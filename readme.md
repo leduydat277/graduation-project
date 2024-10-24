@@ -4,15 +4,15 @@ A demo application to illustrate how [Inertia.js](https://inertiajs.com/) works 
 
 > This is a port of the original [Ping CRM](https://github.com/inertiajs/pingcrm) written in Laravel and Vue.
 
-![](https://raw.githubusercontent.com/liorocks/pingcrm-react/master/screenshot.png)
+![](https://raw.githubusercontent.com/liorocks/graduation-project/master/screenshot.png)
 
 ## Installation
 
 Clone the repo locally:
 
 ```sh
-git clone https://github.com/liorocks/pingcrm-react.git
-cd pingcrm-react
+git clone https://github.com/liorocks/graduation-project.git
+cd graduation-project
 ```
 
 Install PHP dependencies:
