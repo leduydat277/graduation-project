@@ -21,6 +21,6 @@ class StatusTableSeeder extends Seeder
             ['name' => 'Đã thanh toán', 'type' => 3, 'color' => 'green', 'create_at' => now(), 'update_at' => now()],
         ];
 
-        DB::table('status')->insert($statuses);
+        DB::table('statuses')->insert($statuses);
     }
 }

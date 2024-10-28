@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             DamageReportsImageTableSeeder::class,    // Seeder cho bảng damage_reports_image
             GmailSettingTableSeeder::class,          // Seeder cho bảng gmail_setting
             RoomStatusesTableSeeder::class,          // Seeder cho bảng room_statuses
+            PaymentsTableSeeder::class,             // Seeder cho bảng payments
         ]);
     }
 }

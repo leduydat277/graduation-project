@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DashboardController;
@@ -68,6 +69,11 @@ Route::delete('users/{user}', [UsersController::class, 'destroy'])
 Route::put('users/{user}/restore', [UsersController::class, 'restore'])
     ->name('users.restore')
     ->middleware('auth');
+
+//Payments
+
+Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');      
+Route::get('payment/{id}/show', [AdminPaymentController::class, 'show'])->name('payment.show');
 
 // Organizations
 
