@@ -17,7 +17,7 @@ class Booking extends Model
         'check_out_date',
         'VAT',
         'total_price',
-        'actual_number_people',
+        'note',
         'surcharge',
         'deposit_amount',
         'deposit_status',
