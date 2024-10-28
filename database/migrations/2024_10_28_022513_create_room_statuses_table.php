@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('room_id'); // id phòng
             $table->integer('status_id'); // Trạng thái của phòng
             $table->text('description'); // Mô tả tình trạng cụ thể
-            $table->timestamp('user_id'); // Người báo cáo tình trạng
+            $table->integer('user_id'); // Người báo cáo tình trạng
             $table->timestamp('create_at')->nullable(); // Thời gian tạo
             $table->timestamp('update_at')->nullable(); // Thời gian cập nhật
         });

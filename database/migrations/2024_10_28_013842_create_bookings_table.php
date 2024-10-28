@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id'); // ID người booking phòng
-            $table->timestamp('check_in_date');
-            $table->timestamp('check_out_date');
+            $table->integer('status_id'); // Status
+            $table->timestamp('check_in_date')->nullable();
+            $table->timestamp('check_out_date')->nullable();
             $table->integer('VAT'); // Phần trăm thuế VAT
             $table->float('total_price'); // Tổng giá
-            $table->integer('actual_number_people'); // Số lượng người thực tế
+            $table->string('note'); // Số lượng người thực tế
             $table->integer('surcharge')->nullable(); // Phụ phí
             $table->integer('deposit_amount')->nullable(); // Số tiền cọc
             $table->string('deposit_status', 50)->default('pending');

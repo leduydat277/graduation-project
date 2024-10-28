@@ -2,10 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Account;
-use App\Models\Contact;
-use App\Models\Organization;
-use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,26 +12,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $account = Account::create(['name' => 'Acme Corporation']);
-
-        User::factory()->create([
-            'account_id' => $account->id,
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'johndoe@example.com',
-            'password' => 'secret',
-            'owner' => true,
+        $this->call([
+            UsersTableSeeder::class,                // Seeder cho bảng users
+            RoomTypesTableSeeder::class,            // Seeder cho bảng room_types
+            RoomTypeImagesTableSeeder::class,       // Seeder cho bảng room_type_images
+            RoomAmenitiesTableSeeder::class,         // Seeder cho bảng room_amenities
+            TypeAmenitiesTableSeeder::class,         // Seeder cho bảng type_amenities
+            BookingsTableSeeder::class,              // Seeder cho bảng bookings
+            DetailBookingsTableSeeder::class,        // Seeder cho bảng detail_bookings
+            RoomsTableSeeder::class,                 // Seeder cho bảng rooms
+            StatusTableSeeder::class,                // Seeder cho bảng status
+            DamageReportsTableSeeder::class,         // Seeder cho bảng damage_reports
+            ReviewsTableSeeder::class,               // Seeder cho bảng reviews
+            DamageReportsImageTableSeeder::class,    // Seeder cho bảng damage_reports_image
+            GmailSettingTableSeeder::class,          // Seeder cho bảng gmail_setting
+            RoomStatusesTableSeeder::class,          // Seeder cho bảng room_statuses
         ]);
-
-        User::factory(5)->create(['account_id' => $account->id]);
-
-        $organizations = Organization::factory(100)
-            ->create(['account_id' => $account->id]);
-
-        Contact::factory(100)
-            ->create(['account_id' => $account->id])
-            ->each(function ($contact) use ($organizations) {
-                $contact->update(['organization_id' => $organizations->random()->id]);
-            });
     }
 }
