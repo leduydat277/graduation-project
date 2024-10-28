@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CheckInCheckOutController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DashboardController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -140,3 +142,24 @@ Route::get('reports', [ReportsController::class, 'index'])
 Route::get('/img/{path}', [ImagesController::class, 'show'])
     ->where('path', '.*')
     ->name('image');
+
+
+Route::prefix('admin')
+    ->as('admin.')
+    // ->middleware(Role::class) // Admin có tất cả các quyền
+    ->group(function () {
+
+        Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+        Route::prefix('checkin-checkout')
+            ->as('checkin-checkout.')
+            ->group(function () {
+                Route::get('/', [CheckInCheckOutController::class, 'index'])->name('index');
+                Route::get('{id}/checkin', [CheckInCheckOutController::class, 'checkin'])->name('checkin');
+                Route::post('{id}/checkInRequest', [CheckInCheckOutController::class, 'checkInRequest'])->name('checkInRequest');
+
+                // Định nghĩa check-out
+                Route::get('{id}/checkout', [CheckInCheckOutController::class, 'checkOut'])->name('checkOut');
+                Route::post('{id}/checkOutRequest', [CheckInCheckOutController::class, 'checkOutRequest'])->name('checkOutRequest');
+            });
+    });

@@ -19,14 +19,42 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'users';
+
     protected $fillable = [
+        'status_id',
         'name',
-        'first_name',
-        'last_name',
         'email',
+        'code',
         'password',
-        'photo',
+        'image',
+        'role',
+        'phone',
+        'address',
+        'create_at',
+        'update_at',
     ];
+
+    public function tokens()
+    {
+        return $this->hasMany(Token::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function damageReports()
+    {
+        return $this->hasMany(DamageReport::class);
+    }
+    public function status()
+{
+    return $this->belongsTo(Status::class, 'status_id');
+}
+
+    public $timestamps = false;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -61,10 +89,10 @@ class User extends Authenticatable
         return $this->belongsTo(Account::class);
     }
 
-    public function getNameAttribute()
-    {
-        return $this->first_name.' '.$this->last_name;
-    }
+    // public function getNameAttribute()
+    // {
+    //     return $this->first_name.' '.$this->last_name;
+    // }
 
     public function setPasswordAttribute($password)
     {
