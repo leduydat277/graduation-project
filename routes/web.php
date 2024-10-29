@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactsController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ScreenController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\ReportsController;
@@ -34,10 +34,10 @@ Route::post('login', [LoginController::class, 'store'])
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
 
-// Dashboard
+// Screen
 
-Route::get('/', [DashboardController::class, 'index'])
-    ->name('dashboard')
+Route::get('/', [ScreenController::class, 'index'])
+    ->name('screen')
     ->middleware('auth');
 
 // Users
