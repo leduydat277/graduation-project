@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('statuses', function (Blueprint $table) {
+        Schema::create('status', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255); // Tên trạng thái
             $table->integer('type')->default(0); // Loại trạng thái: 0-Chung, 1-Phòng, 2-Bài viết, 3-Thanh toán
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('statuses');
+        Schema::dropIfExists('status');
     }
 };
