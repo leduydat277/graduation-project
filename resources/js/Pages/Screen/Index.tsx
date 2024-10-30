@@ -1,13 +1,12 @@
 import { Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import { DatePickerWithRange } from '@/Components/Reservation/DatePicker';
+import { RoomSearchBar } from './../../shared/RoomSearchBar';
 
 function ScreenPage() {
   return (
-    <div>
-      <DatePickerWithRange />
-      <h1>Screen</h1>
-    </div>
+    <>
+    <RoomSearchBar/>
+    </>
   );
 }
 
