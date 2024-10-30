@@ -148,11 +148,19 @@ Route::get('/img/{path}', [ImagesController::class, 'show'])
     ->where('path', '.*')
     ->name('image');
 
-
+//Booking
 Route::prefix('booking')
     ->as('booking.')
     ->group(function () {
         Route::get('/', [BookingController::class, 'index'])->name('index');
         Route::get('/list', [BookingController::class, 'list'])->name('list');
         Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('detail');
+    });
+
+//Payment
+Route::prefix('payment')
+    ->as('payment.')
+    ->group(function () {
+        Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
+        Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
     });
