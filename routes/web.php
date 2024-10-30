@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Booking\BookingController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactsController;
@@ -72,7 +73,7 @@ Route::put('users/{user}/restore', [UsersController::class, 'restore'])
 
 //Payments
 
-Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');      
+Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');
 Route::get('payment/{id}/show', [AdminPaymentController::class, 'show'])->name('payment.show');
 
 // Organizations
@@ -146,3 +147,12 @@ Route::get('reports', [ReportsController::class, 'index'])
 Route::get('/img/{path}', [ImagesController::class, 'show'])
     ->where('path', '.*')
     ->name('image');
+
+
+Route::prefix('booking')
+    ->as('booking.')
+    ->group(function () {
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/list', [BookingController::class, 'list'])->name('list');
+        Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('detail');
+    });
