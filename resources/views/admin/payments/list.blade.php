@@ -72,7 +72,6 @@ List Payments
                                     <th>ID</th>
                                     <th>Booking ID</th>
                                     <th>Code</th>
-                                    <!-- <th>Account</th> -->
                                     <th>Amount</th>
                                     <th>Payment Method</th>
                                     <th>Payment Date</th>
@@ -87,7 +86,6 @@ List Payments
                                     <td>{{ $payment->id }}</td>
                                     <td>{{ $payment->booking_id }}</td>
                                     <td>{{ $payment->code }}</td>
-                                    <!-- <td>{{$payment->user_name}}</td> -->
                                     <td>{{ $payment->amount }}vnđ</td>
                                     <td><?= ($payment->payment_method == 1) ? 'Tiền mặt' : 'Chuyển khoản' ?></td>
                                     <td>{{ $payment->payment_date }}</td>
