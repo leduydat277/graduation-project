@@ -33,7 +33,9 @@ class Booking extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+        
     }
+
 
     public function room()
     {
@@ -43,6 +45,10 @@ class Booking extends Model
     public function detailBookings()
     {
         return $this->hasMany(DetailBooking::class);
+    }
+    public function damageReports()
+    {
+        return $this->hasMany(DamageReport::class);
     }
 
     public function status()
