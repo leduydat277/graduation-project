@@ -7,7 +7,9 @@ import { usePage } from "@inertiajs/react";
 import { PageProps } from "@/types";
 import { ChevronDown } from "lucide-react";
 import { Box, Stack, Link, Menu, MenuItem } from "@mui/material";
+
 import {containerProps} from '@/components/Responsive';
+
 import React, { useState } from 'react';
 
 export const Profile = (props) => {
@@ -48,6 +50,7 @@ export const Profile = (props) => {
             >
                 <MenuItem onClick={handleClose}>
                     <Link
+
                         // href={route('users.edit', auth.user.id)}
 
                         onClick={() => setMenuOpened(false)}

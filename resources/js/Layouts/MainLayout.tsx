@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 
 
 
+
 import { BottomHeader } from '@/components/Header/BottomHeader';
 
 

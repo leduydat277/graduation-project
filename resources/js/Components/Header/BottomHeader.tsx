@@ -1,6 +1,7 @@
 import { Link, Box, Stack } from "@mui/material";
 import { red } from '@mui/material/colors';
 import { Profile } from '../Profile/Profile';
+
 import { TopHeader } from '@/components/Header/TopHeader';
 import { containerProps } from '@/components/Responsive';
 
