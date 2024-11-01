@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import Alert from '@/Components/Alert/Alert';
+import Alert from '@/components/Alert/Alert';
 
 interface TrashedMessageProps {
   message: string;

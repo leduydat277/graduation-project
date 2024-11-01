@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 
 
 
-import { BottomHeader } from '@/Components/Header/BottomHeader';
+import { BottomHeader } from '@/components/Header/BottomHeader';
 
 
 interface MainLayoutProps {

@@ -1,8 +1,8 @@
 import { Link, Box, Stack } from "@mui/material";
 import { red } from '@mui/material/colors';
 import { Profile } from '../Profile/Profile';
-import { TopHeader } from '@/Components/Header/TopHeader';
-import { containerProps } from '@/Components/Responsive';
+import { TopHeader } from '@/components/Header/TopHeader';
+import { containerProps } from '@/components/Responsive';
 
 export const BottomHeader = ({ fullWidth, ...rest }) => {
   const containerProp = fullWidth ? { width: '100%', flex: 1 } : containerProps();

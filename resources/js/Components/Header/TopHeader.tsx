@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from '@inertiajs/react';
-import Logo from '@/Components/Logo/Logo';
-import MainMenu from '@/Components/Menu/MainMenu';
+import Logo from '@/components/Logo/Logo';
+import MainMenu from '@/components/Menu/MainMenu';
 import { Menu } from 'lucide-react';
-import {containerProps} from '@/Components/Responsive';
+import {containerProps} from '@/components/Responsive';
 export const TopHeader =  (props) => {
   const { fullWidth, ...rest } = props
   const containerProp = fullWidth ? { with: '100%', flex: 1 } : containerProps()

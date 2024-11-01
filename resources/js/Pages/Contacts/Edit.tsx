@@ -2,13 +2,13 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import { Link, usePage, useForm, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import DeleteButton from '@/Components/Button/DeleteButton';
-import LoadingButton from '@/Components/Button/LoadingButton';
-import TextInput from '@/Components/Form/TextInput';
-import SelectInput from '@/Components/Form/SelectInput';
-import TrashedMessage from '@/Components/Messages/TrashedMessage';
+import DeleteButton from '@/components/Button/DeleteButton';
+import LoadingButton from '@/components/Button/LoadingButton';
+import TextInput from '@/components/Form/TextInput';
+import SelectInput from '@/components/Form/SelectInput';
+import TrashedMessage from '@/components/Messages/TrashedMessage';
 import { Contact, Organization } from '@/types';
-import FieldGroup from '@/Components/Form/FieldGroup';
+import FieldGroup from '@/components/Form/FieldGroup';
 
 const Edit = () => {
   const { contact, organizations } = usePage<{

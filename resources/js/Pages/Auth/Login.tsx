@@ -1,11 +1,11 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
-import Logo from '@/Components/Logo/Logo';
-import LoadingButton from '@/Components/Button/LoadingButton';
-import TextInput from '@/Components/Form/TextInput';
-import FieldGroup from '@/Components/Form/FieldGroup';
-import { CheckboxInput } from '@/Components/Form/CheckboxInput';
+import Logo from '@/components/Logo/Logo';
+import LoadingButton from '@/components/Button/LoadingButton';
+import TextInput from '@/components/Form/TextInput';
+import FieldGroup from '@/components/Form/FieldGroup';
+import { CheckboxInput } from '@/components/Form/CheckboxInput';
 
 export default function LoginPage() {
   const { data, setData, errors, post, processing } = useForm({
