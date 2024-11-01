@@ -24,12 +24,12 @@ use Illuminate\Support\Facades\Route;
 // Auth
 
 Route::get('login', [LoginController::class, 'create'])
-    ->name('login')
-    ->middleware('guest');
+    ->name('login');
+    // ->middleware('guest');
 
 Route::post('login', [LoginController::class, 'store'])
-    ->name('login.store')
-    ->middleware('guest');
+    ->name('login.store');
+    // ->middleware('guest');
 
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
@@ -37,8 +37,8 @@ Route::delete('logout', [LoginController::class, 'destroy'])
 // Screen
 
 Route::get('/', [ScreenController::class, 'index'])
-    ->name('screen')
-    ->middleware('auth');
+    ->name('screen');
+    // ->middleware('auth');
 
 // Users
 
