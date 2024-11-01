@@ -68,9 +68,9 @@ List Payments
                         <table id="model-datatables" class="table table-bordered nowrap table-striped align-middle" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>SR No.</th>
                                     <th>ID</th>
                                     <th>Booking ID</th>
+                                    <th>Account</th>
                                     <th>Code</th>
                                     <th>Amount</th>
                                     <th>Payment Method</th>
@@ -82,14 +82,14 @@ List Payments
                             <tbody id="payment-tbody">
                                 @foreach($payments as $key => $payment)
                                 <tr>
-                                    <td>{{$key+1}}</td>
                                     <td>{{ $payment->id }}</td>
                                     <td>{{ $payment->booking_id }}</td>
+                                    <td>alo {{ $payment->booking->user->name}}</td>
                                     <td>{{ $payment->code }}</td>
                                     <td>{{ $payment->amount }}vnđ</td>
                                     <td><?= ($payment->payment_method == 1) ? 'Tiền mặt' : 'Chuyển khoản' ?></td>
                                     <td>{{ $payment->payment_date }}</td>
-                                    <td><span style="color: <?= $status->color ?>;" class="badge bg-info-subtle">{{ $status->name }}</span></td>
+                                    <td><span style="color: <?= $payment->status->color ?>;" class="badge bg-info-subtle">{{ $payment->status->name }}</span></td>
                                     <td>
                                         <div class="dropdown d-inline-block">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">

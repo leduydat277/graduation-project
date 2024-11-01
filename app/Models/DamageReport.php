@@ -41,4 +41,9 @@ class DamageReport extends Model
     {
         return $this->hasMany(DamageReportsImage::class);
     }
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 }
