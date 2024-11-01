@@ -86,9 +86,15 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                    <a href="" class="nav-link" data-key="t-analytics">
+                    <a href="{{ route('booking.index') }}" class="nav-link" data-key="t-analytics">
                         <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
                         Booking
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('roomtype.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fa-solid fa-server"></i>
+                        Quản lí loại phòng
                     </a>
                 </li>
                 <li class="nav-item">

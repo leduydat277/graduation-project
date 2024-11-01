@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Booking\BookingController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\RoomTypes\RoomTypeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ScreenController;
@@ -161,6 +162,14 @@ Route::prefix('booking')
 Route::prefix('payment')
     ->as('payment.')
     ->group(function () {
-        Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
+        Route::get('/', [AdminPaymentController::class, 'index'])->name('index');
         Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
+    });
+
+Route::prefix('roomtype')
+    ->as('roomtype.')
+    ->group(function () {
+        Route::get('/', [RoomTypeController::class, 'index'])->name('index');
+        Route::get('/list', [RoomTypeController::class, 'list'])->name('list');
+        // Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('detail');
     });
