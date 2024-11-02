@@ -63,7 +63,7 @@
             
                 <!-- Trang chủ -->
                 <li class="nav-item">
-                    <a href="{{ url('/') }}" class="nav-link" data-key="t-home">
+                    <a href="{{ url('admin/dashboard') }}" class="nav-link" data-key="t-home">
                         <i class="fas fa-home"></i>
                         Trang chủ
                     </a>
@@ -71,7 +71,7 @@
             
                 <!-- Booking -->
                 <li class="nav-item">
-                    <a href="{{ url('/admin/bookings') }}" class="nav-link" data-key="t-bookings">
+                    <a href="{{ url('/admin/booking') }}" class="nav-link" data-key="t-bookings">
                         <i class="fas fa-address-book"></i>
                         Booking
                     </a>
@@ -79,7 +79,7 @@
             
                 <!-- Payments -->
                 <li class="nav-item">
-                    <a href="{{ url('/admin/payments') }}" class="nav-link" data-key="t-payments">
+                    <a href="{{ url('/admin/payment') }}" class="nav-link" data-key="t-payments">
                         <i class="fas fa-wallet"></i>
                         Payments
                     </a>
@@ -87,7 +87,7 @@
             
                 <!-- Rooms -->
                 <li class="nav-item">
-                    <a href="{{ url('/admin/rooms') }}" class="nav-link" data-key="t-rooms">
+                    <a href="{{ url('/admin/room') }}" class="nav-link" data-key="t-rooms">
                         <i class="fas fa-bed"></i>
                         Rooms
                     </a>
@@ -95,7 +95,7 @@
             
                 <!-- Room Types -->
                 <li class="nav-item">
-                    <a href="{{ url('/admin/roomtypes') }}" class="nav-link" data-key="t-roomtypes">
+                    <a href="{{ url('/admin/roomtype') }}" class="nav-link" data-key="t-roomtypes">
                         <i class="fas fa-th-large"></i>
                         Room Types
                     </a>

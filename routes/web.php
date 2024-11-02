@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AssetTypeController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -42,6 +43,7 @@ Route::prefix('admin')
     ->as('admin.')
     // ->middleware(Role::class) // Admin có tất cả các quyền
     ->group(function () {
+        Route::resource('dashboard', DashboardController::class);
         Route::resource('user', UserController::class);
         Route::resource('booking', BookingController::class);
         Route::resource('payment', PaymentController::class);
