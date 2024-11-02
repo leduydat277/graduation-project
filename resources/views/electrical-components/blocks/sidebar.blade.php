@@ -95,7 +95,7 @@
             
                 <!-- Room Types -->
                 <li class="nav-item">
-                    <a href="{{ url('/admin/roomtype') }}" class="nav-link" data-key="t-roomtypes">
+                    <a href="{{ url('/admin/room-type') }}" class="nav-link" data-key="t-roomtypes">
                         <i class="fas fa-th-large"></i>
                         Room Types
                     </a>
@@ -103,7 +103,7 @@
             
                 <!-- Room Assets -->
                 <li class="nav-item">
-                    <a href="{{ url('/admin/roomasset') }}" class="nav-link" data-key="t-roomasset">
+                    <a href="{{ url('/admin/room-asset') }}" class="nav-link" data-key="t-roomasset">
                         <i class="fas fa-couch"></i>
                         Room Assets
                     </a>
