@@ -8,28 +8,23 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('tokens', function (Blueprint $table) {
-            $table->id();
-            $table->integer('users_id'); // ID người dùng
-            $table->text('value'); // Chuỗi token
+            $table->id(); // Tạo trường id tự động tăng
+            $table->unsignedBigInteger('user_id'); // Khóa ngoại liên kết với bảng users
+            $table->string('value'); // Giá trị của token
             $table->timestamp('expiry_time'); // Thời gian hết hạn của token
-            $table->timestamp('create_at')->useCurrent(); // Thời gian tạo
-            $table->timestamp('update_at')->useCurrent()->useCurrentOnUpdate(); // Thời gian cập nhật
-            $table->softDeletes();
+            $table->unsignedInteger('created_at')->default(time()); // Trường created_at kiểu unsignedInteger
+            $table->unsignedInteger('updated_at')->default(time()); // Trường updated_at kiểu unsignedInteger
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('tokens');
     }
