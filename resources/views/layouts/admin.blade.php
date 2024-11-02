@@ -44,14 +44,14 @@
     <div id="layout-wrapper">
 
         <header id="page-topbar">
-            @include('admin.blocks.header')
+            @include('electrical-components.blocks.header')
         </header>
 
         <!-- removeNotificationModal -->
-        @include('admin.blocks.modal')
+        @include('electrical-components.blocks.modal')
         <!-- /.modal -->
         <!-- ========== App Menu ========== -->
-        @include('admin.blocks.sidebar')
+        @include('electrical-components.blocks.sidebar')
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
         <div class="vertical-overlay"></div>
@@ -70,7 +70,7 @@
             <!-- End Page-content -->
 
             {{-- footer --}}
-            @include('admin.blocks.footer')
+            @include('electrical-components.blocks.footer')
         </div>
         <!-- end main content-->
 
@@ -79,7 +79,7 @@
 
 
 
-    @include('admin.blocks.helper')
+    @include('electrical-components.blocks.helper')
 
     <!-- JAVASCRIPT -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
