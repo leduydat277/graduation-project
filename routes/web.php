@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\Booking\BookingController;
-use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\ContactsController;
-use App\Http\Controllers\ScreenController;
-use App\Http\Controllers\ImagesController;
-use App\Http\Controllers\OrganizationsController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\TokenController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\ManageStatusRoomController;
+use App\Http\Controllers\Admin\AssetTypeController;
+use App\Http\Controllers\Admin\RoomAssetController;
+use App\Http\Controllers\Admin\PhiphatsinhController;
+use App\Http\Controllers\Admin\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,10 +23,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * TODO route riêng tương ứng với tên feature muốn xử lý, 
+ * Ví dụ: chức năng gửi mail => routes\admin_feature\Send_Mail.php
+ */
+foreach (glob(base_path('routes/admin_feature/*.php')) as $file) {
+    include_once $file;
+}
+
+Route::prefix('admin')->group(function () {
+    Route::resource('users', UserController::class);
+    Route::resource('tokens', TokenController::class);
+    Route::resource('reviews', ReviewController::class);
+    Route::resource('bookings', BookingController::class);
+    Route::resource('rooms', RoomController::class);
+    Route::resource('room-types', RoomTypeController::class);
+    Route::resource('manage-status-rooms', ManageStatusRoomController::class);
+    Route::resource('asset-types', AssetTypeController::class);
+    Route::resource('room-assets', RoomAssetController::class);
+    Route::resource('phi-phat-sinh', PhiphatsinhController::class);
+    Route::resource('payments', PaymentController::class);
+});
+
 // Auth
-
-Route::resource('example', PostController::class);
-
 // Route::get('login', [LoginController::class, 'create'])
 //     ->name('login')
 //     ->middleware('guest');
@@ -161,8 +181,8 @@ Route::resource('example', PostController::class);
 
 // //Payment
 // Route::prefix('payment')
-    ->as('payment.')
-    ->group(function () {
-        Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
-        Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
-    });
+    // ->as('payment.')
+    // ->group(function () {
+    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
+    //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
+    // });
