@@ -28,7 +28,7 @@ class MailController extends Controller
     {
         $data = [
             'subject' => $subject,
-            'view' => 'admin.admin.mail.' . $view,
+            'view' => 'admin.mail.' . $view,
             'data_view' => $data,
         ];
 
