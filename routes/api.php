@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FE\FeRoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,3 +11,4 @@ Route::middleware('api')->get('/example', function (Request $request) {
 
 // Route::get('/search', [RoomController::class, 'search'])
 //     ->name('search');
+Route::get('fe/rooms', [FeRoomController::class, 'getRooms'])->name('api.fe.rooms');
