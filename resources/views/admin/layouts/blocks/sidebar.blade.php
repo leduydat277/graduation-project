@@ -86,17 +86,31 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                    <a href="" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
-                        Booking
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
-                        Payments
-                    </a>
-                </li>
+                     <a href="" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
+                         Booking
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
+                         Payments
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="{{ route('room-types.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
+                         Danh sách loại phòng
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a href="{{ route('rooms.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-bed"></i> <!-- Icon for room list -->
+                         Danh sách phòng
+                     </a>
+                 </li>
+
                  <li class="nav-item">
                      <a href="" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-home"></i> <!-- Icon for home page -->

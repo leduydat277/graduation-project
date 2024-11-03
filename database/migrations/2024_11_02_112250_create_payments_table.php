@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // Tạo trường id tự động tăng
             $table->unsignedBigInteger('booking_id'); // Trường booking_id để liên kết với bảng bookings
             $table->unsignedInteger('payment_date')->default(time())->comment('ngày thanh toán'); // Ngày thanh toán
-            $table->unsignedBigInteger('total_price')->comment('Giá với 2 chữ số thập phân, ví dụ 32.00'); // Tổng giá trị thanh toán
+            $table->unsignedBigInteger('total_price');
             $table->string('payment_method')->comment('0: tiền mặt, 1:chuyển khoản'); // Phương thức thanh toán
         });
     }
