@@ -31,7 +31,9 @@ class FeRoomController extends Controller
             ];
         });
 
-        // Trả về kết quả dưới dạng JSON
-        return response()->json($formattedRooms);
+        return response()->json([
+            'status' => 'success',
+            'data' => $formattedRooms
+        ], 200);
     }
 }
