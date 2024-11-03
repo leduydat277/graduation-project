@@ -58,13 +58,13 @@ class SearchRoomController extends Controller
         $results = [];
         foreach ($arr_room_manages as $room) {
             // Kiểm tra điều kiện phòng có `date_out` = 0 và `date_in` trước ngày người dùng đặt
-            if ($room['date_out'] == 0 && $date_in >= $room['date_in']) {
+            if ($room['from'] <= $date_in && $room['to'] == 0) {
                 $results[] = $room['room_id'];
                 continue;
             }
 
             // Kiểm tra điều kiện người dùng đặt nằm trong khoảng thời gian có sẵn của phòng
-            if ($room['date_in'] <= $date_in && $date_out <= $room['date_out']) {
+            if ($room['from'] <= $date_in && $date_out <= $room['to']) {
                 $results[] = $room['room_id'];
             }
         }
@@ -128,12 +128,12 @@ class SearchRoomController extends Controller
         // Lọc danh sách phòng theo thời gian đặt
         $results = [];
         foreach ($arr_room_manages as $room) {
-            if ($room['date_out'] == 0 && ($date_in >= $room['date_in'])) {
+            if ($room['from'] <= $date_in && $room['to'] == 0) {
                 $results[] = $room['room_id'];
                 continue;
             }
 
-            if ($room['date_in'] <= $date_in && $date_out <= $room['date_out']) {
+            if ($room['from'] <= $date_in && $date_out <= $room['to']) {
                 $results[] = $room['room_id'];
             }
         }
