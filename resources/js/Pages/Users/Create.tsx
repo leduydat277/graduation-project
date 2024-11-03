@@ -1,10 +1,10 @@
 import { Link, useForm } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import LoadingButton from '@/Components/Button/LoadingButton';
-import TextInput from '@/Components/Form/TextInput';
-import SelectInput from '@/Components/Form/SelectInput';
-import FileInput from '@/Components/Form/FileInput';
-import FieldGroup from '@/Components/Form/FieldGroup';
+import LoadingButton from '@/components/Button/LoadingButton';
+import TextInput from '@/components/Form/TextInput';
+import SelectInput from '@/components/Form/SelectInput';
+import FileInput from '@/components/Form/FileInput';
+import FieldGroup from '@/components/Form/FieldGroup';
 
 const Create = () => {
   const { data, setData, errors, post, processing } = useForm({

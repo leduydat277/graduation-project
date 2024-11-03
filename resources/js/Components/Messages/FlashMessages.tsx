@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import Alert from '@/Components/Alert/Alert';
+import Alert from '@/components/Alert/Alert';
 
 export default function FlashedMessages() {
   const [visible, setVisible] = useState(true);

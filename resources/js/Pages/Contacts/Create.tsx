@@ -1,10 +1,10 @@
 import { Link, usePage, useForm } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import LoadingButton from '@/Components/Button/LoadingButton';
-import TextInput from '@/Components/Form/TextInput';
-import SelectInput from '@/Components/Form/SelectInput';
+import LoadingButton from '@/components/Button/LoadingButton';
+import TextInput from '@/components/Form/TextInput';
+import SelectInput from '@/components/Form/SelectInput';
 import { Organization } from '@/types';
-import FieldGroup from '@/Components/Form/FieldGroup';
+import FieldGroup from '@/components/Form/FieldGroup';
 
 const Create = () => {
   const { organizations } = usePage<{ organizations: Organization[] }>().props;
