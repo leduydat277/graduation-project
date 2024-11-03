@@ -44,7 +44,6 @@ Route::prefix('admin')->group(function () {
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
 });
-
 // Auth
 // Route::get('login', [LoginController::class, 'create'])
 //     ->name('login')
