@@ -45,6 +45,10 @@ Route::prefix('admin')->group(function () {
     Route::resource('payments', PaymentController::class);
 });
 
+//Route test cắt giao diện admin
+Route::get("/test", function(){
+    return view('admin.index');
+});
 // Auth
 // Route::get('login', [LoginController::class, 'create'])
 //     ->name('login')
