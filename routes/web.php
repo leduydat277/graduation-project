@@ -1,14 +1,17 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\ContactsController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ImagesController;
-use App\Http\Controllers\OrganizationsController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\TokenController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\ManageStatusRoomController;
+use App\Http\Controllers\Admin\AssetTypeController;
+use App\Http\Controllers\Admin\RoomAssetController;
+use App\Http\Controllers\Admin\PhiphatsinhController;
+use App\Http\Controllers\Admin\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,123 +23,170 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * TODO route riêng tương ứng với tên feature muốn xử lý, 
+ * Ví dụ: chức năng gửi mail => routes\admin_feature\Send_Mail.php
+ */
+foreach (glob(base_path('routes/admin_feature/*.php')) as $file) {
+    include_once $file;
+}
+
+Route::prefix('admin')->group(function () {
+    Route::resource('users', UserController::class);
+    Route::resource('tokens', TokenController::class);
+    Route::resource('reviews', ReviewController::class);
+    Route::resource('bookings', BookingController::class);
+    Route::resource('rooms', RoomController::class);
+    Route::resource('room-types', RoomTypeController::class);
+    Route::resource('manage-status-rooms', ManageStatusRoomController::class);
+    Route::resource('asset-types', AssetTypeController::class);
+    Route::resource('room-assets', RoomAssetController::class);
+    Route::resource('phi-phat-sinh', PhiphatsinhController::class);
+    Route::resource('payments', PaymentController::class);
+});
+
+//Route test cắt giao diện admin
+Route::get("/test", function(){
+    return view('admin.index');
+});
 // Auth
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login')
+//     ->middleware('guest');
 
-Route::get('login', [LoginController::class, 'create'])
-    ->name('login')
-    ->middleware('guest');
+// Route::post('login', [LoginController::class, 'store'])
+//     ->name('login.store')
+//     ->middleware('guest');
 
-Route::post('login', [LoginController::class, 'store'])
-    ->name('login.store')
-    ->middleware('guest');
+// Route::delete('logout', [LoginController::class, 'destroy'])
+//     ->name('logout');
 
-Route::delete('logout', [LoginController::class, 'destroy'])
-    ->name('logout');
+// // Screen
 
-// Dashboard
+// Route::get('/', [ScreenController::class, 'index'])
+//     ->name('screen')
+//     ->middleware('auth');
 
-Route::get('/', [DashboardController::class, 'index'])
-    ->name('dashboard')
-    ->middleware('auth');
+// // Users
 
-// Users
+// Route::get('users', [UsersController::class, 'index'])
+//     ->name('users')
+//     ->middleware('auth');
 
-Route::get('users', [UsersController::class, 'index'])
-    ->name('users')
-    ->middleware('auth');
+// Route::get('users/create', [UsersController::class, 'create'])
+//     ->name('users.create')
+//     ->middleware('auth');
 
-Route::get('users/create', [UsersController::class, 'create'])
-    ->name('users.create')
-    ->middleware('auth');
+// Route::post('users', [UsersController::class, 'store'])
+//     ->name('users.store')
+//     ->middleware('auth');
 
-Route::post('users', [UsersController::class, 'store'])
-    ->name('users.store')
-    ->middleware('auth');
+// Route::get('users/{user}/edit', [UsersController::class, 'edit'])
+//     ->name('users.edit')
+//     ->middleware('auth');
 
-Route::get('users/{user}/edit', [UsersController::class, 'edit'])
-    ->name('users.edit')
-    ->middleware('auth');
+// Route::put('users/{user}', [UsersController::class, 'update'])
+//     ->name('users.update')
+//     ->middleware('auth');
 
-Route::put('users/{user}', [UsersController::class, 'update'])
-    ->name('users.update')
-    ->middleware('auth');
+// Route::delete('users/{user}', [UsersController::class, 'destroy'])
+//     ->name('users.destroy')
+//     ->middleware('auth');
 
-Route::delete('users/{user}', [UsersController::class, 'destroy'])
-    ->name('users.destroy')
-    ->middleware('auth');
+// Route::put('users/{user}/restore', [UsersController::class, 'restore'])
+//     ->name('users.restore')
+//     ->middleware('auth');
 
-Route::put('users/{user}/restore', [UsersController::class, 'restore'])
-    ->name('users.restore')
-    ->middleware('auth');
+// //Payments
 
-// Organizations
+// Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');
+// Route::get('payment/{id}/show', [AdminPaymentController::class, 'show'])->name('payment.show');
 
-Route::get('organizations', [OrganizationsController::class, 'index'])
-    ->name('organizations')
-    ->middleware('auth');
+// // Organizations
 
-Route::get('organizations/create', [OrganizationsController::class, 'create'])
-    ->name('organizations.create')
-    ->middleware('auth');
+// Route::get('organizations', [OrganizationsController::class, 'index'])
+//     ->name('organizations')
+//     ->middleware('auth');
 
-Route::post('organizations', [OrganizationsController::class, 'store'])
-    ->name('organizations.store')
-    ->middleware('auth');
+// Route::get('organizations/create', [OrganizationsController::class, 'create'])
+//     ->name('organizations.create')
+//     ->middleware('auth');
 
-Route::get('organizations/{organization}/edit', [OrganizationsController::class, 'edit'])
-    ->name('organizations.edit')
-    ->middleware('auth');
+// Route::post('organizations', [OrganizationsController::class, 'store'])
+//     ->name('organizations.store')
+//     ->middleware('auth');
 
-Route::put('organizations/{organization}', [OrganizationsController::class, 'update'])
-    ->name('organizations.update')
-    ->middleware('auth');
+// Route::get('organizations/{organization}/edit', [OrganizationsController::class, 'edit'])
+//     ->name('organizations.edit')
+//     ->middleware('auth');
 
-Route::delete('organizations/{organization}', [OrganizationsController::class, 'destroy'])
-    ->name('organizations.destroy')
-    ->middleware('auth');
+// Route::put('organizations/{organization}', [OrganizationsController::class, 'update'])
+//     ->name('organizations.update')
+//     ->middleware('auth');
 
-Route::put('organizations/{organization}/restore', [OrganizationsController::class, 'restore'])
-    ->name('organizations.restore')
-    ->middleware('auth');
+// Route::delete('organizations/{organization}', [OrganizationsController::class, 'destroy'])
+//     ->name('organizations.destroy')
+//     ->middleware('auth');
 
-// Contacts
+// Route::put('organizations/{organization}/restore', [OrganizationsController::class, 'restore'])
+//     ->name('organizations.restore')
+//     ->middleware('auth');
 
-Route::get('contacts', [ContactsController::class, 'index'])
-    ->name('contacts')
-    ->middleware('auth');
+// // Contacts
 
-Route::get('contacts/create', [ContactsController::class, 'create'])
-    ->name('contacts.create')
-    ->middleware('auth');
+// Route::get('contacts', [ContactsController::class, 'index'])
+//     ->name('contacts')
+//     ->middleware('auth');
 
-Route::post('contacts', [ContactsController::class, 'store'])
-    ->name('contacts.store')
-    ->middleware('auth');
+// Route::get('contacts/create', [ContactsController::class, 'create'])
+//     ->name('contacts.create')
+//     ->middleware('auth');
 
-Route::get('contacts/{contact}/edit', [ContactsController::class, 'edit'])
-    ->name('contacts.edit')
-    ->middleware('auth');
+// Route::post('contacts', [ContactsController::class, 'store'])
+//     ->name('contacts.store')
+//     ->middleware('auth');
 
-Route::put('contacts/{contact}', [ContactsController::class, 'update'])
-    ->name('contacts.update')
-    ->middleware('auth');
+// Route::get('contacts/{contact}/edit', [ContactsController::class, 'edit'])
+//     ->name('contacts.edit')
+//     ->middleware('auth');
 
-Route::delete('contacts/{contact}', [ContactsController::class, 'destroy'])
-    ->name('contacts.destroy')
-    ->middleware('auth');
+// Route::put('contacts/{contact}', [ContactsController::class, 'update'])
+//     ->name('contacts.update')
+//     ->middleware('auth');
 
-Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])
-    ->name('contacts.restore')
-    ->middleware('auth');
+// Route::delete('contacts/{contact}', [ContactsController::class, 'destroy'])
+//     ->name('contacts.destroy')
+//     ->middleware('auth');
 
-// Reports
+// Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])
+//     ->name('contacts.restore')
+//     ->middleware('auth');
 
-Route::get('reports', [ReportsController::class, 'index'])
-    ->name('reports')
-    ->middleware('auth');
+// // Reports
 
-// Images
+// Route::get('reports', [ReportsController::class, 'index'])
+//     ->name('reports')
+//     ->middleware('auth');
 
-Route::get('/img/{path}', [ImagesController::class, 'show'])
-    ->where('path', '.*')
-    ->name('image');
+// // Images
+
+// Route::get('/img/{path}', [ImagesController::class, 'show'])
+//     ->where('path', '.*')
+//     ->name('image');
+
+// //Booking
+// Route::prefix('booking')
+//     ->as('booking.')
+//     ->group(function () {
+//         Route::get('/', [BookingController::class, 'index'])->name('index');
+//         Route::get('/list', [BookingController::class, 'list'])->name('list');
+//         Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('detail');
+//     });
+
+// //Payment
+// Route::prefix('payment')
+    // ->as('payment.')
+    // ->group(function () {
+    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
+    //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
+    // });
