@@ -1,24 +1,11 @@
-import { defineConfig } from 'vite';  // Chỉ giữ import này.
+import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import { configDefaults } from 'vitest/config';  // Chỉ lấy các config cần.
 
 export default defineConfig({
-  plugins: [
-    laravel(['resources/js/app.tsx', 'resources/css/app.css']),
-    react(),
-    tsconfigPaths()
-  ],
+  plugins: [laravel(['resources/js/app.tsx', 'resources/css/app.css']), react()],
   build: {
     manifest: true,
     outDir: 'public/build',
-  },
-  test: {
-    exclude: [
-      ...configDefaults.exclude,
-      '**/node_modules/**',
-      '**/fixtures/**',
-    ],
-  },
+},
 });

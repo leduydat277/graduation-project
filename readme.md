@@ -87,8 +87,3 @@ php artisan test
 - Original work by Jonathan Reinink (@reinink) and contributors
 - Port to Ruby on Rails by Georg Ledermann (@ledermann)
 - Port to React by Lio (@liorocks)
-
-```
-- change port
-started: "./serve.sh"
-```

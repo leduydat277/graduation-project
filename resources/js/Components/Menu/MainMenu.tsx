@@ -9,8 +9,8 @@ export default function MainMenu({ className }: MainMenuProps) {
   return (
     <div className={className}>
       <MainMenuItem
-        text="Screen"
-        link="screen"
+        text="Dashboard"
+        link="dashboard"
         icon={<CircleGauge size={20} />}
       />
       <MainMenuItem
