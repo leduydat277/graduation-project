@@ -14,7 +14,7 @@ import {
 const initialBookingRange = {
   checkInDate: new Date(),
   checkOutDate: addDays(new Date(), 1),
-  typeRoom: 1,
+  typeRoom: 'normal',
   numberOfGuests: 1,
   numberOfAdults: 1,
   numberOfChildren: 0,
