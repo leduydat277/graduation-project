@@ -132,7 +132,13 @@ class RoomController extends Controller
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được cập nhật thành công.');
     }
 
-
+    /**
+     * Summary of destroy
+     * Fix khi push 1 ảnh thì không được xóa hết
+     * 
+     * @param \App\Models\Admin\Room $room
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Room $room)
     {
         // Xóa tất cả các ảnh liên quan đến phòng nếu có

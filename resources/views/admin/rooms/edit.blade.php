@@ -34,7 +34,7 @@
 
                     <div class="mb-3">
                         <label for="status" class="form-label">Trạng Thái</label>
-                        <select class="form-select" id="status" name="status">
+                        <select class="form-select" id="" name="status">
                             <option value="0" {{ $room->status == 0 ? 'selected' : '' }}>Sẵn sàng</option>
                             <option value="1" {{ $room->status == 1 ? 'selected' : '' }}>Đã cọc</option>
                             <option value="2" {{ $room->status == 2 ? 'selected' : '' }}>Đang sử dụng</option>
@@ -98,8 +98,8 @@
                     <!-- Hiển thị ảnh hiện tại và thêm ảnh mới -->
                     <div class="col-lg-12">
                         <div class="card">
-                            <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
-                                <h4 class="card-title mb-0">Gallery</h4>
+                            <div class="card-header d-flex align-items-center justify-content-between bg-primary">
+                                <h4 class="card-title mb-0 text-white">Gallery</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
