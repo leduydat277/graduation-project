@@ -1,34 +1,48 @@
 import { create } from 'zustand';
-import { addDays, differenceInDays } from "date-fns";
-import { shallow } from 'zustand/shallow'
-import { immer } from 'zustand/middleware/immer'
-import { createWithEqualityFn } from 'zustand/traditional'
+import { addDays } from 'date-fns';
+import { shallow } from 'zustand/shallow';
+import { immer } from 'zustand/middleware/immer';
+import { createWithEqualityFn } from 'zustand/traditional';
+
 import {
   persist,
-  subscribeWithSelector,
   devtools,
-  createJSONStorage,
-} from 'zustand/middleware'
+  subscribeWithSelector,
+  createJSONStorage
+} from 'zustand/middleware';
 
-// const roomTypes = {
-//   single: 100,
-//   double: 150,
-//   suite: 300,
-// };
-
-const initialDateRange = {
-  checkIn: new Date(),
-  checkOut: addDays(new Date(), 1),
- 
+const initialBookingRange = {
+  checkInDate: new Date(),
+  checkOutDate: addDays(new Date(), 1),
+  typeRoom: 'normal',
+  numberOfGuests: 1,
+  numberOfAdults: 1,
+  numberOfChildren: 0,
+  note: '',
 };
 
-
 export const useBookingStore = createWithEqualityFn(
-    subscribeWithSelector(
-        immer<any>((set, get) => ({
-            
+  devtools(
+    persist(
+      subscribeWithSelector(
+        immer <any>((set, get) => ({
+          ...initialBookingRange,
+          resetState: () => set({ ...initialBookingRange }),
+          setIsOpen: (isOpen) => set((state) => { state.isOpen = isOpen; }),
+          setCheckInDate: (checkInDate) => set((state) => { state.checkInDate = checkInDate; }),
+          setCheckOutDate: (checkOutDate) => set((state) => { state.checkOutDate = checkOutDate; }),
+          setTypeRoom: (typeRoom) => set((state) => { state.typeRoom = typeRoom; }),
+          setNumberOfGuests: (numberOfGuests) => set((state) => { state.numberOfGuests = numberOfGuests; }),
+          setNumberOfChildren: (numberOfChildren) => set((state) => { state.numberOfChildren = numberOfChildren; }),
+          setNote: (note) => set((state) => { state.note = note; }),
+          clear: () => set({ ...initialBookingRange }),
         }))
+      ),
+      {
+        name: 'booking-store',
+        storage:createJSONStorage(() => localStorage),
+      }
     )
+  ),
+  shallow
 );
-
-export default useBookingStore;
