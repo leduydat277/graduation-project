@@ -112,6 +112,22 @@
                  </li>
 
                  <li class="nav-item">
+                     <a href="{{ route('room-assets.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-tools"></i> <!-- Icon for room assets list -->
+                         Danh sách tiện nghi phòng
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a href="{{ route('asset-types.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-th-list"></i> <!-- Icon for asset types list -->
+                         Danh sách loại tiện nghi
+                     </a>
+                 </li>
+
+
+
+                 <li class="nav-item">
                      <a href="" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-home"></i> <!-- Icon for home page -->
                          Trở về trang chủ
