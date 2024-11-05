@@ -23,7 +23,6 @@ class RoomRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'room_area' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'status' => 'required|boolean', // Status phải là boolean (1 hoặc 0)
         ];
     }
 
@@ -43,8 +42,6 @@ class RoomRequest extends FormRequest
             'room_area.required' => 'Diện tích là bắt buộc.',
             'room_area.numeric' => 'Diện tích phải là số.',
             'room_area.min' => 'Diện tích phải lớn hơn hoặc bằng 0.',
-            'status.required' => 'Trạng thái là bắt buộc.',
-            'status.boolean' => 'Trạng thái phải là 1 hoặc 0.',
         ];
     }
 }

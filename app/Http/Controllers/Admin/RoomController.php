@@ -62,7 +62,7 @@ class RoomController extends Controller
                 $imagePaths[] = $path; // Thêm đường dẫn ảnh vào mảng
             }
         }
-        // dd(request()->all());
+        
         // Tạo phòng với dữ liệu đầu vào và lưu đường dẫn ảnh dưới dạng JSON
         $room = Room::create([
             'title' => $request->input('title'),
@@ -72,7 +72,7 @@ class RoomController extends Controller
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
             'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
-            'status' => $request->input('status')
+            'status' => 0
         ]);
 
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được thêm thành công.');
@@ -126,7 +126,7 @@ class RoomController extends Controller
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
             'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
-            'status' => $request->input('status', $room->status), // Giữ nguyên trạng thái nếu không thay đổi
+            'status' => $room->status // Giữ nguyên trạng thái nếu không thay đổi
         ]);
 
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được cập nhật thành công.');
