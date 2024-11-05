@@ -32,8 +32,17 @@ class SearchRoomController extends Controller
         }
 
         try {
-            $from = (new DateTime($from))->setTime(14, 0, 0)->getTimestamp();
-            $to = (new DateTime($to))->setTime(12, 0, 0)->getTimestamp();
+            $fromDate = new DateTime($from);
+            $toDate = new DateTime($to);
+
+            // Kiểm tra nếu from và to rơi vào cùng ngày
+            if ($fromDate->format('Y-m-d') === $toDate->format('Y-m-d')) {
+                return false;
+            }
+
+            // check-in: 14h và check-out:12h
+            $from = $fromDate->setTime(14, 0, 0)->getTimestamp();
+            $to = $toDate->setTime(12, 0, 0)->getTimestamp();
         } catch (\Exception $e) {
             return false;
         }
