@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
-use App\Models\Status;
+use App\Models\User;
 
 class PaymentController extends Controller
 {
@@ -13,12 +13,11 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::query()->get();
-        $status = "";
-        foreach ($payments as $payment) {
-            $status = Status::where('id', '=', $payment->status_id)->first();
-        }
-        return view('admin.payments.list', compact('payments', 'status'));
+            $payments = Payment::with(['booking.user', 'status'])->get();
+            foreach ($payments as $payment) {
+            } 
+            return view('admin.payments.list', compact('payments'));
+    
     }
 
     /**
@@ -26,7 +25,9 @@ class PaymentController extends Controller
      */
     public function show(string $id)
     {
-        $payment = Payment::with('booking.detailBookings.roomType.roomTypeImages')
+        $payment = Payment::with([
+            'booking.detailBookings.roomType.roomTypeImages',
+            'booking.detailBookings.room.damageReports'])
             ->where('id', $id)
             ->first();
         return view('admin.payments.show', compact('payment'));

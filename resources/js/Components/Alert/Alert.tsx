@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check, CircleX, TriangleAlert } from 'lucide-react';
-import CloseButton from '@/Components/Button/CloseButton';
+import CloseButton from '@/components/Button/CloseButton';
 
 interface Alert {
   message: string;

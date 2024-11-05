@@ -44,23 +44,22 @@ Detail Payment {{$payment->id}}
             <div data-simplebar style="height: 500px;" class="mx-n3">
                 <ul class="list list-group list-group-flush mb-0">
                     @foreach ($payment->booking->detailBookings as $detailBooking) <br>
-                    <li class="list-group-item" data-id="4">
+                    <li style="color: <?= $detailBooking->room->damageReports->isNotEmpty() ? 'red' : 'green' ?>;"  class="list-group-item" data-id="4">
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <h3 class="fs-13 mb-1"><a href="#" class="link name text-body">Room Type: {{ $detailBooking->roomType->type }}</a></h3>
                                 <p class="born timestamp text-muted mb-0" data-timestamp="45678">Total price: {{$payment->booking->total_price}}VNĐ</p>
-                                
-                                <br> 
+                                <br>
                                 <p class="born timestamp text-muted mb-0" data-timestamp="45678">{{$detailBooking->roomType->price_per_night}}vnđ/1 night</p>
                                 <p class="born timestamp text-muted mb-0" data-timestamp="45678">Actual Number People: {{$detailBooking->actual_number_people}}</p>
                                 <p class="born timestamp text-muted mb-0" data-timestamp="45678">Check in: {{$payment->booking->check_in_date}}</p>
                                 <p class="born timestamp text-muted mb-0" data-timestamp="45678">Check out: {{$payment->booking->check_out_date}}</p>
-
+                                phòng sau khi checkout
                             </div>
-                            <div class=""d-flex">
+                            <div class="" d-flex">
                                 <div>
                                     @foreach ($detailBooking->roomType->roomTypeImages as $image)
-                                    <img class="image avatar-xl rounded-circle" src="{{ $image->image_url }}" alt="" >
+                                    <img class="image avatar-xl rounded-circle" src="{{ $image->image_url }}" alt="">
                                     @endforeach
                                 </div>
                             </div>

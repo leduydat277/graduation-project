@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\Booking\BookingController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\DetailRoom;
 use App\Http\Controllers\ScreenController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\OrganizationsController;
@@ -25,11 +27,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login', [LoginController::class, 'create'])
     ->name('login');
-    // ->middleware('guest');
+// ->middleware('guest');
 
 Route::post('login', [LoginController::class, 'store'])
     ->name('login.store');
-    // ->middleware('guest');
+// ->middleware('guest');
 
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
@@ -38,7 +40,10 @@ Route::delete('logout', [LoginController::class, 'destroy'])
 
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
-    // ->middleware('auth');
+// ->middleware('auth');
+
+Route::get('/detail-Room', [DetailRoom::class, 'index'])
+    ->name('detail-Room');
 
 // Users
 
@@ -72,7 +77,7 @@ Route::put('users/{user}/restore', [UsersController::class, 'restore'])
 
 //Payments
 
-Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');      
+Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');
 Route::get('payment/{id}/show', [AdminPaymentController::class, 'show'])->name('payment.show');
 
 // Organizations
@@ -146,3 +151,20 @@ Route::get('reports', [ReportsController::class, 'index'])
 Route::get('/img/{path}', [ImagesController::class, 'show'])
     ->where('path', '.*')
     ->name('image');
+
+//Booking
+Route::prefix('booking')
+    ->as('booking.')
+    ->group(function () {
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/list', [BookingController::class, 'list'])->name('list');
+        Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('detail');
+    });
+
+//Payment
+Route::prefix('payment')
+    ->as('payment.')
+    ->group(function () {
+        Route::get('/', [AdminPaymentController::class, 'index'])->name('index');
+        Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
+    });
