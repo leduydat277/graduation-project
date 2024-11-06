@@ -3,8 +3,7 @@
 use App\Http\Controllers\Admin\MailController;
 use Illuminate\Support\Facades\Route;
 
-// Nhóm route với prefix 'admin/users'
-Route::prefix('admin/users')->group(function () {
-    // Định nghĩa route cho hành động test trong UserController
-    Route::get('test', [MailController::class, 'test_function'])->name('test');
+Route::prefix('admin/mail')->controller(MailController::class)->group(function () {
+    Route::get('exampleSendMail',);
+    Route::get('sendMailCheckinCode', 'SendCheckinCode')->name('send_mail_check_in_code');
 });

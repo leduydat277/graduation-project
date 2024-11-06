@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
 import { DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/Components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -11,8 +11,10 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  
   ...props
 }: CalendarProps) {
+  console.log("showOutsideDays", {...props})
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -61,7 +63,9 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
       }}
+      
       {...props}
+     
     />
   )
 }

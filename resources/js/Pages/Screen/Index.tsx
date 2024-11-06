@@ -1,13 +1,20 @@
 import { Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import { DatePickerWithRange } from '@/Components/Reservation/DatePicker';
+import { RoomSearchBar } from './../../shared/RoomSearchBar';
+
+import { Box } from '@mui/material';
+import { grey, pink } from '@mui/material/colors';
+
 
 function ScreenPage() {
   return (
-    <div>
-      <DatePickerWithRange />
-      <h1>Screen</h1>
-    </div>
+    <>
+
+      <Box sx={{ backgroundColor: pink[200] }} >
+        <RoomSearchBar />
+      </Box>
+
+    </>
   );
 }
 
