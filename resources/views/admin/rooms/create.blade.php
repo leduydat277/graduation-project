@@ -32,20 +32,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="status" class="form-label">Trạng Thái</label>
-                        <select name="status" class="form-select" id="">
-                            <option value="" selected disabled>Chọn trạng thái</option>
-                            <option value="0">Sẵn sàng</option>
-                            <option value="1">Đã cọc</option>
-                            <option value="2">Đang sử dụng</option>
-                            <option value="3">Hỏng</option>
-                        </select>
-                        @error('status')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
                         <label for="room_type" class="form-label">Loại Phòng</label>
                         <select class="form-control" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>

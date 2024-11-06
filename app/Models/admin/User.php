@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -136,3 +137,13 @@ class User extends Authenticatable
         });
     }
 }
+=======
+namespace App\Models\Admin;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    //
+}
+>>>>>>> f72cd557b6629a5643cf8644371184f8a477158d
