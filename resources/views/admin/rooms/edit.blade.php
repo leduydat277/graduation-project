@@ -33,19 +33,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="status" class="form-label">Trạng Thái</label>
-                        <select class="form-select" id="" name="status">
-                            <option value="0" {{ $room->status == 0 ? 'selected' : '' }}>Sẵn sàng</option>
-                            <option value="1" {{ $room->status == 1 ? 'selected' : '' }}>Đã cọc</option>
-                            <option value="2" {{ $room->status == 2 ? 'selected' : '' }}>Đang sử dụng</option>
-                            <option value="3" {{ $room->status == 3 ? 'selected' : '' }}>Hỏng</option>
-                        </select>
-                        @error('status')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
                         <label for="room_type" class="form-label">Loại Phòng</label>
                         <select class="form-control" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>
@@ -113,10 +100,6 @@
                                                         <div class="position-relative m-2" id="gallery_existing_{{ $key }}">
                                                             <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
                                                                 class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
-                                                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0"
-                                                                onclick="removeImageGallery('gallery_existing_{{ $key }}')" style="transform: translate(50%, -50%);">
-                                                                X
-                                                            </button>
                                                         </div>
                                                     @endforeach
                                                 @else
