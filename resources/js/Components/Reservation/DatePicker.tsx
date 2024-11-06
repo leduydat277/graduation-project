@@ -4,26 +4,40 @@ import * as React from "react"
 import { addDays, format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useBookingStore } from "./../../../service/stores/booking-store";
+import { console } from "inspector"
 
 export function DatePickerWithRange({
   className,
   type,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<{from: number | null; to: number | null}>({
-    from: +new Date(),
-    to: +addDays(new Date(2022, 0, 20), 20),
-  })
 
+  const [date, setDate] = React.useState<{ from: number | null; to: number | null }>({
+    from: +new Date(),
+    to: +addDays(new Date(), 20),
+  });
+
+
+  const [setCheckInDate, setCheckOutDate, checkInDate] = useBookingStore((state) => [
+    state.setCheckInDate,
+    state.setCheckOutDate
+    , state.checkInDate
+  ]);
+
+  const handleDateChange = (rangeDate: DateRange | undefined) => {
+
+    const newFrom = rangeDate?.from ? +rangeDate.from : null;
+    const newTo = rangeDate?.to ? +rangeDate.to : null;
+    setDate({ from: newFrom, to: newTo });
+
+    if (newFrom) setCheckInDate(newFrom);
+    if (newTo) setCheckOutDate(newTo);
+  };
 
 
   return (
@@ -32,7 +46,7 @@ export function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant={"outline"}
+            variant="outline"
             className={cn(
               "w-[300px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
@@ -42,11 +56,10 @@ export function DatePickerWithRange({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y HH:mm")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, "LLL dd, y HH:mm")
               )
             ) : (
               <span>Pick a date</span>
@@ -55,24 +68,19 @@ export function DatePickerWithRange({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
-          onChange={(rangeDate: { from: Date | null; to: Date | null }) => {
-            console.log('OnchangeDate2', rangeDate?.to)
-          }}
-          
-           {...type}
+            {...type}
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={{from: date.from? new Date(date.from) : null, to: date.to ? new Date(date.to) : null}}
-            onSelect={(rangeDate) => {
-              console.log('OnchangeDate', rangeDate?.to)
-              setDate({from: +rangeDate?.from || null, to: +rangeDate?.to || null})
+            defaultMonth={date?.from ? new Date(date.from) : undefined}
+            selected={{
+              from: date.from ? new Date(date.from) : null,
+              to: date.to ? new Date(date.to) : null
             }}
-            
+            onSelect={handleDateChange}
             numberOfMonths={2}
           />
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }
