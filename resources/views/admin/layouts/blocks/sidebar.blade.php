@@ -112,20 +112,13 @@
                  </li>
 
                  <li class="nav-item">
-                     <a href="{{ route('room-assets.index') }}" class="nav-link" data-key="t-analytics">
-                         <i class="fas fa-tools"></i> <!-- Icon for room assets list -->
-                         Danh sách tiện nghi phòng
-                     </a>
-                 </li>
 
-                 <li class="nav-item">
-                     <a href="{{ route('asset-types.index') }}" class="nav-link" data-key="t-analytics">
-                         <i class="fas fa-th-list"></i> <!-- Icon for asset types list -->
-                         Danh sách loại tiện nghi
-                     </a>
-                 </li>
-
-
+                    <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
+                        Danh sách đánh giá và bình luận
+                    </a>
+                </li>
+                
 
                  <li class="nav-item">
                      <a href="" class="nav-link" data-key="t-analytics">
