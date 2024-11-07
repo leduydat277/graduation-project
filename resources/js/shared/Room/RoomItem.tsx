@@ -1,11 +1,13 @@
 import React from "react";
-import { Box, Typography, Card, CardMedia, CardContent } from "@mui/material";
+import { Link } from '@inertiajs/react'
+import { Box, Typography, Card, CardMedia, CardContent} from "@mui/material";
 
 export const RoomItem = (props) => {
     console.log(props);
     const { image, title, subtitle, description, type, ...rest } = props;
 
     return (
+        <Link href="{{}}">
         <Card sx={{
             width: '100%', 
             maxWidth: 450, 
@@ -33,5 +35,6 @@ export const RoomItem = (props) => {
                 </Typography>
             </CardContent>
         </Card>
+        </Link>
     );
 };
