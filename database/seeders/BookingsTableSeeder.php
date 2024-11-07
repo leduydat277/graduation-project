@@ -19,8 +19,8 @@ class BookingsTableSeeder extends Seeder
         // Giả lập 10 bản ghi booking
         for ($i = 0; $i < 10; $i++) {
             // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
-            $user_id = User::inRandomOrder()->first()->id;
-            $room_id = Room::inRandomOrder()->first()->id;
+            // $user_id = User::inRandomOrder()->first()->id;
+            // $room_id = Room::inRandomOrder()->first()->id;
 
             // Lấy thời gian ngẫu nhiên cho check_in_date và check_out_date
             $check_in_date = $faker->dateTimeThisYear()->getTimestamp();
@@ -36,16 +36,16 @@ class BookingsTableSeeder extends Seeder
             $tien_coc = $total_price * 0.3; // Tiền cọc là 30% của tổng giá
 
             Booking::create([
-                'user_id' => $user_id, // Lấy user_id ngẫu nhiên
-                'room_id' => $room_id, // Lấy room_id ngẫu nhiên
+                'user_id' => 1, // Lấy user_id ngẫu nhiên
+                'room_id' => 1, // Lấy room_id ngẫu nhiên
                 'code_check_in' => strtoupper($faker->unique()->bothify('???-####')), // Mã check-in ngẫu nhiên
                 'check_in_date' => $check_in_date, // Ngày check-in (Unix timestamp)
                 'check_out_date' => $check_out_date, // Ngày check-out (Unix timestamp)
                 'total_price' => $total_price, // Tổng giá tính từ thời gian thuê
                 'tien_coc' => $tien_coc, // Tiền cọc
                 'status' => $faker->numberBetween(0, 4), // Trạng thái ngẫu nhiên từ 0 đến 4
-                'created_at' => time(), // Sử dụng thời gian Unix timestamp
-                'updated_at' => time(), // Sử dụng thời gian Unix timestamp
+                'created_at' => (int)time(), // Sử dụng thời gian Unix timestamp
+                'updated_at' => (int)time(), // Sử dụng thời gian Unix timestamp
             ]);
         }
     }

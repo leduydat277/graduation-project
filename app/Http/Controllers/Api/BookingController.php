@@ -118,4 +118,5 @@ class BookingController
             ], 500);
         }
     }
+
 }

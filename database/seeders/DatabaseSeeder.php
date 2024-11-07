@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder
             RoomTypesTableSeeder::class,
             UsersTableSeeder::class,
             RoomsTableSeeder::class,
-            BookingsTableSeeder::class,
             TokensTableSeeder::class,
             RoomAssetsTableSeeder::class,
             ManageStatusRoomsTableSeeder::class,
@@ -33,6 +32,7 @@ class DatabaseSeeder extends Seeder
             PaymentsTableSeeder::class,
             AssetsTypesTableSeeder::class,
             ReviewsTableSeeder::class,
+            BookingsTableSeeder::class,
         ]);
     }
 }
