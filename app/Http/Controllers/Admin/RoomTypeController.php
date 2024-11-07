@@ -84,10 +84,6 @@ class RoomTypeController extends Controller
     {
         $roomType = RoomType::findOrFail($id);
 
-        // if ($roomType->rooms()->count()) {
-        //     return redirect()->back()->with('error', 'Không thể xóa Loại ' . $roomType->type . ' vì vẫn còn Phòng thuộc lớp này.');
-        // }
-
         $roomType->delete();
 
         return redirect()->route('room-types.index')->with('success', 'Xóa loại phòng thành công');
