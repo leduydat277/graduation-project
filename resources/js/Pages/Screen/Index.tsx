@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import { RoomSearchBar } from './../../shared/RoomSearchBar';
+import { RoomSearchBar } from './../../shared/Room/RoomSearchBar';
 import { RoomItem } from '../../shared/Room/RoomItem';
 import { RoomList } from '../../shared/Room/RoomList';
 import { Box } from '@mui/material';
@@ -12,7 +12,6 @@ function ScreenPage() {
   return (
     <>
       <Box sx={{ backgroundColor: pink[200] }} >
-      <RoomList />
       
       </Box>
 
