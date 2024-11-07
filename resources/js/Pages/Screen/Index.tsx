@@ -13,9 +13,11 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 
+
 function ScreenPage() {
   return (
     <>
+
       <Box sx={{ backgroundColor: grey[50], minHeight: '100vh', py: 4 }}>
         <Container sx={{ textAlign: 'center', mb: 4 }}>
 
@@ -61,6 +63,7 @@ function ScreenPage() {
             </Box>
 
           </Box>
+
 
           {/* Thanh Tìm Kiếm */}
           <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: '#EAF1FF', mb: 6 }}>
