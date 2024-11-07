@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\AssetTypeController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
+
+use App\Http\Controllers\Web\ScreenController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,27 +53,26 @@ Route::get("/test", function(){
     return view('admin.index');
 });
 // Auth
-// Route::get('login', [LoginController::class, 'create'])
-//     ->name('login')
-//     ->middleware('guest');
+Route::get('login', [LoginController::class, 'create'])
+    ->name('login');
+    
 
-// Route::post('login', [LoginController::class, 'store'])
-//     ->name('login.store')
-//     ->middleware('guest');
+Route::post('login', [LoginController::class, 'store'])
+    ->name('login.store');
+    
 
-// Route::delete('logout', [LoginController::class, 'destroy'])
-//     ->name('logout');
+Route::delete('logout', [LoginController::class, 'destroy'])
+    ->name('logout');
 
 // // Screen
 
-// Route::get('/', [ScreenController::class, 'index'])
-//     ->name('screen')
-//     ->middleware('auth');
+Route::get('/', [ScreenController::class, 'index'])
+    ->name('screen');
 
 // // Users
 
-// Route::get('users', [UsersController::class, 'index'])
-//     ->name('users')
+Route::get('users', [UsersController::class, 'index'])
+    ->name('users');
 //     ->middleware('auth');
 
 // Route::get('users/create', [UsersController::class, 'create'])
