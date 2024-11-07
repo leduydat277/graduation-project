@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -136,3 +137,4 @@ class User extends Authenticatable
         });
     }
 }
+
