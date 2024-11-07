@@ -2,34 +2,33 @@
 
 namespace Database\Seeders;
 
+use App\Models\Review;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class ReviewsTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $faker = Faker::create();
 
-        $reviews = [];
-        for ($i = 0; $i < 100; $i++) {
-            $reviews[] = [
-                'user_id' => $faker->numberBetween(1, 100), // Giả sử có 100 người dùng
-                'room_type_id' => $faker->numberBetween(1, 100), // Giả sử có 100 loại phòng
-                'status_id' => $faker->numberBetween(1, 4), // Giả sử có 4 trạng thái
-                'content' => $faker->sentence(10), // Nội dung bình luận
-                'rating' => $faker->numberBetween(1, 5), // Đánh giá từ 1 đến 5
-                'create_at' => now(),
-                'update_at' => now(),
-            ];
-        }
+        // Giả lập 10 bản ghi review
+        for ($i = 0; $i < 10; $i++) {
+            // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
+            $user_id = User::inRandomOrder()->first()->id;
+            $room_id = Room::inRandomOrder()->first()->id;
 
-        DB::table('reviews')->insert($reviews);
+            Review::create([
+                'user_id' => $user_id, // Lấy user_id ngẫu nhiên
+                'room_id' => $room_id, // Lấy room_id ngẫu nhiên
+                'rating' => $faker->numberBetween(1, 5), // Đánh giá ngẫu nhiên từ 1 đến 5
+                'comment' => $faker->optional()->sentence, // Nhận xét ngẫu nhiên, có thể để trống
+                'created_at' => time(), // Sử dụng thời gian Unix timestamp
+                'updated_at' => time(), // Sử dụng thời gian Unix timestamp
+            ]);
+        }
     }
 }

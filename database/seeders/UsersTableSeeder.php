@@ -2,47 +2,26 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
 
 class UsersTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $faker = Faker::create();
 
-        // Tạo tài khoản Admin
-        DB::table('users')->insert([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'cccd' => '012345678901', // Thêm trường cccd (nếu có)
-            'password' => Hash::make('admin123'), // Mật khẩu mã hóa
-            'image' => null,
-            'phone' => '0123456789',
-            'role' => 1, // Admin
-            'created_at' => now()->timestamp, // Lưu timestamp
-            'updated_at' => now()->timestamp, // Lưu timestamp
-        ]);
-
-        // Tạo 50 tài khoản người dùng khác
-        for ($i = 0; $i < 50; $i++) {
-            DB::table('users')->insert([
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'cccd' => $faker->numerify('############'), // Số CCCD ngẫu nhiên
-                'password' => Hash::make('password'), // Mật khẩu mã hóa
-                'image' => $faker->imageUrl(200, 200, 'people'), // Ảnh người ngẫu nhiên
-                'phone' => $faker->phoneNumber,
-                'role' => rand(2, 4), // Lễ tân, Quản lý, Khách hàng
-                'created_at' => now()->timestamp, // Lưu timestamp
-                'updated_at' => now()->timestamp, // Lưu timestamp
+        // Giả lập 10 bản ghi user
+        for ($i = 0; $i < 10; $i++) {
+            User::create([
+                'name' => $faker->name, // Tạo tên ngẫu nhiên
+                'email' => $faker->unique()->safeEmail, // Tạo email duy nhất
+                'cccd' => $faker->numerify('###########'), // Tạo số CCCD ngẫu nhiên
+                'password' => bcrypt('password'), // Mã hóa mật khẩu
+                'image' => $faker->imageUrl(200, 200, 'people'), // Tạo URL hình ảnh ngẫu nhiên
+                'phone' => $faker->phoneNumber, // Tạo số điện thoại ngẫu nhiên
+                'role' => $faker->randomElement([0, 1]), // Chọn ngẫu nhiên 0 hoặc 1 cho role (user hoặc admin)
             ]);
         }
     }
