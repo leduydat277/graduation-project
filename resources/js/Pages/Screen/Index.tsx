@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import { RoomSearchBar } from './../../shared/RoomSearchBar';
+<<<<<<< HEAD
 
 import React from 'react';
 import { Box, Button, Container, Grid, Typography, Paper, InputAdornment, TextField, Select, MenuItem, InputLabel, FormControl, Stack, Card, CardMedia, CardContent, Chip } from '@mui/material';
@@ -11,11 +12,19 @@ import GroupIcon from '@mui/icons-material/Group';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+=======
+import { RoomItem } from '../../shared/Room/RoomItem';
+import { RoomList } from '../../shared/Room/RoomList';
+import { Box } from '@mui/material';
+import { grey, pink } from '@mui/material/colors';
+import '@fontsource/roboto/300.css';
+>>>>>>> 175a525762adede9dea5250bff636ac41235b21c
 
 
 function ScreenPage() {
   return (
     <>
+<<<<<<< HEAD
       <Box sx={{ backgroundColor: grey[50], minHeight: '100vh', py: 4 }}>
         <Container sx={{ textAlign: 'center', mb: 4 }}>
 
@@ -195,6 +204,11 @@ function ScreenPage() {
             ))}
           </Grid>
         </Container>
+=======
+      <Box sx={{ backgroundColor: pink[200] }} >
+      <RoomList />
+      
+>>>>>>> 175a525762adede9dea5250bff636ac41235b21c
       </Box>
     </>
   );

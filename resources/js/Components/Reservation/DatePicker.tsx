@@ -16,7 +16,7 @@ export function DatePickerWithRange({
   type,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
- 
+
   const [date, setDate] = React.useState<{ from: number | null; to: number | null }>({
     from: +new Date(),
     to: +addDays(new Date(), 20),
@@ -26,11 +26,11 @@ export function DatePickerWithRange({
   const [setCheckInDate, setCheckOutDate, checkInDate] = useBookingStore((state) => [
     state.setCheckInDate,
     state.setCheckOutDate
-    ,state.checkInDate
+    , state.checkInDate
   ]);
-  
+
   const handleDateChange = (rangeDate: DateRange | undefined) => {
-   
+
     const newFrom = rangeDate?.from ? +rangeDate.from : null;
     const newTo = rangeDate?.to ? +rangeDate.to : null;
     setDate({ from: newFrom, to: newTo });
@@ -38,8 +38,8 @@ export function DatePickerWithRange({
     if (newFrom) setCheckInDate(newFrom);
     if (newTo) setCheckOutDate(newTo);
   };
- 
- 
+
+
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -56,10 +56,10 @@ export function DatePickerWithRange({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y HH:mm")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, "LLL dd, y HH:mm")
               )
             ) : (
               <span>Pick a date</span>
