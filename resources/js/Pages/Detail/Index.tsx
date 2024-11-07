@@ -13,11 +13,6 @@ function DetailRoom() {
 
 
 
-/**
- * Persistent Layout (Inertia.js)
- *
- * [Learn more](https://inertiajs.com/pages#persistent-layouts)
- */
 DetailRoom.layout = (page: React.ReactNode) => (
   <MainLayout title="DetailRoom" children={page} />
 );
