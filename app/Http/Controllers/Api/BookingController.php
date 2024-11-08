@@ -48,11 +48,12 @@ class BookingController
             $room_id = $request->input('room_id');
 
             $today = Carbon::today()->format('dmY');
-            $todayInt = (string) $today;
+            $todayInt = Carbon::createFromFormat('dmY', (string)$today);
+            Log::error($todayInt);
 
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
-            Log::error($checkOutDate);
+            Log::error($checkOutDate, );
 
             $daysBooked = $checkInDate->diffInDays($checkOutDate);
 
@@ -73,7 +74,7 @@ class BookingController
                 ], 400);
             }
 
-            if($check_in_date < $todayInt){
+            if($checkInDate < $todayInt){
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
