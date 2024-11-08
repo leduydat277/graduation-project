@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 use function Laravel\Prompts\error;
@@ -45,8 +46,14 @@ class BookingController
             $phone = $request->input('phone');
             $email = $request->input('email');
             $room_id = $request->input('room_id');
+
+            $today = Carbon::today()->format('dmY');
+            $todayInt = (string) $today;
+
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
+            Log::error($checkOutDate);
+
             $daysBooked = $checkInDate->diffInDays($checkOutDate);
 
             $validator = Validator::make($request->all(), [
@@ -54,13 +61,29 @@ class BookingController
                 'phone' => 'required|regex:/^[0-9]{10}$/',
                 'first_name' => ['required', 'max:50'],
                 'last_name' => ['required', 'max:50'],
-                'email' => 'required|email'
+                'email' => 'required|email',
+                'check_in_date' => 'required',
+                'check_out_date' => 'required',
             ], $this->messages);
 
             if ($validator->fails()) {
                 return response()->json([
                     "type" => "error",
                     "message" => $validator->errors()
+                ], 400);
+            }
+
+            if($check_in_date < $todayInt){
+                return response()->json([
+                    "type" => "error",
+                    "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
+                ], 400);
+            }
+
+            if($checkOutDate <= $checkInDate){
+                return response()->json([
+                    "type" => "error",
+                    "message" => 'Ngày trả phòng không được nhỏ hơn ngày nhận phòng.'
                 ], 400);
             }
 
@@ -74,8 +97,8 @@ class BookingController
             }
 
             $room = Room::where('id', $room_id)->first();
-            $total_price = $room->price*$daysBooked;
-            $depositAmount = $total_price*0.3;
+            $total_price = $room->price * $daysBooked;
+            $depositAmount = $total_price * 0.3;
 
             if ($room->status == 2) {
                 return response()->json([
@@ -105,9 +128,6 @@ class BookingController
                 ], 400);
             }
 
-            $room->status = 4;
-            $room->save();
-
             $bookings = Booking::select('room_id', 'check_in_date', 'check_out_date', 'status')
                 ->where('room_id', $room->id)
                 ->get();
@@ -136,6 +156,7 @@ class BookingController
                     "check_in_date" => $check_in_date,
                     "check_out_date" => $check_out_date,
                     "total_price" => $total_price,
+                    "tien_coc" => $depositAmount
                 ]);
             }
 
@@ -149,6 +170,7 @@ class BookingController
                 "check_in_date" => $check_in_date,
                 "check_out_date" => $check_out_date,
                 "total_price" => $total_price,
+                "tien_coc" => $depositAmount
             ]);
 
             Payment::create([
@@ -156,10 +178,13 @@ class BookingController
                 "total_price" => $depositAmount
             ]);
 
+            $room->status = 4;
+            $room->save();
+
             return response()->json([
                 "message" => "Booking successful",
                 "data" => $booking,
-                "room" => $room
+                "room" => $todayInt
             ], 200);
         } catch (Exception $e) {
             return response()->json([

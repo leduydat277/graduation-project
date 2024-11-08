@@ -16,14 +16,15 @@ return new class extends Migration {
             $table->string('code_check_in')
                 ->nullable()
                 ->change();
-            $table->unsignedInteger('tien_coc')
+            $table->bigInteger('tien_coc')
                 ->nullable()
                 ->change();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->bigInteger('total_price')->change();
+            // $table->string('first_name')->nullable();
+            // $table->string('last_name')->nullable();
+            // $table->string('email')->nullable();
+            // $table->string('phone')->nullable();
+            // $table->string('address')->nullable();
             $table->bigInteger('user_id')->nullable()->change();
         });
     }
@@ -37,6 +38,7 @@ return new class extends Migration {
                 ->change();
             $table->unsignedInteger('tien_coc')
                 ->change();
+            $table->integer('total_price')->change();
             $table->dropColumn('first_name');
             $table->dropColumn('last_name');
             $table->dropColumn('email');
