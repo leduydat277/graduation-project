@@ -14,4 +14,9 @@ class RoomType extends Model
 
     public $timestamps = false;
 
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'room_type_id');
+    }
 }

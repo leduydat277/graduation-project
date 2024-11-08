@@ -112,13 +112,20 @@
                  </li>
 
                  <li class="nav-item">
+                     <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
+                         Danh sách đánh giá và bình luận
+                     </a>
+                 </li>
 
-                    <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
-                        Danh sách đánh giá và bình luận
-                    </a>
-                </li>
-                
+                 <li class="nav-item">
+                     <a href="{{ route('manage-status-rooms.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-hotel"></i> <!-- Thay đổi icon cho quản lý trạng thái phòng -->
+                         Danh sách quản lý trạng thái phòng
+                     </a>
+                 </li>
+
+
 
                  <li class="nav-item">
                      <a href="" class="nav-link" data-key="t-analytics">
