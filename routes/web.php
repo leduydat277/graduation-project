@@ -14,9 +14,9 @@ use App\Http\Controllers\Admin\ChangePasswordController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Api\BookingController as ApiBookingController;
-use App\Http\Controllers\Web\ScreenController;
-use App\Http\Controllers\Web\DetailController;
+use App\Http\Controllers\Admin\PaymentControllers;
+use App\Http\Controllers\Admin\UsersController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,10 +48,15 @@ Route::prefix('admin')->group(function () {
     Route::resource('asset-types', AssetTypeController::class);
     Route::resource('room-assets', RoomAssetController::class);
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
-    Route::resource('payments', PaymentController::class);
-    Route::prefix('change-password')->as('change-password.')->group(function () {
-        Route::get('/', [ChangePasswordController::class, 'index']);
-        Route::post('/change', [ChangePasswordController::class, 'ChangePassword'])->name('change_password');
+    // Route::resource('payments', PaymentControllers::class);
+    Route::get('/payments', [PaymentControllers::class, 'bookings'])->name('bookings');
+    Route::prefix('user')->as('user.')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])->name('index');
+        Route::get('/add-ui', [UsersController::class, 'addUI'])->name('addUI');
+        Route::post('/add', [UsersController::class, 'add'])->name('add');
+        Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
+        Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
+        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
     });
 });
 
