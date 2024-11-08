@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AssetTypeController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\PaymentControllers;
 use App\Http\Controllers\Admin\UsersController;
 
 /*
@@ -43,7 +44,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::resource('asset-types', AssetTypeController::class);
     Route::resource('room-assets', RoomAssetController::class);
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
-    Route::resource('payments', PaymentController::class);
+    // Route::resource('payments', PaymentControllers::class);
+    Route::get('/payments', [PaymentControllers::class, 'bookings'])->name('bookings');
     Route::prefix('user')->as('user.')->group(function () {
         Route::get('/', [UsersController::class, 'index'])->name('index');
         Route::get('/add-ui', [UsersController::class, 'addUI'])->name('addUI');

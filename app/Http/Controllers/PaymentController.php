@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Custommer;
+namespace App\Http\Controllers;
 
 class PaymentController
 {
@@ -36,7 +36,7 @@ class PaymentController
     VD: // Lấy IP của người dùng
         $ipAddr = $request->ip();
      $customReturnUrl: đường đẫn của frontend sau khi thanh toán xong
-     
+
      Tài khoản để test:
      Số thẻ	9704198526191432198
      Tên chủ thẻ	NGUYEN VAN A
@@ -90,7 +90,6 @@ class PaymentController
             }
             $query .= urlencode($key) . "=" . urlencode($value) . '&';
         }
-
         $vnp_Url = $this->vnp_Url . "?" . $query;
 
         if (isset($this->vnp_HashSecret)) {
