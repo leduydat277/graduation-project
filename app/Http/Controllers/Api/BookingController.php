@@ -101,34 +101,6 @@ class BookingController
             $total_price = $room->price * $daysBooked;
             $depositAmount = $total_price * 0.3;
 
-            if ($room->status == 2) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => "Phòng đang có người sử dụng."
-                ], 400);
-            }
-
-            if ($room->status == 1) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => "Phòng đã có khách cọc."
-                ], 400);
-            }
-
-            if ($room->status == 3) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => "Phòng đang hỏng."
-                ], 400);
-            }
-
-            if ($room->status == 4) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => "Phòng đang được khóa để thanh toán."
-                ], 400);
-            }
-
             $bookings = Booking::select('room_id', 'check_in_date', 'check_out_date', 'status')
                 ->where('room_id', $room->id)
                 ->get();
@@ -178,9 +150,6 @@ class BookingController
                 "booking_id" => $booking->id,
                 "total_price" => $depositAmount
             ]);
-
-            $room->status = 4;
-            $room->save();
 
             return response()->json([
                 "message" => "Booking successful",
