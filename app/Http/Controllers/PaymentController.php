@@ -32,7 +32,16 @@ class PaymentController
         type: mặc định là billpayment
         code: mặc định là NCB
         total: tổng gía cần thanh toán
+    $ipAddr: IP của người dùng.
+    VD: // Lấy IP của người dùng
+        $ipAddr = $request->ip();
      $customReturnUrl: đường đẫn của frontend sau khi thanh toán xong
+     
+     Tài khoản để test:
+     Số thẻ	9704198526191432198
+     Tên chủ thẻ	NGUYEN VAN A
+    Ngày phát hành	07/15
+    Mật khẩu OTP	123456
      */
     public function generatePaymentUrl($order, $ipAddr, $customReturnUrl = null)
     {
