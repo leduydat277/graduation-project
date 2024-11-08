@@ -9,6 +9,8 @@ class User extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'name', 'email', 'CCCD', 'password', 'image', 'role', 'phone', 'address'
     ];
