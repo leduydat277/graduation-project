@@ -9,6 +9,8 @@ class Room extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'room_type_id',
         'image_room',
