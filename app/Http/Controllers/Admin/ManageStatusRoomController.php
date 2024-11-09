@@ -97,13 +97,13 @@ class ManageStatusRoomController extends Controller
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }
 
-    public function create()
+    public function create($id_booking, $id_room, $from, $to)
     {
         // $id_booking, $id_room, $from, $to
-        $id_booking = 1;
-        $id_room = 2;
-        $from = '2024-11-13';
-        $to = '2024-11-15';
+        // $id_booking = 1;
+        // $id_room = 2;
+        // $from = '2024-11-13';
+        // $to = '2024-11-15';
 
         $from_new = (new DateTime($from))->setTime(14, 0, 0)->getTimestamp();
         $to_new = (new DateTime($to))->setTime(12, 0, 0)->getTimestamp();

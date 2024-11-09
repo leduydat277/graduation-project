@@ -192,7 +192,7 @@ class BookingController
         }
     }
 
-    public function thanhtoan(Request $request)
+    public function getVN_Pay(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -253,7 +253,10 @@ class BookingController
                 "to" => $booking->check_out_date
             ]);
 
-            return response()->json(["message" => "Thanh toán thành công"], 200);
+            return response()->json([
+                "url_redirect" => "url_test",
+                "message" => "Thanh toán thành công"
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",

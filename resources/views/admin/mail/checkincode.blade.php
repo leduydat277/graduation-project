@@ -67,7 +67,7 @@
 <body>
     <div class="container">
         <h1>Xin chào, {{ $name }}</h1>
-        <p>Mã check-in của bạn là: <strong>{{ $code }}</strong></p>
+        <p>Mã check-in của bạn là: <strong>{{ $checkin_code }}</strong></p>
         <p>Ngày đến: <strong>{{ $check_in_date }}</strong></p>
         <p>Ngày đi: <strong>{{ $check_out_date }}</strong></p>
         <p>Cảm ơn bạn đã chọn khách sạn của chúng tôi!</p>

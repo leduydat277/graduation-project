@@ -15,11 +15,11 @@ Route::middleware('api')->get('/example', function (Request $request) {
 Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
     ->name('api.search_room');
 
-
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
 
-Route::get('donepayment', [BookingController::class, 'thanhtoan'])
+Route::get('donepayment', [BookingController::class, 'getVN_Pay'])
     ->name('api.donepayment');
+
 // Route::get('/search', [RoomController::class, 'search'])
 //     ->name('search');
