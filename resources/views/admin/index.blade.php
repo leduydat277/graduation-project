@@ -1503,6 +1503,24 @@
 
         </div> <!-- end col -->
     </div>
+{{-- 
+    <h2>Thông tin người dùng</h2>
+
+    <div id="user-profile">
+        @php
+            $user = Auth::user();
+
+        @endphp
+        @if ($user)
+            <div class="">Name: {{ $user->name }}</div>
+            <div class="">email: {{ $user->email }}</div>
+            <div class="">phone: {{ $user->phone }}</div>
+            <div class="">cccd: {{ $user->cccd }}</div>
+            <a class="btn btn-danger" href="{{ route('admin.logout') }}">logout</a>
+        @else
+        <a href="{{route('admin.login')}}" class="btn btn-info">Login</a>
+        @endif
+    </div> --}}
 @endsection
 @section('js')
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
