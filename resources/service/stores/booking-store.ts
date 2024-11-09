@@ -15,10 +15,13 @@ const initialBookingRange = {
   checkInDate: new Date(),
   checkOutDate: addDays(new Date(), 1),
   typeRoom: 'normal',
+  totalDays: 1,
+  totalPrice: 0,
   numberOfGuests: 1,
   numberOfAdults: 1,
   numberOfChildren: 0,
   note: '',
+
 };
 
 export const useBookingStore = createWithEqualityFn(
@@ -29,9 +32,15 @@ export const useBookingStore = createWithEqualityFn(
           ...initialBookingRange,
           resetState: () => set({ ...initialBookingRange }),
           setIsOpen: (isOpen) => set((state) => { state.isOpen = isOpen; }),
-          setCheckInDate: (checkInDate) => set((state) => { state.checkInDate = checkInDate; }),
-          setCheckOutDate: (checkOutDate) => set((state) => { state.checkOutDate = checkOutDate; }),
-          setTypeRoom: (typeRoom) => set((state) => { state.typeRoom = typeRoom; }),
+          setCheckInDate: (checkInDate) => set((state) => { 
+            state.checkInDate = checkInDate; 
+            state.totalDays = state.checkOutDate ? Math.floor((state.checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)) : 0;
+          }),
+          setCheckOutDate: (checkOutDate) => set((state) => { 
+            state.checkOutDate = checkOutDate; 
+            state.totalDays = state.checkInDate ? Math.floor((checkOutDate - state.checkInDate) / (1000 * 60 * 60 * 24)) : 0;
+          }),
+          setTotalPrice: (totalPrice) => set((state) => { state.totalPrice = totalPrice; }),
           setNumberOfGuests: (numberOfGuests) => set((state) => { state.numberOfGuests = numberOfGuests; }),
           setNumberOfChildren: (numberOfChildren) => set((state) => { state.numberOfChildren = numberOfChildren; }),
           setNote: (note) => set((state) => { state.note = note; }),
