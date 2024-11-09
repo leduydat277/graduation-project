@@ -9,6 +9,8 @@ class ManageStatusRoom extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'booking_id', 'room_id', 'status', 'from', 'to'
     ];
