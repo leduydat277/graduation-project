@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->unsignedTinyInteger('payment_status')
                 ->default(0)
                 ->comment('0: chưa thanh toán cọc, 1: đang thanh toán, 2: đã thanh toán cọc, 3: đã thanh toán tổng tiền đơn');
-
-            $table->unsignedInteger('created_at')->default(time());
+            $table->string('vnp_BankCode')->nullable();
+            $table->text('vnp_TransactionNo')->nullable()->change();
             $table->unsignedInteger('updated_at')->default(time());
         });
     }
@@ -22,7 +22,7 @@ return new class extends Migration {
     {
         Schema::table('payments', function (Blueprint $table) {
             // Xóa các cột đã thêm nếu rollback
-            $table->dropColumn(['payment_status', 'created_at', 'updated_at']);
+            $table->dropColumn(['payment_status','updated_at', 'vnp_BankCode', 'vnp_TransactionNo']);
         });
     }
 };

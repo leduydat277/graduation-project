@@ -18,5 +18,8 @@ Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
 
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
+
+Route::get('donepayment', [BookingController::class, 'thanhtoan'])
+    ->name('api.donepayment');
 // Route::get('/search', [RoomController::class, 'search'])
 //     ->name('search');

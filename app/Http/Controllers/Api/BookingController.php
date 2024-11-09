@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
+use App\Models\ManageStatusRoom;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
@@ -18,8 +20,10 @@ use function Laravel\Prompts\error;
 class BookingController
 {
     private $messages;
-    public function __construct()
+    private $paymentController;
+    public function __construct(PaymentController $paymentController)
     {
+        $this->paymentController = $paymentController;
         $this->messages = [
             'address.required' => 'Vui lòng nhập địa chỉ của bạn.',
             'phone.required' => 'Vui lòng nhập số điện thoại của bạn',
@@ -53,7 +57,7 @@ class BookingController
 
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
-            Log::error($checkOutDate, );
+            Log::error($checkOutDate,);
 
             $daysBooked = $checkInDate->diffInDays($checkOutDate);
 
@@ -74,14 +78,14 @@ class BookingController
                 ], 400);
             }
 
-            if($checkInDate < $todayInt){
+            if ($checkInDate < $todayInt) {
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
                 ], 400);
             }
 
-            if($checkOutDate <= $checkInDate){
+            if ($checkOutDate <= $checkInDate) {
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày trả phòng không được nhỏ hơn ngày nhận phòng.'
@@ -129,7 +133,8 @@ class BookingController
                     "check_in_date" => $check_in_date,
                     "check_out_date" => $check_out_date,
                     "total_price" => $total_price,
-                    "tien_coc" => $depositAmount
+                    "tien_coc" => $depositAmount,
+                    "status" => 1
                 ]);
             }
 
@@ -143,18 +148,33 @@ class BookingController
                 "check_in_date" => $check_in_date,
                 "check_out_date" => $check_out_date,
                 "total_price" => $total_price,
-                "tien_coc" => $depositAmount
+                "tien_coc" => $depositAmount,
+                "status" => 1
             ]);
 
             Payment::create([
                 "booking_id" => $booking->id,
-                "total_price" => $depositAmount
+                "total_price" => $depositAmount,
+                "payment_method" => 1,
+                "payment_status" => 1
             ]);
+
+            $ipAddr = $request->ip();
+            $order = [
+                "code" => $booking->id,
+                "info" => "booking_payment_$booking->id",
+                "type" => "billpayment",
+                "bankCode" => "NCB",
+                "total" => $depositAmount * 100,
+            ];
+
+            $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr);
 
             return response()->json([
                 "message" => "Booking successful",
                 "data" => $booking,
-                "room" => $todayInt
+                "room" => $todayInt,
+                "paymentUrl" => $paymentUrl
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -167,5 +187,81 @@ class BookingController
                 ]
             ], 500);
         }
+    }
+
+    public function thanhtoan(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                "vnp_Amount" => "required",
+                "vnp_BankCode" => "required",
+                "vnp_BankTranNo" => "required",
+                "vnp_CardType" => "required",
+                "vnp_OrderInfo" => "required",
+                "vnp_PayDate" => "required",
+                "vnp_ResponseCode" => "required",
+                "vnp_TmnCode" => "required",
+                "vnp_TransactionNo" => "required",
+                "vnp_TransactionStatus" => "required",
+                "vnp_TxnRef" => "required",
+                "vnp_SecureHash" => "required",
+            ], $this->messages);
+
+            $id = $request->input('vnp_TxnRef');
+
+            if ($validator->fails()) {
+                Booking::where('id', $id)->delete();
+                Payment::where('booking_id', $id)->delete();
+                return response()->json([
+                    "type" => "canceled",
+                    "message" => "Đã hủy thanh toán!"
+                ], 422);
+            }
+
+            $validatedData = $validator->validated();
+
+            $vnpBankCode = $request->input('vnp_BankCode');
+
+            unset($validatedData['vnp_BankCode']);
+
+            $paymentGatewayResponse = json_encode($validatedData);
+
+            $booking = Booking::where("id", $id)->first();
+            if (!$booking) {
+                return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
+            }
+
+            $booking->status = 2;
+            $booking->save();
+
+            $currentTimestamp = time();
+            Payment::where("booking_id", "=", $id)->update([
+                "payment_status" => 2,
+                "vnp_BankCode" => $vnpBankCode,
+                "updated_at" => $currentTimestamp,
+                "vnp_TransactionNo" => $paymentGatewayResponse,
+            ]);
+
+            ManageStatusRoom::create([
+                "booking_id" => $id,
+                "room_id" => $booking->room_id,
+                "status" => 0,
+                "from" => $booking->check_in_date,
+                "to" => $booking->check_out_date
+            ]);
+
+            return response()->json(["message" => "Thanh toán thành công"], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+
     }
 }

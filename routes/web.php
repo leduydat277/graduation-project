@@ -27,7 +27,7 @@ use App\Http\Controllers\Web\ScreenController;
 */
 
 /**
- * TODO route riêng tương ứng với tên feature muốn xử lý, 
+ * TODO route riêng tương ứng với tên feature muốn xử lý,
  * Ví dụ: chức năng gửi mail => routes\admin_feature\Send_Mail.php
  */
 foreach (glob(base_path('routes/admin_feature/*.php')) as $file) {
@@ -53,26 +53,26 @@ Route::get("/test", function(){
     return view('admin.index');
 });
 // Auth
-Route::get('login', [LoginController::class, 'create'])
-    ->name('login');
-    
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login');
 
-Route::post('login', [LoginController::class, 'store'])
-    ->name('login.store');
-    
 
-Route::delete('logout', [LoginController::class, 'destroy'])
-    ->name('logout');
+// Route::post('login', [LoginController::class, 'store'])
+//     ->name('login.store');
 
-// // Screen
 
-Route::get('/', [ScreenController::class, 'index'])
-    ->name('screen');
+// Route::delete('logout', [LoginController::class, 'destroy'])
+//     ->name('logout');
 
-// // Users
+// // // Screen
 
-Route::get('users', [UsersController::class, 'index'])
-    ->name('users');
+// Route::get('/', [ScreenController::class, 'index'])
+//     ->name('screen');
+
+// // // Users
+
+// Route::get('users', [UsersController::class, 'index'])
+//     ->name('users');
 //     ->middleware('auth');
 
 // Route::get('users/create', [UsersController::class, 'create'])
@@ -189,6 +189,6 @@ Route::get('users', [UsersController::class, 'index'])
 // Route::prefix('payment')
     // ->as('payment.')
     // ->group(function () {
-    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
+    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');
     //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
     // });
