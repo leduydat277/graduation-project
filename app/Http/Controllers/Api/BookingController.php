@@ -140,22 +140,21 @@ class BookingController
                     "tien_coc" => $depositAmount,
                     "status" => 1
                 ]);
+            } else {
+                $booking = Booking::create([
+                    "room_id" => $room_id,
+                    "first_name" => $first_name,
+                    "last_name" => $last_name,
+                    "address" => $address,
+                    "phone" => $phone,
+                    "email" => $email,
+                    "check_in_date" => $check_in_date,
+                    "check_out_date" => $check_out_date,
+                    "total_price" => $total_price,
+                    "tien_coc" => $depositAmount,
+                    "status" => 1
+                ]);
             }
-
-            $booking = Booking::create([
-                "room_id" => $room_id,
-                "first_name" => $first_name,
-                "last_name" => $last_name,
-                "address" => $address,
-                "phone" => $phone,
-                "email" => $email,
-                "check_in_date" => $checkInTimestamp,
-                "check_out_date" => $checkOutTimestamp,
-                "total_price" => $total_price,
-                "tien_coc" => $depositAmount,
-                "status" => 1
-            ]);
-
             Payment::create([
                 "booking_id" => $booking->id,
                 "total_price" => $depositAmount,
