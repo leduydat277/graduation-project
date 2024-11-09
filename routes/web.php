@@ -52,24 +52,27 @@ Route::prefix('admin')->group(function () {
 Route::get("/test", function () {
     return view('admin.index');
 });
-// Auth
+
+// Route::get("/test", function(){
+//     return view('admin.index');
+// });
+// // Auth
 // Route::get('login', [LoginController::class, 'create'])
 //     ->name('login');
-
+    
 
 // Route::post('login', [LoginController::class, 'store'])
 //     ->name('login.store');
-
-
+    
 // Route::delete('logout', [LoginController::class, 'destroy'])
 //     ->name('logout');
 
-// // Screen
+// // // Screen
 
-Route::get('/', [ScreenController::class, 'index'])
-    ->name('screen');
+// Route::get('/', [ScreenController::class, 'index'])
+//     ->name('screen');
 
-// // Users
+// // // Users
 
 // Route::get('users', [UsersController::class, 'index'])
 //     ->name('users');
