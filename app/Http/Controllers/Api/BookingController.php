@@ -53,11 +53,14 @@ class BookingController
 
             $today = Carbon::today()->format('dmY');
             $todayInt = Carbon::createFromFormat('dmY', (string)$today);
-            Log::error($todayInt);
-
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
-            Log::error($checkOutDate,);
+
+            $checkInDateFormat = Carbon::createFromFormat('dmY', (string)$check_in_date)->setTime(14, 0, 0);
+            $checkOutDateFormat = Carbon::createFromFormat('dmY', (string)$check_out_date)->setTime(12, 0, 0);
+
+            $checkInTimestamp = $checkInDateFormat->timestamp;
+            $checkOutTimestamp = $checkOutDateFormat->timestamp;
 
             $daysBooked = $checkInDate->diffInDays($checkOutDate);
 
@@ -110,8 +113,9 @@ class BookingController
                 ->get();
 
             foreach ($bookings as $booking) {
-                if (($check_in_date >= $booking->check_in_date
-                        && $check_in_date < $booking->check_out_date)
+
+                if (($checkInTimestamp >= $booking->check_in_date
+                        && $checkInTimestamp < $booking->check_out_date)
                     && in_array($booking->status, [1, 2, 3, 4])
                 ) {
                     return response()->json([
@@ -130,14 +134,13 @@ class BookingController
                     "address" => $address,
                     "phone" => $phone,
                     "email" => $email,
-                    "check_in_date" => $check_in_date,
-                    "check_out_date" => $check_out_date,
+                    "check_in_date" => $checkInTimestamp,
+                    "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
                     "status" => 1
                 ]);
             } else {
-
                 $booking = Booking::create([
                     "room_id" => $room_id,
                     "first_name" => $first_name,
