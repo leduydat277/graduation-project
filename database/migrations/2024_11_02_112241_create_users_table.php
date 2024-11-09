@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('phone')->nullable();
+            $table->string('address')->nullable();
             $table->tinyInteger('role')->default(0)->comment('0: user, 1: admin');
             $table->unsignedInteger('created_at')->default(time()); // Trường created_at kiểu unsignedInteger
             $table->unsignedInteger('updated_at')->default(time()); // Trường updated_at kiểu unsignedInteger

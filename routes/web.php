@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\AssetTypeController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
-
+use App\Http\Controllers\Api\BookingController as ApiBookingController;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
 /*
