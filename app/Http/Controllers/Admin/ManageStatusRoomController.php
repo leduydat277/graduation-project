@@ -182,6 +182,6 @@ class ManageStatusRoomController extends Controller
                 ]);
             }
         }
-        return 'oke';
+        return 'Thêm bản ghi vào bảng Manage Status Room thành công';
     }
 }

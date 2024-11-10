@@ -20,12 +20,12 @@ class SearchRoomController extends Controller
      * 
      * @return array  A list of available rooms that match the criteria.
      */
-    public function searchRoom($room_type_id, $input_people, $from, $to)
+    public function searchRoom($room_type_id, $input_people, $from, $to, $id_room)
     {
         // Xác thực dữ liệu đầu vào
-        if (!is_numeric($room_type_id) || $room_type_id <= 0) {
-            return false;
-        }
+        // if (!is_numeric($room_type_id) || $room_type_id <= 0) {
+        //     return false;
+        // }
 
         if (!is_numeric($input_people) || $input_people <= 0) {
             return false;
@@ -40,7 +40,7 @@ class SearchRoomController extends Controller
                 return false;
             }
 
-            // check-in: 14h và check-out:12h
+            // check-in:14h và check-out:12h
             $from = $fromDate->setTime(14, 0, 0)->getTimestamp();
             $to = $toDate->setTime(12, 0, 0)->getTimestamp();
         } catch (\Exception $e) {
@@ -49,14 +49,14 @@ class SearchRoomController extends Controller
 
         // Lấy danh sách phòng với room_type_id, status và sức chứa thỏa mãn
         $arr_rooms = Room::where('room_type_id', $room_type_id)
-            ->where('status', 0)
+            // ->where('status', 0)
             ->where('max_people', '>=', $input_people)
             ->select('id')
             ->get()
             ->toArray();
 
         if (empty($arr_rooms)) {
-            return false;
+            return 'không có phòng nào thỏa mãn sức chứa';
         }
 
         // Lấy thời gian quản lý phòng từ "manage_status_room"
@@ -115,13 +115,15 @@ class SearchRoomController extends Controller
     {
         // Validate các tham số đầu vào
         $validated = $request->validate([
-            'room_type_id' => 'required|integer',
-            'input_people' => 'required|integer|min:1',
+            'room_type_id' => 'nullable|integer',
+            'room_id' => 'nullable|integer',
+            'input_people' => 'nullable|integer|min:1',
             'from' => 'required|date',
             'to' => 'required|date|after:from',
         ]);
 
         $room_type_id = $validated['room_type_id'];
+        $room_id = $validated['room_id'];
         $input_people = $validated['input_people'];
         $from = new DateTime($validated['from']);
         $to = new DateTime($validated['to']);
@@ -130,9 +132,35 @@ class SearchRoomController extends Controller
         $from = $from->setTime(14, 0, 0)->getTimestamp();
         $to = $to->setTime(12, 0, 0)->getTimestamp();
 
+        if ($room_id != null) {
+            $current_time_room = ManageStatusRoom::select('room_id', 'from', 'to')
+                ->where('room_id', $room_id)
+                ->where('status', 1)
+                ->get()->toArray();
+
+            if (empty($current_time_room)) {
+                return response()->json([
+                    'message' => 'Không tìm thấy thời gian trống nào',
+                    'status' => false
+                ], 404);
+            }
+
+            foreach ($current_time_room as &$item_arr) {
+                $item_arr['from'] = (new DateTime())->setTimestamp($item_arr['from'])->format('m-d-Y');
+                $item_arr['to'] = (new DateTime())->setTimestamp($item_arr['to'])->format('m-d-Y');
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Rooms retrieved successfully.',
+                'code' => 200,
+                'data' => $current_time_room
+            ], 200);
+        }
+
         // Lấy các phòng có trạng thái sẵn sàng
         $arr_rooms = Room::where('room_type_id', $room_type_id)
-            ->where('status', 0)
+            // ->where('status', 0)
             ->where('max_people', '>=', $input_people)
             ->select('id')
             ->get()
@@ -179,7 +207,6 @@ class SearchRoomController extends Controller
                 'data' => null
             ], 404);
         }
-
 
         $results_rooms = Room::whereIn('id', $results)
             ->with('roomType')
