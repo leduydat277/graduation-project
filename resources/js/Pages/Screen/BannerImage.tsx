@@ -9,11 +9,10 @@ const Images = [HomeBannner2, HomeBannner3, HomeBannner4, HomeBannner5];
 export const BannerImage = (props) => {
 return (
     <>
-    <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ color: "#0d0d2b", textAlign: 'left' }}>
-            Most Picked
+    <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ color: "#0d0d2b", textAlign: 'left' }}>
+           Một số hình ảnh
           </Typography>
-          {/* top phòng hay được book */}
-          <Box sx={{ display: 'flex', gap: '20px', marginBottom: '50px' }}>
+          <Box sx={{ display: 'flex', gap: '20px', marginBottom: '50px', pt: 2 }}>
             <Box sx={{width:'54%'}}>
               <Box
                 component="img"
@@ -30,7 +29,7 @@ return (
                 }}
               />
             </Box>
-            <Box sx={{ display: 'grid', width: '46%', gridTemplateColumns: 'repeat(2, 2fr)', gap: 1,  }}>
+            <Box sx={{ display: 'grid', width: '46%', gridTemplateColumns: 'repeat(2, 2fr)',gap: 2 }}>
                 {Images.map((image, index) => (
                   <Box
                     component="img"
@@ -38,10 +37,9 @@ return (
                     alt="Sample Image"
                     sx={{
                     height: '100%',
-                    width: '250px',
+                    width: '370px',
                     objectFit: 'cover',
                     loading:"lazy",
-                    margin: 'auto',
                     boxShadow: 3,
                     borderRadius: '1rem',
                     overflow: 'hidden',

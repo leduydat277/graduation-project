@@ -1,6 +1,7 @@
 import React from "react";
 import { Stack , Grid} from "@mui/material";
 import { RoomItem } from "./RoomItem";
+import HomeBannner1 from '../../../assets/HomeBanner1.jpg';
 
 
 export const RoomList = () => {
@@ -8,66 +9,66 @@ export const RoomList = () => {
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
-            tye: "VIP",
-            status: "Active",
+            type: "VIP",
+            status: "Vacant",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Vacant",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Vacant",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Maintenance",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Maintenance",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Occupied",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Occupied",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
         {
             title: "ibis Paris Bastille Opera 11th",
             subtitle: "Vibrant economy hotel, open to everyone",
             type: "VIP",
-            status: "Active",
+            status: "Occupied",
             description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-            image: "https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg",
+            image: HomeBannner1,
         },
       
     ];
