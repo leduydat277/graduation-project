@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,5 +22,8 @@ Route::post('booking', [BookingController::class, 'booking'])
 
 Route::get('donepayment', [BookingController::class, 'vnpay'])
     ->name('api.donepayment');
+
+Route::get('detail/{id}', [DetailController::class, 'detail'])
+    ->name('api.detail');
 // Route::get('/search', [RoomController::class, 'search'])
 //     ->name('search');
