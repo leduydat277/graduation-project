@@ -18,7 +18,7 @@ class MailController extends Controller
             'check_out_date' => '2024-11-15',
             'name' => 'Nguyen'
         ];
-        $email_user = 'user@example.com';
+        $email_user = 'linhduyle6a1@gmail.com';
 
         $mailController = new MailController();
         return $mailController->SendCheckinCode('Check-in Code', 'checkincode', $data, $email_user);

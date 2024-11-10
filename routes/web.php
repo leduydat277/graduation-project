@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\Admin\AssetTypeController;
+use App\Http\Controllers\Admin\ChangePasswordController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -27,7 +28,7 @@ use App\Http\Controllers\Web\DetailController;
 */
 
 /**
- * TODO route riêng tương ứng với tên feature muốn xử lý, 
+ * TODO route riêng tương ứng với tên feature muốn xử lý,
  * Ví dụ: chức năng gửi mail => routes\admin_feature\Send_Mail.php
  */
 foreach (glob(base_path('routes/admin_feature/*.php')) as $file) {
@@ -46,25 +47,36 @@ Route::prefix('admin')->group(function () {
     Route::resource('room-assets', RoomAssetController::class);
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
+    Route::prefix('change-password')->as('change-password.')->group(function () {
+        Route::get('/', [ChangePasswordController::class, 'index']);
+        Route::post('/change', [ChangePasswordController::class, 'ChangePassword'])->name('change_password');
+    });
 });
 
 //Route test cắt giao diện admin
-Route::get("/test", function(){
+Route::get("/test", function () {
     return view('admin.index');
 });
+
+
+Route::get('/test1', function() {
+    $abc = (new DateTime())->setTimestamp(1893506400)->format('Y-m-d');
+    return $abc;
+});
 // Auth
-Route::get('login', [LoginController::class, 'create'])
-    ->name('login');
-    
 
-Route::post('login', [LoginController::class, 'store'])
-    ->name('login.store');
-    
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login');
 
-Route::delete('logout', [LoginController::class, 'destroy'])
-    ->name('logout');
 
-// // Screen
+
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login');
+
+
+// Route::post('login', [LoginController::class, 'store'])
+//     ->name('login.store');
+
 
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
@@ -73,8 +85,19 @@ Route::get('/detail', [DetailController::class, 'index'])
     ->name('detail');
 // // Users
 
-Route::get('users', [UsersController::class, 'index'])
-    ->name('users');
+// Route::delete('logout', [LoginController::class, 'destroy'])
+//     ->name('logout');
+
+// // // Screen
+
+
+// Route::get('/', [ScreenController::class, 'index'])
+//     ->name('screen');
+
+// // // Users
+
+// Route::get('users', [UsersController::class, 'index'])
+//     ->name('users');
 //     ->middleware('auth');
 
 // Route::get('users/create', [UsersController::class, 'create'])
@@ -131,6 +154,6 @@ Route::get('users', [UsersController::class, 'index'])
 // Route::prefix('payment')
     // ->as('payment.')
     // ->group(function () {
-    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');      
+    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');
     //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
     // });
