@@ -61,32 +61,19 @@
              <ul class="navbar-nav" id="navbar-nav">
                  <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                  <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
+                     <a href="#" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-home"></i> <!-- Biểu tượng cho trang chủ -->
                          Trang chủ
                      </a>
                  </li>
-
                  <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
-                         <i class="fas fa-chalkboard"></i> <!-- Icon for class list -->
-                         Danh sách lớp học
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
-                         <i class="fas fa-user-graduate"></i> <!-- Icon for student list -->
-                         Danh sách Sinh viên
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
+                     <a href="#" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-users"></i> <!-- Biểu tượng cho danh sách người dùng -->
                          Danh sách tài khoản
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
+                     <a href="#" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
                          Booking
                      </a>
@@ -118,7 +105,7 @@
                         Danh sách đánh giá và bình luận
                     </a>
                 </li>
-                
+
 
                  <li class="nav-item">
                      <a href="" class="nav-link" data-key="t-analytics">

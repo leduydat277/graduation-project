@@ -20,11 +20,11 @@ return new class extends Migration {
                 ->nullable()
                 ->change();
             $table->bigInteger('total_price')->change();
-            // $table->string('first_name')->nullable();
-            // $table->string('last_name')->nullable();
-            // $table->string('email')->nullable();
-            // $table->string('phone')->nullable();
-            // $table->string('address')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
             $table->bigInteger('user_id')->nullable()->change();
         });
     }
