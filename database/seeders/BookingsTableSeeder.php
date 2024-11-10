@@ -2,44 +2,50 @@
 
 namespace Database\Seeders;
 
+use App\Models\Booking;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Faker\Factory as Faker;
 
 class BookingsTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $faker = Faker::create();
 
-        // Giả sử bạn có 50 người dùng
-        $userIds = range(1, 50);
+        // Giả lập 10 bản ghi booking
+        for ($i = 0; $i < 10; $i++) {
+            // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
+            // $user_id = User::inRandomOrder()->first()->id;
+            // $room_id = Room::inRandomOrder()->first()->id;
 
-        for ($i = 1; $i <= 100; $i++) { // Tạo 500 lượt booking
-            $checkInDate = $faker->dateTimeBetween('-30 days', '+30 days'); // Ngẫu nhiên trong 30 ngày qua và 30 ngày tới
-            $checkOutDate = (clone $checkInDate)->modify('+'.rand(1, 7).' days'); // Check-out từ 1 đến 7 ngày sau
+            // Lấy thời gian ngẫu nhiên cho check_in_date và check_out_date
+            $check_in_date = $faker->dateTimeThisYear()->getTimestamp();
+            $check_out_date = $faker->dateTimeThisYear()->getTimestamp();
 
-            DB::table('bookings')->insert([
-                'user_id' => $faker->randomElement($userIds),
-                'status_id' => '1',
-                'check_in_date' => $checkInDate,
-                'check_out_date' => $checkOutDate,
-                'VAT' => 10, // Giả định VAT là 10%
-                'total_price' => $faker->randomFloat(2, 100, 5000), // Giá từ 100 đến 5000
-                'note' => $faker->sentence(20), //ghi chú
-                'surcharge' => rand(0, 1000), // Phụ phí từ 0 đến 1000 (ngẫu nhiên)
-                'deposit_amount' => $faker->optional()->randomElement([500, 1000, 2000]), // Ngẫu nhiên tiền cọc
-                'deposit_status' => $faker->randomElement(['pending', 'paid', 'refunded']),
-                'deposit_date' => $faker->optional()->dateTimeBetween('-10 days', 'now'),
-                'deposit_refund_date' => $faker->optional()->dateTimeBetween('-5 days', 'now'),
-                'type' => rand(1, 2), // 1 - Online, 2 - Tại quầy
-                'create_at' => now(),
-                'update_at' => now(),
+            // Đảm bảo check_out_date luôn lớn hơn check_in_date
+            if ($check_in_date > $check_out_date) {
+                $check_out_date = $check_in_date + 86400; // Thêm 1 ngày (86400 giây)
+            }
+
+            // Tính tổng giá (giả sử mỗi đêm phòng có giá ngẫu nhiên)
+            $total_price = ($check_out_date - $check_in_date) / 86400 * $faker->numberBetween(1000, 3000);
+            $tien_coc = $total_price * 0.3; // Tiền cọc là 30% của tổng giá
+
+            Booking::create([
+                'user_id' => 1, // Lấy user_id ngẫu nhiên
+                'room_id' => 1, // Lấy room_id ngẫu nhiên
+                'code_check_in' => strtoupper($faker->unique()->bothify('???-####')), // Mã check-in ngẫu nhiên
+                'check_in_date' => $check_in_date, // Ngày check-in (Unix timestamp)
+                'check_out_date' => $check_out_date, // Ngày check-out (Unix timestamp)
+                'total_price' => $total_price, // Tổng giá tính từ thời gian thuê
+                'tien_coc' => $tien_coc, // Tiền cọc
+                'status' => $faker->numberBetween(0, 4), // Trạng thái ngẫu nhiên từ 0 đến 4
+                'created_at' => (int)time(), // Sử dụng thời gian Unix timestamp
+                'updated_at' => (int)time(), // Sử dụng thời gian Unix timestamp
             ]);
         }
     }

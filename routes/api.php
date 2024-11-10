@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Admin\SearchRoomController;
+use App\Http\Controllers\Api\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,9 @@ Route::middleware('api')->get('/example', function (Request $request) {
 
 Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
     ->name('api.search_room');
+
+
+Route::post('booking', [BookingController::class, 'booking'])
+    ->name('api.booking');
 // Route::get('/search', [RoomController::class, 'search'])
 //     ->name('search');
-
