@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
 use App\Models\ManageStatusRoom;
@@ -9,6 +10,7 @@ use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -148,8 +150,8 @@ class BookingController
                     "address" => $address,
                     "phone" => $phone,
                     "email" => $email,
-                    "check_in_date" => $check_in_date,
-                    "check_out_date" => $check_out_date,
+                    "check_in_date" => $checkInTimestamp,
+                    "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
                     "status" => 1
@@ -192,7 +194,7 @@ class BookingController
         }
     }
 
-    public function thanhtoan(Request $request)
+    public function vnpay(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -234,6 +236,7 @@ class BookingController
                 return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
             }
 
+            $booking->code_check_in = rand(100000, 999999);
             $booking->status = 2;
             $booking->save();
 
@@ -245,13 +248,11 @@ class BookingController
                 "vnp_TransactionNo" => $paymentGatewayResponse,
             ]);
 
-            ManageStatusRoom::create([
-                "booking_id" => $id,
-                "room_id" => $booking->room_id,
-                "status" => 0,
-                "from" => $booking->check_in_date,
-                "to" => $booking->check_out_date
-            ]);
+            $from_new =  (new DateTime())->setTimestamp($booking->check_in_date)->format('Y-m-d');
+            $to_new = (new DateTime())->setTimestamp($booking->check_out_date)->format('Y-m-d');
+            // dd($from_new, $to_new);
+            $status = new ManageStatusRoomController();
+            $status->create($id, $booking->room_id, $from_new, $to_new);
 
             return response()->json(["message" => "Thanh toán thành công"], 200);
         } catch (Exception $e) {

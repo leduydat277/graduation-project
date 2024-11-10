@@ -57,10 +57,16 @@ Route::prefix('admin')->group(function () {
 Route::get("/test", function () {
     return view('admin.index');
 });
+
+
+Route::get('/test1', function() {
+    $abc = (new DateTime())->setTimestamp(1893506400)->format('Y-m-d');
+    return $abc;
+});
 // Auth
 
-Route::get('login', [LoginController::class, 'create'])
-    ->name('login');
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login');
 
 
 
