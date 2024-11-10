@@ -1,24 +1,32 @@
 
 import MainLayout from '@/Layouts/MainLayout';
 import { RoomSearchBar } from './../../shared/Room/RoomSearchBar'
-import {BannerImage} from './BannerImage'
+import { BannerImage } from './BannerImage'
 import React from 'react';
-import { Box, Button, Container,Typography, Paper, Stack } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { Box, Button, Container, Typography, Paper, Stack } from '@mui/material';
+import { grey, pink, blue } from '@mui/material/colors';
 import SearchIcon from '@mui/icons-material/Search';
 import { Banners } from './Banners';
 import { RoomList } from '@/shared/Room/RoomList';
+
+import { AlignCenter } from 'lucide-react';
 
 
 
 function ScreenPage() {
   return (
     <>
-      <Box  sx={{py: 6 }}>
-        <Box sx={{mb: 10, mx:5}}>
-          <Banners/>
-          <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: '#EAF1FF', mb: 6 }}>
-            <RoomSearchBar />
+      <Box sx={{ py: 6 }}>
+        <Box sx={{ mb: 10, mx: 5 }}>
+          <Banners />
+          <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: blue[50], mb: 6 }}>
+            <RoomSearchBar style={{
+              backgroundColor: grey[50],
+              borderRadius: 10,
+              paddingX: 20,
+            }}
+              direction="row"
+            />
             <Button
               variant="contained"
               color="primary"
@@ -29,10 +37,10 @@ function ScreenPage() {
             </Button>
           </Paper>
           <BannerImage />
-          <RoomList/>
-          
+          <RoomList />
+
         </Box>
-      
+
       </Box>
     </>
   );

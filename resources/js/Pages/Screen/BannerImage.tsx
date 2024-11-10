@@ -9,11 +9,10 @@ const Images = [HomeBannner2, HomeBannner3, HomeBannner4, HomeBannner5];
 export const BannerImage = (props) => {
 return (
     <>
-    <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ color: "#0d0d2b", textAlign: 'left' }}>
-            Most Picked
+    <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ color: "#0d0d2b", textAlign: 'left' }}>
+           Một số hình ảnh
           </Typography>
-          {/* top phòng hay được book */}
-          <Box sx={{ display: 'flex', gap: '20px', marginBottom: '50px' }}>
+          <Box sx={{ display: 'flex', gap: '20px', marginBottom: '50px', pt: 2 }}>
             <Box sx={{width:'54%'}}>
               <Box
                 component="img"

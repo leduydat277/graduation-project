@@ -8,19 +8,14 @@ import { GuestCount } from '../GuestCount';
 import { useBookingStore } from './../../../service/stores/booking-store';
 
 
-export const RoomSearchBar = () => {
+export const RoomSearchBar = (props) => {
+  const {style, direction, position, ...rest} = props
   const { typeRoom } = useBookingStore((state) => ({
     typeRoom: state.typeRoom
   }));
 
-  const containerStyle = {
-    backgroundColor: pink[50],
-    borderRadius: 10,
-    paddingX: 20,
-  };
-
   return (
-    <Stack direction="row" spacing={4} py={2} sx={containerStyle}>
+    <Stack direction={direction} spacing={4} py={2} sx={style}>
       <Stack >
         <Stack direction="row" alignItems="center" spacing={1} pb={1}>
           <Typography variant="caption">Checkin - Checkout</Typography>
@@ -33,10 +28,11 @@ export const RoomSearchBar = () => {
           <Typography variant="caption">Phòng & khách</Typography>
           <Users />
         </Stack>
-        <GuestCount py={2} />
+        <GuestCount py={2} position={position} />
       </Stack>
     </Stack>
   );
+  
 };
 
-export default RoomSearchBar;
+

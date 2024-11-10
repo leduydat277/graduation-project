@@ -8,9 +8,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { useBookingStore } from "./../../../service/stores/booking-store";
-import { console } from "inspector"
-
+import { useBookingStore } from "./../../../service/stores/booking-store"
+import {calculateTotalAmount} from '../../../service/hooks/booking'
 export function DatePickerWithRange({
   className,
   type,
@@ -22,15 +21,16 @@ export function DatePickerWithRange({
     to: +addDays(new Date(), 20),
   });
 
-
-  const [setCheckInDate, setCheckOutDate, checkInDate] = useBookingStore((state) => [
+  const [setCheckInDate, setCheckOutDate, checkInDate, checkOutDate, totalDays, setTotalPrice] = useBookingStore((state) => [
     state.setCheckInDate,
-    state.setCheckOutDate
-    , state.checkInDate
+    state.setCheckOutDate,
+    state.checkInDate,
+    state.checkOutDate,
+    state.totalDays,
+    state.setTotalPrice
   ]);
 
   const handleDateChange = (rangeDate: DateRange | undefined) => {
-
     const newFrom = rangeDate?.from ? +rangeDate.from : null;
     const newTo = rangeDate?.to ? +rangeDate.to : null;
     setDate({ from: newFrom, to: newTo });
@@ -38,7 +38,7 @@ export function DatePickerWithRange({
     if (newFrom) setCheckInDate(newFrom);
     if (newTo) setCheckOutDate(newTo);
   };
-
+  
 
   return (
     <div className={cn("grid gap-2", className)}>
