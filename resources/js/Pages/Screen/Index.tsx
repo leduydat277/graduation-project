@@ -1,22 +1,44 @@
-import { Link } from '@inertiajs/react';
-import MainLayout from '@/Layouts/MainLayout';
-import { RoomSearchBar } from './../../shared/RoomSearchBar';
 
-import { Box } from '@mui/material';
-import { grey, pink } from '@mui/material/colors';
+import MainLayout from '@/Layouts/MainLayout';
+import { RoomSearchBar } from './../../shared/Room/RoomSearchBar'
+import {BannerImage} from './BannerImage'
+import React from 'react';
+import { Box, Button, Container,Typography, Paper, Stack } from '@mui/material';
+import { grey } from '@mui/material/colors';
+import SearchIcon from '@mui/icons-material/Search';
+import { Banners } from './Banners';
+import { RoomList } from '@/shared/Room/RoomList';
+
 
 
 function ScreenPage() {
   return (
     <>
-
-      <Box sx={{ backgroundColor: pink[200] }} >
-        <RoomSearchBar />
+      <Box  sx={{py: 6 }}>
+        <Box sx={{mb: 10, mx:5}}>
+          <Banners/>
+          <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: '#EAF1FF', mb: 6 }}>
+            <RoomSearchBar />
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{ px: 4, py: 1.5, fontWeight: 'bold', textTransform: 'none', borderRadius: '0.5rem' }}
+              startIcon={<SearchIcon />}>
+              Search
+            </Button>
+          </Paper>
+          <BannerImage />
+          <RoomList/>
+          
+        </Box>
+      
       </Box>
-
     </>
   );
 }
+
+
 
 /**
  * Persistent Layout (Inertia.js)

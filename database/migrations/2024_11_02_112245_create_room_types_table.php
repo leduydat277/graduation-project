@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('room_types', function (Blueprint $table) {
             $table->id(); // Tạo trường id tự động tăng
             $table->string('type')->comment('Tên loại phòng'); // Trường type cho loại phòng
+            $table->timestamps();
         });
     }
 
