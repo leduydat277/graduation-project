@@ -1,4 +1,4 @@
-import { Link, Box, Stack } from "@mui/material";
+import { Link, Box, Stack, Typography } from "@mui/material";
 import { red } from '@mui/material/colors';
 import { Profile } from '../Profile/Profile';
 
@@ -10,25 +10,37 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
 
   return (
     <Stack
+
       direction="row"
       alignItems="center"
-      justifyContent="space-between"
-      gap={2}
-      sx={{ width: '100%', ...containerProp }}
+      // justifyContent="space-between"
+      backgroundColor="white"
+      pb={2}
+     pt={3}
+      sx={{ width: '100%',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+      ...containerProp }}
       {...rest}
     >
-      <TopHeader px={2} />
-      <NavLink />
-      <Profile px={2} />
+      <TopHeader px={4.5} />
+      <NavLink/>
+      <Profile px={2} justifyContent="flex-end" />
     </Stack>
   );
 };
 
-const NavLink = () => (
-  <Stack direction="row" gap={4} sx={{ marginLeft: '500px', fontFamily: 'Times New Roman', fontSize: '20px'}}>
-    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">Home</Link>
-    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">Rooms</Link>
-    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">About</Link>
-    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">Contact</Link>
-  </Stack>
-);
+const NavLink = (props) => {
+
+  return (
+    <Stack direction="row" gap={2} pl={7}>
+    <Typography variant="h6">Home</Typography>
+    <Typography variant="h6">Rooms</Typography>
+    <Typography variant="h6">About</Typography>
+    <Typography variant="h6">Policy</Typography>
+ </Stack>
+  )
+ 
+
+};

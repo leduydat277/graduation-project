@@ -8,11 +8,11 @@ import { PageProps } from "@/types";
 import { ChevronDown } from "lucide-react";
 import { Box, Stack, Link, Menu, MenuItem } from "@mui/material";
 
-import {containerProps} from '@/components/Responsive';
 
 import React, { useState } from 'react';
+import { containerProps } from "../Responsive";
 
-export const Profile = (props) => {
+export const Profile = (props:any) => {
     const { fullWidth, pressCart, ...rest } = props
     const { auth } = usePage<PageProps>().props;
     const [menuOpened, setMenuOpened] = useState(false);
@@ -31,7 +31,9 @@ export const Profile = (props) => {
 
     return (
         <Box 
-      
+      position={'absolute'}
+        right={19}
+        top={30}
         {...rest}
        
         >
@@ -60,7 +62,7 @@ export const Profile = (props) => {
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     <Link
-                        href={route('users')}
+                        // href={route('users')}
 
                         onClick={() => setMenuOpened(false)}
                     >
@@ -68,11 +70,11 @@ export const Profile = (props) => {
                     </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                    <Link href={route('logout')} method="delete">
+                    {/* <Link href={route('logout')} method="delete">
 
                         Logout
 
-                    </Link>
+                    </Link> */}
                 </MenuItem>
             </Menu>
         </Box>
