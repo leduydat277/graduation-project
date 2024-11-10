@@ -15,6 +15,8 @@ const initialBookingRange = {
   checkInDate: new Date(),
   checkOutDate: addDays(new Date(), 1),
   typeRoom: 'normal',
+  title: '',
+  subtitle: '',
   totalDays: 1,
   totalPrice: 0,
   numberOfGuests: 1,
@@ -40,6 +42,8 @@ export const useBookingStore = createWithEqualityFn(
             state.checkOutDate = checkOutDate; 
             state.totalDays = state.checkInDate ? Math.floor((checkOutDate - state.checkInDate) / (1000 * 60 * 60 * 24)) : 0;
           }),
+          setTitle: (title) => set((state) => { state.title = title; }),
+          setSubtitle: (subtitle) => set((state) => { state.subtitle = subtitle; }),
           setTotalPrice: (totalPrice) => set((state) => { state.totalPrice = totalPrice; }),
           setNumberOfGuests: (numberOfGuests) => set((state) => { state.numberOfGuests = numberOfGuests; }),
           setNumberOfChildren: (numberOfChildren) => set((state) => { state.numberOfChildren = numberOfChildren; }),

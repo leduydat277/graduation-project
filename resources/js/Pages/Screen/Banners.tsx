@@ -15,6 +15,7 @@ export const Banners = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Box className="banner-left" sx={{ textAlign: 'left', maxWidth: 380 }}>
+        {/* Hero Section */}
         <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ color: "" }}>
           Forget Busy Work, Start Next Vacation
         </Typography>

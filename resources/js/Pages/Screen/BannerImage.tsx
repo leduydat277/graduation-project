@@ -29,7 +29,7 @@ return (
                 }}
               />
             </Box>
-            <Box sx={{ display: 'grid', width: '46%', gridTemplateColumns: 'repeat(2, 2fr)', gap: 1,  }}>
+            <Box sx={{ display: 'grid', width: '46%', gridTemplateColumns: 'repeat(2, 2fr)',gap: 2 }}>
                 {Images.map((image, index) => (
                   <Box
                     component="img"
@@ -37,10 +37,9 @@ return (
                     alt="Sample Image"
                     sx={{
                     height: '100%',
-                    width: '250px',
+                    width: '370px',
                     objectFit: 'cover',
                     loading:"lazy",
-                    margin: 'auto',
                     boxShadow: 3,
                     borderRadius: '1rem',
                     overflow: 'hidden',

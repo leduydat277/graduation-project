@@ -31,7 +31,9 @@ export const Profile = (props) => {
 
     return (
         <Box 
-      
+      position={'absolute'}
+        right={19}
+        top={30}
         {...rest}
        
         >
