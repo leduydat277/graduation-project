@@ -25,10 +25,10 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
 };
 
 const NavLink = () => (
-  <Stack direction="row" gap={2}>
-    <Link href="#basics">HOME</Link>
-    <Link href="#basics">ROOMS</Link>
-    <Link href="#basics">ABOUT</Link>
-    <Link href="#basics">CONTACT</Link>
+  <Stack direction="row" gap={4} sx={{ marginLeft: '500px', fontFamily: 'Times New Roman', fontSize: '20px'}}>
+    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">Home</Link>
+    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">Rooms</Link>
+    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">About</Link>
+    <Link sx={{textDecoration: 'none', color: 'black'}} href="#basics">Contact</Link>
   </Stack>
 );

@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
 
 use App\Http\Controllers\Web\ScreenController;
-
+use App\Http\Controllers\Web\DetailController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,7 +68,9 @@ Route::delete('logout', [LoginController::class, 'destroy'])
 
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
-
+//Detail
+Route::get('/detail', [DetailController::class, 'index'])
+    ->name('detail');
 // // Users
 
 Route::get('users', [UsersController::class, 'index'])
