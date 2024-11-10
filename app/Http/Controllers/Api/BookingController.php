@@ -141,7 +141,6 @@ class BookingController
                     "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
-                    "status" => 1
                 ]);
             } else {
                 $booking = Booking::create([
@@ -155,14 +154,12 @@ class BookingController
                     "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
-                    "status" => 1
                 ]);
             }
             Payment::create([
                 "booking_id" => $booking->id,
                 "total_price" => $depositAmount,
                 "payment_method" => 1,
-                "payment_status" => 1
             ]);
 
             $ipAddr = $request->ip();

@@ -153,7 +153,7 @@ class ManageStatusRoomController extends Controller
         } else {
             $current_room_future = ManageStatusRoom::where('room_id', $id_room)->where('to', 0)->first();
 
-            if ($from_new > $current_room_future->from) {
+            if ($from_new >= $current_room_future->from) {
                 $new_record_manage_from = (new DateTime())->setTimestamp($current_room_future->from)->setTime(14, 0, 0)->getTimestamp();
                 $new_record_manage_to = (new DateTime($from))->setTime(12, 0, 0)->getTimestamp();
 
