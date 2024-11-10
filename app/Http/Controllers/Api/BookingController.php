@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
@@ -236,7 +237,8 @@ class BookingController
                 return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
             }
 
-            $booking->code_check_in = rand(100000, 999999);
+            $check_in_code = rand(100000, 999999);
+            $booking->code_check_in = $check_in_code;
             $booking->status = 2;
             $booking->save();
 
@@ -250,9 +252,19 @@ class BookingController
 
             $from_new =  (new DateTime())->setTimestamp($booking->check_in_date)->format('Y-m-d');
             $to_new = (new DateTime())->setTimestamp($booking->check_out_date)->format('Y-m-d');
-            // dd($from_new, $to_new);
+
             $status = new ManageStatusRoomController();
             $status->create($id, $booking->room_id, $from_new, $to_new);
+
+            $mail = new MailController();
+
+            $data = [
+                'checkin_code' => $check_in_code,
+                'check_in_date' => $from_new,
+                'check_out_date' => $to_new,
+                'name' => $booking->last_name . '' . $booking->first_name
+            ];
+            $mail->SendCheckinCode("Gửi mã Check in", 'checkincode', $data, $booking->email);
 
             return response()->json(["message" => "Thanh toán thành công"], 200);
         } catch (Exception $e) {
