@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-
+import '@fontsource/roboto/400.css';
 
 
 

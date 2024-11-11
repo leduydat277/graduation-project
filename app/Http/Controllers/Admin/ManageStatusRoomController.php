@@ -97,13 +97,8 @@ class ManageStatusRoomController extends Controller
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }
 
-    public function create()
+    public function create($id_booking, $id_room, $from, $to)
     {
-        // $id_booking, $id_room, $from, $to
-        $id_booking = 1;
-        $id_room = 3;
-        $from = '2030-12-30';
-        $to = '2031-01-01';
 
         $from_new = (new DateTime($from))->setTime(14, 0, 0)->getTimestamp();
         $to_new = (new DateTime($to))->setTime(12, 0, 0)->getTimestamp();
@@ -159,8 +154,6 @@ class ManageStatusRoomController extends Controller
         } else {
             $current_room_future = ManageStatusRoom::where('room_id', $id_room)->where('to', 0)->first();
 
-            // dd($from_new > $current_room_future->from, $from_new, $current_room_future->from);
-
             if ($from_new >= $current_room_future->from) {
                 $new_record_manage_from = (new DateTime())->setTimestamp($current_room_future->from)->setTime(14, 0, 0)->getTimestamp();
                 $new_record_manage_to = (new DateTime($from))->setTime(12, 0, 0)->getTimestamp();
@@ -184,6 +177,7 @@ class ManageStatusRoomController extends Controller
                 ]);
             }
         }
+
         return 'Thêm bản ghi vào bảng Manage Status Room thành công';
     }
 }

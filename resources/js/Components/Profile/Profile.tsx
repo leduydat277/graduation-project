@@ -31,7 +31,9 @@ export const Profile = (props) => {
 
     return (
         <Box 
-      
+      position={'absolute'}
+        right={19}
+        top={30}
         {...rest}
        
         >
@@ -59,20 +61,20 @@ export const Profile = (props) => {
                     </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                    <Link
+                    {/* <Link
                         href={route('users')}
 
                         onClick={() => setMenuOpened(false)}
                     >
                         Manage Users
-                    </Link>
+                    </Link> */}
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                    <Link href={route('logout')} method="delete">
+                    {/* <Link href={route('logout')} method="delete">
 
                         Logout
 
-                    </Link>
+                    </Link> */}
                 </MenuItem>
             </Menu>
         </Box>

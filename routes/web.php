@@ -58,6 +58,40 @@ Route::get("/test", function () {
     return view('admin.index');
 });
 
+Route::get('/test1', function () {
+    $abc = (new DateTime())->setTimestamp(1893506400)->format('Y-m-d');
+    return $abc;
+});
+// Auth
+
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login');
+
+
+
+// Route::get('login', [LoginController::class, 'create'])
+//     ->name('login');
+
+
+// Route::post('login', [LoginController::class, 'store'])
+//     ->name('login.store');
+
+
+Route::get('/', [ScreenController::class, 'index'])
+    ->name('screen');
+//Detail
+Route::get('/detail', [DetailController::class, 'index'])
+    ->name('detail');
+// // Users
+
+// Route::delete('logout', [LoginController::class, 'destroy'])
+//     ->name('logout');
+
+// // // Screen
+
+
+// Route::get('/', [ScreenController::class, 'index'])
+//     ->name('screen');
 
 // // // Users
 
@@ -93,66 +127,6 @@ Route::get("/test", function () {
 
 // Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');
 // Route::get('payment/{id}/show', [AdminPaymentController::class, 'show'])->name('payment.show');
-
-// // Organizations
-
-// Route::get('organizations', [OrganizationsController::class, 'index'])
-//     ->name('organizations')
-//     ->middleware('auth');
-
-// Route::get('organizations/create', [OrganizationsController::class, 'create'])
-//     ->name('organizations.create')
-//     ->middleware('auth');
-
-// Route::post('organizations', [OrganizationsController::class, 'store'])
-//     ->name('organizations.store')
-//     ->middleware('auth');
-
-// Route::get('organizations/{organization}/edit', [OrganizationsController::class, 'edit'])
-//     ->name('organizations.edit')
-//     ->middleware('auth');
-
-// Route::put('organizations/{organization}', [OrganizationsController::class, 'update'])
-//     ->name('organizations.update')
-//     ->middleware('auth');
-
-// Route::delete('organizations/{organization}', [OrganizationsController::class, 'destroy'])
-//     ->name('organizations.destroy')
-//     ->middleware('auth');
-
-// Route::put('organizations/{organization}/restore', [OrganizationsController::class, 'restore'])
-//     ->name('organizations.restore')
-//     ->middleware('auth');
-
-// // Contacts
-
-// Route::get('contacts', [ContactsController::class, 'index'])
-//     ->name('contacts')
-//     ->middleware('auth');
-
-// Route::get('contacts/create', [ContactsController::class, 'create'])
-//     ->name('contacts.create')
-//     ->middleware('auth');
-
-// Route::post('contacts', [ContactsController::class, 'store'])
-//     ->name('contacts.store')
-//     ->middleware('auth');
-
-// Route::get('contacts/{contact}/edit', [ContactsController::class, 'edit'])
-//     ->name('contacts.edit')
-//     ->middleware('auth');
-
-// Route::put('contacts/{contact}', [ContactsController::class, 'update'])
-//     ->name('contacts.update')
-//     ->middleware('auth');
-
-// Route::delete('contacts/{contact}', [ContactsController::class, 'destroy'])
-//     ->name('contacts.destroy')
-//     ->middleware('auth');
-
-// Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])
-//     ->name('contacts.restore')
-//     ->middleware('auth');
 
 // // Reports
 
