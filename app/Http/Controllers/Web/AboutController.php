@@ -8,6 +8,6 @@ class AboutController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('about/index');
+        return Inertia::render('About/Index');
     }
 }

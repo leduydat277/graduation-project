@@ -10,7 +10,7 @@ import { Banners } from './Banners';
 import { RoomList } from '@/shared/Room/RoomList';
 
 import { AlignCenter } from 'lucide-react';
-import { Footer } from '@/Components/Footer/Footer';
+import { Footer } from '@/components/Footer/Footer';
 
 
 
