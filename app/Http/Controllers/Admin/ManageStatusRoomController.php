@@ -99,7 +99,6 @@ class ManageStatusRoomController extends Controller
 
     public function create($id_booking, $id_room, $from, $to)
     {
-
         $from_new = (new DateTime($from))->setTime(14, 0, 0)->getTimestamp();
         $to_new = (new DateTime($to))->setTime(12, 0, 0)->getTimestamp();
 
@@ -153,17 +152,18 @@ class ManageStatusRoomController extends Controller
             }
         } else {
             $current_room_future = ManageStatusRoom::where('room_id', $id_room)->where('to', 0)->first();
-
             if ($from_new >= $current_room_future->from) {
                 $new_record_manage_from = (new DateTime())->setTimestamp($current_room_future->from)->setTime(14, 0, 0)->getTimestamp();
                 $new_record_manage_to = (new DateTime($from))->setTime(12, 0, 0)->getTimestamp();
 
-                ManageStatusRoom::create([
-                    "room_id" => $id_room,
-                    "status" => 1,
-                    "from" => $new_record_manage_from,
-                    "to" => $new_record_manage_to
-                ]);
+                if ($from_new != $current_room_future->from) {
+                    ManageStatusRoom::create([
+                        "room_id" => $id_room,
+                        "status" => 1,
+                        "from" => $new_record_manage_from,
+                        "to" => $new_record_manage_to
+                    ]);
+                }
 
                 $new_record_future_from = (new DateTime($to))->setTime(14, 0, 0)->getTimestamp();
                 $new_record_future_to = 0;

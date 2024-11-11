@@ -113,20 +113,18 @@
                  </li>
 
 
-                 <<<<<<< HEAD=======<a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
+                 <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
                      <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
                      Danh sách đánh giá và bình luận
+                 </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a href="" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-home"></i> <!-- Icon for home page -->
+                         Trở về trang chủ
                      </a>
-                     </li>
-
-                     >>>>>>> 42a00c5aedc5555d67b4721a37a22c8445f8a49f
-
-                     <li class="nav-item">
-                         <a href="" class="nav-link" data-key="t-analytics">
-                             <i class="fas fa-home"></i> <!-- Icon for home page -->
-                             Trở về trang chủ
-                         </a>
-                     </li>
+                 </li>
              </ul>
 
          </div>
