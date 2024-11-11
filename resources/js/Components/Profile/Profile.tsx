@@ -61,13 +61,13 @@ export const Profile = (props:any) => {
                     </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                    <Link
-                        // href={route('users')}
+                    {/* <Link
+                        href={route('users')}
 
                         onClick={() => setMenuOpened(false)}
                     >
                         Manage Users
-                    </Link>
+                    </Link> */}
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     {/* <Link href={route('logout')} method="delete">
