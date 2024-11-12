@@ -60,7 +60,6 @@ Route::get("/test", function () {
     return view('admin.index');
 });
 
-
 Route::get('/test1', function () {
     $abc = (new DateTime())->setTimestamp(1893506400)->format('Y-m-d');
     return $abc;
