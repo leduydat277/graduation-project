@@ -76,7 +76,7 @@ class CheckInCheckOutController extends RoutingController
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)
                 ->andWhere('to', 0);
         }
-        $booking->status = 6; //6 là đơn này đã hoàn thành
+        $booking->status = 3;
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
