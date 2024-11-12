@@ -13,8 +13,6 @@ class ManageStatusRoomController extends Controller
 {
     const VIEW_PATH =  'admin.managestatus.';
 
-
-
     public function index(Request $request)
     {
         $title = 'Quản lý trạng thái phòng';
