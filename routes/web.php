@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\Admin\AssetTypeController;
 use App\Http\Controllers\Admin\ChangePasswordController;
+use App\Http\Controllers\Admin\CheckInCheckOutController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -50,6 +51,13 @@ Route::prefix('admin')->group(function () {
     Route::prefix('change-password')->as('change-password.')->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
         Route::post('/change', [ChangePasswordController::class, 'ChangePassword'])->name('change_password');
+    });
+    Route::prefix('checkin-checkout')
+    ->as('checkin-checkout.')
+    ->group(function () {
+        Route::get('/', [CheckInCheckOutController::class, 'index'])->name('index');
+        Route::post('/checkin/{id}', [CheckInCheckOutController::class, 'checkIn'])->name('checkin');
+        Route::post('/checkout/{id}', [CheckInCheckOutController::class, 'checkOut'])->name('checkin');
     });
 });
 
