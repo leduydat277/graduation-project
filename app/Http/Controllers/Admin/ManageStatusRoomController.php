@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ManageStatusRoom;
-use App\Models\Room;
+use App\Models\Admin\ManageStatusRoom;
+use App\Models\Admin\Room;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -152,17 +152,18 @@ class ManageStatusRoomController extends Controller
             }
         } else {
             $current_room_future = ManageStatusRoom::where('room_id', $id_room)->where('to', 0)->first();
-
             if ($from_new >= $current_room_future->from) {
                 $new_record_manage_from = (new DateTime())->setTimestamp($current_room_future->from)->setTime(14, 0, 0)->getTimestamp();
                 $new_record_manage_to = (new DateTime($from))->setTime(12, 0, 0)->getTimestamp();
 
-                ManageStatusRoom::create([
-                    "room_id" => $id_room,
-                    "status" => 1,
-                    "from" => $new_record_manage_from,
-                    "to" => $new_record_manage_to
-                ]);
+                if ($from_new != $current_room_future->from) {
+                    ManageStatusRoom::create([
+                        "room_id" => $id_room,
+                        "status" => 1,
+                        "from" => $new_record_manage_from,
+                        "to" => $new_record_manage_to
+                    ]);
+                }
 
                 $new_record_future_from = (new DateTime($to))->setTime(14, 0, 0)->getTimestamp();
                 $new_record_future_to = 0;
@@ -176,6 +177,7 @@ class ManageStatusRoomController extends Controller
                 ]);
             }
         }
-        return 'oke';
+
+        return 'Thêm bản ghi vào bảng Manage Status Room thành công';
     }
 }
