@@ -79,7 +79,7 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
+                     <a href="{{ route('payments.index')}}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
                          Payments
                      </a>
