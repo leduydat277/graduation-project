@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TokenController;
@@ -36,6 +37,7 @@ foreach (glob(base_path('routes/admin_feature/*.php')) as $file) {
 }
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('users', UserController::class);
     Route::resource('tokens', TokenController::class);
     Route::resource('reviews', ReviewController::class);
@@ -59,7 +61,7 @@ Route::get("/test", function () {
 });
 
 
-Route::get('/test1', function() {
+Route::get('/test1', function () {
     $abc = (new DateTime())->setTimestamp(1893506400)->format('Y-m-d');
     return $abc;
 });
