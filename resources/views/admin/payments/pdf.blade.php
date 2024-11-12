@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<div class="title">Chi Tiết Thanh Toán</div>
+<div class="title">Hóa đơn Thanh Toán</div>
 
 <!-- Thông tin thanh toán -->
 <div class="section">
@@ -70,20 +70,6 @@
             <div class="col"><strong>Giá Mỗi Đêm:</strong> <span class="text-danger">{{ number_format($payment->booking->room->price ?? 0) }} VNĐ</span></div>
             <div class="col"><strong>Sức Chứa:</strong> {{ $payment->booking->room->max_people ?? 'N/A' }} người</div>
         </div>
-    </div>
-</div>
-
-<!-- Báo cáo hỏng hóc (nếu có) -->
-<div class="section">
-    <div class="section-title">Báo Cáo Hỏng Hóc</div>
-    <div class="section-content">
-        <ul>
-            @forelse ($payment->booking->room->damageReports as $report)
-                <li>{{ $report->description }}</li>
-            @empty
-                <p>Không có báo cáo hỏng hóc nào.</p>
-            @endforelse
-        </ul>
     </div>
 </div>
 

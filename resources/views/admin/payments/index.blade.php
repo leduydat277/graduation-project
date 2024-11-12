@@ -21,7 +21,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">List Payments</h5>
+                            <h5 class="card-title mb-0">Danh Sách Hóa Đơn</h5>
                         </div>
                         <div class="card-body">
                             <div class="form row">
@@ -74,7 +74,6 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Booking ID</th>
                                         <th>User</th>
                                         <th>Amount</th>
                                         <th>Payment Method</th>
@@ -86,7 +85,6 @@
                                 <tbody id="payment-tbody">
                                     @foreach ($payments as $payment)
                                         <tr>
-                                            <td>{{ $payment->id }}</td>
                                             <td>{{ $payment->booking_id }}</td>
                                             <td>{{ $payment->booking->user->name ?? 'N/A' }}</td>
                                             <td>{{ number_format($payment->total_price) }} vnđ</td>

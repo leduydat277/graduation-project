@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\Payment;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -50,14 +51,19 @@ class PaymentController extends Controller
     public function show($id)
     {
         // Tìm kiếm hóa đơn thanh toán theo id và tải trước các quan hệ cần thiết
-        $payment = Payment::with([
-            'booking',                      // Quan hệ với booking
-            'booking.room',                 // Thông tin phòng liên quan đến booking
-            'booking.room.roomType',        // Loại phòng
-            'booking.user'                  // Thông tin người đặt phòng
-        ])->findOrFail($id);
-
+        $payment = Payment::with(['booking', 'booking.room', 'booking.room.roomType', 'booking.user'])->findOrFail($id);
         // Trả về view và truyền dữ liệu
         return view(self::VIEW_PATH . __FUNCTION__, compact('payment'));
+    }
+
+    public function generatePDF($id)
+    {
+        $payment = Payment::with(['booking', 'booking.room', 'booking.room.roomType', 'booking.user'])->findOrFail($id);
+
+        // Tạo file PDF với kích thước giấy A4 hoặc kích thước khác nếu muốn
+        $pdf = Pdf::loadView('admin.payments.pdf', compact('payment'))
+            ->setPaper('A4', 'portrait'); // Hoặc 'landscape' cho khổ ngang
+
+        return $pdf->download('HoaDon_' . $payment->id . '.pdf');
     }
 }
