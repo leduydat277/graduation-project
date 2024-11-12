@@ -78,9 +78,18 @@
                         <input type="text" class="form-control" id="checkInDate" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">CCCD</label>
-                        <input type="text" name="cccd" class="form-control" id="cccd" placeholder="nhập số cccd" required>
+                        <label for="checkInDate" class="form-label">Số tiền cần thanh toán</label>
+                        <input type="text" class="form-control" id="thanhtoan" readonly>
                     </div>
+                    <div class="mb-3">
+                        <label for="checkInDate" class="form-label">CCCD</label>
+                        <input type="number" name="cccd" class="form-control" id="cccd" placeholder="nhập số cccd" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="checkInDate" class="form-label">Code check-in</label>
+                        <input type="text" name="code" class="form-control" id="code" placeholder="nhập code của bạn" required>
+                    </div>
+                    <div id="error-message"></div>
                     <!-- You can add more fields if needed -->
                     <button type="submit" class="btn btn-primary">Submit Check-in</button>
                 </form>
@@ -171,7 +180,35 @@
                     },
                     {
                         name: "Status",
-                        width: "100px"
+                        width: "150px",
+                        formatter: (cell, row) => {
+                            const status = row.cells[7].data;
+                            let statusText = '';
+                            let statusClass = '';
+
+                            // Kiểm tra trạng thái và trả về giá trị tương ứng với màu sắc
+                            switch (status) {
+                                case 2:
+                                    statusText = "Đã thanh toán cọc"; // Trạng thái 2
+                                    statusClass = 'bg-warning'; // Màu vàng
+                                    break;
+                                case 3:
+                                    statusText = "Đã thanh toán tổng tiền đơn"; // Trạng thái 3
+                                    statusClass = 'bg-primary'; // Màu xanh dương
+                                    break;
+                                case 4:
+                                    statusText = "Đang sử dụng"; // Trạng thái 4
+                                    statusClass = 'bg-success'; // Màu xanh lá
+                                    break;
+                                default:
+                                    statusText = "Chưa xác định"; // Trạng thái mặc định
+                                    statusClass = 'bg-secondary'; // Màu xám
+                                    break;
+                            }
+
+                            // Trả về HTML với lớp CSS cho màu sắc
+                            return gridjs.html(`<span class="badge ${statusClass}">${statusText}</span>`);
+                        }
                     },
                     {
                         name: "Action",
@@ -218,16 +255,23 @@
         document.getElementById('userName').value = booking.user_name;
         document.getElementById('roomType').value = booking.room_type;
         document.getElementById('checkInDate').value = booking.check_in_date;
+        document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc);
+        window.booking = booking;
     }
     document.getElementById('checkinForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Ngừng hành động gửi form mặc định
-
-        const form = this;
-        const bookingId = document.getElementById('bookingId').value;
-
-        form.action = '/admin/checkin-checkout/checkin/' + bookingId;
-        form.method = 'POST';
-        form.submit();
+        const code = document.getElementById('code').value;
+        const bookingCode = window.booking.code_check_in;
+        console.log(bookingCode);
+        if (code.trim() !== bookingCode.trim()) {
+            alert('Mã Check in không đúng');
+        } else {
+            e.preventDefault();
+            const form = this;
+            const bookingId = document.getElementById('bookingId').value;
+            form.action = '/admin/checkin-checkout/checkin/' + bookingId;
+            form.method = 'POST';
+            form.submit();
+        }
     });
 
 
@@ -243,8 +287,8 @@
         e.preventDefault(); // Ngừng hành động gửi form mặc định
 
         const form = this;
-        const bookingId = document.getElementById('bookingId').value;
-
+        const bookingId = document.getElementById('bookingId1').value;
+        console.log(bookingId);
         form.action = '/admin/checkin-checkout/checkout/' + bookingId;
         form.method = 'POST';
         form.submit();

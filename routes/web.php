@@ -57,7 +57,7 @@ Route::prefix('admin')->group(function () {
     ->group(function () {
         Route::get('/', [CheckInCheckOutController::class, 'index'])->name('index');
         Route::post('/checkin/{id}', [CheckInCheckOutController::class, 'checkIn'])->name('checkin');
-        Route::post('/checkout/{id}', [CheckInCheckOutController::class, 'checkOut'])->name('checkin');
+        Route::post('/checkout/{id}', [CheckInCheckOutController::class, 'checkOut'])->name('checkout');
     });
 });
 
