@@ -1,21 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\TokenController;
-use App\Http\Controllers\Admin\ReviewController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\RoomTypeController;
-use App\Http\Controllers\Admin\ManageStatusRoomController;
-use App\Http\Controllers\Admin\AssetTypeController;
-use App\Http\Controllers\Admin\ChangePasswordController;
-use App\Http\Controllers\Admin\CheckInCheckOutController;
-use App\Http\Controllers\Admin\RoomAssetController;
-use App\Http\Controllers\Admin\PhiphatsinhController;
-use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Api\BookingController as ApiBookingController;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
 /*
