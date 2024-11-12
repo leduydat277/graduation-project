@@ -112,10 +112,16 @@
                      </a>
                  </li>
 
-
+                 <li class="nav-item">
                  <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
                      <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
                      Danh sách đánh giá và bình luận
+                 </a>
+                 </li>
+                 <li class="nav-item">
+                 <a href="{{ route('checkin-checkout.index') }}" class="nav-link" data-key="t-analytics">
+                 <i class="fas fa-th-list"></i> 
+                    Check-in|Check-out
                  </a>
                  </li>
 
