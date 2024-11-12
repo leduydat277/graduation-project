@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 class BookingsTableSeeder extends Seeder
@@ -14,8 +16,8 @@ class BookingsTableSeeder extends Seeder
         // Giả lập 10 bản ghi booking
         for ($i = 0; $i < 10; $i++) {
             // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
-            // $user_id = User::inRandomOrder()->first()->id;
-            // $room_id = Room::inRandomOrder()->first()->id;
+            $user_id = User::inRandomOrder()->first()->id;
+            $room_id = Room::inRandomOrder()->first()->id;
 
             // Lấy thời gian ngẫu nhiên cho check_in_date và check_out_date
             $check_in_date = $faker->dateTimeThisYear()->getTimestamp();

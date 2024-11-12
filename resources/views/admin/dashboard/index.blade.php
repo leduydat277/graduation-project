@@ -222,31 +222,33 @@
                                         {{-- <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
                                             style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="75">
                                         </div> --}}
-                                    </div>
-
-                                    <p class="mt-3 mb-1">Greenland <span class="float-end">47%</span>
-                                    </p>
-                                    <div class="progress mt-2" style="height: 6px;">
-                                        <div id="greenland-progress" class="progress-bar progress-bar-striped bg-primary" role="progressbar"
-                                        style="width: 47%" aria-valuenow="47" aria-valuemin="0" aria-valuemax="47"></div>
-                                    </div>
-
-                                    <p class="mt-3 mb-1">Russia <span class="float-end">82%</span></p>
-                                    <div class="progress mt-2" style="height: 6px;">
-                                        <div id="russia-progress" class="progress-bar progress-bar-striped bg-primary" role="progressbar"
-                                        style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="82"></div>
-                                    </div>
-                                </div>
-                            </div> --}}
-                            <!-- end card body -->
                         </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-                </div>
-            </div> <!-- end .h-100-->
 
-        </div> <!-- end col -->
+                        <p class="mt-3 mb-1">Greenland <span class="float-end">47%</span>
+                        </p>
+                        <div class="progress mt-2" style="height: 6px;">
+                            <div id="greenland-progress" class="progress-bar progress-bar-striped bg-primary"
+                                role="progressbar" style="width: 47%" aria-valuenow="47" aria-valuemin="0"
+                                aria-valuemax="47"></div>
+                        </div>
+
+                        <p class="mt-3 mb-1">Russia <span class="float-end">82%</span></p>
+                        <div class="progress mt-2" style="height: 6px;">
+                            <div id="russia-progress" class="progress-bar progress-bar-striped bg-primary"
+                                role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0"
+                                aria-valuemax="82"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    </div> <!-- end .h-100-->
+
+    </div> <!-- end col -->
     </div>
 @endsection
 @section('js')

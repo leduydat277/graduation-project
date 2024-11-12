@@ -22,7 +22,7 @@ return new class extends Migration {
     {
         Schema::table('payments', function (Blueprint $table) {
             // Xóa các cột đã thêm nếu rollback
-            $table->dropColumn(['payment_status','updated_at', 'vnp_BankCode', 'vnp_TransactionNo']);
+            $table->dropColumn(['payment_status', 'updated_at', 'vnp_BankCode', 'vnp_TransactionNo']);
         });
     }
 };

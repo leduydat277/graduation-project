@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Models\User;
+namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +22,8 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
+
+    use SoftDeletes;
     protected $fillable = [
         'status_id',
         'name',
@@ -51,9 +53,13 @@ class User extends Authenticatable
         return $this->hasMany(DamageReport::class);
     }
     public function status()
-{
-    return $this->belongsTo(Status::class, 'status_id');
-}
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function review() {
+        return $this->hasMany(Review::class, 'user_id');
+    }
 
     public $timestamps = false;
 
@@ -92,7 +98,7 @@ class User extends Authenticatable
 
     public function getNameAttribute()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function setPasswordAttribute($password)
@@ -113,8 +119,10 @@ class User extends Authenticatable
     public function scopeWhereRole($query, $role)
     {
         switch ($role) {
-            case 'user': return $query->where('owner', false);
-            case 'owner': return $query->where('owner', true);
+            case 'user':
+                return $query->where('owner', false);
+            case 'owner':
+                return $query->where('owner', true);
         }
     }
 
@@ -122,9 +130,9 @@ class User extends Authenticatable
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%'.$search.'%')
-                    ->orWhere('last_name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['role'] ?? null, function ($query, $role) {
             $query->whereRole($role);
@@ -137,4 +145,3 @@ class User extends Authenticatable
         });
     }
 }
-

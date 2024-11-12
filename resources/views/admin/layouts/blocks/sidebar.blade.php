@@ -29,7 +29,7 @@
      <!-- LOGO -->
      <div class="navbar-brand-box">
          <!-- Dark Logo-->
-         <a href="" class="logo logo-dark">
+         <a href="/admin/" class="logo logo-dark">
              <span class="logo-sm">
                  <img src="/../assets/admin/assets/images/logo-sm.png" alt="" height="22">
              </span>
@@ -38,7 +38,7 @@
              </span>
          </a>
          <!-- Light Logo-->
-         <a href="" class="logo logo-light">
+         <a href="/admin/" class="logo logo-light">
              <span class="logo-sm">
                  <img src="/../assets/admin/assets/images/logo-sm.png" alt="" height="22">
              </span>
@@ -67,27 +67,27 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link" data-key="t-analytics">
+                     <a href="" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-users"></i> <!-- Biểu tượng cho danh sách người dùng -->
-                         Danh sách tài khoản
+                         Tài khoản
                      </a>
                  </li>
                  <li class="nav-item">
                      <a href="#" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
-                         Booking
+                         Đơn đặt
                      </a>
                  </li>
                  <li class="nav-item">
                      <a href="{{ route('payments.index')}}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
-                         Payments
+                         Hóa đơn
                      </a>
                  </li>
                  <li class="nav-item">
                      <a href="{{ route('room-types.index') }}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
-                         Danh sách loại phòng
+                         Loại phòng
                      </a>
                  </li>
 
@@ -99,22 +99,25 @@
                  </li>
 
                  <li class="nav-item">
-
-                    <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
-                        Danh sách đánh giá và bình luận
-                    </a>
-                </li>
-
+                     <a href="{{ route('manage-status-rooms.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-hotel"></i> <!-- Thay đổi icon cho quản lý trạng thái phòng -->
+                         Quản lý trạng thái phòng
+                     </a>
+                 </li>
 
                  <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
-                         <i class="fas fa-home"></i> <!-- Icon for home page -->
-                         Trở về trang chủ
+                     <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
+                         Đánh giá và bình luận
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="{{ route('checkin-checkout.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-th-list"></i>
+                         Check-in & Check-out
                      </a>
                  </li>
              </ul>
-
          </div>
          <!-- Sidebar -->
      </div>
