@@ -5,44 +5,35 @@ namespace Database\Seeders;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
+
 class BookingsTableSeeder extends Seeder
 {
     public function run()
     {
         $faker = Faker::create();
 
-        // Giả lập 10 bản ghi booking
-        for ($i = 0; $i < 10; $i++) {
-            // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
-            $user_id = User::inRandomOrder()->first()->id;
-            $room_id = Room::inRandomOrder()->first()->id;
-
-            // Lấy thời gian ngẫu nhiên cho check_in_date và check_out_date
-            $check_in_date = $faker->dateTimeThisYear()->getTimestamp();
-            $check_out_date = $faker->dateTimeThisYear()->getTimestamp();
-
-            // Đảm bảo check_out_date luôn lớn hơn check_in_date
-            if ($check_in_date > $check_out_date) {
-                $check_out_date = $check_in_date + 86400; // Thêm 1 ngày (86400 giây)
-            }
-
-            // Tính tổng giá (giả sử mỗi đêm phòng có giá ngẫu nhiên)
-            $total_price = ($check_out_date - $check_in_date) / 86400 * $faker->numberBetween(1000, 3000);
-            $tien_coc = $total_price * 0.3; // Tiền cọc là 30% của tổng giá
-
-            Booking::create([
-                'user_id' => 1, // Lấy user_id ngẫu nhiên
-                'room_id' => 1, // Lấy room_id ngẫu nhiên
-                'code_check_in' => strtoupper($faker->unique()->bothify('???-####')), // Mã check-in ngẫu nhiên
-                'check_in_date' => $check_in_date, // Ngày check-in (Unix timestamp)
-                'check_out_date' => $check_out_date, // Ngày check-out (Unix timestamp)
-                'total_price' => $total_price, // Tổng giá tính từ thời gian thuê
-                'tien_coc' => $tien_coc, // Tiền cọc
-                'status' => $faker->numberBetween(0, 4), // Trạng thái ngẫu nhiên từ 0 đến 4
-                'created_at' => (int)time(), // Sử dụng thời gian Unix timestamp
-                'updated_at' => (int)time(), // Sử dụng thời gian Unix timestamp
+        for ($i = 0; $i < 50; $i++) {
+            DB::table('bookings')->insert([
+                'room_id' => $faker->numberBetween(1, 50), // Room ID ngẫu nhiên từ 1 đến 50
+                'user_id' => $faker->optional()->numberBetween(1, 50), // User ID ngẫu nhiên có thể NULL
+                'code_check_in' => $faker->unique()->word, // Mã check-in ngẫu nhiên
+                'check_in_date' => Carbon::now()->addDays($faker->numberBetween(1, 10))->timestamp, // Thời gian check-in ngẫu nhiên trong 10 ngày tới
+                'check_out_date' => Carbon::now()->addDays($faker->numberBetween(11, 20))->timestamp, // Thời gian check-out sau thời gian check-in
+                'total_price' => $faker->numberBetween(500000, 2000000), // Tổng giá phòng ngẫu nhiên trong khoảng 500k đến 2 triệu
+                'tien_coc' => $faker->numberBetween(100000, 500000), // Tiền cọc ngẫu nhiên
+                'status' => $faker->randomElement([0, 1, 2, 3, 4, 5]), // Trạng thái: từ 0 đến 5
+                'created_at' => Carbon::now()->timestamp, // Thời gian tạo bản ghi
+                'updated_at' => Carbon::now()->timestamp, // Thời gian cập nhật bản ghi
+                'first_name' => $faker->firstName, // Tên người dùng
+                'last_name' => $faker->lastName, // Họ người dùng
+                'email' => $faker->safeEmail, // Email người dùng
+                'phone' => $faker->phoneNumber, // Số điện thoại người dùng
+                'address' => $faker->address, // Địa chỉ người dùng
+                'CCCD_booking' => $faker->numerify('###########'), // Số CCCD ngẫu nhiên
             ]);
         }
     }
