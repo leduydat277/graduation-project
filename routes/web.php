@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\AboutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;

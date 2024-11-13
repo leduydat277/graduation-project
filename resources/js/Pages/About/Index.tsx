@@ -33,9 +33,10 @@ function AboutPage() {
 
   return (
     <>
-       <Box display="flex" sx={{ width: '80%', marginTop: '40px', margin: 'auto', marginBottom: '40px' }}>
+       <Box display="flex" sx={{ width: '80%', marginTop: '90px', margin: 'auto', marginBottom: '40px' }}>
         {/* Sidebar */}
         <Box sx={{ 
+          marginTop: '60px',
           width: '250px', 
           borderRight: '1px solid #ddd',
           paddingRight: '10px'
@@ -76,10 +77,11 @@ function AboutPage() {
         <Box sx={{
           padding: '20px',
           flexGrow: 1,
-          minWidth: 0, // Ngăn nội dung mở rộng ngoài khu vực xác định
+          minWidth: 0, 
           maxWidth: 'calc(100% - 250px)',
-          overflow: 'hidden', // Đảm bảo nội dung không vượt ra ngoài khi thay đổi
-          transition: 'all 0.3s ease-in-out', // Hiệu ứng chuyển động
+          overflow: 'hidden', 
+          transition: 'all 0.3s ease-in-out',
+          marginTop: '50px'
         }}>
           {/* Tiêu đề */}
           <Typography variant="h4" gutterBottom>

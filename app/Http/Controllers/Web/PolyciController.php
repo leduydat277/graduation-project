@@ -8,6 +8,6 @@ class PolyciController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Polyci/Index');
+        return Inertia::render('Policy/Index');
     }
 }
