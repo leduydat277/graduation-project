@@ -1,9 +1,11 @@
 @extends('admin.layouts.admin')
-    {{ $title }} -Admin
+{{ $title }} -Admin
 @section('css')
     <!-- App favicon và các css cần thiết -->
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
-    <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
+        type="text/css" />
+
     <link href="{{ asset('assets/admin/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/admin/assets/js/layout.js') }}"></script>
     <link href="{{ asset('assets/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
@@ -27,7 +29,7 @@
                         <div class="col-md-3">
                             <label for="search" class="form-label">Tìm kiếm tên phòng</label>
                             <input type="text" name="search" id="search" class="form-control"
-                                   placeholder="Nhập tên phòng..." value="{{ request('search') }}">
+                                placeholder="Nhập tên phòng..." value="{{ request('search') }}">
                         </div>
 
                         <!-- Chọn trạng thái phòng -->
@@ -37,7 +39,8 @@
                                 <option value="">Chọn trạng thái</option>
                                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Đã cọc</option>
                                 <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Sẵn sàng</option>
-                                <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Đang sử dụng</option>
+                                <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Đang sử dụng
+                                </option>
                             </select>
                         </div>
 
@@ -45,14 +48,13 @@
                         <div class="col-md-3">
                             <label for="from_date" class="form-label">Ngày đến (From)</label>
                             <input type="date" name="from_date" id="from_date" class="form-control"
-                                   placeholder="Chọn ngày bắt đầu" value="{{ request('from_date') }}">
+                                placeholder="Chọn ngày bắt đầu" value="{{ request('from_date') }}">
                         </div>
 
                         <!-- Ngày kết thúc -->
                         <div class="col-md-3">
                             <label for="to_date" class="form-label">Ngày đi (To)</label>
-                            <input type="date" name="to_date" id="to_date" class="form-control"
-                                   placeholder="Chọn ngày kết thúc" value="{{ request('to_date') }}">
+                                placeholder="Chọn ngày kết thúc" value="{{ request('to_date') }}">
                         </div>
 
                         <!-- Nút Lọc -->
@@ -83,43 +85,54 @@
                                                 @case(0)
                                                     Đã cọc
                                                 @break
+
                                                 @case(1)
                                                     Sẵn sàng
                                                 @break
+
                                                 @case(2)
                                                     Đang sử dụng
                                                 @break
+
                                                 @default
                                                     Không xác định
                                             @endswitch
                                         </td>
                                         <td>
                                             {{ date('d/m/Y H:i', $statusRoom['from']) }} -
-                                            {{ date('d/m/Y H:i', $statusRoom['to']) }}
+
+                                            @if (!$statusRoom['to'])
+                                                <span
+                                                    style="background-color: #ccffcc; color: #333; padding: 2px 5px; border-radius: 3px;">không
+                                                    giới hạn</span>
+                                            @else
+                                                {{ date('d/m/Y H:i', $statusRoom['to']) }}
+                                            @endif
                                         </td>
                                         <td>
                                             @if (!empty($statusRoom['booking']))
-                                                <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}">Xem Booking</a>
+                                                <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}">Xem
+                                                    Booking</a>
                                             @else
                                                 Không có
                                             @endif
                                         </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">Không có kết quả phù hợp</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">Không có kết quả phù hợp</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <!-- Hiển thị phân trang -->
-                    <div class="d-flex justify-content-end">
-                        {{ $statusRooms->appends(request()->input())->links('pagination::bootstrap-5') }}
+                        <!-- Hiển thị phân trang -->
+                        <div class="d-flex justify-content-end">
+                            {{ $statusRooms->appends(request()->input())->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-@endsection
+    @endsection
+

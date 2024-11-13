@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Admin\MailController;
+use App\Http\Controllers\Admin\ManageStatusRoomController;
+use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
+use App\Models\ManageStatusRoom;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +23,10 @@ use function Laravel\Prompts\error;
 class BookingController
 {
     private $messages;
-    public function __construct()
+    private $paymentController;
+    public function __construct(PaymentController $paymentController)
     {
+        $this->paymentController = $paymentController;
         $this->messages = [
             'address.required' => 'Vui lòng nhập địa chỉ của bạn.',
             'phone.required' => 'Vui lòng nhập số điện thoại của bạn',
@@ -49,11 +56,14 @@ class BookingController
 
             $today = Carbon::today()->format('dmY');
             $todayInt = Carbon::createFromFormat('dmY', (string)$today);
-            Log::error($todayInt);
-
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
-            Log::error($checkOutDate, );
+
+            $checkInDateFormat = Carbon::createFromFormat('dmY', (string)$check_in_date)->setTime(14, 0, 0);
+            $checkOutDateFormat = Carbon::createFromFormat('dmY', (string)$check_out_date)->setTime(12, 0, 0);
+
+            $checkInTimestamp = $checkInDateFormat->timestamp;
+            $checkOutTimestamp = $checkOutDateFormat->timestamp;
 
             $daysBooked = $checkInDate->diffInDays($checkOutDate);
 
@@ -74,14 +84,14 @@ class BookingController
                 ], 400);
             }
 
-            if($checkInDate < $todayInt){
+            if ($checkInDate < $todayInt) {
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
                 ], 400);
             }
 
-            if($checkOutDate <= $checkInDate){
+            if ($checkOutDate <= $checkInDate) {
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày trả phòng không được nhỏ hơn ngày nhận phòng.'
@@ -106,8 +116,9 @@ class BookingController
                 ->get();
 
             foreach ($bookings as $booking) {
-                if (($check_in_date >= $booking->check_in_date
-                        && $check_in_date < $booking->check_out_date)
+
+                if (($checkInTimestamp >= $booking->check_in_date
+                        && $checkInTimestamp < $booking->check_out_date)
                     && in_array($booking->status, [1, 2, 3, 4])
                 ) {
                     return response()->json([
@@ -126,35 +137,135 @@ class BookingController
                     "address" => $address,
                     "phone" => $phone,
                     "email" => $email,
-                    "check_in_date" => $check_in_date,
-                    "check_out_date" => $check_out_date,
+                    "check_in_date" => $checkInTimestamp,
+                    "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
-                    "tien_coc" => $depositAmount
+                    "tien_coc" => $depositAmount,
+                ]);
+            } else {
+                $booking = Booking::create([
+                    "room_id" => $room_id,
+                    "first_name" => $first_name,
+                    "last_name" => $last_name,
+                    "address" => $address,
+                    "phone" => $phone,
+                    "email" => $email,
+                    "check_in_date" => $checkInTimestamp,
+                    "check_out_date" => $checkOutTimestamp,
+                    "total_price" => $total_price,
+                    "tien_coc" => $depositAmount,
                 ]);
             }
-
-            $booking = Booking::create([
-                "room_id" => $room_id,
-                "first_name" => $first_name,
-                "last_name" => $last_name,
-                "address" => $address,
-                "phone" => $phone,
-                "email" => $email,
-                "check_in_date" => $check_in_date,
-                "check_out_date" => $check_out_date,
-                "total_price" => $total_price,
-                "tien_coc" => $depositAmount
-            ]);
-
             Payment::create([
                 "booking_id" => $booking->id,
-                "total_price" => $depositAmount
+                "total_price" => $depositAmount,
+                "payment_method" => 1,
             ]);
+
+            $ipAddr = $request->ip();
+            $order = [
+                "code" => $booking->id,
+                "info" => "booking_payment_$booking->id",
+                "type" => "billpayment",
+                "bankCode" => "NCB",
+                "total" => $depositAmount * 100,
+            ];
+
+            $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr);
 
             return response()->json([
                 "message" => "Booking successful",
                 "data" => $booking,
-                "room" => $todayInt
+                "room" => $todayInt,
+                "paymentUrl" => $paymentUrl
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
+    public function vnpay(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                "vnp_Amount" => "required",
+                "vnp_BankCode" => "required",
+                "vnp_BankTranNo" => "required",
+                "vnp_CardType" => "required",
+                "vnp_OrderInfo" => "required",
+                "vnp_PayDate" => "required",
+                "vnp_ResponseCode" => "required",
+                "vnp_TmnCode" => "required",
+                "vnp_TransactionNo" => "required",
+                "vnp_TransactionStatus" => "required",
+                "vnp_TxnRef" => "required",
+                "vnp_SecureHash" => "required",
+            ], $this->messages);
+
+            $id = $request->input('vnp_TxnRef');
+
+            if ($validator->fails()) {
+                Booking::where('id', $id)->delete();
+                Payment::where('booking_id', $id)->delete();
+                return response()->json([
+                    "type" => "canceled",
+                    "message" => "Đã hủy thanh toán!"
+                ], 422);
+            }
+
+            $validatedData = $validator->validated();
+
+            $vnpBankCode = $request->input('vnp_BankCode');
+
+            unset($validatedData['vnp_BankCode']);
+
+            $paymentGatewayResponse = json_encode($validatedData);
+
+            $booking = Booking::where("id", $id)->first();
+            if (!$booking) {
+                return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
+            }
+
+            $check_in_code = rand(100000, 999999);
+            $booking->code_check_in = $check_in_code;
+            $booking->status = 2;
+            $booking->save();
+
+            $currentTimestamp = time();
+            Payment::where("booking_id", "=", $id)->update([
+                "payment_status" => 2,
+                "vnp_BankCode" => $vnpBankCode,
+                "updated_at" => $currentTimestamp,
+                "vnp_TransactionNo" => $paymentGatewayResponse,
+            ]);
+
+            $from_new =  (new DateTime())->setTimestamp($booking->check_in_date)->format('Y-m-d');
+            $to_new = (new DateTime())->setTimestamp($booking->check_out_date)->format('Y-m-d');
+
+            $status = new ManageStatusRoomController();
+            $status->create($id, $booking->room_id, $from_new, $to_new);
+
+            $mail = new MailController();
+
+            $data = [
+                'checkin_code' => $check_in_code,
+                'check_in_date' => $from_new,
+                'check_out_date' => $to_new,
+                'name' => $booking->last_name . '' . $booking->first_name
+            ];
+            $mail->SendCheckinCode("Gửi mã Check in", 'checkincode', $data, $booking->email);
+
+            return response()->json([
+                "url_redirect" => "url_test",
+                "message" => "Thanh toán thành công"
             ], 200);
         } catch (Exception $e) {
             return response()->json([

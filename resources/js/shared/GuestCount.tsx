@@ -12,8 +12,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Box } from "@mui/material"
 import { QuantitySelectGuest } from "./QuantitySelectGuest"
+import { rest } from "lodash"
 
-export const GuestCount = () => {
+export const GuestCount = (props) => {
+  const {position, ...rest} = props
   return (
     <Dialog >
       <DialogTrigger asChild>
@@ -24,11 +26,8 @@ export const GuestCount = () => {
         }}
         >Chọn loại phòng & số người</Button>
       </DialogTrigger>
-      <DialogContent >
+      <DialogContent position={position}>
        <QuantitySelectGuest />
-        <DialogFooter>
-          <Button type="submit">Xác nhận </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

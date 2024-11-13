@@ -3,13 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
-use App\Models\Room;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 use Faker\Factory as Faker;
-
 class BookingsTableSeeder extends Seeder
 {
     public function run()

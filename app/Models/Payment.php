@@ -11,7 +11,14 @@ class Payment extends Model
 
     public $timestamps = false;
     protected $fillable = [
-        'booking_id', 'payment_date', 'total_price', 'payment_method', 'payment_status'
+        'booking_id',
+        'payment_date',
+        'total_price',
+        'payment_method',
+        'payment_status',
+        'vnp_BankCode',
+        'vnp_TransactionNo	',
+        '	updated_at'
     ];
 
     public function booking()

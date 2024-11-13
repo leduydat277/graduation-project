@@ -13,9 +13,6 @@ class ManageStatusRoomController extends Controller
 {
 
     const VIEW_PATH =  'admin.managestatus.';
-
-    
-
     public function index(Request $request)
     {
         $title = 'Quản lý trạng thái phòng';
@@ -96,5 +93,89 @@ class ManageStatusRoomController extends Controller
         ]);
 
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
+    }
+
+    public function create($id_booking, $id_room, $from, $to)
+    {
+        $from_new = (new DateTime($from))->setTime(14, 0, 0)->getTimestamp();
+        $to_new = (new DateTime($to))->setTime(12, 0, 0)->getTimestamp();
+
+        $current_time_room = ManageStatusRoom::where('room_id', $id_room)
+            ->where('status', 1)
+            ->where('from', '<=', $from_new)
+            ->where('to', '>=', $to_new)
+            ->first();
+
+        if ($current_time_room && $to_new == $current_time_room->to && $from == $current_time_room->from) {
+            $current_time_room->update([
+                'booking_id' => $id_booking,
+                'status' => 0
+            ]);
+            return;
+        }
+
+        ManageStatusRoom::create([
+            "booking_id" => $id_booking,
+            "room_id" => $id_room,
+            "status" => 0,
+            "from" => $from_new,
+            "to" => $to_new
+        ]);
+
+        if ($current_time_room) {
+            if ($from_new > $current_time_room->from) {
+                $new_record_manage_from = (new DateTime())->setTimestamp($current_time_room->from)->setTime(14, 0, 0)->getTimestamp();
+                $new_record_manage_to = (new DateTime())->setTimestamp($from_new)->setTime(12, 0, 0)->getTimestamp();
+
+                ManageStatusRoom::create([
+                    "room_id" => $id_room,
+                    "status" => 1,
+                    "from" => $new_record_manage_from,
+                    "to" => $new_record_manage_to
+                ]);
+            }
+            if ($to_new < $current_time_room->to) {
+                $new_record_manage_from = (new DateTime($to))->setTime(14, 0, 0)->getTimestamp();
+                $new_record_manage_to = (new DateTime())->setTimestamp($current_time_room->to)->setTime(12, 0, 0)->getTimestamp();
+
+                ManageStatusRoom::create([
+                    "room_id" => $id_room,
+                    "status" => 1,
+                    "from" => $new_record_manage_from,
+                    "to" => $new_record_manage_to
+                ]);
+            }
+            if ($current_time_room) {
+                $current_time_room->delete();
+            }
+        } else {
+            $current_room_future = ManageStatusRoom::where('room_id', $id_room)->where('to', 0)->first();
+            if ($from_new >= $current_room_future->from) {
+                $new_record_manage_from = (new DateTime())->setTimestamp($current_room_future->from)->setTime(14, 0, 0)->getTimestamp();
+                $new_record_manage_to = (new DateTime($from))->setTime(12, 0, 0)->getTimestamp();
+
+                if ($from_new != $current_room_future->from) {
+                    ManageStatusRoom::create([
+                        "room_id" => $id_room,
+                        "status" => 1,
+                        "from" => $new_record_manage_from,
+                        "to" => $new_record_manage_to
+                    ]);
+                }
+
+                $new_record_future_from = (new DateTime($to))->setTime(14, 0, 0)->getTimestamp();
+                $new_record_future_to = 0;
+
+                ManageStatusRoom::where('room_id', $id_room)->where('to', 0)->delete();
+                ManageStatusRoom::create([
+                    "room_id" => $id_room,
+                    "status" => 1,
+                    "from" => $new_record_future_from,
+                    "to" => $new_record_future_to
+                ]);
+            }
+        }
+
+        return 'Thêm bản ghi vào bảng Manage Status Room thành công';
     }
 }
