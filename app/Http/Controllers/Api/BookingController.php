@@ -263,7 +263,10 @@ class BookingController
             ];
             $mail->SendCheckinCode("Gửi mã Check in", 'checkincode', $data, $booking->email);
 
-            return response()->json(["message" => "Thanh toán thành công"], 200);
+            return response()->json([
+                "url_redirect" => "url_test",
+                "message" => "Thanh toán thành công"
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",

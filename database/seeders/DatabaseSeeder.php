@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder
             RoomTypesTableSeeder::class,
             UsersTableSeeder::class,
             RoomsTableSeeder::class,
-            TokensTableSeeder::class,
             RoomAssetsTableSeeder::class,
             ManageStatusRoomsTableSeeder::class,
             PhiPhatSinhsTableSeeder::class,

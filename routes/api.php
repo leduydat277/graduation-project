@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Web\DetailController;
@@ -17,8 +18,11 @@ Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
     ->name('api.search_room');
 
 
+Route::get('dashboard', [DashboardController::class, 'statistical'])->name('api.dashboard');
+
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
+
 
 Route::get('donepayment', [BookingController::class, 'vnpay'])
     ->name('api.donepayment');
