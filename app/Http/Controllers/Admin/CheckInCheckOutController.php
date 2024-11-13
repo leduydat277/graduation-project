@@ -80,7 +80,15 @@ class CheckInCheckOutController extends RoutingController
         $room->save();
         $payment = Payment::where('booking_id', $id)->first();
         $payment->payment_status = 3;
-        $payment->total_price = $request->totalPrice; // updatetieenf ở payments
+        $payment->insert(
+            [
+                'booking_id' => $id,
+                'payment_date' => Carbon::now()->timestamp,
+                'payment_method' => 0,
+                'payment_status' => 3,
+                'total_price' => ($request->totalPrice - $request->tiencu),
+            ]
+        );
         $payment->save();
 
         foreach ($request->pps as $index => $name) {

@@ -107,6 +107,7 @@
                     @csrf
                     <!-- Form fields -->
                     <input type="hidden" id="bookingId1" name="bookingId">
+                    <input type="hidden" id="tiencu" name="tiencu">
                     <div class="mb-3">
                         <label for="userName" class="form-label">User Name</label>
                         <input type="text" class="form-control" id="userName1" readonly>
@@ -353,6 +354,7 @@ function calculateTotal() {
         document.getElementById('userName1').value = booking.user_name;
         document.getElementById('checkoutDate1').value = booking.check_out_date;
         document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc);
+        document.getElementById('tiencu').value = (booking.tien_coc);
     }
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Ngừng hành động gửi form mặc định
