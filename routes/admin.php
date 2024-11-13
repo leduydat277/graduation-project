@@ -70,3 +70,7 @@ Route::get('/admin/logout', function () {
 
     return redirect('/admin/login')->with('message', 'You have been logged out successfully.');
 })->name('admin/ogout');
+
+Route::prefix('admin')->group(function () {
+    Route::get('{id}/export_pdf', [PaymentController::class, 'generatePDF'])->name('payments.export_pdf');
+});
