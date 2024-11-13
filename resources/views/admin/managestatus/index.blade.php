@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
     <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
         type="text/css" />
+
     <link href="{{ asset('assets/admin/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/admin/assets/js/layout.js') }}"></script>
     <link href="{{ asset('assets/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
@@ -53,7 +54,6 @@
                         <!-- Ngày kết thúc -->
                         <div class="col-md-3">
                             <label for="to_date" class="form-label">Ngày đi (To)</label>
-                            <input type="date" name="to_date" id="to_date" class="form-control"
                                 placeholder="Chọn ngày kết thúc" value="{{ request('to_date') }}">
                         </div>
 
@@ -100,6 +100,7 @@
                                         </td>
                                         <td>
                                             {{ date('d/m/Y H:i', $statusRoom['from']) }} -
+
                                             @if (!$statusRoom['to'])
                                                 <span
                                                     style="background-color: #ccffcc; color: #333; padding: 2px 5px; border-radius: 3px;">không
@@ -133,5 +134,5 @@
                     </div>
                 </div>
             </div>
-        </div>
     @endsection
+

@@ -62,6 +62,7 @@
                  <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                  <li class="nav-item">
                      <a href="#" class="nav-link" data-key="t-analytics">
+
                          <i class="fas fa-home"></i> <!-- Biểu tượng cho trang chủ -->
                          Trang chủ
                      </a>
@@ -111,7 +112,6 @@
                          Danh sách quản lý trạng thái phòng
                      </a>
                  </li>
-
 
                  <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
                      <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
