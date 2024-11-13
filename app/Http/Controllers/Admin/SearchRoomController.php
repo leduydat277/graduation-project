@@ -21,8 +21,14 @@ class SearchRoomController extends Controller
      * 
      * @return array  A list of available rooms that match the criteria.
      */
-    public function searchRoom($room_type_id, $input_people, $from, $to, $room_id)
+    public function searchRoom()
     {
+        $room_type_id = $_GET['room_type_id'];
+        $input_people = $_GET['input_people'];
+        $from = $_GET['from'];
+        $to = $_GET['to'];
+        $room_id = $_GET['room_id'];
+
         if (!$room_id && (!is_numeric($input_people) || $input_people <= 0)) {
             return response()->json([
                 'status' => 'error',
@@ -31,7 +37,7 @@ class SearchRoomController extends Controller
         }
 
         // try {
-        if ($from != "null" && $to != "null") {
+        if ($from  && $to) {
             $fromDate = new DateTime($from);
             $toDate = new DateTime($to);
 
@@ -51,7 +57,7 @@ class SearchRoomController extends Controller
         }
 
         //TODO Trường hợp nếu `room_id` được truyền
-        if ($room_id && $room_id != "null") {
+        if ($room_id) {
             $current_time_room = ManageStatusRoom::select('room_id', 'from', 'to')
                 ->where('room_id', $room_id)
                 ->where('status', 1)

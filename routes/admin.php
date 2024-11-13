@@ -57,7 +57,7 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('admin/searchroom')->controller(SearchRoomController::class)->group(function () {
-    Route::get('search_room/{room_type_id}/{input_people}/{date_in}/{date_out}/{room_id}', [SearchRoomController::class, 'searchRoom']);
+    Route::get('search_room', [SearchRoomController::class, 'searchRoom']);
 });
 
 Route::prefix('admin/mail')->controller(MailController::class)->group(function () {
