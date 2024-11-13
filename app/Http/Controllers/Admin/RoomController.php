@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\RoomRequest;
 use App\Http\Requests\Admin\UpdateRoomRequest;
+use App\Models\Admin\ManageStatusRoom;
 use App\Models\Admin\Room;
 use App\Models\Admin\RoomType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +24,7 @@ class RoomController extends Controller
 
         // Lấy các tham số sắp xếp
         $sortBy = $request->input('sort_by', 'id'); // Mặc định sắp xếp theo 'id'
-        $sortOrder = $request->input('sort_order', 'asc'); // Mặc định sắp xếp tăng dần
+        $sortOrder = $request->input('sort_order', 'desc'); // Mặc định sắp xếp tăng dần
 
         // Lấy danh sách phòng với tìm kiếm và sắp xếp
         $rooms = Room::with('roomType')
@@ -62,7 +64,7 @@ class RoomController extends Controller
                 $imagePaths[] = $path; // Thêm đường dẫn ảnh vào mảng
             }
         }
-        
+
         // Tạo phòng với dữ liệu đầu vào và lưu đường dẫn ảnh dưới dạng JSON
         $room = Room::create([
             'title' => $request->input('title'),
@@ -75,6 +77,12 @@ class RoomController extends Controller
             'status' => 0
         ]);
 
+        ManageStatusRoom::create([
+            'room_id' => $room->id,
+            'status' => 1,
+            'from' => Carbon::tomorrow()->setHour(14)->timestamp,
+            'to' => 0,
+        ]);
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được thêm thành công.');
     }
 
