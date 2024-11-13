@@ -78,10 +78,6 @@
                         <input type="text" class="form-control" id="checkInDate" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Số tiền cần thanh toán</label>
-                        <input type="text" class="form-control" id="thanhtoan" readonly>
-                    </div>
-                    <div class="mb-3">
                         <label for="checkInDate" class="form-label">CCCD</label>
                         <input type="number" name="cccd" class="form-control" id="cccd" placeholder="nhập số cccd" required>
                     </div>
@@ -103,7 +99,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="checkinModalLabel">Check-in Booking</h5>
+                <h5 class="modal-title" id="checkinModalLabel">Check-out Booking</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -120,14 +116,17 @@
                         <input type="text" class="form-control" id="checkoutDate1" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Phát sinh</label>
-                        <input type="text" name="pps1" class="form-control" id="pps" readonly>
+                        <label for="checkInDate" class="form-label">Số tiền nợ</label>
+                        <input type="number" class="form-control" id="thanhtoan" readonly>
                     </div>
-                    <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Tổng phí phát sinh</label>
-                        <input type="text" name="price" class="form-control" id="price" readonly>
+                    <div id="extraFeesContainer">
                     </div>
+                    <button type="button" id="addFeeButton" class="btn btn-primary">+</button>
                     <!-- You can add more fields if needed -->
+                    <div class="mt-3">
+                        <label for="totalPrice" class="form-label">Tổng tiền cần thanh toán</label>
+                        <input type="number" name="totalPrice" class="form-control" id="totalPrice" readonly>
+                    </div> <br>
                     <button type="submit" class="btn btn-primary">Submit Check-out</button>
                 </form>
             </div>
@@ -137,6 +136,79 @@
 @endsection
 @section('js')
 <script>
+document.getElementById("addFeeButton").addEventListener("click", function() {
+    // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
+    const ppsInputs = document.querySelectorAll('input[name="pps[]"]');
+    const priceInputs = document.querySelectorAll('input[name="price[]"]');
+    
+    // Kiểm tra nếu tất cả các trường đã điền
+    let allFilled = true;
+    ppsInputs.forEach(input => {
+        if (input.value.trim() === "") {
+            allFilled = false;
+        }
+    });
+    priceInputs.forEach(input => {
+        if (input.value.trim() === "") {
+            allFilled = false;
+        }
+    });
+    
+    // Nếu tất cả các trường đã được điền thì cho phép thêm trường mới
+    if (allFilled) {
+        // Tạo một div chứa các trường phát sinh mới
+        const newFeeDiv = document.createElement("div");
+        newFeeDiv.classList.add("mb-3");
+
+        // Tạo trường Phát sinh
+        const newPpsLabel = document.createElement("label");
+        newPpsLabel.classList.add("form-label");
+        newPpsLabel.textContent = "Phát sinh";
+        const newPpsInput = document.createElement("input");
+        newPpsInput.type = "text";
+        newPpsInput.name = "pps[]";
+        newPpsInput.classList.add("form-control");
+
+        // Tạo trường Giá phát sinh
+        const newPriceLabel = document.createElement("label");
+        newPriceLabel.classList.add("form-label");
+        newPriceLabel.textContent = "Giá phát sinh";
+        const newPriceInput = document.createElement("input");
+        newPriceInput.type = "number";
+        newPriceInput.name = "price[]";
+        newPriceInput.classList.add("form-control", "price-input");
+        newPriceInput.oninput = calculateTotal;
+        const hr = document.createElement("hr");
+        // Thêm các trường vào div mới
+        newFeeDiv.appendChild(newPpsLabel);
+        newFeeDiv.appendChild(newPpsInput);
+        newFeeDiv.appendChild(newPriceLabel);
+        newFeeDiv.appendChild(newPriceInput);
+        newFeeDiv.appendChild(hr);
+        // Thêm div mới vào container chính
+        document.getElementById("extraFeesContainer").appendChild(newFeeDiv);
+    } else {
+        alert("Vui lòng nhập Phát sinh và Giá phát sinh trước khi thêm mục mới.");
+    }
+});
+
+// Hàm tính tổng giá trị các ô Giá phát sinh
+function calculateTotal() {
+    const priceInputs = document.querySelectorAll('.price-input');
+    const no = parseFloat(document.getElementById('thanhtoan').value) || 0; // Lấy giá trị từ ô "thanhtoan" và chuyển thành số
+    let total = no; // Khởi tạo total với giá trị từ "thanhtoan"
+
+    priceInputs.forEach(input => {
+        const value = parseFloat(input.value);
+        if (!isNaN(value)) {
+            total += value; // Cộng giá trị của mỗi ô "Giá phát sinh" vào tổng
+        }
+    });
+
+    document.getElementById("totalPrice").value = total; // Gán tổng vào ô "totalPrice"
+}
+//end
+
     document.addEventListener("DOMContentLoaded", function() {
         const bookingsData = @json($bookings);
 
@@ -215,7 +287,7 @@
                         width: "100px",
                         formatter: (cell, row) => {
                             const status = row.cells[7].data;
-                            if (status === 2 || status === 3) {
+                            if (status === 2) {
                                 return gridjs.html('<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(' + row.cells[0].data + ')">Check-in</button>');
                             } else if (status === 4) {
                                 return gridjs.html('<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(' + row.cells[0].data + ')">Check-out</button>');
@@ -245,7 +317,7 @@
     });
     // end table
 
-    // Mở modal và điền dữ liệu vào form
+//checkin
     function openCheckinModal(bookingId) {
         // Tìm booking tương ứng
         const booking = @json($bookings).find(b => b.id === bookingId);
@@ -255,7 +327,6 @@
         document.getElementById('userName').value = booking.user_name;
         document.getElementById('roomType').value = booking.room_type;
         document.getElementById('checkInDate').value = booking.check_in_date;
-        document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc);
         window.booking = booking;
     }
     document.getElementById('checkinForm').addEventListener('submit', function(e) {
@@ -273,15 +344,15 @@
             form.submit();
         }
     });
+//endcheckin
 
-
+//checkout
     function openCheckoutModal(bookingId) {
         const booking = @json($bookings).find(b => b.id === bookingId);
         document.getElementById('bookingId1').value = booking.id;
         document.getElementById('userName1').value = booking.user_name;
         document.getElementById('checkoutDate1').value = booking.check_out_date;
-        document.getElementById('pps').value = booking.phiphatsinh;
-        document.getElementById('price').value = booking.giaphiphatsinh;
+        document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc);
     }
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Ngừng hành động gửi form mặc định
@@ -293,6 +364,7 @@
         form.method = 'POST';
         form.submit();
     });
+//endcheckout
 </script>
 
 
