@@ -23,11 +23,11 @@ class SearchRoomController extends Controller
      */
     public function searchRoom()
     {
-        $room_type_id = $_GET['room_type_id'];
-        $input_people = $_GET['input_people'];
-        $from = $_GET['from'];
-        $to = $_GET['to'];
-        $room_id = $_GET['room_id'];
+        $room_type_id = $_GET['room_type_id'] ?? null;
+        $input_people = $_GET['input_people'] ?? null;
+        $from = $_GET['from'] ?? null;
+        $to = $_GET['to'] ?? null;
+        $room_id = $_GET['room_id'] ?? null;
 
         if (!$room_id && (!is_numeric($input_people) || $input_people <= 0)) {
             return response()->json([
