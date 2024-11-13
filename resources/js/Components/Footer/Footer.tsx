@@ -1,155 +1,52 @@
-import { Box, Typography, Button } from '@mui/material';
+import React from 'react';
+import { Box, Grid, Typography, IconButton, Link } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import XIcon from '@mui/icons-material/X';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AddCardIcon from '@mui/icons-material/AddCard';
+import GoogleIcon from '@mui/icons-material/Google';
 export const Footer = () => {
   return (
-    <Box
-      sx={{
-        color: 'black',
-        padding: '20px',
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '15px',
-        }}
-      >
-        <Box
-          sx={{
-            flex: 1,
-            minWidth: '150px',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            Hỗ trợ
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Các câu hỏi thường gặp về virus corona (COVID-19)
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Quản lí các chuyến đi của bạn
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Liên hệ Dịch vụ Khách hàng
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Trung tâm thông tin bảo mật
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            minWidth: '150px',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            Khám phá thêm
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Chương trình khách hàng thân thiết Genius
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Ưu đãi theo mùa và dịp lễ
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Bài viết về du lịch
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Booking.com dành cho Doanh Nghiệp
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            minWidth: '150px',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            Điều khoản và cài đặt
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Bảo mật & Cookie
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Điều khoản và điều kiện
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Tranh chấp đối tác
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            minWidth: '150px',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            Dành cho đối tác
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Đăng nhập vào trang Extranet
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Trợ giúp đối tác
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            minWidth: '150px',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            Về chúng tôi
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Về Booking.com
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Chúng tôi hoạt động như thế nào
-          </Typography>
-          <Typography component="a" href="#" sx={{ display: 'block', color: 'black', textDecoration: 'none', margin: '5px 0', '&:hover': { textDecoration: 'underline' } }}>
-            Truyền thông
-          </Typography>
-        </Box>
-      </Box>
-      <Box>
-          <FacebookIcon />
-          <TwitterIcon />
-          <YouTubeIcon />
-          <XIcon />
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          borderTop: '1px solid #ddd',
-          marginTop: '20px',
-        }}
-      >
-        <Box>
-          <Typography variant="h6" sx={{ color: '#3366cc', fontWeight: 'bold' }}>
-            SleepStay.
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#666' }}>
-            We kaboom your beauty holiday <br /> instantly and memorable.
-          </Typography>
-        </Box>
-        <Box textAlign="right">
-          <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#333' }}>
-            Become hotel Owner
-          </Typography>
-          <Button variant="contained" color="primary">
-            Register Now
-          </Button>
-        </Box>
-      </Box>
+    <Box sx={{ bgcolor: '#092533', color: '#E5E5E5', padding: '2rem 0' }}>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12} md={8} display="flex" justifyContent="center" gap={2}>
+          {['Sang Trọng', 'Chính Sách Hợp Lý', 'Bảo Mật An Toàn', 'Tiện Nghi Đủ Đầy', 'Vị Trí Khách Sạn Thuận Lợi', 'Lễ Tân chuyên nghiệp'].map((item) => (
+            <Typography key={item} variant="body2" component="a" href="#" sx={{ textDecoration: 'none', color: '#E5E5E5' }}>
+              {item}
+            </Typography>
+          ))}
+        </Grid>
+        <Grid item xs={12} md={8} display="flex" flexDirection="column" alignItems="center" textAlign="center" my={2}>
+          
+          <Typography variant="body2">Địa chỉ: Số 29, tổ 5, đường Thác Bạc, Phường Sapa, Thị xã Sapa, tỉnh Lào Cai, Việt Nam</Typography>
+          <Typography variant="body2">VPKD: P409, Tòa nhà Savina, Số 1 Đinh Lễ, Quận Hoàn Kiếm, Hà Nội</Typography>
+          <Typography variant="body2">ĐKKD số 5300200993-001 do Sở KHĐT Lào Cai cấp ngày 24/09/2018 & Sửa đổi lần 4 ngày 05/04/2023</Typography>
+          <Typography variant="body2">Điện thoại: 0214 356 6666 | Hotline: 0868 588 364 | Email: rsv@pistachiohotel.com</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} display="flex" justifyContent="center" alignItems="center" gap={2}>
+          <Box>
+            <Typography variant="body2" align="center">Tìm chúng tôi trên</Typography>
+            <Box display="flex" gap={1} justifyContent="center">
+              <FacebookIcon></FacebookIcon>
+            </Box>
+          </Box>
+          <Box display="flex" flexDirection="column" alignItems="center">
+      
+            <Typography variant="body2" align="center">Xếp hạng trên Google</Typography>
+            <GoogleIcon></GoogleIcon>
+            
+          </Box>
+          <Box>
+            <Typography variant="body2" align="center">Các hình thức được chấp nhận</Typography>
+            <Box display="flex" gap={1} justifyContent="center">
+            <AccountBalanceWalletIcon></AccountBalanceWalletIcon> 
+            <AddCardIcon></AddCardIcon>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={12} textAlign="center" mt={2}>
+          <Typography variant="body2">© Bản quyền 2020 - 2025 bởi Sleep Hotel</Typography>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

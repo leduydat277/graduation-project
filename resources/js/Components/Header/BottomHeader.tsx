@@ -6,6 +6,7 @@ import { TopHeader } from '@/components/Header/TopHeader';
 import { containerProps } from '@/components/Responsive';
 
 export const BottomHeader = ({ fullWidth, ...rest }) => {
+  
   const containerProp = fullWidth ? { width: '100%', flex: 1 } : containerProps();
 
   return (
