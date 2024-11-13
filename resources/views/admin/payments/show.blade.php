@@ -20,18 +20,16 @@
 
 @section('content')
     <div class="card shadow-lg">
-        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+        <div class="card-header bg-primary d-flex justify-content-center align-items-center">
             <h4 class="card-title mb-0 text-white">Chi Tiết Hóa Đơn</h4>
         </div>
         <div class="card-body bg-light">
 
             <!-- Thông tin chi tiết -->
-            <div class="d-flex flex-wrap py-4 px-4 bg-white rounded shadow-sm">
+            <div class="d-flex flex-column align-items-center py-4 px-4 bg-white rounded shadow-sm">
                 <!-- Thông tin thanh toán -->
-                <div class="info-box flex-fill p-3 m-2 border rounded">
+                <div class="info-box mb-3 p-3 border rounded w-100">
                     <h6 class="text-primary">Thông Tin Thanh Toán</h6>
-                    <p><strong>ID Thanh Toán:</strong> {{ $payment->id }}</p>
-                    <p><strong>ID Đặt Phòng:</strong> {{ $payment->booking_id }}</p>
                     <p><strong>Ngày Thanh Toán:</strong>
                         {{ \Carbon\Carbon::parse($payment->payment_date)->format('d-m-Y') }}</p>
                     <p><strong>Tổng Số Tiền:</strong> <span
@@ -40,12 +38,12 @@
                             class="fw-bold">{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</span></p>
                     <p><strong>Trạng Thái Thanh Toán:</strong>
                         <span
-                            class="badge {{ $payment->payment_status == 1 ? 'bg-success' : 'bg-warning' }}">{{ $payment->payment_status == 1 ? 'Đã thanh toán' : 'Chưa thanh toán' }}</span>
+                            class="badge {{ $payment->payment_status == 3 ? 'bg-success' : 'bg-warning' }}">{{ $payment->payment_status == 3 ? 'Đã thanh toán' : 'Chưa thanh toán' }}</span>
                     </p>
                 </div>
 
                 <!-- Thông tin đặt phòng -->
-                <div class="info-box flex-fill p-3 m-2 border rounded">
+                <div class="info-box mb-3 p-3 border rounded w-100">
                     <h6 class="text-primary">Thông Tin Đặt Phòng</h6>
                     <p><strong>Người Đặt Phòng:</strong> {{ $payment->booking->user->name ?? 'N/A' }}</p>
                     <p><strong>Ngày Check-in:</strong>
@@ -62,7 +60,7 @@
                 </div>
 
                 <!-- Thông tin phòng -->
-                <div class="info-box flex-fill p-3 m-2 border rounded">
+                <div class="info-box mb-3 p-3 border rounded w-100">
                     <h6 class="text-primary">Thông Tin Phòng</h6>
                     <p><strong>Tên Phòng:</strong> {{ $payment->booking->room->title ?? 'N/A' }}</p>
                     <p><strong>Loại Phòng:</strong> {{ $payment->booking->room->roomType->type ?? 'N/A' }}</p>
@@ -71,13 +69,6 @@
                             class="text-danger fw-bold">{{ number_format($payment->booking->room->price ?? 0) }} VNĐ</span>
                     </p>
                     <p><strong>Sức Chứa:</strong> {{ $payment->booking->room->max_people ?? 'N/A' }} người</p>
-                    @if ($payment->booking->room->image_room)
-                        <p><strong>Hình Ảnh:</strong></p>
-                        @foreach (json_decode($payment->booking->room->image_room, true) as $image)
-                            <img src="{{ asset('storage/' . $image) }}" alt="Room Image" class="img-thumbnail mb-2"
-                                width="100">
-                        @endforeach
-                    @endif
                 </div>
             </div>
 
@@ -87,6 +78,7 @@
             </div>
         </div>
     </div>
+
 
     <style>
         .card-header {

@@ -11,6 +11,9 @@ class Payment extends Model
     use HasFactory;
 
     // Khai báo tên bảng và các thuộc tính có thể điền được
+
+    const PAYMENT_STATUS_PAID = 3;
+
     protected $table = 'payments';
     protected $fillable = [
         'booking_id',

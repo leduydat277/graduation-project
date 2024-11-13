@@ -42,8 +42,9 @@ class PaymentController extends Controller
         }
 
         // Lấy danh sách các bản ghi
-        $payments = $query->get();
-
+        $payments = $query->where('payment_status',  Payment::PAYMENT_STATUS_PAID)
+            ->orderBy('payment_date', 'desc')
+            ->paginate(10);
         // Truyền dữ liệu sang view
         return view(self::VIEW_PATH . __FUNCTION__, compact('payments', 'dateRange', 'status', 'title'));
     }
