@@ -54,6 +54,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
         Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
     });
+    Route::prefix('booking')->as('booking.')->group(function () {
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/add-ui', [BookingController::class, 'addUI'])->name('addUI');
+        Route::post('/add', [BookingController::class, 'add'])->name('add');
+        Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
+        Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
+        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+    });
 });
 
 //Route test cắt giao diện admin
