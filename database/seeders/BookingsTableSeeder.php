@@ -52,11 +52,6 @@ class BookingsTableSeeder extends Seeder
                 'vnp_TransactionNo' => $faker->optional()->uuid,
                 'updated_at' => Carbon::now()->timestamp,
             ]);
-
-            $from_new =  (new DateTime())->setTimestamp($checkIn)->format('Y-m-d');
-            $to_new = (new DateTime())->setTimestamp($checkOut)->format('Y-m-d');
-            $status = new ManageStatusRoomController;
-            $status->create($bookingId, $roomId, $from_new, $to_new);
         }
     }
 }
