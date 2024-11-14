@@ -23,15 +23,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoomTypesTableSeeder::class,
-            UsersTableSeeder::class,
             RoomsTableSeeder::class,
-            RoomAssetsTableSeeder::class,
-            ManageStatusRoomsTableSeeder::class,
-            PhiPhatSinhsTableSeeder::class,
-            PaymentsTableSeeder::class,
-            AssetsTypesTableSeeder::class,
-            ReviewsTableSeeder::class,
+            UsersTableSeeder::class,
             BookingsTableSeeder::class,
+            AssetsTypesTableSeeder::class,
+            RoomAssetsTableSeeder::class,
+            ReviewsTableSeeder::class,
         ]);
     }
 }
