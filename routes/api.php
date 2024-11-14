@@ -1,10 +1,7 @@
 <?php
 
-
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\SearchRoomController;
-use App\Http\Controllers\Api\BookingController;
-use App\Http\Controllers\Web\DetailController;
+use App\Http\Controllers\Admin\RoomController as AdminRoomController;
+use App\Http\Controllers\Api\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,20 +11,7 @@ Route::middleware('api')->get('/example', function (Request $request) {
 });
 
 
-Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
-    ->name('api.search_room');
-
-
-Route::get('dashboard', [DashboardController::class, 'statistical'])->name('api.dashboard');
-
-Route::post('booking', [BookingController::class, 'booking'])
-    ->name('api.booking');
-
-
-Route::get('donepayment', [BookingController::class, 'vnpay'])
-    ->name('api.donepayment');
-
-Route::get('detail/{id}', [DetailController::class, 'detail'])
-    ->name('api.detail');
-// Route::get('/search', [RoomController::class, 'search'])
-//     ->name('search');
+Route::middleware('api')->group(function () {
+    Route::get('/rooms', [RoomController::class, 'index']);
+    Route::get('/rooms/booking', [AdminRoomController::class, 'getRoomBookings']);
+});

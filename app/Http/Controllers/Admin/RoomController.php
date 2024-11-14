@@ -39,6 +39,42 @@ class RoomController extends Controller
             ->with('title', 'Danh sách Phòng');
     }
 
+    public function getRoomBookings(Request $request) {
+        $query = Room::select("rooms.id", "rooms.title", "rooms.price", "rooms.max_people", "bookings.check_in_date", "bookings.check_out_date")
+                     ->leftJoin("bookings", "bookings.room_id", "=", "rooms.id")
+                     ->groupBy("rooms.id", "rooms.title", "rooms.price", "rooms.max_people", "bookings.check_in_date", "bookings.check_out_date");
+
+
+        if($request->has("room_type_id")){
+            $query->where("rooms.room_type_id", $request->input("room_type_id"));
+        }
+        if($request->has("max_people")){
+            $query->where("rooms.max_people", "<=" ,$request->input("max_people"));
+        }
+    
+        $checkInDate = $request->input("check_in_date");
+        $checkOutDate = $request->input("check_out_date");
+    
+        if ($checkInDate && $checkOutDate) {
+            $query->whereNotExists(function($subQuery) use ($checkInDate, $checkOutDate) {
+                $subQuery->select("bookings.room_id")
+                         ->from("bookings")
+                         ->whereColumn("bookings.room_id", "=", "rooms.id")
+                         ->where(function($dateQuery) use ($checkInDate, $checkOutDate) {
+                             $dateQuery->whereBetween("bookings.check_in_date", [$checkInDate, $checkOutDate])
+                                       ->orWhereBetween("bookings.check_out_date", [$checkInDate, $checkOutDate])
+                                       ->orWhere(function($overlapQuery) use ($checkInDate, $checkOutDate) {
+                                           $overlapQuery->where("bookings.check_in_date", "<=", $checkInDate)
+                                                        ->where("bookings.check_out_date", ">=", $checkOutDate);
+                                       });
+                         });
+            });
+        }
+        $data = $query->get();
+        return response()->json($data);
+    }
+    
+
     public function create()
     {
 
