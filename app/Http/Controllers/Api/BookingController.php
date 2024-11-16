@@ -176,7 +176,7 @@ class BookingController
             return response()->json([
                 "message" => "Booking successful",
                 "data" => $booking,
-                "room" => $todayInt,
+                "room" => $room,
                 "paymentUrl" => $paymentUrl
             ], 200);
         } catch (Exception $e) {
