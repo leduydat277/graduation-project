@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 16, 2024 at 08:17 AM
--- Server version: 8.0.30
--- PHP Version: 8.2.25
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th10 16, 2024 lúc 12:03 PM
+-- Phiên bản máy phục vụ: 10.4.28-MariaDB
+-- Phiên bản PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,23 +18,23 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `fake_datn`
+-- Cơ sở dữ liệu: `fake_datn`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assets_types`
+-- Cấu trúc bảng cho bảng `assets_types`
 --
 
 CREATE TABLE `assets_types` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'loại tiện nghi',
-  `description` text COLLATE utf8mb4_unicode_ci COMMENT 'mô tả loại tiện ích'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL COMMENT 'loại tiện nghi',
+  `description` text DEFAULT NULL COMMENT 'mô tả loại tiện ích'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `assets_types`
+-- Đang đổ dữ liệu cho bảng `assets_types`
 --
 
 INSERT INTO `assets_types` (`id`, `name`, `description`) VALUES
@@ -75,60 +75,66 @@ INSERT INTO `assets_types` (`id`, `name`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookings`
+-- Cấu trúc bảng cho bảng `bookings`
 --
 
 CREATE TABLE `bookings` (
-  `id` bigint UNSIGNED NOT NULL,
-  `room_id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint DEFAULT NULL,
-  `code_check_in` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `check_in_date` int UNSIGNED NOT NULL,
-  `check_out_date` int UNSIGNED NOT NULL,
-  `total_price` bigint NOT NULL,
-  `tien_coc` bigint DEFAULT NULL,
-  `status` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '0: chưa thanh toán cọc, 1: đang thanh toán, 2: đã thanh toán cọc, 3: đã thanh toán tổng tiền đơn, 4: đang sử dụng, 5: đã hủy',
-  `created_at` int UNSIGNED NOT NULL DEFAULT '1731139621',
-  `updated_at` int UNSIGNED NOT NULL DEFAULT '1731139621',
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `CCCD_booking` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `room_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `code_check_in` varchar(255) DEFAULT NULL,
+  `check_in_date` int(10) UNSIGNED NOT NULL,
+  `check_out_date` int(10) UNSIGNED NOT NULL,
+  `total_price` bigint(20) NOT NULL,
+  `tien_coc` bigint(20) DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '0: chưa thanh toán cọc, 1: đang thanh toán, 2: đã thanh toán cọc, 3: đã thanh toán tổng tiền đơn, 4: đang sử dụng, 5: đã hủy',
+  `created_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621,
+  `updated_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `CCCD_booking` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bookings`
+-- Đang đổ dữ liệu cho bảng `bookings`
 --
 
 INSERT INTO `bookings` (`id`, `room_id`, `user_id`, `code_check_in`, `check_in_date`, `check_out_date`, `total_price`, `tien_coc`, `status`, `created_at`, `updated_at`, `first_name`, `last_name`, `email`, `phone`, `address`, `CCCD_booking`) VALUES
-(1, 20, 1, NULL, 1733234400, 1733400000, 2600000, 780000, 0, 1731139621, 1731139621, 'khoi', 'nguyen', 'khointph33170@fpt.edu.vn', '0123456789', 'HN', NULL),
-(2, 20, 1, '410325', 1733234400, 1733400000, 2600000, 780000, 2, 1731139621, 1731139621, 'khoi', 'nguyen', 'khointph33170@fpt.edu.vn', '0123456789', 'HN', NULL);
+(2, 20, 1, '410325', 1733234400, 1733400000, 2600000, 780000, 2, 1731139621, 1731139621, 'khoi', 'nguyen', 'khointph33170@fpt.edu.vn', '0123456789', 'HN', NULL),
+(3, 1, 2, '799533', 1733061600, 1733313600, 3600000, 1080000, 2, 1731139621, 1731139621, 'Trần', 'Thị B', 'nguyenvana@example.com', '0987654321', 'Hồ Chí Minh', NULL),
+(4, 1, 3, '931424', 1733580000, 1733745600, 2400000, 720000, 2, 1731139621, 1731139621, 'Lê', 'Quang C', 'lequangc@example.com', '0912345678', 'Đà Nẵng', NULL),
+(5, 1, 4, '756358', 1733839200, 1735041600, 16800000, 5040000, 2, 1731139621, 1731139621, 'Phạm', 'Minh D', 'phamminhd@example.com', '0123876543', 'Hải Phòng', NULL),
+(6, 1, 5, '543493', 1735740000, 1736337600, 8400000, 2520000, 2, 1731139621, 1731139621, 'Đặng', 'Thị E', 'dangthie@example.com', '0938123456', 'Cần Thơ', NULL),
+(7, 1, 6, '852559', 1736604000, 1737892800, 18000000, 5400000, 2, 1731139621, 1731139621, 'Vũ', 'Hải F', 'vuhai@example.com', '0918234567', 'Nha Trang', NULL),
+(8, 3, 7, '173834', 1736258400, 1737806400, 36000000, 10800000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
+(9, 3, 8, '542975', 1734789600, 1735732800, 22000000, 6600000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
+(10, 2, 9, '627410', 1734703200, 1736078400, 19200000, 5760000, 2, 1731139621, 1731139621, 'Bùi', 'Thị I', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
+(11, 2, 10, '538841', 1734012000, 1734436800, 6000000, 1800000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(12, 3, 10, '553601', 1733148000, 1734264000, 26000000, 7800000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `manage_status_rooms`
+-- Cấu trúc bảng cho bảng `manage_status_rooms`
 --
 
 CREATE TABLE `manage_status_rooms` (
-  `id` bigint UNSIGNED NOT NULL,
-  `booking_id` bigint UNSIGNED DEFAULT NULL COMMENT 'để truy vấn dễ hơn',
-  `room_id` bigint UNSIGNED NOT NULL,
-  `status` int NOT NULL COMMENT '0: đã cọc, 1: sẵn sàng, 2: đang sử dụng',
-  `from` int UNSIGNED NOT NULL,
-  `to` int UNSIGNED NOT NULL COMMENT 'Lấy số 0 làm cờ'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `booking_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'để truy vấn dễ hơn',
+  `room_id` bigint(20) UNSIGNED NOT NULL,
+  `status` int(11) NOT NULL COMMENT '0: đã cọc, 1: sẵn sàng, 2: đang sử dụng',
+  `from` int(10) UNSIGNED NOT NULL,
+  `to` int(10) UNSIGNED NOT NULL COMMENT 'Lấy số 0 làm cờ'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Manage status of rooms with booking states and availability.';
 
 --
--- Dumping data for table `manage_status_rooms`
+-- Đang đổ dữ liệu cho bảng `manage_status_rooms`
 --
 
 INSERT INTO `manage_status_rooms` (`id`, `booking_id`, `room_id`, `status`, `from`, `to`) VALUES
-(1, NULL, 1, 1, 1733061600, 0),
-(2, NULL, 2, 1, 1733061600, 0),
-(3, NULL, 3, 1, 1733061600, 0),
 (4, NULL, 4, 1, 1733061600, 0),
 (5, NULL, 5, 1, 1733061600, 0),
 (6, NULL, 6, 1, 1733061600, 0),
@@ -147,22 +153,44 @@ INSERT INTO `manage_status_rooms` (`id`, `booking_id`, `room_id`, `status`, `fro
 (19, NULL, 19, 1, 1733061600, 0),
 (21, 2, 20, 0, 1733234400, 1733400000),
 (22, NULL, 20, 1, 1733061600, 1733227200),
-(23, NULL, 20, 1, 1733407200, 0);
+(23, NULL, 20, 1, 1733407200, 0),
+(24, 3, 1, 0, 1733061600, 1733313600),
+(26, 4, 1, 0, 1733580000, 1733745600),
+(27, NULL, 1, 1, 1733320800, 1733572800),
+(29, 5, 1, 0, 1733839200, 1735041600),
+(30, NULL, 1, 1, 1733752800, 1733832000),
+(32, 6, 1, 0, 1735740000, 1736337600),
+(33, NULL, 1, 1, 1735048800, 1735732800),
+(35, 7, 1, 0, 1736604000, 1737892800),
+(36, NULL, 1, 1, 1736344800, 1736596800),
+(37, NULL, 1, 1, 1737900000, 0),
+(38, 8, 3, 0, 1736258400, 1737806400),
+(40, NULL, 3, 1, 1737813600, 0),
+(41, 9, 3, 0, 1734789600, 1735732800),
+(43, NULL, 3, 1, 1735740000, 1736251200),
+(44, 10, 2, 0, 1734703200, 1736078400),
+(46, NULL, 2, 1, 1736085600, 0),
+(47, 11, 2, 0, 1734012000, 1734436800),
+(48, NULL, 2, 1, 1733061600, 1734004800),
+(49, NULL, 2, 1, 1734444000, 1734696000),
+(50, 12, 3, 0, 1733148000, 1734264000),
+(51, NULL, 3, 1, 1733061600, 1733140800),
+(52, NULL, 3, 1, 1734271200, 1734782400);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Cấu trúc bảng cho bảng `migrations`
 --
 
 CREATE TABLE `migrations` (
-  `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Đang đổ dữ liệu cho bảng `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -171,78 +199,88 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payments`
+-- Cấu trúc bảng cho bảng `payments`
 --
 
 CREATE TABLE `payments` (
-  `id` bigint UNSIGNED NOT NULL,
-  `booking_id` bigint UNSIGNED NOT NULL,
-  `payment_date` int UNSIGNED NOT NULL DEFAULT '1731139621' COMMENT 'ngày thanh toán',
-  `total_price` bigint UNSIGNED DEFAULT NULL,
-  `payment_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '0: tiền mặt, 1:chuyển khoản',
-  `payment_status` tinyint UNSIGNED NOT NULL DEFAULT '0' COMMENT '0: chưa thanh toán cọc, 1: đang thanh toán, 2: đã thanh toán cọc, 3: đã thanh toán tổng tiền đơn',
-  `vnp_BankCode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `vnp_TransactionNo` text COLLATE utf8mb4_unicode_ci,
-  `updated_at` int UNSIGNED NOT NULL DEFAULT '1731139621'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `booking_id` bigint(20) UNSIGNED NOT NULL,
+  `payment_date` int(10) UNSIGNED NOT NULL DEFAULT 1731139621 COMMENT 'ngày thanh toán',
+  `total_price` bigint(20) UNSIGNED DEFAULT NULL,
+  `payment_method` varchar(255) DEFAULT NULL COMMENT '0: tiền mặt, 1:chuyển khoản',
+  `payment_status` tinyint(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '0: chưa thanh toán cọc, 1: đang thanh toán, 2: đã thanh toán cọc, 3: đã thanh toán tổng tiền đơn',
+  `vnp_BankCode` varchar(255) DEFAULT NULL,
+  `vnp_TransactionNo` text DEFAULT NULL,
+  `updated_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `payments`
+-- Đang đổ dữ liệu cho bảng `payments`
 --
 
 INSERT INTO `payments` (`id`, `booking_id`, `payment_date`, `total_price`, `payment_method`, `payment_status`, `vnp_BankCode`, `vnp_TransactionNo`, `updated_at`) VALUES
 (1, 1, 1731139621, 780000, '1', 0, NULL, NULL, 1731139621),
-(2, 2, 1731139621, 780000, '1', 2, 'NCB', '{\"vnp_Amount\":\"78000000\",\"vnp_BankTranNo\":\"VNP14676155\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_2\",\"vnp_PayDate\":\"20241116150032\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676155\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"2\",\"vnp_SecureHash\":\"3eb1aa790d9b61ad8c1b23da9d9ec83aed15ff673614cd469abef8df15c186aa4cbd24abb723b0b47330a8ac06e6d281907a3685a2adfcc97234b23e42e714a2\"}', 1731744041);
+(2, 2, 1731139621, 780000, '1', 2, 'NCB', '{\"vnp_Amount\":\"78000000\",\"vnp_BankTranNo\":\"VNP14676155\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_2\",\"vnp_PayDate\":\"20241116150032\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676155\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"2\",\"vnp_SecureHash\":\"3eb1aa790d9b61ad8c1b23da9d9ec83aed15ff673614cd469abef8df15c186aa4cbd24abb723b0b47330a8ac06e6d281907a3685a2adfcc97234b23e42e714a2\"}', 1731744041),
+(3, 3, 1731139621, 1080000, '1', 2, 'NCB', '{\"vnp_Amount\":\"108000000\",\"vnp_BankTranNo\":\"VNP14676371\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_3\",\"vnp_PayDate\":\"20241116172457\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676371\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"3\",\"vnp_SecureHash\":\"af13718c0d7b3d9e4fc72dc69891d1a9f437e648cf693af65b2f0ef5c0fd2cf4745bf72c342aa1e9acbb21679782f149aa359ffc04783a17fd63cf5e00467ba7\"}', 1731752705),
+(4, 4, 1731139621, 720000, '1', 2, 'NCB', '{\"vnp_Amount\":\"72000000\",\"vnp_BankTranNo\":\"VNP14676376\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_4\",\"vnp_PayDate\":\"20241116173029\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676376\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"4\",\"vnp_SecureHash\":\"39a693b0377f922ffabd27987a12fb1cc2b6095e4bec526148d89b0ddf933edffa8bafc13b3fa91300b185532a53082bd018882f20e33d853c49efb523816c12\"}', 1731753042),
+(5, 5, 1731139621, 5040000, '1', 2, 'NCB', '{\"vnp_Amount\":\"504000000\",\"vnp_BankTranNo\":\"VNP14676381\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_5\",\"vnp_PayDate\":\"20241116173328\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676381\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"5\",\"vnp_SecureHash\":\"682788c3f296b2d871ff11af601edad2899ee45c7617bb301e37f1d27f4b5791dd61c35b0118c46bf7cd71500ab397153e1d992a83011c7d282404ec0fb0388a\"}', 1731753218),
+(6, 6, 1731139621, 2520000, '1', 2, 'NCB', '{\"vnp_Amount\":\"252000000\",\"vnp_BankTranNo\":\"VNP14676385\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_6\",\"vnp_PayDate\":\"20241116173622\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676385\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"6\",\"vnp_SecureHash\":\"145914796418658817930493b430020f6ecb53869270ae6e2a19845cffdb0f0ccad3f2e251173636e9a7a9b86dfe42e6d3644a82b153df865c69408a11e7d24f\"}', 1731753391),
+(7, 7, 1731139621, 5400000, '1', 2, 'NCB', '{\"vnp_Amount\":\"540000000\",\"vnp_BankTranNo\":\"VNP14676394\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_7\",\"vnp_PayDate\":\"20241116173949\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676394\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"7\",\"vnp_SecureHash\":\"375f6cdb45a7f45838e83a988fc91f58f4ffbadbe4c2aef30c13c6c5cfb6aff591e9ab55d3c19752c3dd9717168125bd21d535de04ac58a50ebb4c3d3b6ec8e8\"}', 1731753597),
+(8, 8, 1731139621, 10800000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1080000000\",\"vnp_BankTranNo\":\"VNP14676403\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_8\",\"vnp_PayDate\":\"20241116174601\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676403\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"8\",\"vnp_SecureHash\":\"0b8a08bde26e662fcd249be07b5722af05ffb6a7b29bf49ea3b11e4b57b4a038be58d4979ed8c3214f4021825bc396c8e037f137709ede7da9d14f9f66b31e4c\"}', 1731753970),
+(9, 9, 1731139621, 6600000, '1', 2, 'NCB', '{\"vnp_Amount\":\"660000000\",\"vnp_BankTranNo\":\"VNP14676407\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_9\",\"vnp_PayDate\":\"20241116174812\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676407\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"9\",\"vnp_SecureHash\":\"61ef232a71466fea7ee936c6cde8586682fcebea6c9d40a36f919ecb41008916fd3950cc7004dbc70be2c93fe2288d93fc2ee81b5048faf2c21868508cee9f53\"}', 1731754101),
+(10, 10, 1731139621, 5760000, '1', 2, 'NCB', '{\"vnp_Amount\":\"576000000\",\"vnp_BankTranNo\":\"VNP14676413\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_10\",\"vnp_PayDate\":\"20241116175241\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676413\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"10\",\"vnp_SecureHash\":\"7a3c3b5c119de4c67e9472942cd266dac3a25bd95d7c903e0f0401afc5ecca359f31fac880cc0b09f81dbcdb805be17082535c99cc45beb56c57d1358c5da2d8\"}', 1731754369),
+(11, 11, 1731139621, 1800000, '1', 2, 'NCB', '{\"vnp_Amount\":\"180000000\",\"vnp_BankTranNo\":\"VNP14676419\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_11\",\"vnp_PayDate\":\"20241116175548\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676419\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"11\",\"vnp_SecureHash\":\"16f96053ad0b7f0a7036455f10a53353decded7e2c08518f7858b8f80c6cee3cb15b471a59b8201e69fe4cbab0a68398b7f9f1472d988553bd64cd4e84db098f\"}', 1731754557),
+(12, 12, 1731139621, 7800000, '1', 2, 'NCB', '{\"vnp_Amount\":\"780000000\",\"vnp_BankTranNo\":\"VNP14676420\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_12\",\"vnp_PayDate\":\"20241116175713\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676420\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"12\",\"vnp_SecureHash\":\"cab4970832b5dd620e4d3794f72b8ded30fc85968d57e19ab155585ad60444ac181a7c1a7cd153a024a669dcbab685006b01e3e8356881a361663cb7ce841614\"}', 1731754644);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phiphatsinhs`
+-- Cấu trúc bảng cho bảng `phiphatsinhs`
 --
 
 CREATE TABLE `phiphatsinhs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `booking_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `price` bigint UNSIGNED NOT NULL,
-  `created_at` int UNSIGNED NOT NULL DEFAULT '1731139621',
-  `updated_at` int UNSIGNED NOT NULL DEFAULT '1731139621'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `booking_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `price` bigint(20) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621,
+  `updated_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reviews`
+-- Cấu trúc bảng cho bảng `reviews`
 --
 
 CREATE TABLE `reviews` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint UNSIGNED NOT NULL,
-  `room_id` bigint UNSIGNED NOT NULL,
-  `rating` int NOT NULL COMMENT 'max là 5 sao',
-  `comment` text COLLATE utf8mb4_unicode_ci,
-  `created_at` int UNSIGNED NOT NULL DEFAULT '1731139621'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `room_id` bigint(20) UNSIGNED NOT NULL,
+  `rating` int(11) NOT NULL COMMENT 'max là 5 sao',
+  `comment` text DEFAULT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roomassets`
+-- Cấu trúc bảng cho bảng `roomassets`
 --
 
 CREATE TABLE `roomassets` (
-  `id` bigint UNSIGNED NOT NULL,
-  `assets_type_id` bigint UNSIGNED NOT NULL,
-  `room_id` bigint UNSIGNED NOT NULL,
-  `status` tinyint NOT NULL DEFAULT '0' COMMENT '0: đang sử dụng, 1: tạm dừng sử dụng',
-  `created_at` int UNSIGNED NOT NULL DEFAULT '1731139621',
-  `updated_at` int UNSIGNED NOT NULL DEFAULT '1731139621'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `assets_type_id` bigint(20) UNSIGNED NOT NULL,
+  `room_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: đang sử dụng, 1: tạm dừng sử dụng',
+  `created_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621,
+  `updated_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `roomassets`
+-- Đang đổ dữ liệu cho bảng `roomassets`
 --
 
 INSERT INTO `roomassets` (`id`, `assets_type_id`, `room_id`, `status`, `created_at`, `updated_at`) VALUES
@@ -450,23 +488,23 @@ INSERT INTO `roomassets` (`id`, `assets_type_id`, `room_id`, `status`, `created_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rooms`
+-- Cấu trúc bảng cho bảng `rooms`
 --
 
 CREATE TABLE `rooms` (
-  `id` bigint UNSIGNED NOT NULL,
-  `room_type_id` bigint UNSIGNED NOT NULL,
-  `image_room` json DEFAULT NULL COMMENT 'Các ảnh lưu dưới dạng json',
-  `max_people` int UNSIGNED NOT NULL COMMENT 'Số người tối đa của phòng',
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'tên phòng, dùng để hiển thị tên thay vì id phòng ở phía FE',
-  `price` bigint UNSIGNED NOT NULL,
-  `room_area` int UNSIGNED NOT NULL COMMENT 'Diện tích phòng',
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `status` tinyint NOT NULL DEFAULT '0' COMMENT '0: sẵn sàng, 1: đã cọc, 2: đang sử dụng, 3: hỏng. Admin sẽ có quyền tùy chỉnh'
-) ;
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `room_type_id` bigint(20) UNSIGNED NOT NULL,
+  `image_room` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Các ảnh lưu dưới dạng json' CHECK (json_valid(`image_room`)),
+  `max_people` int(10) UNSIGNED NOT NULL COMMENT 'Số người tối đa của phòng',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'tên phòng, dùng để hiển thị tên thay vì id phòng ở phía FE',
+  `price` bigint(20) UNSIGNED NOT NULL,
+  `room_area` int(10) UNSIGNED NOT NULL COMMENT 'Diện tích phòng',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: sẵn sàng, 1: đã cọc, 2: đang sử dụng, 3: hỏng. Admin sẽ có quyền tùy chỉnh'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `rooms`
+-- Đang đổ dữ liệu cho bảng `rooms`
 --
 
 INSERT INTO `rooms` (`id`, `room_type_id`, `image_room`, `max_people`, `title`, `price`, `room_area`, `description`, `status`) VALUES
@@ -494,16 +532,16 @@ INSERT INTO `rooms` (`id`, `room_type_id`, `image_room`, `max_people`, `title`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `room_types`
+-- Cấu trúc bảng cho bảng `room_types`
 --
 
 CREATE TABLE `room_types` (
-  `id` bigint UNSIGNED NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên loại phòng'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `type` varchar(255) NOT NULL COMMENT 'Tên loại phòng'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `room_types`
+-- Đang đổ dữ liệu cho bảng `room_types`
 --
 
 INSERT INTO `room_types` (`id`, `type`) VALUES
@@ -521,43 +559,43 @@ INSERT INTO `room_types` (`id`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tokens`
+-- Cấu trúc bảng cho bảng `tokens`
 --
 
 CREATE TABLE `tokens` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint UNSIGNED NOT NULL,
-  `value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiry_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_at` int UNSIGNED NOT NULL DEFAULT '1731139620',
-  `updated_at` int UNSIGNED NOT NULL DEFAULT '1731139620'
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `expiry_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139620,
+  `updated_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139620
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Cấu trúc bảng cho bảng `users`
 --
 
 CREATE TABLE `users` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cccd` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` tinyint NOT NULL DEFAULT '0' COMMENT '0: user, 1: admin',
-  `created_at` int UNSIGNED NOT NULL DEFAULT '1731139621',
-  `updated_at` int UNSIGNED NOT NULL DEFAULT '1731139621',
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `cccd` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `role` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: user, 1: admin',
+  `created_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621,
+  `updated_at` int(10) UNSIGNED NOT NULL DEFAULT 1731139621,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Đang đổ dữ liệu cho bảng `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `cccd`, `password`, `image`, `phone`, `address`, `role`, `created_at`, `updated_at`, `first_name`, `last_name`, `deleted_at`) VALUES
@@ -573,157 +611,157 @@ INSERT INTO `users` (`id`, `name`, `email`, `cccd`, `password`, `image`, `phone`
 (10, 'Cao Anh J', 'caoanhj@example.com', '012345678901', '1', 'image10.jpg', '0934222334', 'Bắc Ninh', 1, 1731139621, 1731139621, 'Cao', 'Anh J', NULL);
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `assets_types`
+-- Chỉ mục cho bảng `assets_types`
 --
 ALTER TABLE `assets_types`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `bookings`
+-- Chỉ mục cho bảng `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `manage_status_rooms`
+-- Chỉ mục cho bảng `manage_status_rooms`
 --
 ALTER TABLE `manage_status_rooms`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `migrations`
+-- Chỉ mục cho bảng `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `payments`
+-- Chỉ mục cho bảng `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `phiphatsinhs`
+-- Chỉ mục cho bảng `phiphatsinhs`
 --
 ALTER TABLE `phiphatsinhs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `reviews`
+-- Chỉ mục cho bảng `reviews`
 --
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `roomassets`
+-- Chỉ mục cho bảng `roomassets`
 --
 ALTER TABLE `roomassets`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `rooms`
+-- Chỉ mục cho bảng `rooms`
 --
 ALTER TABLE `rooms`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `room_types`
+-- Chỉ mục cho bảng `room_types`
 --
 ALTER TABLE `room_types`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tokens`
+-- Chỉ mục cho bảng `tokens`
 --
 ALTER TABLE `tokens`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `assets_types`
+-- AUTO_INCREMENT cho bảng `assets_types`
 --
 ALTER TABLE `assets_types`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT for table `bookings`
+-- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `manage_status_rooms`
+-- AUTO_INCREMENT cho bảng `manage_status_rooms`
 --
 ALTER TABLE `manage_status_rooms`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `payments`
+-- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `phiphatsinhs`
+-- AUTO_INCREMENT cho bảng `phiphatsinhs`
 --
 ALTER TABLE `phiphatsinhs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reviews`
+-- AUTO_INCREMENT cho bảng `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `roomassets`
+-- AUTO_INCREMENT cho bảng `roomassets`
 --
 ALTER TABLE `roomassets`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
 
 --
--- AUTO_INCREMENT for table `rooms`
+-- AUTO_INCREMENT cho bảng `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `room_types`
+-- AUTO_INCREMENT cho bảng `room_types`
 --
 ALTER TABLE `room_types`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `tokens`
+-- AUTO_INCREMENT cho bảng `tokens`
 --
 ALTER TABLE `tokens`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
