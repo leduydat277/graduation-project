@@ -85,7 +85,7 @@ class SearchRoomController extends Controller
                     'status' => 'error'
                 ], 404);
             }
-
+            // dd($current_time_room);
             foreach ($current_time_room as $key => &$item_arr) {
                 $item_arr['from'] = (new DateTime())->setTimestamp($item_arr['from'])->format('d-m-Y');
                 $item_arr['to'] = (new DateTime())->setTimestamp($item_arr['to'])->format('d-m-Y');
@@ -103,6 +103,13 @@ class SearchRoomController extends Controller
                         $current_time->modify('+1 day'); // Cộng thêm 1 ngày
                         $item_arr['from'] = $current_time->format('d-m-Y');
                     }
+                }
+                if (
+                    $fromTimestamp > DateTime::createFromFormat('d-m-Y', $item_arr['from'])->getTimestamp()
+                    && $fromTimestamp > DateTime::createFromFormat('d-m-Y', $item_arr['to'])->getTimestamp()
+                    && $item_arr['to'] != "01-01-1970"
+                ) {
+                    unset($current_time_room[$key]);
                 }
             }
 
