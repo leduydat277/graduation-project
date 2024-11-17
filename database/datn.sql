@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 16, 2024 lúc 12:03 PM
+-- Thời gian đã tạo: Th10 17, 2024 lúc 11:31 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `fake_datn`
+-- Cơ sở dữ liệu: `datn`
 --
 
 -- --------------------------------------------------------
@@ -113,7 +113,26 @@ INSERT INTO `bookings` (`id`, `room_id`, `user_id`, `code_check_in`, `check_in_d
 (9, 3, 8, '542975', 1734789600, 1735732800, 22000000, 6600000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
 (10, 2, 9, '627410', 1734703200, 1736078400, 19200000, 5760000, 2, 1731139621, 1731139621, 'Bùi', 'Thị I', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
 (11, 2, 10, '538841', 1734012000, 1734436800, 6000000, 1800000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
-(12, 3, 10, '553601', 1733148000, 1734264000, 26000000, 7800000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL);
+(12, 3, 10, '553601', 1733148000, 1734264000, 26000000, 7800000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(13, 4, 10, '895814', 1733320800, 1733745600, 12500000, 3750000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(14, 19, 10, '603058', 1733148000, 1734264000, 18850000, 5655000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(15, 19, 10, '558560', 1735826400, 1736942400, 18850000, 5655000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(16, 11, 10, '354641', 1735048800, 1735992000, 13750000, 4125000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(17, 8, 10, '396817', 1735394400, 1736856000, 10200000, 3060000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'caoanhj@example.com', '0934222334', 'Bắc Ninh', NULL),
+(18, 8, 9, '474683', 1733839200, 1734955200, 7800000, 2340000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
+(19, 17, 9, '955876', 1733061600, 1734091200, 7800000, 2340000, 2, 1731139621, 1731139621, 'Cao', 'Anh J', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
+(20, 14, 9, '103582', 1734444000, 1735473600, 61200000, 18360000, 2, 1731139621, 1731139621, 'Bùi', 'Thị I', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
+(21, 12, 9, '949833', 1736604000, 1738238400, 39900000, 11970000, 2, 1731139621, 1731139621, 'Bùi', 'Thị I', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
+(22, 12, 8, '907161', 1736085600, 1736424000, 8400000, 2520000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
+(23, 6, 8, '278755', 1735135200, 1736683200, 14400000, 4320000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
+(24, 12, 8, '532593', 1733234400, 1733832000, 14700000, 4410000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
+(25, 13, 8, '789499', 1736863200, 1738324800, 44200000, 13260000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
+(26, 13, 7, '722608', 1733061600, 1734264000, 36400000, 10920000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
+(27, 16, 7, '423070', 1733493600, 1734955200, 54400000, 16320000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
+(28, 18, 7, '691094', 1734012000, 1735473600, 26350000, 7905000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
+(29, 5, 7, '357317', 1737554400, 1738324800, 45000000, 13500000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
+(30, 5, 7, '825030', 1733580000, 1734609600, 60000000, 18000000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
+(31, 9, 7, '733680', 1734271200, 1737374400, 54000000, 16200000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL);
 
 -- --------------------------------------------------------
 
@@ -135,22 +154,9 @@ CREATE TABLE `manage_status_rooms` (
 --
 
 INSERT INTO `manage_status_rooms` (`id`, `booking_id`, `room_id`, `status`, `from`, `to`) VALUES
-(4, NULL, 4, 1, 1733061600, 0),
-(5, NULL, 5, 1, 1733061600, 0),
-(6, NULL, 6, 1, 1733061600, 0),
 (7, NULL, 7, 1, 1733061600, 0),
-(8, NULL, 8, 1, 1733061600, 0),
-(9, NULL, 9, 1, 1733061600, 0),
 (10, NULL, 10, 1, 1733061600, 0),
-(11, NULL, 11, 1, 1733061600, 0),
-(12, NULL, 12, 1, 1733061600, 0),
-(13, NULL, 13, 1, 1733061600, 0),
-(14, NULL, 14, 1, 1733061600, 0),
 (15, NULL, 15, 1, 1733061600, 0),
-(16, NULL, 16, 1, 1733061600, 0),
-(17, NULL, 17, 1, 1733061600, 0),
-(18, NULL, 18, 1, 1733061600, 0),
-(19, NULL, 19, 1, 1733061600, 0),
 (21, 2, 20, 0, 1733234400, 1733400000),
 (22, NULL, 20, 1, 1733061600, 1733227200),
 (23, NULL, 20, 1, 1733407200, 0),
@@ -175,7 +181,56 @@ INSERT INTO `manage_status_rooms` (`id`, `booking_id`, `room_id`, `status`, `fro
 (49, NULL, 2, 1, 1734444000, 1734696000),
 (50, 12, 3, 0, 1733148000, 1734264000),
 (51, NULL, 3, 1, 1733061600, 1733140800),
-(52, NULL, 3, 1, 1734271200, 1734782400);
+(52, NULL, 3, 1, 1734271200, 1734782400),
+(53, 13, 4, 0, 1733320800, 1733745600),
+(54, NULL, 4, 1, 1733061600, 1733313600),
+(55, NULL, 4, 1, 1733752800, 0),
+(56, 14, 19, 0, 1733148000, 1734264000),
+(57, NULL, 19, 1, 1733061600, 1733140800),
+(59, 15, 19, 0, 1735826400, 1736942400),
+(60, NULL, 19, 1, 1734271200, 1735819200),
+(61, NULL, 19, 1, 1736949600, 0),
+(62, 16, 11, 0, 1735048800, 1735992000),
+(63, NULL, 11, 1, 1733061600, 1735041600),
+(64, NULL, 11, 1, 1735999200, 0),
+(65, 17, 8, 0, 1735394400, 1736856000),
+(67, NULL, 8, 1, 1736863200, 0),
+(68, 18, 8, 0, 1733839200, 1734955200),
+(69, NULL, 8, 1, 1733061600, 1733832000),
+(70, NULL, 8, 1, 1734962400, 1735387200),
+(71, 19, 17, 0, 1733061600, 1734091200),
+(72, NULL, 17, 1, 1734098400, 0),
+(73, 20, 14, 0, 1734444000, 1735473600),
+(74, NULL, 14, 1, 1733061600, 1734436800),
+(75, NULL, 14, 1, 1735480800, 0),
+(76, 21, 12, 0, 1736604000, 1738238400),
+(78, NULL, 12, 1, 1738245600, 0),
+(79, 22, 12, 0, 1736085600, 1736424000),
+(81, NULL, 12, 1, 1736431200, 1736596800),
+(82, 23, 6, 0, 1735135200, 1736683200),
+(83, NULL, 6, 1, 1733061600, 1735128000),
+(84, NULL, 6, 1, 1736690400, 0),
+(85, 24, 12, 0, 1733234400, 1733832000),
+(86, NULL, 12, 1, 1733061600, 1733227200),
+(87, NULL, 12, 1, 1733839200, 1736078400),
+(88, 25, 13, 0, 1736863200, 1738324800),
+(90, NULL, 13, 1, 1738332000, 0),
+(91, 26, 13, 0, 1733061600, 1734264000),
+(92, NULL, 13, 1, 1734271200, 1736856000),
+(93, 27, 16, 0, 1733493600, 1734955200),
+(94, NULL, 16, 1, 1733061600, 1733486400),
+(95, NULL, 16, 1, 1734962400, 0),
+(96, 28, 18, 0, 1734012000, 1735473600),
+(97, NULL, 18, 1, 1733061600, 1734004800),
+(98, NULL, 18, 1, 1735480800, 0),
+(99, 29, 5, 0, 1737554400, 1738324800),
+(101, NULL, 5, 1, 1738332000, 0),
+(102, 30, 5, 0, 1733580000, 1734609600),
+(103, NULL, 5, 1, 1733061600, 1733572800),
+(104, NULL, 5, 1, 1734616800, 1737547200),
+(105, 31, 9, 0, 1734271200, 1737374400),
+(106, NULL, 9, 1, 1733061600, 1734264000),
+(107, NULL, 9, 1, 1737381600, 0);
 
 -- --------------------------------------------------------
 
@@ -230,7 +285,26 @@ INSERT INTO `payments` (`id`, `booking_id`, `payment_date`, `total_price`, `paym
 (9, 9, 1731139621, 6600000, '1', 2, 'NCB', '{\"vnp_Amount\":\"660000000\",\"vnp_BankTranNo\":\"VNP14676407\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_9\",\"vnp_PayDate\":\"20241116174812\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676407\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"9\",\"vnp_SecureHash\":\"61ef232a71466fea7ee936c6cde8586682fcebea6c9d40a36f919ecb41008916fd3950cc7004dbc70be2c93fe2288d93fc2ee81b5048faf2c21868508cee9f53\"}', 1731754101),
 (10, 10, 1731139621, 5760000, '1', 2, 'NCB', '{\"vnp_Amount\":\"576000000\",\"vnp_BankTranNo\":\"VNP14676413\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_10\",\"vnp_PayDate\":\"20241116175241\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676413\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"10\",\"vnp_SecureHash\":\"7a3c3b5c119de4c67e9472942cd266dac3a25bd95d7c903e0f0401afc5ecca359f31fac880cc0b09f81dbcdb805be17082535c99cc45beb56c57d1358c5da2d8\"}', 1731754369),
 (11, 11, 1731139621, 1800000, '1', 2, 'NCB', '{\"vnp_Amount\":\"180000000\",\"vnp_BankTranNo\":\"VNP14676419\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_11\",\"vnp_PayDate\":\"20241116175548\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676419\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"11\",\"vnp_SecureHash\":\"16f96053ad0b7f0a7036455f10a53353decded7e2c08518f7858b8f80c6cee3cb15b471a59b8201e69fe4cbab0a68398b7f9f1472d988553bd64cd4e84db098f\"}', 1731754557),
-(12, 12, 1731139621, 7800000, '1', 2, 'NCB', '{\"vnp_Amount\":\"780000000\",\"vnp_BankTranNo\":\"VNP14676420\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_12\",\"vnp_PayDate\":\"20241116175713\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676420\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"12\",\"vnp_SecureHash\":\"cab4970832b5dd620e4d3794f72b8ded30fc85968d57e19ab155585ad60444ac181a7c1a7cd153a024a669dcbab685006b01e3e8356881a361663cb7ce841614\"}', 1731754644);
+(12, 12, 1731139621, 7800000, '1', 2, 'NCB', '{\"vnp_Amount\":\"780000000\",\"vnp_BankTranNo\":\"VNP14676420\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_12\",\"vnp_PayDate\":\"20241116175713\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14676420\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"12\",\"vnp_SecureHash\":\"cab4970832b5dd620e4d3794f72b8ded30fc85968d57e19ab155585ad60444ac181a7c1a7cd153a024a669dcbab685006b01e3e8356881a361663cb7ce841614\"}', 1731754644),
+(13, 13, 1731139621, 3750000, '1', 2, 'NCB', '{\"vnp_Amount\":\"375000000\",\"vnp_BankTranNo\":\"VNP14677842\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_13\",\"vnp_PayDate\":\"20241117163835\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677842\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"13\",\"vnp_SecureHash\":\"8da5b53740dd801ba872e929b774f918f8924860130f6a0ab8ac91684ba3d64df88985ae913048d068710bd2a8ae0f7703f1445f8fecafae55b156f5c450edd3\"}', 1731836322),
+(14, 14, 1731139621, 5655000, '1', 2, 'NCB', '{\"vnp_Amount\":\"565500000\",\"vnp_BankTranNo\":\"VNP14677850\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_14\",\"vnp_PayDate\":\"20241117164214\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677850\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"14\",\"vnp_SecureHash\":\"20c13870435888a5beddf06cbd46fe0f79f4c17aebb5610dcadb963581bf65b71b906980540e111a5cb429ec748aa22ed84d3819035b5a60f5cf9b5a8083f71e\"}', 1731836542),
+(15, 15, 1731139621, 5655000, '1', 2, 'NCB', '{\"vnp_Amount\":\"565500000\",\"vnp_BankTranNo\":\"VNP14677853\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_15\",\"vnp_PayDate\":\"20241117164425\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677853\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"15\",\"vnp_SecureHash\":\"88cf66f2b518f2cf926b083341c5109a4831e33a8eadf51b94f9ba514840ae0c20a5c112027c46d8d5c673238cc3e4a151d5b40e4622c5ceb26708dfecd6273b\"}', 1731836674),
+(16, 16, 1731139621, 4125000, '1', 2, 'NCB', '{\"vnp_Amount\":\"412500000\",\"vnp_BankTranNo\":\"VNP14677855\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_16\",\"vnp_PayDate\":\"20241117164642\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677855\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"16\",\"vnp_SecureHash\":\"0e7392084c49f6a6d3413da1ac50a97ebf16544e28ea3485d55a73814888ffc7e965343f8e85f61568d239a9168f5594a467d06ae651e5b783b9106b2382fb84\"}', 1731836809),
+(17, 17, 1731139621, 3060000, '1', 2, 'NCB', '{\"vnp_Amount\":\"306000000\",\"vnp_BankTranNo\":\"VNP14677857\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_17\",\"vnp_PayDate\":\"20241117164904\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677857\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"17\",\"vnp_SecureHash\":\"42200af928e1fe9896b8974d76d3518cb30c30f977a11ef44493eb63ae208737b610483b625a2850f44b9deff6c63ea493653dfb34dbc1456c75ea2940dfec44\"}', 1731836956),
+(18, 18, 1731139621, 2340000, '1', 2, 'NCB', '{\"vnp_Amount\":\"234000000\",\"vnp_BankTranNo\":\"VNP14677860\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_18\",\"vnp_PayDate\":\"20241117165130\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677860\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"18\",\"vnp_SecureHash\":\"b91400ec3dc18b38d4c0c70cddaf0dad48120cc4d941daa42a08fde3559c257f6feaf458c6b5f34b0e1bf0c43a7dad401914ac36642facc80bc5f134d2900508\"}', 1731837098),
+(19, 19, 1731139621, 2340000, '1', 2, 'NCB', '{\"vnp_Amount\":\"234000000\",\"vnp_BankTranNo\":\"VNP14677863\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_19\",\"vnp_PayDate\":\"20241117165252\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677863\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"19\",\"vnp_SecureHash\":\"02b3816a48af323342f02548de502b06f82c003cf7ff53c67849db24f5fb9fd6a3b65055c35821f7adb71d601d845c66b1a51bb618ccefe7a2f4a6883dc48306\"}', 1731837180),
+(20, 20, 1731139621, 18360000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1836000000\",\"vnp_BankTranNo\":\"VNP14677867\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_20\",\"vnp_PayDate\":\"20241117165505\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677867\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"20\",\"vnp_SecureHash\":\"82666697d26843e22f5d9e4d3c13214f5e9bc3576d1737ab49ec7ac8491d29d3affd41dc6b605db7e82d59d9199804c5a2070ee7aa53dd889ee4b6bc3ff84fdc\"}', 1731837312),
+(21, 21, 1731139621, 11970000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1197000000\",\"vnp_BankTranNo\":\"VNP14677872\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_21\",\"vnp_PayDate\":\"20241117165637\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677872\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"21\",\"vnp_SecureHash\":\"8dde9e26d40b41f102c3ce5eb4c13509e0aec4d8206ea6344963be2b3b426b1260f52304abf814a6c9f7bdbb3b1a16e376e1110696d213db1d5a476c2b1039d0\"}', 1731837405),
+(22, 22, 1731139621, 2520000, '1', 2, 'NCB', '{\"vnp_Amount\":\"252000000\",\"vnp_BankTranNo\":\"VNP14677875\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_22\",\"vnp_PayDate\":\"20241117165846\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677875\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"22\",\"vnp_SecureHash\":\"ec99001e2a5e4195b3a64355b22f6347c3570588f8924deeed990212f805bfc65998c7a21756a50f15264bc8f763de8c7a1f952b0c5099da500375cfd9b34fbb\"}', 1731837533),
+(23, 23, 1731139621, 4320000, '1', 2, 'NCB', '{\"vnp_Amount\":\"432000000\",\"vnp_BankTranNo\":\"VNP14677879\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_23\",\"vnp_PayDate\":\"20241117170019\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677879\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"23\",\"vnp_SecureHash\":\"005e9ab2c01c67dda11c0cb7ceb62e9a4d09af673094cb6a49e409c0736dba4e07758fad294ecf5ec80bae7e2f8e267ca842d79e7c256bc995ed25e49e253026\"}', 1731837627),
+(24, 24, 1731139621, 4410000, '1', 2, 'NCB', '{\"vnp_Amount\":\"441000000\",\"vnp_BankTranNo\":\"VNP14677883\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_24\",\"vnp_PayDate\":\"20241117170143\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677883\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"24\",\"vnp_SecureHash\":\"f24f5919ff068ad0ecad541167d86065962aac414e227feb8ffc46e479e014c8668aab60a087e071ccc355a636552900e80737723a280969452b51890f527864\"}', 1731837712),
+(25, 25, 1731139621, 13260000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1326000000\",\"vnp_BankTranNo\":\"VNP14677886\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_25\",\"vnp_PayDate\":\"20241117170322\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677886\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"25\",\"vnp_SecureHash\":\"6124b93c081e6defa3cc499fa7e3df104dff18afb94ab2595941534fa25307a530dc46ad523fbbe916d4abc782abf168969cbd1bcb93961d0b697f9c0803b913\"}', 1731837810),
+(26, 26, 1731139621, 10920000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1092000000\",\"vnp_BankTranNo\":\"VNP14677889\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_26\",\"vnp_PayDate\":\"20241117170539\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677889\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"26\",\"vnp_SecureHash\":\"c626e5eba2f62131a14c9f735e6ae994fc16189c0f97039cb3a38efcf82c9dcbfac5a7ad206645fa832ca26d92f6f6a4312cc069ae6e1d5f66b4cc9c06229e3e\"}', 1731837947),
+(27, 27, 1731139621, 16320000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1632000000\",\"vnp_BankTranNo\":\"VNP14677892\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_27\",\"vnp_PayDate\":\"20241117170701\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677892\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"27\",\"vnp_SecureHash\":\"4ef1cbd9112e3e6d35af9b180f402c22148ec0cecd419e8a37056579712f9565cb0926056787bca3c0650a16007776bc68278d2e2e066654ff6bdc2fba4af659\"}', 1731838029),
+(28, 28, 1731139621, 7905000, '1', 2, 'NCB', '{\"vnp_Amount\":\"790500000\",\"vnp_BankTranNo\":\"VNP14677893\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_28\",\"vnp_PayDate\":\"20241117170837\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677893\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"28\",\"vnp_SecureHash\":\"30fc4e7a7c78260831bfdcbfc33984fa6557faf9c281b698c12415d24d634ffd9907d95363ef7c545e8471523e2a98ea33a501093740c9e6a81e48bd20044149\"}', 1731838124),
+(29, 29, 1731139621, 13500000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1350000000\",\"vnp_BankTranNo\":\"VNP14677913\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_29\",\"vnp_PayDate\":\"20241117172509\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677913\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"29\",\"vnp_SecureHash\":\"4440e0beb17b726b9570a966526002123fbccf71eabe967fd4850104a1d5ebcd5ed4f1e6db2d2b192357227a58a16062953f50ef5ff2e0a52d9d417f213f0014\"}', 1731839117),
+(30, 30, 1731139621, 18000000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1800000000\",\"vnp_BankTranNo\":\"VNP14677917\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_30\",\"vnp_PayDate\":\"20241117172846\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677917\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"30\",\"vnp_SecureHash\":\"63a98e96f3cb668d7352b53df5b7403441b20e44f35e4ec580c572b2a2deb765ba5ab2de92b94fe30098187f187a1f48bd87374e779d80f2c548b6db25e676f7\"}', 1731839333),
+(31, 31, 1731139621, 16200000, '1', 2, 'NCB', '{\"vnp_Amount\":\"1620000000\",\"vnp_BankTranNo\":\"VNP14677921\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"booking_payment_31\",\"vnp_PayDate\":\"20241117173030\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"4OPQMRL6\",\"vnp_TransactionNo\":\"14677921\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"31\",\"vnp_SecureHash\":\"279b1da08e7d2d9fb6cfe4d7ec79e4fc3203b0ed28bb56c0a8d803bab38c7addb714fac3745d54463b03caeb0620486e25bef66de9ea92b3d7b8747ef090cba7\"}', 1731839437);
 
 -- --------------------------------------------------------
 
@@ -701,13 +775,13 @@ ALTER TABLE `assets_types`
 -- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT cho bảng `manage_status_rooms`
 --
 ALTER TABLE `manage_status_rooms`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT cho bảng `migrations`
@@ -719,7 +793,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT cho bảng `phiphatsinhs`
