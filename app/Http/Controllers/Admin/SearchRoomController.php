@@ -65,12 +65,12 @@ class SearchRoomController extends Controller
                 ->where(function ($query) use ($fromTimestamp, $toTimestamp) {
                     if ($fromTimestamp && $toTimestamp) {
                         // Điều kiện khi có input from và to
-                        $query->where('from', '<=', $fromTimestamp)
-                            ->where(function ($query) use ($toTimestamp) {
-                                // Kiểm tra nếu `to = 0`, không so sánh thời gian kết thúc
-                                $query->where('to', '>=', $toTimestamp)
-                                    ->orWhere('to', 0);  // Nếu `to = 0` thì coi như không giới hạn
-                            });
+                        $query->where('from', '<=', $fromTimestamp);
+                        // ->where(function ($query) use ($toTimestamp) {
+                        //     // Kiểm tra nếu `to = 0`, không so sánh thời gian kết thúc
+                        //     $query->where('to', '>=', $toTimestamp)
+                        //         ->orWhere('to', 0);  // Nếu `to = 0` thì coi như không giới hạn
+                        // });
                     } else {
                         // Điều kiện khi không có from và to
                         // $query->where('from', '>=', Carbon::now()->timestamp);
