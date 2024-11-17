@@ -56,6 +56,7 @@ class SearchRoomController extends Controller
             $toTimestamp = null;
         }
 
+        // dd($fromTimestamp, $toTimestamp);
         //TODO Trường hợp nếu `room_id` được truyền
         if ($room_id) {
             $current_time_room = ManageStatusRoom::select('room_id', 'from', 'to')
@@ -72,7 +73,7 @@ class SearchRoomController extends Controller
                             });
                     } else {
                         // Điều kiện khi không có from và to
-                        $query->where('from', '>=', Carbon::now()->timestamp);
+                        // $query->where('from', '>=', Carbon::now()->timestamp);
                     }
                 })
                 ->get()
@@ -85,9 +86,24 @@ class SearchRoomController extends Controller
                 ], 404);
             }
 
-            foreach ($current_time_room as &$item_arr) {
+            foreach ($current_time_room as $key => &$item_arr) {
                 $item_arr['from'] = (new DateTime())->setTimestamp($item_arr['from'])->format('d-m-Y');
                 $item_arr['to'] = (new DateTime())->setTimestamp($item_arr['to'])->format('d-m-Y');
+
+                $current_time = new DateTime();
+                if (($item_arr['to'] < $current_time->getTimestamp()) && $item_arr['to'] != "01-01-1970") {
+                    unset($current_time_room[$key]);
+                }
+
+                if ($item_arr['from'] < $current_time->getTimestamp()) {
+                    $today_14h = new DateTime('today 14:00:00');
+                    if ($current_time->getTimestamp() < $today_14h->getTimestamp()) {
+                        $item_arr['from'] = $current_time->format('d-m-Y');
+                    } else {
+                        $current_time->modify('+1 day'); // Cộng thêm 1 ngày
+                        $item_arr['from'] = $current_time->format('d-m-Y');
+                    }
+                }
             }
 
             return response()->json([
