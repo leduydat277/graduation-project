@@ -13,8 +13,4 @@ class PhiPhatSinh extends Model
         'booking_id', 'name', 'description', 'price'
     ];
 
-    public function booking()
-    {
-        return $this->belongsTo(Booking::class);
-    }
 }
