@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
+use App\Http\Controllers\Web\CheckoutScreenController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,3 +27,6 @@ Route::get('/', [ScreenController::class, 'index'])
 //Detail
 Route::get('/detail', [DetailController::class, 'index'])
     ->name('detail');
+//Checkout
+Route::get('/checkout-screen', [CheckoutScreenController::class, 'index'])
+    ->name('checkout-screen');
