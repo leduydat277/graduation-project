@@ -74,3 +74,7 @@ Route::get('/admin/logout', function () {
 Route::prefix('admin')->group(function () {
     Route::get('{id}/export_pdf', [PaymentController::class, 'generatePDF'])->name('payments.export_pdf');
 });
+
+Route::prefix('admin')->group(function () {
+    Route::get('room-types/{id}/rooms', [RoomTypeController::class, 'showroom'])->name('room-types.rooms');
+});

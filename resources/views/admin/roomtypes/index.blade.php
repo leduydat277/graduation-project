@@ -52,15 +52,18 @@
                             @endif
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                    <form method="GET" action="{{ route('room-types.index') }}">
-                                        <div class="input-group search-box ms-2">
+                                    <form method="GET" action="{{ route('room-types.index') }}"
+                                        class="d-flex align-items-center">
+                                        <div class="input-group">
                                             <input type="text" name="search" value="{{ $search ?? '' }}"
-                                                class="form-control" placeholder="Tìm kiếm loại phòng...">
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i>
+                                                class="form-control" placeholder="Nhập từ khóa tìm kiếm..."
+                                                aria-label="Tìm kiếm loại phòng">
+                                            <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                                <i class="ri-search-line search-icon"></i> Tìm kiếm
                                             </button>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -88,9 +91,8 @@
                                                 @endif
                                             </a>
                                         </th>
-                                        <th class="sort" data-sort="type">
-                                            Tên loại phòng
-                                        </th>
+                                        <th class="sort" data-sort="type">Tên loại phòng</th>
+                                        <th>Số lượng phòng</th>
                                         <th class="sort" data-sort="action">Hành động</th>
                                     </tr>
                                 </thead>
@@ -106,6 +108,11 @@
                                             <td>{{ $roomType->id }}</td>
                                             <td>{{ $roomType->type }}</td>
                                             <td>
+                                                <a href="{{ route('room-types.rooms', $roomType->id) }}">
+                                                    {{ $roomType->rooms_count }} phòng
+                                                </a>
+                                            </td>
+                                            <td>
                                                 <a href="{{ route('room-types.edit', $roomType->id) }}"
                                                     class="btn btn-warning">Sửa</a>
                                                 <form action="{{ route('room-types.destroy', $roomType->id) }}"
@@ -120,6 +127,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+
                             @if ($roomTypes->isEmpty())
                                 <div class="noresult">
                                     <div class="text-center">

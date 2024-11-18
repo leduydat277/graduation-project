@@ -15,34 +15,38 @@ class RoomAssetController extends Controller
 
     public function index(Request $request)
     {
-        //Tiêu đề trang
+        // Tiêu đề trang
         $title = 'Danh sách tiện nghi phòng';
 
         // Lấy từ khóa tìm kiếm từ request
         $search = $request->input('search');
 
-        // Lấy cột sắp xếp và thứ tự sắp xếp từ request (mặc định sắp xếp theo 'id' tăng dần)
+        // Lấy cột sắp xếp và thứ tự sắp xếp từ request
         $sortBy = $request->input('sort_by', 'id');
         $sortOrder = $request->input('sort_order', 'asc');
 
-        // Kiểm tra tính hợp lệ của cột sắp xếp để tránh lỗi
+        // Kiểm tra tính hợp lệ của cột sắp xếp
         if (!in_array($sortBy, ['id', 'room_id', 'assets_type_id', 'status'])) {
             $sortBy = 'id';
         }
 
         // Truy vấn danh sách room assets với tìm kiếm và sắp xếp
-        $roomassets = RoomAsset::with('room', 'assetType')
+        $roomassets = RoomAsset::query()
+            ->join('rooms', 'roomassets.room_id', '=', 'rooms.id') // Liên kết bảng rooms
+            ->join('assets_types', 'roomassets.assets_type_id', '=', 'assets_types.id') // Liên kết bảng assets_types
+            ->select('roomassets.*', 'rooms.title as room_title', 'assets_types.name as asset_type_name') // Chọn các cột
             ->when($search, function ($query, $search) {
-                return $query->where('room_id', 'LIKE', "%{$search}%")
-                    ->orWhere('assets_type_id', 'LIKE', "%{$search}%")
-                    ->orWhere('status', 'LIKE', "%{$search}%");
+                return $query->where('rooms.title', 'LIKE', "%{$search}%") // Tìm theo tên phòng
+                    ->orWhere('assets_types.name', 'LIKE', "%{$search}%") // Tìm theo tên loại tiện nghi
+                    ->orWhere('roomassets.status', 'LIKE', "%{$search}%"); // Tìm theo trạng thái
             })
             ->orderBy($sortBy, $sortOrder)
             ->paginate(10); // Sử dụng phân trang
 
-        // Truyền các tham số sang view
+        // Truyền dữ liệu qua view
         return view(self::VIEW_PATH . __FUNCTION__, compact('roomassets', 'search', 'sortBy', 'sortOrder', 'title'));
     }
+
 
     public function create()
     {
