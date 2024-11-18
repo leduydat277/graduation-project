@@ -9,11 +9,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Banners } from './Banners';
 import { RoomList } from '@/shared/Room/RoomList';
 
-import { AlignCenter } from 'lucide-react';
-
-
-
 function ScreenPage() {
+  
+const onPress = async () => {
+  
+}
+  
   return (
     <>
       <Box sx={{ py: 6 }}>
