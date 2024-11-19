@@ -14,23 +14,32 @@ class RoomTypeController extends Controller
 
     public function index(Request $request)
     {
-        // Lấy từ khóa tìm kiếm
         $search = $request->input('search');
-
-        // Lấy các tham số sắp xếp
-        $sortBy = $request->input('sort_by', 'id'); // Mặc định sắp xếp theo 'id'
-        $sortOrder = $request->input('sort_order', 'asc'); // Mặc định sắp xếp tăng dần
+        $sortBy = $request->input('sort_by', 'id');
+        $sortOrder = $request->input('sort_order', 'asc');
         $title = "Danh sách loại phòng";
 
-        // Lấy danh sách các loại phòng với tìm kiếm và sắp xếp
+        // Thêm withCount để đếm số lượng phòng
         $roomTypes = RoomType::query()
+            ->withCount('rooms') // Đếm số lượng phòng liên kết
             ->when($search, function ($query, $search) {
-                return $query->where('type', 'LIKE', '%' . $search . '%');
+                return $query->where('type', 'LIKE', '%' . $search . '%')
+                    ->orWhere('id', $search); // Tìm kiếm theo ID hoặc Tên
             })
             ->orderBy($sortBy, $sortOrder)
-            ->paginate(10); // Phân trang với 10 bản ghi mỗi trang
+            ->paginate(10);
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('roomTypes', 'search', 'sortBy', 'sortOrder', 'title'));
+    }
+
+
+    public function showroom($id)
+    {
+        $roomType = RoomType::with('rooms')->findOrFail($id); // Lấy loại phòng cùng danh sách phòng
+        $rooms = $roomType->rooms; // Lấy danh sách phòng
+        $title = "Danh sách phòng thuộc loại: " . $roomType->type;
+
+        return view(self::VIEW_PATH . __FUNCTION__, compact('roomType', 'rooms', 'title'));
     }
 
     public function create()

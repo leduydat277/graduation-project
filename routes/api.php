@@ -20,6 +20,8 @@ Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
 
 
 Route::get('dashboard', [DashboardController::class, 'statistical'])->name('api.dashboard');
+Route::get('getWeeks', [DashboardController::class, 'getWeeksInCurrentMonth'])->name('api.getWeeks');
+Route::get('countRoomOrders', [DashboardController::class, 'countRoomOrders'])->name('api.countRoomOrders');
 
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');

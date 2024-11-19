@@ -52,12 +52,14 @@
                             @endif
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                    <form method="GET" action="{{ route('rooms.index') }}">
-                                        <div class="input-group search-box ms-2">
+                                    <form method="GET" action="{{ route('rooms.index') }}"
+                                        class="d-flex align-items-center">
+                                        <div class="input-group">
                                             <input type="text" name="search" value="{{ $search ?? '' }}"
-                                                class="form-control" placeholder="Tìm kiếm phòng...">
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i>
+                                                class="form-control" placeholder="Nhập từ khóa tìm kiếm..."
+                                                aria-label="Tìm kiếm loại phòng">
+                                            <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                                <i class="ri-search-line search-icon"></i> Tìm kiếm
                                             </button>
                                         </div>
                                     </form>
@@ -114,17 +116,18 @@
                                             <td>
                                                 @if (!empty($room->image_room))
                                                     @foreach (json_decode($room->image_room, true) as $image)
-                                                        <img src="{{ asset('storage/' . $image) }}" alt="Room Image" width="50">
+                                                        <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
+                                                            width="50">
                                                     @endforeach
                                                 @else
                                                     Không có ảnh
                                                 @endif
                                             </td>
-                                            
+
                                             <td>
                                                 <a href="{{ route('rooms.edit', $room->id) }}"
                                                     class="btn btn-warning">Sửa</a>
-                                                <a href="{{ route('rooms.show', $room->id)}}" class="btn btn-info">
+                                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info">
                                                     Xem
                                                 </a>
                                                 <form action="{{ route('rooms.destroy', $room->id) }}" method="POST"
