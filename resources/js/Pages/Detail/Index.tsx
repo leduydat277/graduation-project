@@ -22,7 +22,7 @@ function DetailRoom() {
   setSubtitle(subtitle)
   return (
     <>
-<DetailContent {...data} />
+      <DetailContent {...data} />
     </>
   );
 }

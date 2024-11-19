@@ -4,6 +4,7 @@ use App\Http\Controllers\Web\AboutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
+use App\Http\Controllers\Web\CheckoutScreenController;
 use App\Http\Controllers\Web\PolyciController;
 
 /*
@@ -108,3 +109,6 @@ Route::get('/policy', [PolyciController::class, 'index'])
     //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
     // });
     // ->name('detail');
+//Checkout
+Route::get('/checkout-screen', [CheckoutScreenController::class, 'index'])
+    ->name('checkout-screen');

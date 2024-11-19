@@ -21,8 +21,14 @@ class SearchRoomController extends Controller
      * 
      * @return array  A list of available rooms that match the criteria.
      */
-    public function searchRoom($room_type_id, $input_people, $from, $to, $room_id)
+    public function searchRoom()
     {
+        $room_type_id = $_GET['room_type_id'] ?? null;
+        $input_people = $_GET['input_people'] ?? null;
+        $from = $_GET['from'] ?? null;
+        $to = $_GET['to'] ?? null;
+        $room_id = $_GET['room_id'] ?? null;
+
         if (!$room_id && (!is_numeric($input_people) || $input_people <= 0)) {
             return response()->json([
                 'status' => 'error',
@@ -31,7 +37,7 @@ class SearchRoomController extends Controller
         }
 
         // try {
-        if ($from != "null" && $to != "null") {
+        if ($from  && $to) {
             $fromDate = new DateTime($from);
             $toDate = new DateTime($to);
 
@@ -50,23 +56,24 @@ class SearchRoomController extends Controller
             $toTimestamp = null;
         }
 
+        // dd($fromTimestamp, $toTimestamp);
         //TODO Trường hợp nếu `room_id` được truyền
-        if ($room_id && $room_id != "null") {
+        if ($room_id) {
             $current_time_room = ManageStatusRoom::select('room_id', 'from', 'to')
                 ->where('room_id', $room_id)
                 ->where('status', 1)
                 ->where(function ($query) use ($fromTimestamp, $toTimestamp) {
                     if ($fromTimestamp && $toTimestamp) {
                         // Điều kiện khi có input from và to
-                        $query->where('from', '<=', $fromTimestamp)
-                            ->where(function ($query) use ($toTimestamp) {
-                                // Kiểm tra nếu `to = 0`, không so sánh thời gian kết thúc
-                                $query->where('to', '>=', $toTimestamp)
-                                    ->orWhere('to', 0);  // Nếu `to = 0` thì coi như không giới hạn
-                            });
+                        $query->where('from', '<=', $fromTimestamp);
+                        // ->where(function ($query) use ($toTimestamp) {
+                        //     // Kiểm tra nếu `to = 0`, không so sánh thời gian kết thúc
+                        //     $query->where('to', '>=', $toTimestamp)
+                        //         ->orWhere('to', 0);  // Nếu `to = 0` thì coi như không giới hạn
+                        // });
                     } else {
                         // Điều kiện khi không có from và to
-                        $query->where('from', '>=', Carbon::now()->timestamp);
+                        // $query->where('from', '>=', Carbon::now()->timestamp);
                     }
                 })
                 ->get()
@@ -78,10 +85,32 @@ class SearchRoomController extends Controller
                     'status' => 'error'
                 ], 404);
             }
-
-            foreach ($current_time_room as &$item_arr) {
+            // dd($current_time_room);
+            foreach ($current_time_room as $key => &$item_arr) {
                 $item_arr['from'] = (new DateTime())->setTimestamp($item_arr['from'])->format('d-m-Y');
                 $item_arr['to'] = (new DateTime())->setTimestamp($item_arr['to'])->format('d-m-Y');
+
+                $current_time = new DateTime();
+                if (($item_arr['to'] < $current_time->getTimestamp()) && $item_arr['to'] != "01-01-1970") {
+                    unset($current_time_room[$key]);
+                }
+
+                if ($item_arr['from'] < $current_time->getTimestamp()) {
+                    $today_14h = new DateTime('today 14:00:00');
+                    if ($current_time->getTimestamp() < $today_14h->getTimestamp()) {
+                        $item_arr['from'] = $current_time->format('d-m-Y');
+                    } else {
+                        $current_time->modify('+1 day'); // Cộng thêm 1 ngày
+                        $item_arr['from'] = $current_time->format('d-m-Y');
+                    }
+                }
+                if (
+                    $fromTimestamp > DateTime::createFromFormat('d-m-Y', $item_arr['from'])->getTimestamp()
+                    && $fromTimestamp > DateTime::createFromFormat('d-m-Y', $item_arr['to'])->getTimestamp()
+                    && $item_arr['to'] != "01-01-1970"
+                ) {
+                    unset($current_time_room[$key]);
+                }
             }
 
             return response()->json([

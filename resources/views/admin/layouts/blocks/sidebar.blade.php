@@ -61,7 +61,7 @@
              <ul class="navbar-nav" id="navbar-nav">
                  <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link" data-key="t-analytics">
+                     <a href="{{ route('admin.dashboard') }}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-home"></i> <!-- Biểu tượng cho trang chủ -->
                          Trang chủ
                      </a>
@@ -79,7 +79,7 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="" class="nav-link" data-key="t-analytics">
+                     <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
                          Hóa đơn
                      </a>
@@ -95,6 +95,20 @@
                      <a href="{{ route('rooms.index') }}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-bed"></i> <!-- Icon for room list -->
                          Danh sách phòng
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a href="{{ route('room-types.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
+                         Danh sách tiện nghi
+                     </a>
+                 </li>
+
+                 <li class="nav-item">
+                     <a href="{{ route('room-assets.index') }}" class="nav-link" data-key="t-analytics">
+                         <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
+                         Quản lý tiện nghi phòng
                      </a>
                  </li>
 

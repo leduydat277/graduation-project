@@ -8,13 +8,14 @@ import { grey, pink, blue } from '@mui/material/colors';
 import SearchIcon from '@mui/icons-material/Search';
 import { Banners } from './Banners';
 import { RoomList } from '@/shared/Room/RoomList';
-
-import { AlignCenter } from 'lucide-react';
 import { Footer } from '@/components/Footer/Footer';
 
-
-
 function ScreenPage() {
+  
+const onPress = async () => {
+  
+}
+  
   return (
     <>
       <Box sx={{ py: 6 }}>

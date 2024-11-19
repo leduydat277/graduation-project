@@ -4,6 +4,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,11 +24,14 @@ Route::get('dashboard', [DashboardController::class, 'statistical'])->name('api.
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
 
+Route::get('all-payment', [PaymentController::class, 'allPayments'])
+    ->name('api.all-payment');
+Route::post('filter-payment', [PaymentController::class, 'filterPayments'])
+    ->name('api.filter-payment');
+
 
 Route::get('donepayment', [BookingController::class, 'vnpay'])
     ->name('api.donepayment');
 
 Route::get('detail/{id}', [DetailController::class, 'detail'])
     ->name('api.detail');
-// Route::get('/search', [RoomController::class, 'search'])
-//     ->name('search');

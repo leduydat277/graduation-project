@@ -4,6 +4,7 @@ import { RoomSearchBar } from "../Room/RoomSearchBar";
 import { calculateTotalAmount } from "../../../service/hooks/booking";
 import { useBookingStore } from "../../../service/stores/booking-store";
 import { CalendarClock } from "lucide-react";
+import { Link } from '@inertiajs/react'
 import { grey } from "@mui/material/colors";
 export const BookingForm = (props) => {
   const { type, price, status, description, ...rest } = props
@@ -37,8 +38,9 @@ export const BookingForm = (props) => {
         </Stack>
         <RoomSearchBar position={'detail'} />
         <Typography variant="h6" pb={1}>Total: {totalPrice}</Typography>
-        {/* <LoadingBtn text={'Đặt ngay'}/> */}
-        <Button>Đặt ngay</Button>
+      
+      <Link href="checkout-screen"as="button" type="button">Logout</Link>
+
       </Stack>
     </>
   )
