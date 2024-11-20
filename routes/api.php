@@ -4,6 +4,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
@@ -18,10 +19,13 @@ Route::middleware('api')->get('/example', function (Request $request) {
 Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
     ->name('api.search_room');
 
-
+// Admin api
 Route::get('dashboard', [DashboardController::class, 'statistical'])->name('api.dashboard');
 Route::get('getWeeks', [DashboardController::class, 'getWeeksInCurrentMonth'])->name('api.getWeeks');
 Route::get('countRoomOrders', [DashboardController::class, 'countRoomOrders'])->name('api.countRoomOrders');
+Route::get('/notifications', [NotificationsController::class, 'showNotifications']);
+Route::post('/notifications/delete', [NotificationsController::class, 'deleteNotifications']);
+Route::post('/notifications/read', [NotificationsController::class, 'readNotifications']);
 
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
