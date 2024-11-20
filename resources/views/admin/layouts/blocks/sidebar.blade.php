@@ -131,6 +131,12 @@
                          Check-in & Check-out
                      </a>
                  </li>
+                 <li class="nav-item">
+                     <a href="{{ route('others.index') }}" class="nav-link" data-key="t-analytics">
+                     <i class="fas fa-th-list"></i>
+                         Others
+                     </a>
+                 </li>
              </ul>
          </div>
          <!-- Sidebar -->
