@@ -309,7 +309,7 @@ function calculateTotal() {
                     booking.status
                 ]),
                 pagination: {
-                    limit: 5
+                    limit: 10
                 },
                 sort: true,
                 search: true
