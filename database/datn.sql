@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 17, 2024 lúc 11:31 AM
+-- Thời gian đã tạo: Th10 20, 2024 lúc 02:38 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `datn`
+-- Cơ sở dữ liệu: `do_an_tot_nghiep`
 --
 
 -- --------------------------------------------------------
@@ -103,12 +103,12 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `room_id`, `user_id`, `code_check_in`, `check_in_date`, `check_out_date`, `total_price`, `tien_coc`, `status`, `created_at`, `updated_at`, `first_name`, `last_name`, `email`, `phone`, `address`, `CCCD_booking`) VALUES
-(2, 20, 1, '410325', 1733234400, 1733400000, 2600000, 780000, 2, 1731139621, 1731139621, 'khoi', 'nguyen', 'khointph33170@fpt.edu.vn', '0123456789', 'HN', NULL),
-(3, 1, 2, '799533', 1733061600, 1733313600, 3600000, 1080000, 2, 1731139621, 1731139621, 'Trần', 'Thị B', 'nguyenvana@example.com', '0987654321', 'Hồ Chí Minh', NULL),
-(4, 1, 3, '931424', 1733580000, 1733745600, 2400000, 720000, 2, 1731139621, 1731139621, 'Lê', 'Quang C', 'lequangc@example.com', '0912345678', 'Đà Nẵng', NULL),
-(5, 1, 4, '756358', 1733839200, 1735041600, 16800000, 5040000, 2, 1731139621, 1731139621, 'Phạm', 'Minh D', 'phamminhd@example.com', '0123876543', 'Hải Phòng', NULL),
-(6, 1, 5, '543493', 1735740000, 1736337600, 8400000, 2520000, 2, 1731139621, 1731139621, 'Đặng', 'Thị E', 'dangthie@example.com', '0938123456', 'Cần Thơ', NULL),
-(7, 1, 6, '852559', 1736604000, 1737892800, 18000000, 5400000, 2, 1731139621, 1731139621, 'Vũ', 'Hải F', 'vuhai@example.com', '0918234567', 'Nha Trang', NULL),
+(2, 20, 1, '410325', 1733234400, 1733400000, 2600000, 780000, 5, 1731974400, 1731139621, 'khoi', 'nguyen', 'khointph33170@fpt.edu.vn', '0123456789', 'HN', NULL),
+(3, 1, 2, '799533', 1733061600, 1733313600, 3600000, 1080000, 3, 1731715200, 1731139621, 'Trần', 'Thị B', 'nguyenvana@example.com', '0987654321', 'Hồ Chí Minh', NULL),
+(4, 1, 3, '931424', 1733580000, 1733745600, 2400000, 720000, 3, 1734307200, 1731139621, 'Lê', 'Quang C', 'lequangc@example.com', '0912345678', 'Đà Nẵng', NULL),
+(5, 1, 4, '756358', 1733839200, 1735041600, 16800000, 5040000, 5, 1731715200, 1731139621, 'Phạm', 'Minh D', 'phamminhd@example.com', '0123876543', 'Hải Phòng', NULL),
+(6, 1, 5, '543493', 1735740000, 1736337600, 8400000, 2520000, 5, 1731974400, 1731139621, 'Đặng', 'Thị E', 'dangthie@example.com', '0938123456', 'Cần Thơ', NULL),
+(7, 1, 6, '852559', 1736604000, 1737892800, 18000000, 5400000, 3, 1731974400, 1731139621, 'Vũ', 'Hải F', 'vuhai@example.com', '0918234567', 'Nha Trang', NULL),
 (8, 3, 7, '173834', 1736258400, 1737806400, 36000000, 10800000, 2, 1731139621, 1731139621, 'Ngô', 'Thanh G', 'ngothang@example.com', '0909345678', 'Quảng Ninh', NULL),
 (9, 3, 8, '542975', 1734789600, 1735732800, 22000000, 6600000, 2, 1731139621, 1731139621, 'Hoàng', 'Minh H', 'hoangminhh@example.com', '0978543210', 'Nam Định', NULL),
 (10, 2, 9, '627410', 1734703200, 1736078400, 19200000, 5760000, 2, 1731139621, 1731139621, 'Bùi', 'Thị I', 'buitihi@example.com', '0911122334', 'Vinh', NULL),
@@ -249,7 +249,33 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(2, '2024_11_16_054436_update_image_room_nullable_in_rooms_table', 1);
+(2, '2024_11_16_054436_update_image_room_nullable_in_rooms_table', 1),
+(3, '2024_11_19_100241_create_others_table', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `others`
+--
+
+CREATE TABLE `others` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `created_at` int(10) UNSIGNED DEFAULT 1732066515,
+  `updated_at` int(10) UNSIGNED DEFAULT 1732066515
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `others`
+--
+
+INSERT INTO `others` (`id`, `name`, `type`, `description`, `value`, `created_at`, `updated_at`) VALUES
+(1, 'Others 1', 'Banner', 'đây là banner', 'đường dẫn ảnh banner', 1732066515, 1732066515),
+(2, 'Others 2', 'Logo', 'đây là logo', 'đường dẫn ảnh logo', 1732066515, 1732066515),
+(3, 'Footer', 'Footer', 'đây là Footer', 'đường dẫn ảnh Footer', 1732066515, 1732066515);
 
 -- --------------------------------------------------------
 
@@ -568,7 +594,7 @@ INSERT INTO `roomassets` (`id`, `assets_type_id`, `room_id`, `status`, `created_
 CREATE TABLE `rooms` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `room_type_id` bigint(20) UNSIGNED NOT NULL,
-  `image_room` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Các ảnh lưu dưới dạng json' CHECK (json_valid(`image_room`)),
+  `image_room` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Các ảnh lưu dưới dạng json',
   `max_people` int(10) UNSIGNED NOT NULL COMMENT 'Số người tối đa của phòng',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'tên phòng, dùng để hiển thị tên thay vì id phòng ở phía FE',
   `price` bigint(20) UNSIGNED NOT NULL,
@@ -582,7 +608,7 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_type_id`, `image_room`, `max_people`, `title`, `price`, `room_area`, `description`, `status`) VALUES
-(1, 1, NULL, 2, 'Deluxe Room 101', 1200000, 25, 'Phòng Deluxe với đầy đủ tiện nghi hiện đại.', 0),
+(1, 1, '[\"upload\\/rooms\\/8aD18jiTK3BjS7xtetcLtVkjELPh9RbM3YG6Iag2.webp\",\"upload\\/rooms\\/WLWDREfaHG55PZxxaDd4i9u99OIdFGJRikoVzzNE.webp\",\"upload\\/rooms\\/KJSchVYpPkLdYrrPUZ4C7PLIvdv2PZX7sQrS6gkD.webp\"]', 2, 'Deluxe Room 101', 1200000, 25, 'Phòng Deluxe với đầy đủ tiện nghi hiện đại.', 0),
 (2, 1, NULL, 2, 'Deluxe Room 102', 1200000, 25, 'Phòng Deluxe view biển đẹp.', 0),
 (3, 2, NULL, 4, 'Executive Room 201', 2000000, 35, 'Phòng Executive sang trọng dành cho gia đình.', 1),
 (4, 3, NULL, 6, 'Family Room 301', 2500000, 50, 'Phòng gia đình rộng rãi và tiện nghi.', 0),
@@ -601,7 +627,7 @@ INSERT INTO `rooms` (`id`, `room_type_id`, `image_room`, `max_people`, `title`, 
 (17, 7, NULL, 1, 'Economy Room 702', 650000, 19, 'Phòng nhỏ gọn, thích hợp cho du lịch ngắn ngày.', 0),
 (18, 8, NULL, 2, 'King Room 802', 1550000, 32, 'Phòng King với thiết kế thanh lịch.', 0),
 (19, 9, NULL, 2, 'Queen Room 902', 1450000, 29, 'Phòng Queen với nội thất hiện đại.', 1),
-(20, 10, NULL, 2, 'Studio Room 1001', 1300000, 25, 'Phòng Studio nhỏ gọn, tiện ích cho công việc.', 0);
+(20, 10, '[\"upload\\/rooms\\/BXOLpaNtdYltle8rygfWh1m8PTxRzLwyzANUvwQg.webp\",\"upload\\/rooms\\/6RUmxJg1OhwmJcnNSyy87yxBcagFM83byVGFeZXO.webp\"]', 2, 'Studio Room 1001', 1300000, 25, 'Phòng Studio nhỏ gọn, tiện ích cho công việc.', 0);
 
 -- --------------------------------------------------------
 
@@ -673,7 +699,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `cccd`, `password`, `image`, `phone`, `address`, `role`, `created_at`, `updated_at`, `first_name`, `last_name`, `deleted_at`) VALUES
-(1, 'Nguyễn Văn A', 'nguyenvana@example.com', '123456789012', '1', 'image1.jpg', '0123456789', 'HN', 0, 1731139621, 1731139621, 'khoi', 'nguyen', NULL),
+(1, 'Nguyễn Văn A', 'nguyenvana@example.com', '123456789012', '1', 'image1.jpg', '0336107429', 'Quảng Ninh', 0, 1731139621, 1731139621, 'Linh', 'Lê', NULL),
 (2, 'Trần Thị B', 'tranthib@example.com', '234567890123', '1', 'image2.jpg', '0987654321', 'Hồ Chí Minh', 1, 1731139621, 1731139621, 'Trần', 'Thị B', NULL),
 (3, 'Lê Quang C', 'lequangc@example.com', '345678901234', '1', 'image3.jpg', '0912345678', 'Đà Nẵng', 0, 1731139621, 1731139621, 'Lê', 'Quang C', NULL),
 (4, 'Phạm Minh D', 'phamminhd@example.com', '456789012345', '1', 'image4.jpg', '0123876543', 'Hải Phòng', 0, 1731139621, 1731139621, 'Phạm', 'Minh D', NULL),
@@ -710,6 +736,12 @@ ALTER TABLE `manage_status_rooms`
 -- Chỉ mục cho bảng `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `others`
+--
+ALTER TABLE `others`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -775,7 +807,7 @@ ALTER TABLE `assets_types`
 -- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT cho bảng `manage_status_rooms`
@@ -787,13 +819,19 @@ ALTER TABLE `manage_status_rooms`
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `others`
+--
+ALTER TABLE `others`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT cho bảng `phiphatsinhs`
