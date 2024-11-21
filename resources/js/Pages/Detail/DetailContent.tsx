@@ -3,7 +3,8 @@ import React from 'react';
 import { Typography, Box } from "@mui/material";
 
 export const DetailContent = (props) => {
-    const { title, subtitle, description, image } = props
+  const { title, description, subtitle = 'fake subtitle', image = '' } = props
+    console.log('DetailContent', props)
   return (
     <Box sx={{ minHeight: '300px'}}>
               <Box

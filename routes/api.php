@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +36,9 @@ Route::get('donepayment', [BookingController::class, 'vnpay'])
 
 Route::get('detail/{id}', [DetailController::class, 'detail'])
     ->name('api.detail');
+
+Route::get('all-rooms', [RoomController::class, 'index'])->name('api.rooms');
+
+Route::get('test', function () {
+    return 'API is working!';
+});
