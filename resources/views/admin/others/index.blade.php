@@ -37,6 +37,17 @@
     {{ session('success') }}
 </div>
 @endif
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -54,7 +65,13 @@
     </div>
     <!-- end col -->
 </div>
-
+@if ($errors->any())
+<script>
+    $(document).ready(function() {
+        $('#addOtherModal').modal('show');
+    });
+</script>
+@endif
 <!-- modal thêm mới -->
 <div class="modal fade" id="addOtherModal" tabindex="-1" aria-labelledby="addOtherModalLabel" aria-hidden="true">
     <div class="modal-dialog">

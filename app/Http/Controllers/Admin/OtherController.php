@@ -35,7 +35,6 @@ class OtherController
             'description' => 'required',
             'value' => 'required|string|max:255',
         ]);
-    
         $other = Other::create($validated);
     
         if ($other) {
@@ -68,7 +67,6 @@ class OtherController
         $other->type = $validated['type'];
         $other->description = $validated['description'];
         $other->value = $validated['value'];
-    
         $other->save();
         return redirect()->route('others.index')->with('success', 'Cập nhật thông tin thành công!', compact('other'));
     }
