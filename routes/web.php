@@ -4,14 +4,11 @@ use App\Events\NotificationMessage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
-<<<<<<< HEAD
 use App\Http\Controllers\Web\SuccesssController;
 use App\Http\Controllers\Web\RoomsController;
-=======
 use App\Http\Controllers\Web\CheckoutScreenController;
 use Illuminate\Support\Facades\Request;
 
->>>>>>> cad47aa01201fe9fa71882b16cbb914166350bc0
 /*
 |--------------------------------------------------------------------------
 | Web Routes

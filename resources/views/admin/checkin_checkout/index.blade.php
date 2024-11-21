@@ -134,81 +134,106 @@
         </div>
     </div>
 </div>
+
+<!-- modal hủy -->
+<div class="modal fade" id="exitModal" tabindex="-1" aria-labelledby="exitModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="exitModalLabel">Xác nhận hủy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p id="exitModalMessage"></p> <!-- Nội dung thông báo sẽ được thay đổi động -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-danger" onclick="confirmCancel()">Xác nhận hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @section('js')
 <script>
-document.getElementById("addFeeButton").addEventListener("click", function() {
-    // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
-    const ppsInputs = document.querySelectorAll('input[name="pps[]"]');
-    const priceInputs = document.querySelectorAll('input[name="price[]"]');
-    
-    // Kiểm tra nếu tất cả các trường đã điền
-    let allFilled = true;
-    ppsInputs.forEach(input => {
-        if (input.value.trim() === "") {
-            allFilled = false;
+    document.getElementById("addFeeButton").addEventListener("click", function() {
+        // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
+        const ppsInputs = document.querySelectorAll('input[name="pps[]"]');
+        const priceInputs = document.querySelectorAll('input[name="price[]"]');
+
+        // Kiểm tra nếu tất cả các trường đã điền
+        let allFilled = true;
+        ppsInputs.forEach(input => {
+            if (input.value.trim() === "") {
+                allFilled = false;
+            }
+        });
+        priceInputs.forEach(input => {
+            if (input.value.trim() === "") {
+                allFilled = false;
+            }
+        });
+
+        // Nếu tất cả các trường đã được điền thì cho phép thêm trường mới
+        if (allFilled) {
+            // Tạo một div chứa các trường phát sinh mới
+            const newFeeDiv = document.createElement("div");
+            newFeeDiv.classList.add("mb-3");
+
+            // Tạo trường Phát sinh
+            const newPpsLabel = document.createElement("label");
+            newPpsLabel.classList.add("form-label");
+            newPpsLabel.textContent = "Phát sinh";
+            const newPpsInput = document.createElement("input");
+            newPpsInput.type = "text";
+            newPpsInput.name = "pps[]";
+            newPpsInput.classList.add("form-control");
+
+            // Tạo trường Giá phát sinh
+            const newPriceLabel = document.createElement("label");
+            newPriceLabel.classList.add("form-label");
+            newPriceLabel.textContent = "Giá phát sinh";
+            const newPriceInput = document.createElement("input");
+            newPriceInput.type = "number";
+            newPriceInput.name = "price[]";
+            newPriceInput.classList.add("form-control", "price-input");
+            newPriceInput.oninput = calculateTotal;
+            const hr = document.createElement("hr");
+            // Thêm các trường vào div mới
+            newFeeDiv.appendChild(newPpsLabel);
+            newFeeDiv.appendChild(newPpsInput);
+            newFeeDiv.appendChild(newPriceLabel);
+            newFeeDiv.appendChild(newPriceInput);
+            newFeeDiv.appendChild(hr);
+            // Thêm div mới vào container chính
+            document.getElementById("extraFeesContainer").appendChild(newFeeDiv);
+        } else {
+            alert("Vui lòng nhập Phát sinh và Giá phát sinh trước khi thêm mục mới.");
         }
     });
-    priceInputs.forEach(input => {
-        if (input.value.trim() === "") {
-            allFilled = false;
-        }
-    });
-    
-    // Nếu tất cả các trường đã được điền thì cho phép thêm trường mới
-    if (allFilled) {
-        // Tạo một div chứa các trường phát sinh mới
-        const newFeeDiv = document.createElement("div");
-        newFeeDiv.classList.add("mb-3");
 
-        // Tạo trường Phát sinh
-        const newPpsLabel = document.createElement("label");
-        newPpsLabel.classList.add("form-label");
-        newPpsLabel.textContent = "Phát sinh";
-        const newPpsInput = document.createElement("input");
-        newPpsInput.type = "text";
-        newPpsInput.name = "pps[]";
-        newPpsInput.classList.add("form-control");
+    // Hàm tính tổng giá trị các ô Giá phát sinh
+    function calculateTotal() {
+        const priceInputs = document.querySelectorAll('.price-input');
+        const no = parseFloat(document.getElementById('thanhtoan').value) || 0; // Lấy giá trị từ ô "thanhtoan" và chuyển thành số
+        let total = no; // Khởi tạo total với giá trị từ "thanhtoan"
 
-        // Tạo trường Giá phát sinh
-        const newPriceLabel = document.createElement("label");
-        newPriceLabel.classList.add("form-label");
-        newPriceLabel.textContent = "Giá phát sinh";
-        const newPriceInput = document.createElement("input");
-        newPriceInput.type = "number";
-        newPriceInput.name = "price[]";
-        newPriceInput.classList.add("form-control", "price-input");
-        newPriceInput.oninput = calculateTotal;
-        const hr = document.createElement("hr");
-        // Thêm các trường vào div mới
-        newFeeDiv.appendChild(newPpsLabel);
-        newFeeDiv.appendChild(newPpsInput);
-        newFeeDiv.appendChild(newPriceLabel);
-        newFeeDiv.appendChild(newPriceInput);
-        newFeeDiv.appendChild(hr);
-        // Thêm div mới vào container chính
-        document.getElementById("extraFeesContainer").appendChild(newFeeDiv);
-    } else {
-        alert("Vui lòng nhập Phát sinh và Giá phát sinh trước khi thêm mục mới.");
+        priceInputs.forEach(input => {
+            const value = parseFloat(input.value);
+            if (!isNaN(value)) {
+                total += value; // Cộng giá trị của mỗi ô "Giá phát sinh" vào tổng
+            }
+        });
+
+        document.getElementById("totalPrice").value = total; // Gán tổng vào ô "totalPrice"
     }
-});
-
-// Hàm tính tổng giá trị các ô Giá phát sinh
-function calculateTotal() {
-    const priceInputs = document.querySelectorAll('.price-input');
-    const no = parseFloat(document.getElementById('thanhtoan').value) || 0; // Lấy giá trị từ ô "thanhtoan" và chuyển thành số
-    let total = no; // Khởi tạo total với giá trị từ "thanhtoan"
-
-    priceInputs.forEach(input => {
-        const value = parseFloat(input.value);
-        if (!isNaN(value)) {
-            total += value; // Cộng giá trị của mỗi ô "Giá phát sinh" vào tổng
-        }
-    });
-
-    document.getElementById("totalPrice").value = total; // Gán tổng vào ô "totalPrice"
-}
-//end
+    //end
 
     document.addEventListener("DOMContentLoaded", function() {
         const bookingsData = @json($bookings);
@@ -289,7 +314,11 @@ function calculateTotal() {
                         formatter: (cell, row) => {
                             const status = row.cells[7].data;
                             if (status === 2) {
-                                return gridjs.html('<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(' + row.cells[0].data + ')">Check-in</button>');
+                                return gridjs.html(`
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check-in</button>
+                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
+                                `);
+
                             } else if (status === 4) {
                                 return gridjs.html('<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(' + row.cells[0].data + ')">Check-out</button>');
                             }
@@ -318,7 +347,54 @@ function calculateTotal() {
     });
     // end table
 
-//checkin
+// hủy
+function openCancelModal(id) {
+const modalMessage = document.getElementById('exitModalMessage');
+const check_in_date = 1736258400; // Ví dụ timestamp
+
+// Chuyển đổi timestamp sang đối tượng Date
+const checkInDate = new Date(check_in_date * 1000); // Chuyển timestamp từ giây sang milliseconds
+
+// Lấy ngày hiện tại
+const today = new Date();
+
+// Kiểm tra xem check_in_date có cùng ngày với ngày hiện tại không
+const isSameDay = checkInDate.getDate() === today.getDate() && 
+                  checkInDate.getMonth() === today.getMonth() && 
+                  checkInDate.getFullYear() === today.getFullYear();
+
+if (isSameDay) {
+    // Lấy giờ hiện tại
+    const currentHour = 11;
+
+    // Kiểm tra nếu hiện tại là trước 12h hoặc sau 21h
+    if (currentHour < 12) {
+         modalMessage.textContent = "Chưa đến giờ check-in";
+    } else if (currentHour >= 21) {
+         modalMessage.textContent = "Đã quá giờ check-in";
+    } else {
+         modalMessage.textContent = "Đang trong khoảng thời gian check-in";
+    }
+} else {
+     modalMessage.textContent = "Ngày check-in không phải hôm nay";
+}
+
+}
+
+
+    // function confirmCancel() {
+    //     const id = document.getElementById('cancelItemId').value; // Lấy giá trị ID
+    //     console.log("Hủy hành động với ID:", id);
+
+    //     // Thực hiện hủy (gửi AJAX hoặc chuyển hướng)
+    //     alert(`Hủy hành động cho ID: ${id}`);
+    //     // Đóng modal sau khi xử lý
+    //     const modal = bootstrap.Modal.getInstance(document.getElementById('exitModal'));
+    //     modal.hide();
+    // }
+
+// end hủy
+    //checkin
     function openCheckinModal(bookingId) {
         // Tìm booking tương ứng
         const booking = @json($bookings).find(b => b.id === bookingId);
@@ -345,9 +421,9 @@ function calculateTotal() {
             form.submit();
         }
     });
-//endcheckin
+    //endcheckin
 
-//checkout
+    //checkout
     function openCheckoutModal(bookingId) {
         const booking = @json($bookings).find(b => b.id === bookingId);
         document.getElementById('bookingId1').value = booking.id;
@@ -366,7 +442,7 @@ function calculateTotal() {
         form.method = 'POST';
         form.submit();
     });
-//endcheckout
+    //endcheckout
 </script>
 
 
