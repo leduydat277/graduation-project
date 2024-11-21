@@ -12,19 +12,29 @@ import {
 
 
 
-const initialDateRange = {
-  checkIn: new Date(),
-  checkOut: addDays(new Date(), 1),
- 
+const initialUser = {
+  userId: 0,
+  address: '',
+  email: '',
+  firstName: '',
+  lastname: '',
+ phone: '',
 };
 
 
-export const useBookingStore = createWithEqualityFn(
+export const userStore = createWithEqualityFn(
     subscribeWithSelector(
         immer<any>((set, get) => ({
-            
+          ...initialUser,
+          resetState: () => set({ ...initialUser }),
+          setUserId: (userId) => set((state) => { state.userId = userId; }),
+          setAddress: (address) => set((state) => { state.address = address; }),
+          setEmail: (email) => set((state) => { state.email = email; }),
+          setFirstName: (firstName) => set((state) => { state.firstName = firstName; }),
+          setLastName: (lastName) => set((state) => { state.lastName = lastName; }),
+          setPhone: (phone) => set((state) => { state.phone = phone; }),
+         
         }))
     )
 );
 
-export default useBookingStore;

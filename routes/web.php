@@ -1,9 +1,17 @@
 <?php
 
+use App\Events\NotificationMessage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
+<<<<<<< HEAD
+use App\Http\Controllers\Web\SuccesssController;
+use App\Http\Controllers\Web\RoomsController;
+=======
 use App\Http\Controllers\Web\CheckoutScreenController;
+use Illuminate\Support\Facades\Request;
+
+>>>>>>> cad47aa01201fe9fa71882b16cbb914166350bc0
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +25,9 @@ use App\Http\Controllers\Web\CheckoutScreenController;
 
 include_once "admin.php";
 
-Route::get("/test", function () {
-    return view('admin.index');
+Route::get("/test", function (Request $request) {
+    event(new NotificationMessage('Lê Duy Linh','Đơn đặt phòng mới', 'dfjghidsgh'));
+    return response()->json(['status' => 'Notification sent!']);
 });
 
 
@@ -27,6 +36,11 @@ Route::get('/', [ScreenController::class, 'index'])
 //Detail
 Route::get('/detail', [DetailController::class, 'index'])
     ->name('detail');
+Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
+
 //Checkout
-Route::get('/checkout-screen', [CheckoutScreenController::class, 'index'])
-    ->name('checkout-screen');
+Route::get('/success', [SuccesssController::class, 'index'])
+    ->name('success');
+
+Route::get('/rooms', [RoomsController::class, 'index'])
+    ->name('rooms');    

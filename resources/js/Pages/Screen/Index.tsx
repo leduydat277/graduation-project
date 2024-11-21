@@ -38,7 +38,7 @@ const onPress = async () => {
             </Button>
           </Paper>
           <BannerImage />
-          <RoomList />
+          <RoomList end={6} start={0} />
 
         </Box>
 
