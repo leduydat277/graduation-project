@@ -1,5 +1,7 @@
 @extends('admin.layouts.admin')
-{{ $title }} -Admin
+@section('title')
+    {{ $title }}
+@endsection
 @section('css')
     <!-- App favicon và các css cần thiết -->
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">

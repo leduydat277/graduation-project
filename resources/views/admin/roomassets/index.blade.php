@@ -52,12 +52,14 @@
                             @endif
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                    <form method="GET" action="{{ route('room-assets.index') }}">
-                                        <div class="input-group search-box ms-2">
+                                    <form method="GET" action="{{ route('room-assets.index') }}"
+                                        class="d-flex align-items-center">
+                                        <div class="input-group">
                                             <input type="text" name="search" value="{{ $search ?? '' }}"
-                                                class="form-control" placeholder="Tìm kiếm tiện nghi...">
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i>
+                                                class="form-control" placeholder="Nhập từ khóa tìm kiếm..."
+                                                aria-label="Tìm kiếm loại phòng">
+                                            <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                                <i class="ri-search-line search-icon"></i> Tìm kiếm
                                             </button>
                                         </div>
                                     </form>

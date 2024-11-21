@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AssetTypeController;
 use App\Http\Controllers\Admin\ChangePasswordController;
 use App\Http\Controllers\Admin\CheckInCheckOutController;
 use App\Http\Controllers\Admin\MailController;
+use App\Http\Controllers\Admin\OtherController;
 use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -43,6 +44,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('room-assets', RoomAssetController::class);
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
+    Route::resource('others', OtherController::class);
     Route::prefix('change-password')->as('change-password.')->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
         Route::post('/change', [ChangePasswordController::class, 'ChangePassword'])->name('change_password');
@@ -73,4 +75,8 @@ Route::get('/admin/logout', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('{id}/export_pdf', [PaymentController::class, 'generatePDF'])->name('payments.export_pdf');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('room-types/{id}/rooms', [RoomTypeController::class, 'showroom'])->name('room-types.rooms');
 });
