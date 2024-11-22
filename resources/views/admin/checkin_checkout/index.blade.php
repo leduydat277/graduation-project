@@ -146,15 +146,20 @@
             </div>
 
             <!-- Modal Body -->
+            <form action="{{route('checkin-checkout.booking.cancel')}}" method="post">
+                @csrf
             <div class="modal-body">
                 <p id="exitModalMessage"></p> <!-- Nội dung thông báo sẽ được thay đổi động -->
+                <input type="hidden" name="id" id="cancelItemId">
             </div>
-
-            <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-danger" onclick="confirmCancel()">Xác nhận hủy</button>
+                <button type="submit" class="btn btn-danger" >Xác nhận hủy</button>
             </div>
+            </form>
+
+            <!-- Modal Footer -->
+
         </div>
     </div>
 </div>
@@ -241,20 +246,28 @@
         if (document.getElementById("table-gridjs")) {
             new gridjs.Grid({
                 columns: [{
-                        name: "Booking ID",
-                        width: "100px"
+                        name: "Mã đơn",
+                        width: "70px"
                     },
                     {
-                        name: "User Name",
+                        name: "Người dùng",
                         width: "150px"
                     },
                     {
-                        name: "Room ID",
+                        name: "Email",
+                        width: "150px"
+                    },
+                    {
+                        name: "SĐT",
                         width: "100px"
                     },
                     {
-                        name: "Room Type",
-                        width: "150px"
+                        name: "Mã phòng",
+                        width: "100px"
+                    },
+                    {
+                        name: "Loại phòng",
+                        width: "100px"
                     },
                     {
                         name: "Check-in",
@@ -273,14 +286,14 @@
                         }
                     },
                     {
-                        name: "Total Price",
+                        name: "Tổng tiền",
                         width: "100px"
                     },
                     {
-                        name: "Status",
-                        width: "150px",
+                        name: "Trạng thái",
+                        width: "120px",
                         formatter: (cell, row) => {
-                            const status = row.cells[7].data;
+                            const status = row.cells[9].data;
                             let statusText = '';
                             let statusClass = '';
 
@@ -309,27 +322,49 @@
                         }
                     },
                     {
-                        name: "Action",
-                        width: "100px",
+                        name: "Tùy chọn",
+                        width: "120px",
                         formatter: (cell, row) => {
-                            const status = row.cells[7].data;
-                            if (status === 2) {
-                                return gridjs.html(`
-                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check-in</button>
-                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
-                                `);
+                            const status = row.cells[9].data; // Trạng thái
+                            const checkInDateTimestamp = row.cells[6].data; // Lấy check_in_date từ bảng (timestamp)
+                            const checkInDate = new Date(checkInDateTimestamp * 1000); // Chuyển đổi sang Date
+                            const today = new Date();
+                            const currentHour = new Date().getHours();
 
+                            // So sánh ngày hôm nay và ngày check_in_date
+                            const isToday =
+                                checkInDate.getDate() === today.getDate() &&
+                                checkInDate.getMonth() === today.getMonth() &&
+                                checkInDate.getFullYear() === today.getFullYear();
+                                
+                                if (status === 2) {
+                                    if (isToday && currentHour >= 14) {
+                                    return gridjs.html(`
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check-in</button>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
+                `);
+                                } else {
+                                    return gridjs.html(`
+                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian check-in')">Check-in</button>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
+                `);
+                                }
                             } else if (status === 4) {
-                                return gridjs.html('<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(' + row.cells[0].data + ')">Check-out</button>');
+                                return gridjs.html(`
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})">Check-out</button>
+            `);
                             }
 
                             return '';
                         }
                     }
+
                 ],
                 data: bookingsData.map(booking => [
                     booking.id,
                     booking.user_name,
+                    booking.user_email,
+                    booking.user_phone,
                     booking.room_id,
                     booking.room_type,
                     booking.check_in_date,
@@ -347,53 +382,47 @@
     });
     // end table
 
-// hủy
-function openCancelModal(id) {
-const modalMessage = document.getElementById('exitModalMessage');
-const check_in_date = 1736258400; // Ví dụ timestamp
+    // hủy
+    function openCancelModal(id) {
+        const booking = @json($bookings).find(b => b.id === id);
+        const modalMessage = document.getElementById('exitModalMessage');
+        const confirmButton = document.getElementById('confirmButton');
+        const check_in_date = booking.check_in_date;
 
-// Chuyển đổi timestamp sang đối tượng Date
-const checkInDate = new Date(check_in_date * 1000); // Chuyển timestamp từ giây sang milliseconds
+        // Chuyển đổi timestamp sang đối tượng Date
+        const checkInDate = new Date(check_in_date * 1000); // Chuyển timestamp từ giây sang milliseconds
 
-// Lấy ngày hiện tại
-const today = new Date();
+        // Lấy ngày hiện tại
+        const today = new Date();
 
-// Kiểm tra xem check_in_date có cùng ngày với ngày hiện tại không
-const isSameDay = checkInDate.getDate() === today.getDate() && 
-                  checkInDate.getMonth() === today.getMonth() && 
-                  checkInDate.getFullYear() === today.getFullYear();
+        // Kiểm tra xem check_in_date có cùng ngày với ngày hiện tại không
+        const isSameDay = checkInDate.getDate() === today.getDate() &&
+            checkInDate.getMonth() === today.getMonth() &&
+            checkInDate.getFullYear() === today.getFullYear();
+        if (isSameDay) {
+            const now = new Date();
+            const currentHour = now.getHours();
+            if (currentHour < 12) {
+                modalMessage.textContent = "Chưa đến giờ check-in. Vẫn hủy?";
+            } else if (currentHour >= 21) {
+                modalMessage.textContent = "Đã quá giờ check-in. Hủy đơn?";
+            } else {
+                modalMessage.textContent = "Đang trong khoảng thời gian check-in. Hủy đơn?";
+            }
+        } else {
+            modalMessage.textContent = "Ngày check-in không phải hôm nay. Vẫn hủy?";
+        }
+        document.getElementById('cancelItemId').value = id;
 
-if (isSameDay) {
-    // Lấy giờ hiện tại
-    const currentHour = 11;
-
-    // Kiểm tra nếu hiện tại là trước 12h hoặc sau 21h
-    if (currentHour < 12) {
-         modalMessage.textContent = "Chưa đến giờ check-in";
-    } else if (currentHour >= 21) {
-         modalMessage.textContent = "Đã quá giờ check-in";
-    } else {
-         modalMessage.textContent = "Đang trong khoảng thời gian check-in";
     }
-} else {
-     modalMessage.textContent = "Ngày check-in không phải hôm nay";
-}
 
-}
+    function confirmCancel() {
+        const id = document.getElementById('cancelItemId').value; 
+        const modal = bootstrap.Modal.getInstance(document.getElementById('exitModal'));
+        modal.hide();
+    }
 
-
-    // function confirmCancel() {
-    //     const id = document.getElementById('cancelItemId').value; // Lấy giá trị ID
-    //     console.log("Hủy hành động với ID:", id);
-
-    //     // Thực hiện hủy (gửi AJAX hoặc chuyển hướng)
-    //     alert(`Hủy hành động cho ID: ${id}`);
-    //     // Đóng modal sau khi xử lý
-    //     const modal = bootstrap.Modal.getInstance(document.getElementById('exitModal'));
-    //     modal.hide();
-    // }
-
-// end hủy
+    // end hủy
     //checkin
     function openCheckinModal(bookingId) {
         // Tìm booking tương ứng
@@ -409,7 +438,6 @@ if (isSameDay) {
     document.getElementById('checkinForm').addEventListener('submit', function(e) {
         const code = document.getElementById('code').value;
         const bookingCode = window.booking.code_check_in;
-        console.log(bookingCode);
         if (code.trim() !== bookingCode.trim()) {
             alert('Mã Check in không đúng');
         } else {
@@ -437,7 +465,6 @@ if (isSameDay) {
 
         const form = this;
         const bookingId = document.getElementById('bookingId1').value;
-        console.log(bookingId);
         form.action = '/admin/checkin-checkout/checkout/' + bookingId;
         form.method = 'POST';
         form.submit();

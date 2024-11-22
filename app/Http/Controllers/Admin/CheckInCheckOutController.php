@@ -23,7 +23,7 @@ class CheckInCheckOutController extends RoutingController
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->select(
                 'bookings.*',
-                'users.name as user_name',
+                'users.name as user_name', 'users.email as user_email', 'users.phone as user_phone',
                 'room_types.type as room_type',
                 'rooms.id as room_id'
             )
@@ -100,5 +100,19 @@ class CheckInCheckOutController extends RoutingController
             ]);
         }
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
+    }
+
+
+    public function cancel(Request $request)
+    {
+        $booking = Booking::find($request->id);
+        $manage_status_room = ManageStatusRoom::where('from', $booking->check_in_date)
+        ->where('status', 0)
+        ->first();
+        $manage_status_room->status = 1;
+        $manage_status_room->save();
+        $booking->status = 5;
+        $booking->save();
+        return redirect()->route('checkin-checkout.index')->with('success', 'Hủy đơn thành công!');
     }
 }
