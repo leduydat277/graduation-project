@@ -22,11 +22,25 @@ class RoomController extends Controller
         // Lấy từ khóa tìm kiếm
         $search = $request->input('search');
 
-        // Lấy các tham số sắp xếp
-        $sortBy = $request->input('sort_by', 'id'); // Mặc định sắp xếp theo 'id'
-        $sortOrder = $request->input('sort_order', 'desc'); // Mặc định sắp xếp tăng dần
+        // Lấy giá trị sort từ request
+        $sortOption = $request->input('sort', '');
+        $sortOptionsMap = [
+            'room_area_asc' => ['room_area', 'asc'],
+            'room_area_desc' => ['room_area', 'desc'],
+            'max_people_asc' => ['max_people', 'asc'],
+            'max_people_desc' => ['max_people', 'desc'],
+            'price_asc' => ['price', 'asc'],
+            'price_desc' => ['price', 'desc'],
+            'name_asc' => ['name', 'asc'],
+            'name_desc' => ['name', 'desc'],
+            // Thêm các sort option khác nếu cần
+        ];
 
-        // Lấy danh sách phòng với tìm kiếm và sắp xếp
+        // Lấy cột và thứ tự sắp xếp từ map
+        $sortBy = $sortOptionsMap[$sortOption][0] ?? 'id'; // Mặc định sắp xếp theo 'id'
+        $sortOrder = $sortOptionsMap[$sortOption][1] ?? 'desc'; // Mặc định sắp xếp giảm dần
+
+        // Lấy danh sách phòng
         $rooms = Room::with('roomType')
             ->when($search, function ($query, $search) {
                 return $query->where('title', 'LIKE', '%' . $search . '%')
@@ -35,9 +49,9 @@ class RoomController extends Controller
                     });
             })
             ->orderBy($sortBy, $sortOrder)
-            ->paginate(10); // Phân trang với 10 bản ghi mỗi trang
+            ->paginate(10);
 
-        return view(self::VIEW_PATH . __FUNCTION__, compact('rooms', 'search', 'sortBy', 'sortOrder'))
+        return view(self::VIEW_PATH . __FUNCTION__, compact('rooms', 'search', 'sortOption'))
             ->with('title', 'Danh sách Phòng');
     }
 
