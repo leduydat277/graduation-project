@@ -148,14 +148,14 @@
             <!-- Modal Body -->
             <form action="{{route('checkin-checkout.booking.cancel')}}" method="post">
                 @csrf
-            <div class="modal-body">
-                <p id="exitModalMessage"></p> <!-- Nội dung thông báo sẽ được thay đổi động -->
-                <input type="hidden" name="id" id="cancelItemId">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" class="btn btn-danger" >Xác nhận hủy</button>
-            </div>
+                <div class="modal-body">
+                    <p id="exitModalMessage"></p> <!-- Nội dung thông báo sẽ được thay đổi động -->
+                    <input type="hidden" name="id" id="cancelItemId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                </div>
             </form>
 
             <!-- Modal Footer -->
@@ -287,7 +287,15 @@
                     },
                     {
                         name: "Tổng tiền",
-                        width: "100px"
+                        width: "100px",
+                        formatter: (cell, row) => {
+                            const totalPrice = row.cells[8].data; // Dữ liệu cột total_price
+                            const formattedPrice = new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND',
+                            }).format(totalPrice); // Định dạng VND
+                            return gridjs.html(`<span>${formattedPrice}</span>`);
+                        }
                     },
                     {
                         name: "Trạng thái",
@@ -336,9 +344,9 @@
                                 checkInDate.getDate() === today.getDate() &&
                                 checkInDate.getMonth() === today.getMonth() &&
                                 checkInDate.getFullYear() === today.getFullYear();
-                                
-                                if (status === 2) {
-                                    if (isToday && currentHour >= 14) {
+
+                            if (status === 2) {
+                                if (isToday && currentHour >= 14) {
                                     return gridjs.html(`
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check-in</button>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
@@ -417,7 +425,7 @@
     }
 
     function confirmCancel() {
-        const id = document.getElementById('cancelItemId').value; 
+        const id = document.getElementById('cancelItemId').value;
         const modal = bootstrap.Modal.getInstance(document.getElementById('exitModal'));
         modal.hide();
     }
