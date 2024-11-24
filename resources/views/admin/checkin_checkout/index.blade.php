@@ -271,10 +271,11 @@
                     },
                     {
                         name: "Check-in",
-                        width: "100px",
+                        width: "150px", // Tăng chiều rộng để hiển thị thêm thông tin
                         formatter: (cell) => {
-                            const date = new Date(cell * 1000);
-                            return date.toLocaleDateString("vi-VN");
+                            const date = new Date(cell * 1000); // Chuyển đổi từ timestamp sang Date
+                            const formattedDate = date.toLocaleDateString("vi-VN"); // Định dạng ngày tháng
+                            return `${formattedDate} (12h-21h)`; // Thêm chuỗi "(12h-21h)"
                         }
                     },
                     {
