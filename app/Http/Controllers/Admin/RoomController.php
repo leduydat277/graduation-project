@@ -68,6 +68,7 @@ class RoomController extends Controller
 
     public function store(RoomRequest $request)
     {
+        // dd($request->all());    
         $imagePaths = [];
 
         // Lưu từng ảnh và lưu đường dẫn vào mảng

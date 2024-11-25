@@ -82,7 +82,6 @@
                         @enderror
                     </div>
 
-                    <!-- Hiển thị ảnh hiện tại và thêm ảnh mới -->
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header d-flex align-items-center justify-content-between bg-primary">
@@ -97,9 +96,11 @@
                                             <div class="d-flex flex-wrap justify-content-center">
                                                 @if (!empty($room->image_room))
                                                     @foreach (json_decode($room->image_room, true) as $key => $image)
-                                                        <div class="position-relative m-2" id="gallery_existing_{{ $key }}">
+                                                        <div class="position-relative m-2"
+                                                            id="gallery_existing_{{ $key }}">
                                                             <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
-                                                                class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                                                                class="img-thumbnail"
+                                                                style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
                                                         </div>
                                                     @endforeach
                                                 @else
@@ -108,19 +109,35 @@
                                             </div>
                                         </div>
                                     </div>
-                    
+
                                     <!-- Khối thêm ảnh mới -->
                                     <div class="col-md-12">
                                         <div class="card border-light shadow-sm p-3">
                                             <h5 class="text-center">Thêm Ảnh Mới</h5>
                                             <div id="new-image-uploads">
                                                 <div class="d-flex align-items-center mb-3">
-                                                    <input type="file" class="form-control" name="image_room[]" multiple>
-                                                    <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeImageInput(this)">Xóa</button>
+                                                    <input type="file"
+                                                        class="form-control @error('image_room') is-invalid @enderror"
+                                                        name="image_room[]" multiple>
+                                                    <button type="button" class="btn btn-danger btn-sm ms-2"
+                                                        onclick="removeImageInput(this)">Xóa</button>
                                                 </div>
+                                                <!-- Hiển thị lỗi nếu có -->
+                                                @error('image_room')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+
+                                                @if ($errors->has('image_room.*'))
+                                                    @foreach ($errors->get('image_room.*') as $index => $errorMessages)
+                                                        @foreach ($errorMessages as $error)
+                                                            <span class="text-danger">{{ $error }}</span><br>
+                                                        @endforeach
+                                                    @endforeach
+                                                @endif
                                             </div>
                                             <div class="text-center">
-                                                <button type="button" class="btn btn-primary btn-sm" onclick="addNewImageInput()">+ Thêm ảnh</button>
+                                                <button type="button" class="btn btn-primary btn-sm"
+                                                    onclick="addNewImageInput()">+ Thêm ảnh</button>
                                             </div>
                                         </div>
                                     </div>
@@ -152,13 +169,13 @@
             `;
             document.getElementById('new-image-uploads').insertAdjacentHTML('beforeend', html);
         }
-    
+
         function removeImageGallery(id) {
             if (confirm('Bạn có chắc chắn muốn xóa ảnh này?')) {
                 document.getElementById(id).remove();
             }
         }
-    
+
         function removeImageInput(element) {
             element.parentNode.remove();
         }
