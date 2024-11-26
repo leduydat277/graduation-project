@@ -104,7 +104,11 @@
                         <input type="text" class="form-control" id="checkoutDate1" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Số tiền nợ</label>
+                        <label for="checkInDate" class="form-label">Phí phát sinh của bạn</label>
+                        <div id="phiphatsinh-container"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="checkInDate" class="form-label">Số tiền nợ (tiền còn lại sau cọc và phí phát sinh(nếu có))</label>
                         <input type="number" class="form-control" id="thanhtoan" readonly>
                     </div>
                     <div id="extraFeesContainer">
@@ -322,11 +326,11 @@
                         name: "Ngày đặt",
                         width: "100px",
                         formatter: (cell) => {
-                            const date = new Date(cell * 1000); 
-                            const hours = date.getHours(); 
-                            const minutes = date.getMinutes(); 
-                            const day = date.getDate(); 
-                            const month = date.getMonth() + 1; 
+                            const date = new Date(cell * 1000);
+                            const hours = date.getHours();
+                            const minutes = date.getMinutes();
+                            const day = date.getDate();
+                            const month = date.getMonth() + 1;
                             const year = date.getFullYear();
                             return `${hours}h ${day}/${month}/${year}`;
                         }
@@ -349,16 +353,16 @@
 
                             if (status === 2) {
                                 if (isToday && currentHour >= 14) {
-                                    return gridjs.html(`
+                                return gridjs.html(`
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check-in</button>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
                 `);
-                                } else {
-                                    return gridjs.html(`
-                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian check-in')">Check-in</button>
-                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
-                `);
-                                }
+                                                } else {
+                                                    return gridjs.html(`
+                                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian check-in')">Check-in</button>
+                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
+                                `);
+                                                }
                             } else if (status === 4) {
                                 return gridjs.html(`
                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})">Check-out</button>
@@ -465,11 +469,61 @@
     //checkout
     function openCheckoutModal(bookingId) {
         const booking = @json($bookings).find(b => b.id === bookingId);
+        const phiphatsinhs = @json($phiphatsinhs).filter(p => p.booking_id === bookingId);
+        console.log(phiphatsinhs);
         document.getElementById('bookingId1').value = booking.id;
         document.getElementById('userName1').value = booking.user_name;
-        document.getElementById('checkoutDate1').value = booking.check_out_date;
-        document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc);
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+        const phiphatsinhSum = phiphatsinhs.reduce((sum, item) => {
+            return sum + (parseFloat(item.price) || 0); 
+        }, 0); 
+        document.getElementById('checkoutDate1').value = formattedDate;
+        document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc + phiphatsinhSum);
         document.getElementById('tiencu').value = (booking.tien_coc);
+
+    
+    //thêm phí phát inh cứng
+        const container = document.getElementById('phiphatsinh-container');
+
+        // Tạo các input cho mỗi phí phát sinh
+        phiphatsinhs.forEach((item, index) => {
+            // Tạo div cho mỗi phí phát sinh
+            const div = document.createElement('div');
+            div.classList.add('mb-3');
+
+
+            // Tạo input cho name
+            const inputName = document.createElement('input');
+            inputName.setAttribute('type', 'text');
+            inputName.setAttribute('id', `phiphatsinh_name_${index}`);
+            inputName.setAttribute('name', `phiphatsinhs[${index}][name]`);
+            inputName.setAttribute('value', item.name);
+            inputName.classList.add('form-control');
+            inputName.setAttribute('readonly', true); // Nếu bạn muốn input readonly
+
+            // Tạo input cho price
+            const inputPrice = document.createElement('input');
+            inputPrice.setAttribute('type', 'number');
+            inputPrice.setAttribute('id', `phiphatsinh_price_${index}`);
+            inputPrice.setAttribute('name', `phiphatsinhs[${index}][price]`);
+            inputPrice.setAttribute('value', item.price);
+            inputPrice.classList.add('form-control');
+            inputPrice.setAttribute('readonly', true); // Nếu bạn muốn input readonly
+
+            // Thêm label và input vào div
+            div.appendChild(inputName);
+            div.appendChild(inputPrice);
+
+            // Thêm div vào container
+            container.appendChild(div);
+        });
+    //end thêm phí phát inh cứng
     }
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Ngừng hành động gửi form mặc định

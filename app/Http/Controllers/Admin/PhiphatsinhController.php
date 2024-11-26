@@ -14,7 +14,7 @@ class PhiphatsinhController extends Controller
      */
     public function index()
     {
-        $allBooking = Booking::whereIn('status', [2, 3])->get();
+        $allBooking = Booking::whereIn('status', [2, 3, 4])->get();
         $title = 'Phí Phát Sinh';
         $phiphatsinhs = PhiPhatSinh::all();
         return view('admin.phiphatsinhs.index', compact('phiphatsinhs', 'title', 'allBooking'));
@@ -35,7 +35,6 @@ class PhiphatsinhController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:255',
             'booking_id' => 'required',
-            'description' => 'required',
             'price' => 'required',
         ]);
         $imagePath = null;
@@ -78,9 +77,9 @@ class PhiphatsinhController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'booking_id' => 'required|exists:bookings,id',
-            'description' => 'nullable|string',
+            'description' => 'nullable',
             'price' => 'required|numeric|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate hình ảnh
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
         $phiphatsinh->name = $request->input('name');
         $phiphatsinh->booking_id = $request->input('booking_id');

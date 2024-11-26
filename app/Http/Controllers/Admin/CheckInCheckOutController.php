@@ -28,7 +28,8 @@ class CheckInCheckOutController extends RoutingController
                 'rooms.id as room_id'
             )
             ->get();
-        return view('admin.checkin_checkout.index', compact('bookings', 'title'));
+        $phiphatsinhs = PhiPhatSinh::all();
+        return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
 
 
@@ -52,6 +53,18 @@ class CheckInCheckOutController extends RoutingController
 
     public function checkOut(Request $request, $id)
     {
+        foreach ($request->pps as $index => $name) {
+            $price = $request->price[$index];
+            PhiPhatSinh::insert([
+                'booking_id' => $id,
+                'name' => $name,
+                'price' => $price,
+            ]);
+        }
+        $phiphatsinhs = PhiPhatSinh::where('booking_id', $id)->get();
+        foreach ($phiphatsinhs as $phi){
+            $phi->delete();
+        }
         $currentTimestamp = Carbon::now()->timestamp;
         $booking = Booking::findOrFail($id);
         if ($booking->check_out_date == $currentTimestamp) { // nếu checkout đúng ngày thì xóa
@@ -90,15 +103,6 @@ class CheckInCheckOutController extends RoutingController
             ]
         );
         $payment->save();
-
-        foreach ($request->pps as $index => $name) {
-            $price = $request->price[$index];
-            PhiPhatSinh::insert([
-                'booking_id' => $id,
-                'name' => $name,
-                'price' => $price,
-            ]);
-        }
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
     }
 
