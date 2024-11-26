@@ -3,32 +3,19 @@
 {{$title}}
 @endsection
 @section('css')
-<!-- App favicon -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
-
-<!-- gridjs css -->
 <link rel="stylesheet" href="{{ asset('assets/admin/assets/libs/gridjs/theme/mermaid.min.css') }}">
-<!-- App favicon -->
 <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
-
-<!-- jsvectormap css -->
 <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
     type="text/css" />
-
-<!--Swiper slider css-->
 <link href="{{ asset('assets/admin/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
-
-<!-- Layout config Js -->
 <script src="{{ asset('assets/admin/assets/js/layout.js') }}"></script>
-<!-- Bootstrap Css -->
 <link href="{{ asset('assets/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-<!-- Icons Css -->
 <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-<!-- App Css-->
 <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-<!-- custom Css-->
 <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-
 <link href="{{ asset('assets/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
@@ -166,6 +153,7 @@
 
 @endsection
 @section('js')
+
 <script>
     document.getElementById("addFeeButton").addEventListener("click", function() {
         // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
@@ -275,7 +263,7 @@
                         formatter: (cell) => {
                             const date = new Date(cell * 1000); // Chuyển đổi từ timestamp sang Date
                             const formattedDate = date.toLocaleDateString("vi-VN"); // Định dạng ngày tháng
-                            return `${formattedDate} (12h-21h)`; // Thêm chuỗi "(12h-21h)"
+                            return `${formattedDate}`;
                         }
                     },
                     {
@@ -331,6 +319,19 @@
                         }
                     },
                     {
+                        name: "Ngày đặt",
+                        width: "100px",
+                        formatter: (cell) => {
+                            const date = new Date(cell * 1000); 
+                            const hours = date.getHours(); 
+                            const minutes = date.getMinutes(); 
+                            const day = date.getDate(); 
+                            const month = date.getMonth() + 1; 
+                            const year = date.getFullYear();
+                            return `${hours}h ${day}/${month}/${year}`;
+                        }
+                    },
+                    {
                         name: "Tùy chọn",
                         width: "120px",
                         formatter: (cell, row) => {
@@ -366,7 +367,7 @@
 
                             return '';
                         }
-                    }
+                    },
 
                 ],
                 data: bookingsData.map(booking => [
@@ -379,7 +380,8 @@
                     booking.check_in_date,
                     booking.check_out_date,
                     booking.total_price,
-                    booking.status
+                    booking.status,
+                    booking.created_at
                 ]),
                 pagination: {
                     limit: 10
