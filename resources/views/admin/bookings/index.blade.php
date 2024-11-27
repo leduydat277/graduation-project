@@ -47,28 +47,47 @@
             </div>
             <div class="card-body collapse" id="filterSection">
                 <form method="GET" action="{{ route('bookings.index') }}">
-                    <div class="row g-3">
+                    <div class="row g-3 d-flex justify-content-center align-items-center">
+                        <!-- Bộ lọc trạng thái -->
                         <div class="col-md-4">
                             <label for="status" class="form-label">Trạng thái</label>
                             <select name="status" class="form-select">
                                 <option value="">Tất cả</option>
-                                <option value="1">Đang thanh toán</option>
-                                <option value="2">Đã thanh toán tiền cọc</option>
-                                <option value="3">Đã thanh toán tổng tiền đơn</option>
-                                <option value="4">Hủy</option>
+                                <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Chưa thanh toán
+                                </option>
+                                <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Đang thanh toán
+                                </option>
+                                <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Đã thanh toán tiền
+                                    cọc</option>
+                                <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>Đã thanh toán tổng
+                                    tiền đơn</option>
+                                <option value="4" {{ request('status') == '4' ? 'selected' : '' }}>Đang sử dụng
+                                </option>
+                                <option value="5" {{ request('status') == '5' ? 'selected' : '' }}>Đã hủy</option>
                             </select>
                         </div>
+                        <!-- Bộ lọc khoảng thời gian -->
                         <div class="col-md-4">
-                            <label for="date_range" class="form-label">Ngày đặt</label>
-                            <input type="text" id="date_range" class="form-control" name="date_range"
-                                placeholder="Chọn khoảng ngày">
+                            <label for="date_range" class="form-label">Khoảng thời gian đặt</label>
+                            <div class="col-sm-auto">
+                                <div class="input-group">
+                                    <input type="text" name="date_range" id="date-range-input"
+                                        class="form-control border-0 dash-filter-picker shadow"
+                                        placeholder="Chọn khoảng thời gian" value="{{ request('date_range') }}">
+                                    <div class="input-group-text bg-primary border-primary text-white">
+                                        <i class="ri-calendar-2-line"></i>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="text-end mt-3">
+                    <!-- Nút bấm -->
+                    <div class="text-center mt-3">
                         <button type="submit" class="btn btn-primary">Lọc</button>
                         <a href="{{ route('bookings.index') }}" class="btn btn-secondary">Xóa bộ lọc</a>
                     </div>
                 </form>
+
             </div>
         </div>
 
@@ -93,7 +112,7 @@
                         <tbody>
                             @foreach ($bookings as $booking)
                                 <tr>
-                                    <td>{{ $booking->code_check_in }}</td>
+                                    <td>{{ $booking->id }}</td>
                                     <td>{{ $booking->user->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
@@ -106,19 +125,27 @@
                                     <td>
                                         @switch($booking['status'])
                                             @case(0)
-                                                Đã cọc
+                                                Chưa thanh toán cọc
                                             @break
 
                                             @case(1)
-                                                Sẵn sàng
+                                                Đang thanh toán
                                             @break
 
                                             @case(2)
+                                                Đã thanh toán cọc
+                                            @break
+
+                                            @case(3)
+                                                Đã thanh toán tổng tiền đơn
+                                            @break
+
+                                            @case(3)
                                                 Đang sử dụng
                                             @break
 
                                             @default
-                                                Không xác định
+                                                Đã hủy
                                         @endswitch
                                     </td>
                                     <td>
@@ -139,31 +166,32 @@
     <!-- jQuery, DataTables, Daterangepicker -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            // Initialize DataTables
-            $('#bookingTable').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
-                }
+        $('#bookingTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo flatpickr với chế độ chọn khoảng thời gian
+            flatpickr('#date-range-input', {
+                mode: 'range',
+                dateFormat: 'Y-m-d',
             });
+        });
 
-            // Initialize Daterangepicker
-            $('#date_range').daterangepicker({
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    cancelLabel: 'Xóa',
-                    applyLabel: 'Áp dụng'
-                },
-                autoUpdateInput: false
-            }).on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format(
-                    'YYYY-MM-DD'));
-            }).on('cancel.daterangepicker', function(ev, picker) {
-                $(this).val('');
+        // Xuất file Excel
+        document.getElementById('export-excel-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var table = document.getElementById('model-datatables');
+            var wb = XLSX.utils.table_to_book(table, {
+                sheet: "Payments"
             });
+            XLSX.writeFile(wb, 'DanhSachThanhToan.xlsx');
         });
     </script>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -15,31 +16,53 @@ class BookingController  extends Controller
         $query = Booking::with('room', 'user');
 
         // Tìm kiếm theo ID đơn, tên user, hoặc CCCD
-        if ($request->has('search')) {
+        if ($request->has('search') && !empty($request->input('search'))) {
             $search = $request->input('search');
-            $query->where('id', $search)
-                ->orWhereHas('user', function ($q) use ($search) {
-                    $q->where('name', 'like', "%$search%");
-                })
-                ->orWhere('cccd', 'like', "%$search%");
+            $query->where(function ($q) use ($search) {
+                $q->where('id', $search)
+                    ->orWhereHas('user', function ($subQuery) use ($search) {
+                        $subQuery->where('name', 'like', "%$search%");
+                    })
+                    ->orWhere('cccd_booking', 'like', "%$search%");
+            });
         }
 
         // Lọc theo trạng thái
-        if ($request->has('status')) {
+        if ($request->has('status') && $request->input('status') !== '') {
             $query->where('status', $request->input('status'));
         }
 
-        // Lọc theo khoảng ngày
-        if ($request->has(['from_date', 'to_date'])) {
-            $fromDate = $request->input('from_date');
-            $toDate = $request->input('to_date');
-            $query->whereBetween('check_in', [$fromDate, $toDate]);
+        // Lọc theo khoảng thời gian
+        if ($request->has('date_range') && !empty($request->input('date_range'))) {
+            $dateRange = explode(' to ', $request->input('date_range'));
+
+            if (count($dateRange) === 2) {
+                // Lấy cả ngày và giờ (nếu có) từ input
+                $startDateTime = trim($dateRange[0]); // Ngày bắt đầu
+                $endDateTime = trim($dateRange[1]); // Ngày kết thúc
+
+
+                // Chuyển đổi sang timestamp
+                $startDate = strtotime($startDateTime); // Giờ bắt đầu từ input
+                $endDate = strtotime($endDateTime); // Giờ kết thúc từ input
+
+                $query->where(function ($subQuery) use ($startDate, $endDate) {
+                    $subQuery->whereBetween('check_in_date', [$startDate, $endDate]) // Check-in nằm trong khoảng
+                        ->orWhereBetween('check_out_date', [$startDate, $endDate]) // Check-out nằm trong khoảng
+                        ->orWhere(function ($query) use ($startDate, $endDate) { // Bao trùm toàn bộ khoảng
+                            $query->where('check_in_date', '>=', $startDate)
+                                ->where('check_out_date', '<=', $endDate);
+                        });
+                });
+            }
         }
 
-        $bookings = $query->paginate(10);
+        // Lấy danh sách đặt phòng
+        $bookings = $query->get(); // Phân trang, mỗi trang 10 bản ghi
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('bookings'));
     }
+
 
     public function show($id)
     {

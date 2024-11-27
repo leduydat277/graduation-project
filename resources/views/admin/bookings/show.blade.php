@@ -40,7 +40,7 @@
                             <div class="col-md-6">
                                 <h6 class="text-muted">Thông tin đơn hàng</h6>
                                 <div class="border rounded p-3 mb-3">
-                                    <p><strong>ID Đơn:</strong> <span class="text-primary">{{ $booking->id }}</span></p>
+                                    <p><strong>Mã Đơn:</strong> <span class="text-primary">{{ $booking->id }}</span></p>
                                     <p><strong>Mã Check-in:</strong> {{ $booking->code_check_in }}</p>
                                     <p><strong>Loại phòng:</strong> {{ $booking->room->roomType->type ?? 'Không rõ' }}</p>
                                     <p><strong>Tên Phòng:</strong> {{ $booking->room->title }}</p>
@@ -91,6 +91,9 @@
                                     </p>
                                     <p><strong>Trạng thái:</strong>
                                         @switch($booking->status)
+                                            @case(0)
+                                                <span class="badge bg-info">chưa thanh toán</span>
+                                            @break
                                             @case(1)
                                                 <span class="badge bg-info">Đang thanh toán</span>
                                             @break
@@ -100,10 +103,14 @@
                                             @break
 
                                             @case(3)
-                                                <span class="badge bg-success">Đã thanh toán tổng tiền</span>
+                                                <span class="badge bg-success">Đã thanh toán tổng tiền đơn</span>
                                             @break
 
                                             @case(4)
+                                                <span class="badge bg-danger">Đang sử dụng</span>
+                                            @break
+
+                                            @case(5)
                                                 <span class="badge bg-danger">Đã hủy</span>
                                             @break
 
