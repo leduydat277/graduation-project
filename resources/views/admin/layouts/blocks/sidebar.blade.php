@@ -130,7 +130,13 @@
                          <i class="fas fa-th-list"></i>
                          Check-in & Check-out
                      </a>
-                 </li>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('phiphatsinhs.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fas fa-th-list"></i>
+                            Phí phát sinh
+                        </a>
+                    </li>
                  <li class="nav-item">
                      <a href="{{ route('others.index') }}" class="nav-link" data-key="t-analytics">
                      <i class="fas fa-th-list"></i>

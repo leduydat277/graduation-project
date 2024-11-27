@@ -48,6 +48,7 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('others', OtherController::class);
+    Route::resource('phiphatsinhs', PhiphatsinhController::class);
     Route::prefix('change-password')->as('change-password.')->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
         Route::post('/change', [ChangePasswordController::class, 'ChangePassword'])->name('change_password');

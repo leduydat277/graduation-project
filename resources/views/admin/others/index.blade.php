@@ -3,32 +3,19 @@
 {{$title}}
 @endsection
 @section('css')
-<!-- App favicon -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
-
-<!-- gridjs css -->
 <link rel="stylesheet" href="{{ asset('assets/admin/assets/libs/gridjs/theme/mermaid.min.css') }}">
-<!-- App favicon -->
 <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
-
-<!-- jsvectormap css -->
 <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
     type="text/css" />
-
-<!--Swiper slider css-->
 <link href="{{ asset('assets/admin/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
-
-<!-- Layout config Js -->
 <script src="{{ asset('assets/admin/assets/js/layout.js') }}"></script>
-<!-- Bootstrap Css -->
 <link href="{{ asset('assets/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-<!-- Icons Css -->
 <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-<!-- App Css-->
 <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-<!-- custom Css-->
 <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-
 <link href="{{ asset('assets/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
