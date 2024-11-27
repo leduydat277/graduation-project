@@ -28,7 +28,7 @@ class BookingController  extends Controller
         }
 
         // Lọc theo trạng thái
-        if ($request->has('status') && $request->input('status') !== '') {
+        if ($request->has('status') && $request->input('status') !== null) {
             $query->where('status', $request->input('status'));
         }
 
@@ -39,24 +39,24 @@ class BookingController  extends Controller
             if (count($dateRange) === 2) {
                 // Lấy cả ngày và giờ (nếu có) từ input
                 $startDateTime = trim($dateRange[0]); // Ngày bắt đầu
-                $endDateTime = trim($dateRange[1]); // Ngày kết thúc
+                $endDateTime = trim($dateRange[1]);   // Ngày kết thúc
 
-
-                // Chuyển đổi sang timestamp
-                $startDate = strtotime($startDateTime); // Giờ bắt đầu từ input
-                $endDate = strtotime($endDateTime); // Giờ kết thúc từ input
+                // Chuyển đổi sang timestamp (giây từ epoch)
+                $startDate = strtotime($startDateTime); // Giờ bắt đầu từ input, dạng 1733234400
+                $endDate = strtotime($endDateTime);     // Giờ kết thúc từ input, dạng 1733234400
+                // In ra để kiểm tra
 
                 $query->where(function ($subQuery) use ($startDate, $endDate) {
                     $subQuery->whereBetween('check_in_date', [$startDate, $endDate]) // Check-in nằm trong khoảng
                         ->orWhereBetween('check_out_date', [$startDate, $endDate]) // Check-out nằm trong khoảng
                         ->orWhere(function ($query) use ($startDate, $endDate) { // Bao trùm toàn bộ khoảng
-                            $query->where('check_in_date', '>=', $startDate)
-                                ->where('check_out_date', '<=', $endDate);
+                            $query->where('check_in_date', '<=', $startDate)
+                                ->where('check_out_date', '>=', $endDate);
                         });
                 });
             }
         }
-
+        // dd($query->toSql() , $query->getBindings());
         // Lấy danh sách đặt phòng
         $bookings = $query->get(); // Phân trang, mỗi trang 10 bản ghi
 
