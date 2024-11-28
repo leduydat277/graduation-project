@@ -160,6 +160,26 @@ class DashboardController
                 $uPercentage = 0;
             }
 
+            $todayStart = Carbon::now()->startOfDay()->timestamp;
+            $todayEnd = Carbon::now()->endOfDay()->timestamp;
+
+            $bookingToday = Booking::select('room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+                ->with('room')
+                ->whereBetween('created_at', [$todayStart, $todayEnd])
+                ->get();
+
+            $todayPrice = 0;
+            $countDes = 0;
+
+            foreach ($bookingToday as $item) {
+                if ($item->status == 3) {
+                    $todayPrice += $item->total_price;
+                }
+                if ($item->status == 5) {
+                    $countDes++;
+                }
+            }
+
             return view('admin.dashboard.index', compact([
                 'weeklyEarnings',
                 'weeklyOrders',
@@ -172,7 +192,10 @@ class DashboardController
                 'earningsComparison',
                 'earningsPercentage',
                 'ordersComparison',
-                'ordersPercentage'
+                'ordersPercentage',
+                'bookingToday',
+                'todayPrice',
+                'countDes'
             ]));
         } catch (Exception $e) {
             return response()->json([

@@ -46,7 +46,7 @@
                 <div class="info-box mb-3 p-3 border rounded w-100">
                     <h6 class="text-primary">Thông Tin Đặt Phòng</h6>
                     <p><strong>Người Đặt Phòng:</strong> {{ $payment->booking->user->name ?? 'N/A' }}</p>
-                    <p><strong>Ngày Check-in:</strong>
+                    <p><strong>Ngày đến:</strong>
                         {{ \Carbon\Carbon::parse($payment->booking->check_in_date)->format('d-m-Y') }}</p>
                     <p><strong>Ngày Check-out:</strong>
                         {{ \Carbon\Carbon::parse($payment->booking->check_out_date)->format('d-m-Y') }}</p>
@@ -64,7 +64,6 @@
                     <h6 class="text-primary">Thông Tin Phòng</h6>
                     <p><strong>Tên Phòng:</strong> {{ $payment->booking->room->title ?? 'N/A' }}</p>
                     <p><strong>Loại Phòng:</strong> {{ $payment->booking->room->roomType->type ?? 'N/A' }}</p>
-                    <p><strong>Diện Tích:</strong> {{ $payment->booking->room->room_area ?? 'N/A' }} m²</p>
                     <p><strong>Giá Mỗi Đêm:</strong> <span
                             class="text-danger fw-bold">{{ number_format($payment->booking->room->price ?? 0) }} VNĐ</span>
                     </p>

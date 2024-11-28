@@ -103,9 +103,9 @@
         <div class="section-content">
             <div class="row">
                 <div class="col"><strong>Người Đặt Phòng:</strong> {{ $payment->booking->user->name ?? 'N/A' }}</div>
-                <div class="col"><strong>Ngày Check-in:</strong>
+                <div class="col"><strong>Ngày đến:</strong>
                     {{ \Carbon\Carbon::parse($payment->booking->check_in_date)->format('d-m-Y') }}</div>
-                <div class="col"><strong>Ngày Check-out:</strong>
+                <div class="col"><strong>Ngày đi:</strong>
                     {{ \Carbon\Carbon::parse($payment->booking->check_out_date)->format('d-m-Y') }}</div>
             </div>
             <div class="row">
@@ -127,8 +127,6 @@
             <div class="row">
                 <div class="col"><strong>Tên Phòng:</strong> {{ $payment->booking->room->title ?? 'N/A' }}</div>
                 <div class="col"><strong>Loại Phòng:</strong> {{ $payment->booking->room->roomType->type ?? 'N/A' }}
-                </div>
-                <div class="col"><strong>Diện Tích:</strong> {{ $payment->booking->room->room_area ?? 'N/A' }} m²
                 </div>
             </div>
             <div class="row">

@@ -72,7 +72,7 @@ function fetchNotifications() {
                       </span>
                   </div>
                   <div class="flex-grow-1">
-                      <a href="#!" class="stretched-link">
+                      <a href="/admin/bookings/${notification.id}" class="stretched-link">
                           <h6 class="mt-0 mb-2 lh-base">${notification.message}</h6>
                       </a>
                       <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">

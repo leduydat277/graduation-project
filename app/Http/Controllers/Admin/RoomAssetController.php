@@ -22,13 +22,23 @@ class RoomAssetController extends Controller
         $search = $request->input('search');
 
         // Lấy cột sắp xếp và thứ tự sắp xếp từ request
-        $sortBy = $request->input('sort_by', 'id');
-        $sortOrder = $request->input('sort_order', 'asc');
+        $sort = $request->input('sort', 'id_asc'); // Mặc định sắp xếp theo 'id_asc'
 
-        // Kiểm tra tính hợp lệ của cột sắp xếp
-        if (!in_array($sortBy, ['id', 'room_id', 'assets_type_id', 'status'])) {
-            $sortBy = 'id';
-        }
+        // Mapping cột và thứ tự sắp xếp
+        $sortMapping = [
+            'id_asc' => ['column' => 'roomassets.id', 'order' => 'asc'],
+            'id_desc' => ['column' => 'roomassets.id', 'order' => 'desc'],
+            'room_name_asc' => ['column' => 'rooms.title', 'order' => 'asc'],
+            'room_name_desc' => ['column' => 'rooms.title', 'order' => 'desc'],
+            'asset_type_asc' => ['column' => 'assets_types.name', 'order' => 'asc'],
+            'asset_type_desc' => ['column' => 'assets_types.name', 'order' => 'desc'],
+            'status_asc' => ['column' => 'roomassets.status', 'order' => 'asc'],
+            'status_desc' => ['column' => 'roomassets.status', 'order' => 'desc'],
+        ];
+
+        // Kiểm tra tính hợp lệ của sort
+        $sortBy = $sortMapping[$sort]['column'] ?? 'roomassets.id';
+        $sortOrder = $sortMapping[$sort]['order'] ?? 'asc';
 
         // Truy vấn danh sách room assets với tìm kiếm và sắp xếp
         $roomassets = RoomAsset::query()
@@ -44,8 +54,9 @@ class RoomAssetController extends Controller
             ->paginate(10); // Sử dụng phân trang
 
         // Truyền dữ liệu qua view
-        return view(self::VIEW_PATH . __FUNCTION__, compact('roomassets', 'search', 'sortBy', 'sortOrder', 'title'));
+        return view(self::VIEW_PATH . __FUNCTION__, compact('roomassets', 'search', 'sort', 'title'));
     }
+
 
 
     public function create()

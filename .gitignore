@@ -6,7 +6,6 @@
 /storage/*.key
 /vendor
 .DS_Store
-.env
 .env.backup
 .phpunit.result.cache
 .php-cs-fixer.php
@@ -17,3 +16,4 @@ Homestead.yaml
 npm-debug.log
 /.idea
 /.vscode
+.env

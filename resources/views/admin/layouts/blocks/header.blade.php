@@ -1,5 +1,5 @@
 <div class="layout-width">
-    <div class="navbar-header">
+    <div class="navbar-header d-flex justify-content-end">
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box horizontal-logo">
@@ -45,7 +45,8 @@
                             </div>
                             <div id="deleteNotificationButtonContainer" style="display: none;" class="text-end mt-2">
                                 <button id="deleteNotificationButton" class="btn btn-danger">Xóa thông báo</button>
-                                <button id="readNotificationButton" class="btn btn-primary">Đọc các thông báo được chọn</button>
+                                <button id="readNotificationButton" class="btn btn-primary">Đọc các thông báo được
+                                    chọn</button>
                             </div>
                         </div>
                     </div>
@@ -86,6 +87,63 @@
                 </div>
             </div>
             <div id="notification-container"></div>
+            <div class="dropdown ms-sm-3 header-item topbar-user">
+                <button type="button" class="btn d-flex align-items-center" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <!-- Avatar -->
+                    <img class="rounded-circle header-profile-user"
+                        src="{{ Auth::user()->image ?? asset('assets/images/users/default-avatar.jpg') }}"
+                        alt="User Avatar" style="width: 36px; height: 36px; object-fit: cover;">
+                    <!-- User Info -->
+                    <span class="text-start ms-2">
+                        <span class="d-block fw-medium user-name-text"
+                            style="color: #212529;">{{ Auth::user()->name ?? 'Guest' }}</span>
+                        <span class="d-block fs-12 user-name-sub-text text-muted">
+                            {{ Auth::user()->role === 1 ? 'Admin' : 'User' }}
+                        </span>
+                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item" href="{{ route('admin.logout') }}">
+                        <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
+                        <span class="align-middle" data-key="t-logout">Đăng xuất</span>
+                    </a>
+                </div>
+            </div>
+            <style>
+                .header-profile-user {
+                    width: 36px;
+                    height: 36px;
+                    object-fit: cover;
+                    /* Đảm bảo hình ảnh không bị méo */
+                }
+
+                .user-name-text {
+                    font-weight: 600;
+                    color: #212529;
+                    /* Màu chữ đậm */
+                }
+
+                .user-name-sub-text {
+                    font-size: 12px;
+                    color: #6c757d;
+                    /* Màu chữ nhạt hơn */
+                }
+
+                .header-item .dropdown-menu {
+                    min-width: 150px;
+                    /* Đảm bảo menu không bị hẹp */
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                }
+
+                .btn:focus {
+                    outline: none;
+                    /* Bỏ border outline khi chọn button */
+                    box-shadow: none;
+                    /* Bỏ shadow của button */
+                }
+            </style>
+
         </div>
     </div>
 </div>
