@@ -98,13 +98,13 @@
                     <table id="bookingTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Mã đơn</th>
+                                <th>Mã check-in</th>
+                                <th>Ảnh phòng</th>
                                 <th>Khách hàng</th>
                                 <th>Ngày đến</th>
                                 <th>Ngày đi</th>
                                 <th>Phòng</th>
                                 <th>Tiền cọc</th>
-                                <th>CCCD</th>
                                 <th>Trạng thái đơn</th>
                                 <th>Hành Động</th>
                             </tr>
@@ -112,7 +112,11 @@
                         <tbody>
                             @foreach ($bookings as $booking)
                                 <tr>
-                                    <td>{{ $booking->id }}</td>
+                                    <td>{{ $booking->code_check_in }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $booking->room->image_room) }}" alt="Room Image"
+                                            class="img-fluid" style="max-width: 100px;">
+                                    </td>
                                     <td>{{ $booking->user->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
@@ -121,7 +125,7 @@
                                         <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
-                                    <td>{{ $booking->cccd_booking ?? 'Chưa rõ' }}</td>
+                                    
                                     <td>
                                         @switch($booking['status'])
                                             @case(0)
@@ -133,19 +137,19 @@
                                             @break
 
                                             @case(2)
-                                                Đã thanh toán cọc
+                                                <span class="badge bg-success">Đã thanh toán cọc</span>
                                             @break
 
                                             @case(3)
-                                                Đã thanh toán tổng tiền đơn
+                                                <span class="badge bg-success">Đã thanh toán tổng tiền đơn</span>
                                             @break
 
                                             @case(3)
-                                                Đang sử dụng
+                                                <span class="badge bg-info">Đang sử dụng</span>
                                             @break
 
                                             @default
-                                                Đã hủy
+                                                <span class="badge bg-danger">Đã hủy</span>
                                         @endswitch
                                     </td>
                                     <td>

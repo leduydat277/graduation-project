@@ -18,7 +18,7 @@
     <div class="w-100 d-flex justify-content-center align-items-center">
         <div class="col-6">
             <h2 class="text-center">{{ $title }}</h2>
-            <form action="{{ route('asset-types.store') }}" method="POST">
+            <form action="{{ route('asset-types.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên Loại Tiện Nghi</label>
@@ -34,7 +34,13 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                
+                <div class="mb-3">
+                    <label for="image" class="form-label">Hình Ảnh</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    @error('image')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Thêm Loại Tiện Nghi</button>
                 </div>

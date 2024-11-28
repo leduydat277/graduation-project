@@ -96,15 +96,15 @@
                                     <p><strong>Trạng thái:</strong>
                                         @switch($booking->status)
                                             @case(0)
-                                                <span class="badge bg-info">chưa thanh toán</span>
+                                                <span class="badge bg-warning">chưa thanh toán</span>
                                             @break
 
                                             @case(1)
-                                                <span class="badge bg-info">Đang thanh toán</span>
+                                                <span class="badge bg-warning">Đang thanh toán</span>
                                             @break
 
                                             @case(2)
-                                                <span class="badge bg-warning">Đã thanh toán tiền cọc</span>
+                                                <span class="badge bg-success">Đã thanh toán tiền cọc</span>
                                             @break
 
                                             @case(3)
@@ -112,7 +112,7 @@
                                             @break
 
                                             @case(4)
-                                                <span class="badge bg-danger">Đang sử dụng</span>
+                                                <span class="badge bg-info">Đang sử dụng</span>
                                             @break
 
                                             @case(5)

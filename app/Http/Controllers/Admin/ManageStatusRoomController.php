@@ -60,7 +60,7 @@ class ManageStatusRoomController extends Controller
         }
 
         // Xây dựng query cho `ManageStatusRoom`
-        $query = ManageStatusRoom::query()->with(['room', 'booking']);
+        $query = ManageStatusRoom::query()->with(['room.roomType', 'booking']);
 
         if ($status !== null) {
             $query->where('status', $status);

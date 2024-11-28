@@ -3,7 +3,6 @@
     {{ $title }}
 @endsection
 @section('css')
-    <!-- App favicon và các css cần thiết -->
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
     <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
         type="text/css" />
@@ -33,7 +32,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <!-- Hiển thị thông báo thành công -->
+
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
@@ -42,7 +41,6 @@
                                 </div>
                             @endif
 
-                            <!-- Hiển thị thông báo lỗi -->
                             @if (session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     {{ session('error') }}
@@ -50,6 +48,7 @@
                                         aria-label="Close"></button>
                                 </div>
                             @endif
+
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
                                     <form method="GET" action="{{ route('asset-types.index') }}">
@@ -88,9 +87,8 @@
                                                 @endif
                                             </a>
                                         </th>
-                                        <th class="sort" data-sort="name">
-                                            Tên loại tiện nghi
-                                        </th>
+                                        <th class="sort" data-sort="name">Tên loại tiện nghi</th>
+                                        <th class="sort" data-sort="image">Hình ảnh</th>
                                         <th class="sort" data-sort="action">Hành động</th>
                                     </tr>
                                 </thead>
@@ -105,6 +103,14 @@
                                             </td>
                                             <td>{{ $assetType->id }}</td>
                                             <td>{{ $assetType->name }}</td>
+                                            <td>
+                                                @if ($assetType->image)
+                                                    <img src="{{ asset('storage/' . $assetType->image) }}" alt="Hình ảnh"
+                                                        width="100">
+                                                @else
+                                                    Không có hình ảnh
+                                                @endif
+                                            </td>
                                             <td>
                                                 <a href="{{ route('asset-types.edit', $assetType->id) }}"
                                                     class="btn btn-warning">Sửa</a>
@@ -138,9 +144,9 @@
                             {{ $assetTypes->appends(request()->input())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
-                </div><!-- end card-body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('js')

@@ -18,7 +18,7 @@
     <div class="w-100 d-flex justify-content-center align-items-center">
         <div class="col-6">
             <h2 class="text-center">{{ $title }}</h2>
-            <form action="{{ route('asset-types.update', $assetType->id) }}" method="POST">
+            <form action="{{ route('asset-types.update', $assetType->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Đặt phương thức PUT cho form chỉnh sửa -->
                 <div class="mb-3">
@@ -35,7 +35,19 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                
+                <div class="mb-3">
+                    <label for="image" class="form-label">Hình Ảnh</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    @error('image')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                    @if ($assetType->image)
+                        <div class="mt-3">
+                            <label>Hình Ảnh Hiện Tại:</label>
+                            <img src="{{ asset('storage/' . $assetType->image) }}" alt="Hình Ảnh Hiện Tại" class="img-fluid" style="max-width: 100%; height: auto;">
+                        </div>
+                    @endif
+                </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Cập Nhật Loại Tiện Nghi</button>
                 </div>
