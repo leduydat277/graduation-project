@@ -112,7 +112,6 @@
                                         <th>Tên Phòng</th>
                                         <th>Loại Phòng</th>
                                         <th>Giá</th>
-                                        <th>Diện Tích</th>
                                         <th>Số Người Tối Đa</th>
                                         <th>Trạng Thái</th>
                                         <th>Hình Ảnh</th>
@@ -126,7 +125,6 @@
                                             <td>{{ $room->title }}</td>
                                             <td>{{ $room->roomType->type ?? 'Không xác định' }}</td>
                                             <td>{{ number_format($room->price, 0, ',', '.') }} VND</td>
-                                            <td>{{ $room->room_area }} m²</td>
                                             <td>{{ $room->max_people }}</td>
                                             <td>
                                                 @switch($room->status)

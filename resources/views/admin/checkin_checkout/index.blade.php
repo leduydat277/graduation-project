@@ -44,7 +44,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="checkinModalLabel">Check-in Booking</h5>
+                <h5 class="modal-title" id="checkinModalLabel">Khách Hàng Nhận phòng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -53,15 +53,15 @@
                     <!-- Form fields -->
                     <input type="hidden" id="bookingId" name="bookingId">
                     <div class="mb-3">
-                        <label for="userName" class="form-label">User Name</label>
+                        <label for="userName" class="form-label">Người dùng</label>
                         <input type="text" class="form-control" id="userName" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="roomType" class="form-label">Room Type</label>
+                        <label for="roomType" class="form-label">Loại phòng</label>
                         <input type="text" class="form-control" id="roomType" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Check-in Date</label>
+                        <label for="checkInDate" class="form-label">Ngày đến</label>
                         <input type="text" class="form-control" id="checkInDate" readonly>
                     </div>
                     <div class="mb-3">
@@ -69,12 +69,12 @@
                         <input type="number" name="cccd" class="form-control" id="cccd" placeholder="nhập số cccd" required>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Code check-in</label>
+                        <label for="checkInDate" class="form-label">Mã nhận phòng</label>
                         <input type="text" name="code" class="form-control" id="code" placeholder="nhập code của bạn" required>
                     </div>
                     <div id="error-message"></div>
                     <!-- You can add more fields if needed -->
-                    <button type="submit" class="btn btn-primary">Submit Check-in</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận nhận phòng</button>
                 </form>
             </div>
         </div>
@@ -86,7 +86,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="checkinModalLabel">Check-out Booking</h5>
+                <h5 class="modal-title" id="checkinModalLabel">Khách Hàng Trả Phòng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -96,11 +96,11 @@
                     <input type="hidden" id="bookingId1" name="bookingId">
                     <input type="hidden" id="tiencu" name="tiencu">
                     <div class="mb-3">
-                        <label for="userName" class="form-label">User Name</label>
+                        <label for="userName" class="form-label">Người dùng</label>
                         <input type="text" class="form-control" id="userName1" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkoutDate" class="form-label">Check-out Date</label>
+                        <label for="checkoutDate" class="form-label">Ngày đi</label>
                         <input type="text" class="form-control" id="checkoutDate1" readonly>
                     </div>
                     <div class="mb-3">
@@ -119,7 +119,7 @@
                         <label for="totalPrice" class="form-label">Tổng tiền cần thanh toán</label>
                         <input type="number" name="totalPrice" class="form-control" id="totalPrice" readonly>
                     </div> <br>
-                    <button type="submit" class="btn btn-primary">Submit Check-out</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận trả phòng</button>
                 </form>
             </div>
         </div>
@@ -262,7 +262,7 @@
                         width: "100px"
                     },
                     {
-                        name: "Check-in",
+                        name: "Ngày đến",
                         width: "150px", // Tăng chiều rộng để hiển thị thêm thông tin
                         formatter: (cell) => {
                             const date = new Date(cell * 1000); // Chuyển đổi từ timestamp sang Date
@@ -271,7 +271,7 @@
                         }
                     },
                     {
-                        name: "Check-out",
+                        name: "Ngày đi",
                         width: "100px",
                         formatter: (cell) => {
                             const date = new Date(cell * 1000);
@@ -354,18 +354,18 @@
                             if (status === 2) {
                                 if (isToday && currentHour >= 14) {
                                 return gridjs.html(`
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check-in</button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check in</button>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
                 `);
                                                 } else {
                                                     return gridjs.html(`
-                                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian check-in')">Check-in</button>
+                                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')">Check in</button>
                                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
                                 `);
                                                 }
                             } else if (status === 4) {
                                 return gridjs.html(`
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})">Check-out</button>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})">Check out</button>
             `);
                             }
 
@@ -418,14 +418,14 @@
             const now = new Date();
             const currentHour = now.getHours();
             if (currentHour < 12) {
-                modalMessage.textContent = "Chưa đến giờ check-in. Vẫn hủy?";
+                modalMessage.textContent = "Chưa đến giờ nhận phòng. Vẫn hủy?";
             } else if (currentHour >= 21) {
-                modalMessage.textContent = "Đã quá giờ check-in. Hủy đơn?";
+                modalMessage.textContent = "Đã quá giờ nhận phòng. Hủy đơn?";
             } else {
-                modalMessage.textContent = "Đang trong khoảng thời gian check-in. Hủy đơn?";
+                modalMessage.textContent = "Đang trong khoảng thời gian nhận phòng. Hủy đơn?";
             }
         } else {
-            modalMessage.textContent = "Ngày check-in không phải hôm nay. Vẫn hủy?";
+            modalMessage.textContent = "Ngày nhận phòng không phải hôm nay. Vẫn hủy?";
         }
         document.getElementById('cancelItemId').value = id;
 
@@ -481,13 +481,13 @@
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
         const phiphatsinhSum = phiphatsinhs.reduce((sum, item) => {
-            return sum + (parseFloat(item.price) || 0); 
-        }, 0); 
+            return sum + (parseFloat(item.price) || 0);
+        }, 0);
         document.getElementById('checkoutDate1').value = formattedDate;
         document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc + phiphatsinhSum);
         document.getElementById('tiencu').value = (booking.tien_coc);
 
-    
+
     //thêm phí phát inh cứng
         const container = document.getElementById('phiphatsinh-container');
 

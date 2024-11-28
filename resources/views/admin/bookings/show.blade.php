@@ -66,9 +66,13 @@
                         </div>
 
                         @php
-                            $checkInDate = date('d-m-Y H:i', $booking->check_in_date);
-                            $checkOutDate = date('d-m-Y H:i', $booking->check_out_date);
-                            $numberOfNights = ($booking->check_out_date - $booking->check_in_date) / (60 * 60 * 24);
+                            $checkInDate = date('d-m-Y', $booking->check_in_date);
+                            $checkOutDate = date('d-m-Y', $booking->check_out_date);
+
+                            $checkInTimestamp = strtotime($checkInDate);
+                            $checkOutTimestamp = strtotime($checkOutDate);
+
+                            $numberOfNights = ($checkOutTimestamp - $checkInTimestamp) / (60 * 60 * 24);
                         @endphp
 
                         <!-- Booking Summary -->
@@ -76,8 +80,8 @@
                             <div class="col-md-6">
                                 <h6 class="text-muted">Chi tiết đặt phòng</h6>
                                 <div class="border rounded p-3 mb-3">
-                                    <p><strong>Ngày Check-in:</strong> {{ $checkInDate }}</p>
-                                    <p><strong>Ngày Check-out:</strong> {{ $checkOutDate }}</p>
+                                    <p><strong>Ngày đến:</strong> {{ $checkInDate }}</p>
+                                    <p><strong>Ngày đi:</strong> {{ $checkOutDate }}</p>
                                     <p><strong>Số đêm ở:</strong> {{ $numberOfNights }}</p>
                                 </div>
                             </div>
@@ -94,6 +98,7 @@
                                             @case(0)
                                                 <span class="badge bg-info">chưa thanh toán</span>
                                             @break
+
                                             @case(1)
                                                 <span class="badge bg-info">Đang thanh toán</span>
                                             @break

@@ -84,7 +84,7 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Gallery</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Thư viện ảnh</h4>
                                 <button type="button" class="btn btn-primary" onclick="addImageGallery()">Thêm ảnh</button>
                             </div><!-- end card header -->
 
@@ -92,7 +92,7 @@
                                 <div class="live-preview">
                                     <div class="row gy-4" id="gallery_list">
                                         <div class="col-md-4" id="gallery_default_item">
-                                            <label for="gallery_default" class="form-label">Image</label>
+                                            <label for="gallery_default" class="form-label">Hình ảnh</label>
                                             <div class="d-flex">
                                                 <input type="file"
                                                     class="form-control @error('image_room') is-invalid @enderror"

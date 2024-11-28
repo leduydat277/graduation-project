@@ -106,7 +106,7 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="{{ route('admin.logout') }}">
                         <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
-                        <span class="align-middle" data-key="t-logout">Logout</span>
+                        <span class="align-middle" data-key="t-logout">Đăng xuất</span>
                     </a>
                 </div>
             </div>

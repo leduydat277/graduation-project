@@ -74,7 +74,7 @@
                                     <th>Tên Phòng</th>
                                     <th>Loại Trạng Thái</th>
                                     <th>Khoảng Thời Gian</th>
-                                    <th>Chi Tiết Booking (nếu có)</th>
+                                    <th>Chi Tiết đơn hàng(nếu có)</th>
                                 </tr>
                             </thead>
                             <tbody>

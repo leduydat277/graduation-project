@@ -74,12 +74,12 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>User</th>
-                                        <th>Amount</th>
-                                        <th>Payment Method</th>
-                                        <th>Payment Date</th>
-                                        <th>Payment_status</th>
-                                        <th>Action</th>
+                                        <th>Người dùng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Phương thức thanh toán</th>
+                                        <th>Ngày thanh toán</th>
+                                        <th>Trạng thái thanh toán</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody id="payment-tbody">

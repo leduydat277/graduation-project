@@ -85,7 +85,7 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header d-flex align-items-center justify-content-between bg-primary">
-                                <h4 class="card-title mb-0 text-white">Gallery</h4>
+                                <h4 class="card-title mb-0 text-white">Thư viện ảnh</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
