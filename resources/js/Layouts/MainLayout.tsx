@@ -4,6 +4,7 @@ import '@fontsource/roboto/400.css';
 
 
 import { BottomHeader } from '@/components/Header/BottomHeader';
+import { FooterSection } from './../components/Footer/Footer';
 
 
 interface MainLayoutProps {
@@ -17,6 +18,7 @@ export default function MainLayout({ title, children }: MainLayoutProps) {
       <Head title={title} />
       <BottomHeader />
       {children}
+      <FooterSection/>
     </>
   );
 }

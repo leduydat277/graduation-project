@@ -17,7 +17,7 @@ const onPress = async () => {
   
   return (
     <>
-      <Box sx={{ py: 6 }}>
+      <Box sx={{ pt: 6, pb: 3 }}>
         <Box sx={{ mb: 10, mx: 5 }}>
           <Banners />
           <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: blue[50], mb: 6 }}>
