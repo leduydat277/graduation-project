@@ -1,5 +1,6 @@
 import { sleepRequest } from './api';
 export const calculateTotalAmount = (days: number, price: number) => {
+   console.log('days: ', days, 'price: ', price)
    const total = days * price;
    return total
 }

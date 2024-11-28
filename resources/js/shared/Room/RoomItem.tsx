@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/react";
 import { Box, Typography, Card, CardContent, Snackbar } from "@mui/material";
 import { useState } from "react";
 import {pink, grey} from "@mui/material/colors";
-
+import HomeBannner5 from '../../../assets/HomeBanner5.jpg';
 
 export const RoomItem = (props) => {
     console.log('RoomItem', props);
@@ -51,7 +51,7 @@ export const RoomItem = (props) => {
                     <CardContent>
                         <Box
                             component="img"
-                            src={image}
+                            src={HomeBannner5}
                             borderRadius={4}
                             alt="Sample Image"
                             sx={{

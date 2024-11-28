@@ -4,14 +4,21 @@ import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
 
 function DetailRoom({ room }) {
+  console.log('detail room line 7 ', room.price);
   const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [state.setPrice, state.setSubtitle, state.setIdRoom]);
-  React.useEffect(() => {
-    if (room) {
-      setPrice(room.price);
-      setSubtitle(room.title);
-      setIdRoom(room.id);
-    }
-  }, [room, setPrice, setSubtitle]);
+ 
+  // if (room) {
+  //    setPrice(room.price);
+  //   }
+  
+  // React.useEffect(() => {
+  //   if (room) {
+  //     setPrice(room.price);
+  //     setSubtitle(room.title);
+  //     setIdRoom(room.id);
+  //   }
+  // }, [room.id]);
+  // console.log('detail room line 15 ', room);
 
   if (!room) {
     return <div>No room data available</div>;
