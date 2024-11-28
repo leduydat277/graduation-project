@@ -5,19 +5,11 @@ import { Booking, calculateTotalAmount } from "../../../service/hooks/booking";
 import { useBookingStore } from "../../../service/stores/booking-store";
 import { userStore } from "../../../service/stores/user-store"
 import { CalendarClock } from "lucide-react";
-import { Link } from '@inertiajs/react'
 import { grey } from "@mui/material/colors";
-import React from "react";
-import { paramsStringify } from "../../../service/utils/params";
-import { toast } from "@/hooks/use-toast";
-import { useNavigate } from 'react-router-dom';
+
 export const BookingForm = (props) => {
   const { type, status, description, ...rest } = props
-//  const navigate = useNavigate(); 
 
-// Navigate to a new route
-// navigate('/new-route');
-  // const { push } = useRouter()
   const [checkInDate, checkOutDate, totalDays, setTotalPrice, title, subtitle, price, idRoom, clear] = useBookingStore((state) => [
     state.checkInDate,
     state.checkOutDate,
@@ -46,20 +38,20 @@ export const BookingForm = (props) => {
     }
     return false;
   }
-  const totalPrice = calculateTotalAmount(totalDays, price)
-  if (totalPrice > 0 && totalDays > 0) {
-    setTotalPrice(totalPrice)
-  }
+  // const totalPrice = calculateTotalAmount(totalDays, price)
+  // if (totalPrice > 0 && totalDays > 0) {
+  //   setTotalPrice(totalPrice)
+  // }
 
-  // React.useEffect(() => {
-  //   const uid = userStore.getState().userId; 
-  //   if (!uid) {
-  //     const queryString = paramsStringify({
-  //       redirect: '/checkout-screen', 
-  //     });
-  //     navigate(`/login?${queryString}`, { replace: true }); 
-  //   }
-  // }, [navigate, userStore]);
+  React.useEffect(() => {
+    const uid = userStore.getState().userId; 
+    if (!uid) {
+      const queryString = paramsStringify({
+        redirect: '/checkout-screen', 
+      });
+      navigate(`/login?${queryString}`, { replace: true }); 
+    }
+  }, [navigate, userStore]);
   ps.push(validateLogin())
   ps.push(clear())
   
@@ -69,15 +61,15 @@ const onPress = async () => {
   await Promise.all(ps)
   console.log('onPress');
   const bookingData = {
-    user_id: 5,
-  check_in_date: "23112024",
-  check_out_date: "24112024",
+  user_id: 5,
+  check_in_date: "27112024",
+  check_out_date: "28112024",
   first_name: "John",
   last_name: "Doe",
   address: "123 Main St",
   phone: "0123456789",
   email: "johndoe@example.com",
-  room_id: idRoom
+  room_id: idRoom || 5
   }
   try {
     const booking = await Booking(bookingData); 
@@ -108,8 +100,8 @@ const onPress = async () => {
           <Typography pl={2}> Check-in 2:00 PM | Check-out 12:00 PM</Typography>
         </Stack>
         <RoomSearchBar position={'detail'} />
-        <Typography variant="h6" pb={1}>Total: {totalPrice}</Typography>
-      
+        {/* <Typography variant="h6" pb={1}>Total: {totalPrice}</Typography>
+       */}
  
       <Button onClick={onPress} variant="outline">Thanh Toán</Button>
     
