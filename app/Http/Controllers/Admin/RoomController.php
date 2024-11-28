@@ -10,6 +10,7 @@ use App\Models\Admin\RoomType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class RoomController extends Controller
@@ -57,21 +58,25 @@ class RoomController extends Controller
 
     public function create()
     {
-
         $title = 'Thêm phòng';
+
+        $roomId = Room::select('id')->orderBy('id', 'DESC')->first();
+        $roomId = $roomId ? $roomId->id + 1 : 1;
 
         $roomTypes = RoomType::all();
 
-        return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'roomTypes'));
+        return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'roomTypes', 'roomId'));
     }
 
 
     public function store(RoomRequest $request)
     {
-        // dd($request->all());    
+        // dd($request->all());
         $imagePaths = [];
 
-        // Lưu từng ảnh và lưu đường dẫn vào mảng
+        $sPrice = str_replace(',', '', $request->price);
+        $price = (int) $sPrice;
+
         if ($request->hasFile('image_room')) {
             foreach ($request->file('image_room') as $image) {
 
@@ -83,9 +88,10 @@ class RoomController extends Controller
         // Tạo phòng với dữ liệu đầu vào và lưu đường dẫn ảnh dưới dạng JSON
         $room = Room::create([
             'title' => $request->input('title'),
+            'roomId_number' => $request->input('roomId_number'),
             'room_type_id' => $request->input('room_type'),
             'description' => $request->input('description'),
-            'price' => $request->input('price'),
+            'price' => $price,
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
             'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
@@ -125,6 +131,8 @@ class RoomController extends Controller
     {
         $imagePaths = json_decode($room->image_room, true) ?? []; // Lấy ảnh hiện tại nếu có, nếu không thì là mảng rỗng
 
+        $sPrice = str_replace(',', '', $request->input('price'));
+        $price = (int) $sPrice;
         // Nếu có ảnh mới được tải lên, lưu ảnh mới và cập nhật mảng $imagePaths
         if ($request->hasFile('image_room')) {
             // Xóa ảnh cũ khỏi thư mục (nếu cần thiết)
@@ -143,9 +151,10 @@ class RoomController extends Controller
         // Cập nhật dữ liệu phòng với các trường đầu vào mới và ảnh dưới dạng JSON
         $room->update([
             'title' => $request->input('title'),
+            'roomId_number' => $request->input('roomId_number'),
             'room_type_id' => $request->input('room_type'),
             'description' => $request->input('description'),
-            'price' => $request->input('price'),
+            'price' => $price,
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
             'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
@@ -158,7 +167,7 @@ class RoomController extends Controller
     /**
      * Summary of destroy
      * Fix khi push 1 ảnh thì không được xóa hết
-     * 
+     *
      * @param \App\Models\Admin\Room $room
      * @return \Illuminate\Http\RedirectResponse
      */

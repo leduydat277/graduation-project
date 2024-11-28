@@ -72,16 +72,10 @@
                             <table class="table align-middle table-nowrap" id="roomTypeTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 50px;">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="checkAll"
-                                                    value="option">
-                                            </div>
-                                        </th>
                                         <th class="sort" data-sort="id">
                                             <a
                                                 href="{{ route('room-types.index', ['search' => $search, 'sort_by' => 'id', 'sort_order' => $sortBy == 'id' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
-                                                ID
+                                                Mã loại phòng
                                                 @if ($sortBy == 'id')
                                                     @if ($sortOrder == 'asc')
                                                         ↑
@@ -99,13 +93,7 @@
                                 <tbody class="list form-check-all">
                                     @foreach ($roomTypes as $roomType)
                                         <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        value="{{ $roomType->id }}">
-                                                </div>
-                                            </td>
-                                            <td>{{ $roomType->id }}</td>
+                                            <td>{{ $roomType->roomType_number }}</td>
                                             <td>{{ $roomType->type }}</td>
                                             <td>
                                                 <a href="{{ route('room-types.rooms', $roomType->id) }}">

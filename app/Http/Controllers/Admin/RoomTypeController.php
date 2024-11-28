@@ -58,7 +58,10 @@ class RoomTypeController extends Controller
             return redirect()->route('room-types.index')->with('error', 'Tên loại phòng đã tồn tại.');
         }
 
-        RoomType::create($data);
+        RoomType::create([
+            'roomType_number' => $request->roomType_number,
+            'type' => $data['type'],
+        ]);
 
         return redirect()->route('room-types.index')->with('success', 'Thêm mới thành công');
     }
@@ -84,7 +87,10 @@ class RoomTypeController extends Controller
             return redirect()->route('room-types.index')->with('error', 'Tên loại phòng đã tồn tại.');
         }
 
-        $roomType->update($data);
+        $roomType->update([
+            'roomType_number' => $request->roomType_number,
+            'type' => $data['type'],
+        ]);
 
         return redirect()->route('room-types.index')->with('success', 'Cập nhập thành công');
     }

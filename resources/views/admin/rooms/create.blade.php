@@ -37,13 +37,20 @@
                             <option value="">Chọn loại phòng</option>
                             <!-- Loop through room types -->
                             @foreach ($roomTypes as $type)
-                                <option value="{{ $type->id }}" {{ old('room_type') == $type->id ? 'selected' : '' }}>
+                                <option value="{{ $type->id }}" dt-value={{ $type->roomType_number }}
+                                    {{ old('room_type') == $type->id ? 'selected' : '' }}>
                                     {{ $type->type }}</option>
                             @endforeach
                         </select>
                         @error('room_type')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Mã Phòng</label>
+                        <input type="text" class="form-control" id="roomId_number" name="roomId_number"
+                            placeholder="Mã phòng" readonly value="{{ old('roomId_number') }}">
                     </div>
 
                     <div class="mb-3">
@@ -56,7 +63,7 @@
 
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá Mỗi Đêm</label>
-                        <input type="number" class="form-control" id="price" name="price"
+                        <input type="text" class="form-control" id="price" name="price"
                             placeholder="Nhập giá mỗi đêm" value="{{ old('price') }}">
                         @error('price')
                             <span class="text-danger">{{ $message }}</span>
@@ -85,7 +92,8 @@
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Thư viện ảnh</h4>
-                                <button type="button" class="btn btn-primary" onclick="addImageGallery()">Thêm ảnh</button>
+                                <button type="button" class="btn btn-primary" onclick="addImageGallery()">Thêm
+                                    ảnh</button>
                             </div><!-- end card header -->
 
                             <div class="card-body">
@@ -153,5 +161,49 @@
                 $('#' + id).remove();
             }
         }
+    </script>
+    <script>
+        function removeVietnameseTones(str) {
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Xóa dấu
+                .replace(/đ/g, 'd') // Chuyển đ -> d
+                .replace(/Đ/g, 'D'); // Chuyển Đ -> D
+        }
+
+        document.getElementById('room_type').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const roomName = selectedOption.getAttribute('dt-value');
+
+            if (roomName) {
+                const normalizedRoomName = removeVietnameseTones(roomName);
+
+                const roomCode = normalizedRoomName
+                    .toUpperCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^A-Z0-9_]/g, '');
+
+                document.getElementById('roomId_number').value = roomCode + '_' + {{ $roomId }};
+            } else {
+                document.getElementById('roomId_number').value = '';
+            }
+        });
+    </script>
+    <script>
+        function formatPrice(value) {
+            let val = value.replace(/\D/g, '');
+
+            return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        document.getElementById('price').addEventListener('input', function(e) {
+            let cursorPosition = this.selectionStart;
+            const formattedValue = formatPrice(this.value);
+
+            this.value = formattedValue;
+
+            // Đặt lại vị trí con trỏ (cursor) sau khi format
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
     </script>
 @endsection

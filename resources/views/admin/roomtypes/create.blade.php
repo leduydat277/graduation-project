@@ -22,12 +22,17 @@
                 @csrf
                 <div class="mb-3">
                     <label for="type" class="form-label">Tên Loại Phòng</label>
-                    <input type="text" class="form-control" id="type" name="type" placeholder="Nhập tên loại phòng" value="{{ old('type') }}">
+                    <input type="text" class="form-control" id="type" name="type"
+                        placeholder="Nhập tên loại phòng" value="{{ old('type') }}">
                     @error('type')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                
+                <div class="mb-3">
+                    <label for="type" class="form-label">Mã Loại Phòng</label>
+                    <input type="text" class="form-control" id="roomType_number" name="roomType_number"
+                    placeholder="Mã phòng" readonly value="{{ old('roomType_number') }}">
+                </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Thêm Loại Phòng</button>
                 </div>
@@ -39,4 +44,27 @@
 @section('js')
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    <script>
+        function removeVietnameseTones(str) {
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/Đ/g, 'D');
+        }
+
+        document.getElementById('type').addEventListener('input', function() {
+            const roomName = this.value;
+
+            const normalizedRoomName = removeVietnameseTones(roomName);
+
+            const roomCode = normalizedRoomName
+                .toUpperCase()
+                .replace(/\s+/g, '_')
+                .replace(/[^A-Z0-9_]/g, '');
+            document.getElementById('roomType_number').value = roomCode;
+        });
+
+
+    </script>
 @endsection

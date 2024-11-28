@@ -61,7 +61,7 @@ class BookingController
             $todayInt = Carbon::createFromFormat('dmY', (string)$today, 'Asia/Ho_Chi_Minh');
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
- 
+
             $checkInDateFormat = Carbon::createFromFormat('dmY', (string)$check_in_date)->setTime(14, 0, 0);
             $checkOutDateFormat = Carbon::createFromFormat('dmY', (string)$check_out_date)->setTime(12, 0, 0);
 
@@ -235,6 +235,13 @@ class BookingController
 
             $paymentGatewayResponse = json_encode($validatedData);
 
+            if($request->input('vnp_ResponseCode') !== 00){
+                return response()->json([
+                    "type" => "error",
+                    "message" => "Giao dịch không thành công."
+                ], 400);
+            }
+
             $booking = Booking::where("id", $id)->first();
             if (!$booking) {
                 return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
@@ -291,9 +298,11 @@ class BookingController
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
 
+
+            $url = route('success');
             event(new NotificationMessage($message, $title, $formattedDate));
             return response()->json([
-                "url_redirect" => "url_test",
+                "url_redirect" => $url,
                 "message" => "Thanh toán thành công"
             ], 200);
         } catch (Exception $e) {

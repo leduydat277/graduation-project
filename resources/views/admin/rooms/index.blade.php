@@ -108,7 +108,7 @@
                             <table class="table align-middle table-nowrap" id="roomTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
                                         <th>Loại Phòng</th>
                                         <th>Giá</th>
@@ -121,7 +121,7 @@
                                 <tbody>
                                     @foreach ($rooms as $room)
                                         <tr>
-                                            <td>{{ $room->id }}</td>
+                                            <td>{{ $room->roomId_number }}</td>
                                             <td>{{ $room->title }}</td>
                                             <td>{{ $room->roomType->type ?? 'Không xác định' }}</td>
                                             <td>{{ number_format($room->price, 0, ',', '.') }} VND</td>

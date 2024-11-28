@@ -37,7 +37,7 @@
                         <select class="form-control" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>
                             @foreach ($roomTypes as $type)
-                                <option value="{{ $type->id }}"
+                                <option value="{{ $type->id }}" dt-value="{{ $type->roomType_number }}"
                                     {{ $room->room_type_id == $type->id ? 'selected' : '' }}>
                                     {{ $type->type }}</option>
                             @endforeach
@@ -45,6 +45,12 @@
                         @error('room_type')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Mã Phòng</label>
+                        <input type="text" class="form-control" id="roomId_number" name="roomId_number"
+                            placeholder="Mã phòng" readonly value="{{ $room->roomId_number }}">
                     </div>
 
                     <div class="mb-3">
@@ -57,8 +63,8 @@
 
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá Mỗi Đêm</label>
-                        <input type="number" class="form-control" id="price" name="price"
-                            placeholder="Nhập giá mỗi đêm" value="{{ old('price', $room->price) }}">
+                        <input type="text" class="form-control" id="price" name="price"
+                            placeholder="Nhập giá mỗi đêm" value="{{ $room->price }}">
                         @error('price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -179,5 +185,53 @@
         function removeImageInput(element) {
             element.parentNode.remove();
         }
+    </script>
+    <script>
+        function removeVietnameseTones(str) {
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Xóa dấu
+                .replace(/đ/g, 'd') // Chuyển đ -> d
+                .replace(/Đ/g, 'D'); // Chuyển Đ -> D
+        }
+
+        document.getElementById('room_type').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const roomName = selectedOption.getAttribute('dt-value');
+
+            if (roomName) {
+                const normalizedRoomName = removeVietnameseTones(roomName);
+
+                const roomCode = normalizedRoomName
+                    .toUpperCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^A-Z0-9_]/g, '');
+
+                document.getElementById('roomId_number').value = roomCode + '_' + {{ $room->id }};
+            } else {
+                document.getElementById('roomId_number').value = '';
+            }
+        });
+    </script>
+    <script>
+        function formatPrice(value) {
+            let val = value.replace(/\D/g, '');
+
+            return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceInput = document.getElementById('price');
+            priceInput.value = formatPrice(priceInput.value);
+        });
+
+        document.getElementById('price').addEventListener('input', function(e) {
+            let cursorPosition = this.selectionStart;
+            const formattedValue = formatPrice(this.value);
+
+            this.value = formattedValue;
+
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
     </script>
 @endsection

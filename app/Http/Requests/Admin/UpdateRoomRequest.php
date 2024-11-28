@@ -20,7 +20,7 @@ class UpdateRoomRequest extends FormRequest
             'title' => 'required|string|max:255',
             'room_type' => 'required|exists:room_types,id',
             'max_people' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'price' => 'required|min:0',
             'room_area' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'image_room' => 'required|array', // Bắt buộc phải có mảng ảnh
