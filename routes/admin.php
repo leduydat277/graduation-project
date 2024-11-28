@@ -53,6 +53,7 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
         Route::post('/change', [ChangePasswordController::class, 'ChangePassword'])->name('change_password');
     });
+    Route::post('room-assets/{id}', [RoomAssetController::class, 'update'])->name('ras.update');
     Route::prefix('checkin-checkout')
         ->as('checkin-checkout.')
         ->group(function () {

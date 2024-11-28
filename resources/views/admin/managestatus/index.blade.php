@@ -70,7 +70,7 @@
                         <table class="table align-middle table-nowrap">
                             <thead class="table-light">
                                 <tr>
-                                    <th>ID Phòng</th>
+                                    <th>Mã phòng</th>
                                     <th>Tên Phòng</th>
                                     <th>Loại Trạng Thái</th>
                                     <th>Khoảng Thời Gian</th>
@@ -80,7 +80,7 @@
                             <tbody>
                                 @forelse ($statusRooms as $statusRoom)
                                     <tr>
-                                        <td>{{ $statusRoom['room']['id'] ?? 'Không xác định' }}</td>
+                                        <td>{{ $statusRoom['room']['roomId_number'] ?? 'Không xác định' }}</td>
                                         <td>{{ $statusRoom['room']['title'] ?? 'Không xác định' }}</td>
                                         <td>
                                             @switch($statusRoom['status'])

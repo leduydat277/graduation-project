@@ -22,15 +22,9 @@
                 <div class="card-header">
                     <h4 class="card-title mb-0">Danh sách tiện nghi phòng</h4>
                 </div>
-
                 <div class="card-body">
                     <div class="listjs-table" id="roomAssetList">
                         <div class="row g-4 mb-3">
-                            <div class="col-sm-auto">
-                                <a href="{{ route('room-assets.create') }}" class="btn btn-success">
-                                    <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi phòng
-                                </a>
-                            </div>
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
                                     <!-- Dropdown Sort -->
@@ -60,19 +54,6 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <form method="GET" action="{{ route('room-assets.index') }}"
-                                        class="d-flex align-items-center me-3">
-                                        <!-- Tìm kiếm -->
-                                        <div class="input-group">
-                                            <input type="text" name="search" value="{{ request('search') }}"
-                                                class="form-control" placeholder="Nhập từ khóa tìm kiếm..."
-                                                aria-label="Tìm kiếm tiện nghi">
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i> Tìm kiếm
-                                            </button>
-                                        </div>
-                                    </form>
-
                                 </div>
                             </div>
                         </div>
@@ -81,48 +62,23 @@
                             <table class="table align-middle table-nowrap" id="roomAssetTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
-                                        <th>Loại Tiện Nghi</th>
-                                        <th>Trạng Thái</th>
-                                        <th>Hành động</th>
+                                        <th>Số lượng tiện nghi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($roomassets as $roomasset)
                                         <tr>
-                                            <td>{{ $roomasset->id }}</td>
-                                            <td>{{ $roomasset->room->title ?? 'Không xác định' }}</td>
-                                            <td>{{ $roomasset->assetType->name ?? 'Không xác định' }}</td>
-                                            <td>
-                                                @switch($roomasset->status)
-                                                    @case(0)
-                                                        Đang sử dụng
-                                                    @break
-
-                                                    @case(1)
-                                                        Tạm dừng sử dụng
-                                                    @break
-
-                                                    @default
-                                                        Không xác định
-                                                @endswitch
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('room-assets.edit', $roomasset->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
-                                                <form action="{{ route('room-assets.destroy', $roomasset->id) }}"
-                                                    method="POST" class="delete-form"
-                                                    data-room-asset="{{ $roomasset->id }}" style="display:inline-block;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn">Xóa</button>
-                                                </form>
-                                            </td>
+                                            <td>{{ $roomasset['room']['roomId_number'] ?? 'Không xác định' }}</td>
+                                            <td>{{ $roomasset['room']['title'] ?? 'Không xác định' }}</td>
+                                            <td><a href="{{ route('room-assets.show', $roomasset['room']['id']) }}">{{ $roomasset['asset_count'] ?? 0 }}
+                                                    tiện nghi</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+
                             @if ($roomassets->isEmpty())
                                 <div class="noresult">
                                     <div class="text-center">
@@ -150,31 +106,6 @@
 @section('js')
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                var form = this.closest('.delete-form');
-                var roomAssetId = form.getAttribute('data-room-asset');
-
-                Swal.fire({
-                    title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của tiện nghi phòng này (ID: " +
-                        roomAssetId + ")!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Có, xóa nó!',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    </script>
-
     <script>
         function handleSortChange() {
             const sort = document.getElementById('sort').value;

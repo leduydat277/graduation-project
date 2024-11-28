@@ -19,11 +19,8 @@
         <div class="w-100 d-flex justify-content-center align-items-center">
             <div class="col-9">
                 <h2 class="text-center">{{ $title }}</h2>
-                <form action="{{ route('room-assets.update', $roomasset->id) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('ras.update',$room->id) }}" method="POST">
                     @csrf
-                    @method('PUT') <!-- Sử dụng PUT cho form chỉnh sửa -->
-
                     @if (session('error'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {{ session('error') }}
@@ -32,28 +29,12 @@
                     @endif
 
                     <div class="mb-3">
-                        <label for="room_id" class="form-label">Tên Phòng</label>
-                        <select class="form-control" id="room_id" name="room_id">
-                            <option value="">Chọn phòng</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}"
-                                    {{ $roomasset->room_id == $room->id ? 'selected' : '' }}>
-                                    {{ $room->title }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('room_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="asset_type_id" class="form-label">Loại Tiện Nghi</label>
+                        <label for="asset_type_id" class="form-label">Tiện Nghi</label>
                         <select class="form-control" id="" name="assets_type_id">
-                            <option value="">Chọn loại tiện nghi</option>
+                            <option value="">Chọn tiện nghi</option>
                             @foreach ($assetTypes as $assetType)
                                 <option value="{{ $assetType->id }}"
-                                    {{ $roomasset->assets_type_id == $assetType->id ? 'selected' : '' }}>
+                                    {{ $assetType->assets_type_id == $assetType->id ? 'selected' : '' }}>
                                     {{ $assetType->name }}
                                 </option>
                             @endforeach
@@ -63,21 +44,9 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Trạng Thái</label>
-                        <select class="form-select" id="" name="status">
-                            <option value="0" {{ $roomasset->status == 0 ? 'selected' : '' }}>Đang sử dụng</option>
-                            <option value="1" {{ $roomasset->status == 1 ? 'selected' : '' }}>Tạm dừng sử dụng
-                            </option>
-                        </select>
-                        @error('status')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary">Cập Nhật Tiện Nghi</button>
-                        <a href="{{ route('room-assets.index') }}" class="btn btn-secondary">Quay lại</a>
+                        <a href="{{ route('room-assets.show', $room->id) }}" class="btn btn-secondary">Quay lại</a>
                     </div>
                 </form>
             </div>

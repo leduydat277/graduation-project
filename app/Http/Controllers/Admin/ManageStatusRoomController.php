@@ -6,8 +6,10 @@ use App\Models\Admin\ManageStatusRoom;
 use App\Models\Admin\Room;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class ManageStatusRoomController extends Controller
 {
