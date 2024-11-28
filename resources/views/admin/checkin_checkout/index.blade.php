@@ -352,17 +352,17 @@
                                 checkInDate.getFullYear() === today.getFullYear();
 
                             if (status === 2) {
-                                if (isToday && currentHour >= 14) {
+                                // if (isToday && currentHour >= 14) {
                                 return gridjs.html(`
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check in</button>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
                 `);
-                                                } else {
-                                                    return gridjs.html(`
-                                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')">Check in</button>
-                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
-                                `);
-                                                }
+                                //                 } else {
+                                //                     return gridjs.html(`
+                                //     <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')">Check in</button>
+                                //     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
+                                // `);
+                                //                 }
                             } else if (status === 4) {
                                 return gridjs.html(`
                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})">Check out</button>

@@ -90,7 +90,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="otherValue" class="form-label">Giá</label>
-                        <input type="number" class="form-control" id="otherValue" name="price">
+                        <input type="text" class="form-control" id="price" name="price">
                     </div>
                     <div class="mb-3">
                         <label for="otherValue" class="form-label">Hình ảnh</label>
@@ -143,7 +143,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Giá</label>
-                            <input type="number" class="form-control" id="price" name="price">
+                            <input type="number" class="form-control" name="price">
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label">Hình ảnh</label>
@@ -170,6 +170,28 @@
 @endsection
 @section('js')
 <script>
+// format tiền trong input
+function formatCurrency(value) {
+        // Loại bỏ các ký tự không phải là số
+        value = value.replace(/[^\d]/g, "");
+
+        // Thêm dấu phân cách hàng nghìn
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Lắng nghe sự kiện nhập liệu trong ô input
+    document.getElementById('price').addEventListener('input', function(e) {
+        let value = e.target.value;
+
+        // Format giá trị nhập vào và thêm "VNĐ"
+        let formattedValue = formatCurrency(value);
+
+        // Cập nhật giá trị vào ô input
+        e.target.value = formattedValue + " VNĐ";
+    });
+// end format tiền trong input
+
+
     // // sửa
     function openCheckinModal(id) {
     // Tìm đối tượng cần chỉnh sửa
@@ -245,19 +267,29 @@
                         formatter: (cell) => gridjs.html(cell),
                     },
                     {
+                        name: "Trạng thái",
+                        width: "120px",
+                        formatter: (cell, row) => {
+                            const status = row.cells[6].data;
+                            let statusText = '';
+                            let statusClass = '';
 
-                        name: "Action",
-                        width: "150px",
-                        formatter: (_, row) => gridjs.html(`
-<button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Sửa</button>
-    <form id="delete-form-${row.cells[0].data}" action="/admin/phiphatsinhs/${row.cells[0].data}" method="POST" style="display: inline-block;">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="_method" value="DELETE">
-        <button type="submit" onclick="return confirm('bạn có muốn xóa?')" class="btn btn-danger">Xóa</button>
-    </form>
-`)
+                            // Kiểm tra trạng thái và trả về giá trị tương ứng với màu sắc
+                            switch (status) {
+                                case 0:
+                                    statusText = "Chưa thanh toán"; // Trạng thái 2
+                                    statusClass = 'bg-danger'; // Màu vàng
+                                    break;
+                                case 1:
+                                    statusText = "Đã thanh toán"; // Trạng thái 3
+                                    statusClass = 'bg-success'; // Màu xanh dương
+                                    break;
+                            }
 
-                    }
+                            // Trả về HTML với lớp CSS cho màu sắc
+                            return gridjs.html(`<span class="badge ${statusClass}">${statusText}</span>`);
+                        }
+                    },
 
                 ],
                 data: othersData.map(phiphatsinhs => [
@@ -269,6 +301,7 @@
                     phiphatsinhs.image ?
                     `<img src="/storage/${phiphatsinhs.image}" alt="Hình ảnh" style="width: 50px; height: 50px; object-fit: cover;">` :
                     'Không có hình ảnh',
+                    phiphatsinhs.status,
                 ]),
                 pagination: {
                     limit: 10

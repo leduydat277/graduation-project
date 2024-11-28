@@ -48,11 +48,13 @@ class CheckInCheckOutController extends RoutingController
         $room = Room::find($room_id);
         $room->status = 2;
         $room->save();
-        return redirect()->route('checkin-checkout.index')->with('success', 'Check-in thành công (đã lưu cccd vào csdl)');
+        return redirect()->route('checkin-checkout.index')->with('success', 'Check-in thành công');
     }
 
     public function checkOut(Request $request, $id)
     {
+        var_dump($request);
+        die;
         foreach ($request->pps as $index => $name) {
             $price = $request->price[$index];
             PhiPhatSinh::insert([
@@ -63,7 +65,8 @@ class CheckInCheckOutController extends RoutingController
         }
         $phiphatsinhs = PhiPhatSinh::where('booking_id', $id)->get();
         foreach ($phiphatsinhs as $phi){
-            $phi->delete();
+            $phi->status = 1;
+            $phi->save();
         }
         $currentTimestamp = Carbon::now()->timestamp;
         $booking = Booking::findOrFail($id);
