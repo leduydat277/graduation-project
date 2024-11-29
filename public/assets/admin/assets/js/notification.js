@@ -3,7 +3,7 @@ var pusher = new Pusher('2934f03ec3f3092b7fc7', {
 });
 
 var channel = pusher.subscribe('notifications');
-channel.bind('notification.sent', function(data) {
+channel.bind('notification.sent', function (data) {
   showNotification(data.title, data.message);
   fetchNotifications();
 });
@@ -18,53 +18,53 @@ function showNotification(title, message) {
 <p>${message}</p>
 `;
 
-  popup.querySelector('.close-btn').addEventListener('click', function() {
-      popup.remove();
+  popup.querySelector('.close-btn').addEventListener('click', function () {
+    popup.remove();
   });
 
   document.getElementById('notification-container').appendChild(popup);
 
   popup.style.display = 'block';
 
-  setTimeout(function() {
-      if (popup.parentNode) {
-          popup.remove();
-      }
+  setTimeout(function () {
+    if (popup.parentNode) {
+      popup.remove();
+    }
   }, 5000);
 }
 
 function fetchNotifications() {
   $.ajax({
-      url: '/api/notifications',
-      method: 'GET',
-      success: function(data) {
-          let notificationItemsTabContent = $('#notificationItemsTabContent');
-          let unreadBadge = $('#page-header-notifications-dropdown .topbar-badge');
-          let dropdownHeaderBadge = $('.dropdown-tabs .badge');
-          notificationItemsTabContent.empty();
+    url: '/api/notifications',
+    method: 'GET',
+    success: function (data) {
+      let notificationItemsTabContent = $('#notificationItemsTabContent');
+      let unreadBadge = $('#page-header-notifications-dropdown .topbar-badge');
+      let dropdownHeaderBadge = $('.dropdown-tabs .badge');
+      notificationItemsTabContent.empty();
 
-          if (data.type === 'success' && data.data.length > 0) {
-              const unreadNotifications = data.data.filter(notification => notification.is_read ===
-                  0);
+      if (data.type === 'success' && data.data.length > 0) {
+        const unreadNotifications = data.data.filter(
+          notification => notification.is_read === 0
+        );
 
-              unreadBadge.text(unreadNotifications.length);
+        unreadBadge.text(unreadNotifications.length);
 
-              dropdownHeaderBadge.text(`${unreadNotifications.length} thông báo mới`);
+        dropdownHeaderBadge.text(`${unreadNotifications.length} thông báo mới`);
 
-              data.data.forEach(notification => {
-                  let read;
-                  if (notification.is_read === 1) {
-                      read = `<i class="bx bx-check" style="color: green;"></i>`
-                  }
-                  if (notification.is_read === 0) {
-                      read = `<i class="bx"></i>`
-                  }
-                  const notificationItem = $('<div>')
-                      .addClass(
-                          'text-reset notification-item d-block dropdown-item position-relative'
-                      );
+        data.data.forEach(notification => {
+          let read;
+          if (notification.is_read === 1) {
+            read = `<i class="bx bx-check" style="color: green;"></i>`;
+          }
+          if (notification.is_read === 0) {
+            read = `<i class="bx"></i>`;
+          }
+          const notificationItem = $('<div>').addClass(
+            'text-reset notification-item d-block dropdown-item position-relative'
+          );
 
-                  const notificationContent = `
+          const notificationContent = `
               <div class="d-flex">
                   <div class="avatar-xs me-3 flex-shrink-0">
                       <span class="avatar-title bg-info-subtle text-info rounded-circle fs-16">
@@ -88,24 +88,26 @@ function fetchNotifications() {
               </div>
           `;
 
-                  notificationItem.html(notificationContent);
-                  notificationItemsTabContent.append(notificationItem);
-              });
-          } else {
-              unreadBadge.text('0');
-              dropdownHeaderBadge.text('Không có thông báo mới');
-              const noNotificationMessage = $('<div>')
-                  .addClass('text-center text-muted py-3')
-                  .text('Hiện không có thông báo.');
-              notificationItemsTabContent.append(noNotificationMessage);
-          }
-      },
-      error: function(xhr, status, error) {
-          console.error('Error fetching data:', error);
-          $('#notificationItemsTabContent')
-              .empty()
-              .append('<div class="text-center text-danger py-3">Không thể tải thông báo.</div>');
+          notificationItem.html(notificationContent);
+          notificationItemsTabContent.append(notificationItem);
+        });
+      } else {
+        unreadBadge.text('0');
+        dropdownHeaderBadge.text('Không có thông báo mới');
+        const noNotificationMessage = $('<div>')
+          .addClass('text-center text-muted py-3')
+          .text('Hiện không có thông báo.');
+        notificationItemsTabContent.append(noNotificationMessage);
       }
+    },
+    error: function (xhr, status, error) {
+      console.error('Error fetching data:', error);
+      $('#notificationItemsTabContent')
+        .empty()
+        .append(
+          '<div class="text-center text-danger py-3">Không thể tải thông báo.</div>'
+        );
+    }
   });
 }
 
@@ -116,85 +118,89 @@ function toggleDeleteButton() {
   const deleteButtonContainer = $('#deleteNotificationButtonContainer');
 
   if (checkedCount > 0) {
-      deleteButtonContainer.show();
+    deleteButtonContainer.show();
   } else {
-      deleteButtonContainer.hide();
+    deleteButtonContainer.hide();
   }
 }
 
 function toggleReadButton() {
   const checkedCount = $('.notification-checkbox:checked').length;
   const readButtonContainer = $('#readNotificationButtonContainer');
+
   if (checkedCount > 0) {
-      readButtonContainer.show();
+    readButtonContainer.show();
   } else {
-      readButtonContainer.hide();
+    readButtonContainer.hide();
   }
 }
 
-$(document).on('change', '.notification-checkbox', function() {
+$(document).on('change', '.notification-checkbox', function () {
   toggleReadButton();
   toggleDeleteButton();
 });
 
-$(document).on('click', '#deleteNotificationButton', function() {
+$(document).on('click', '#deleteNotificationButton', function () {
   const selectedNotifications = $('.notification-checkbox:checked')
-      .map(function() {
-          return $(this).val();
-      })
-      .get();
+    .map(function () {
+      return $(this).val();
+    })
+    .get();
+
   if (selectedNotifications.length > 0) {
-      $.ajax({
-          url: '/api/notifications/delete',
-          method: 'POST',
-          data: {
-              notification_ids: selectedNotifications
-          },
-          success: function(response) {
-              if (response.type === 'success') {
-                  $('#readNotificationButton').hide();
-                  $('#deleteNotificationButton').hide();
-                  fetchNotifications();
-              } else {
-                  alert('Không thể xóa thông báo.');
-              }
-          },
-          error: function(xhr, status, error) {
-              console.error('Error deleting notifications:', error);
-          }
-      });
+    $.ajax({
+      url: '/api/notifications/delete',
+      method: 'POST',
+      data: {
+        notification_ids: selectedNotifications
+      },
+      success: function (response) {
+        if (response.type === 'success') {
+          fetchNotifications();
+          $('#deleteNotificationButtonContainer').hide();
+          $('#readNotificationButtonContainer').hide();
+        } else {
+          alert('Không thể xóa thông báo.');
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error('Error deleting notifications:', error);
+      }
+    });
   } else {
-      alert('Vui lòng chọn ít nhất một thông báo để xóa.');
+    alert('Vui lòng chọn ít nhất một thông báo để xóa.');
   }
 });
 
-$(document).on('click', '#readNotificationButton', function() {
+$(document).on('click', '#readNotificationButton', function () {
   const selectedNotifications = $('.notification-checkbox:checked')
-      .map(function() {
-          return $(this).val();
-      })
-      .get();
+    .map(function () {
+      return $(this).val();
+    })
+    .get();
+
   if (selectedNotifications.length > 0) {
-      $.ajax({
-          url: '/api/notifications/read',
-          method: 'POST',
-          data: {
-              notification_ids: selectedNotifications
-          },
-          success: function(response) {
-              if (response.type === 'success') {
-                  $('#readNotificationButton').hide();
-                  $('#deleteNotificationButton').hide();
-                  fetchNotifications();
-              } else {
-                  alert('Không thể đọc thông báo.');
-              }
-          },
-          error: function(xhr, status, error) {
-              console.error('Error reading notifications:', error);
-          }
-      });
+    $.ajax({
+      url: '/api/notifications/read',
+      method: 'POST',
+      data: {
+        notification_ids: selectedNotifications
+      },
+      success: function (response) {
+        if (response.type === 'success') {
+          fetchNotifications();
+
+          $('#deleteNotificationButtonContainer').hide();
+          $('#readNotificationButtonContainer').hide();
+        } else {
+          alert('Không thể đánh dấu thông báo đã đọc.');
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error('Error reading notifications:', error);
+      }
+    });
   } else {
-      alert('Vui lòng chọn ít nhất một thông báo để đọc.');
+    alert('Vui lòng chọn ít nhất một thông báo để đánh dấu đã đọc.');
   }
 });
