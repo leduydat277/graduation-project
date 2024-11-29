@@ -10,7 +10,7 @@ use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
-
+use Illuminate\Support\Str;
 
 class CheckInCheckOutController extends RoutingController
 {
@@ -28,7 +28,7 @@ class CheckInCheckOutController extends RoutingController
                 'rooms.id as room_id'
             )
             ->get();
-        $phiphatsinhs = PhiPhatSinh::all();
+        $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
         return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
 
@@ -37,7 +37,8 @@ class CheckInCheckOutController extends RoutingController
     {
         $booking = Booking::findOrFail($id);
         $booking->status = 4;
-        $booking->CCCD_booking = $request->cccd; // lưu cccd của người checkin vào db booking
+        $booking->check_in_date = Carbon::now()->timestamp;  
+        $booking->CCCD_booking = $request->cccd; 
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
@@ -53,8 +54,6 @@ class CheckInCheckOutController extends RoutingController
 
     public function checkOut(Request $request, $id)
     {
-        var_dump($request);
-        die;
         foreach ($request->pps as $index => $name) {
             $price = $request->price[$index];
             PhiPhatSinh::insert([
@@ -82,6 +81,7 @@ class CheckInCheckOutController extends RoutingController
                 ->andWhere('to', 0);
         }
         $booking->status = 3;
+        $booking->check_out_date = $currentTimestamp;
         $booking->total_price = $request->totalPrice; //update tiền ở booking
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
@@ -99,6 +99,7 @@ class CheckInCheckOutController extends RoutingController
         $payment->insert(
             [
                 'booking_id' => $id,
+                'payments_id_number' => Str::random(6),
                 'payment_date' => Carbon::now()->timestamp,
                 'payment_method' => 0,
                 'payment_status' => 3,

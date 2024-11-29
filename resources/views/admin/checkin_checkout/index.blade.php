@@ -61,7 +61,7 @@
                         <input type="text" class="form-control" id="roomType" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Ngày đến</label>
+                        <label for="checkInDate" class="form-label">Thời gian đến</label>
                         <input type="text" class="form-control" id="checkInDate" readonly>
                     </div>
                     <div class="mb-3">
@@ -108,8 +108,8 @@
                         <div id="phiphatsinh-container"></div>
                     </div>
                     <div class="mb-3">
-                        <label for="checkInDate" class="form-label">Số tiền nợ (tiền còn lại sau cọc và phí phát sinh(nếu có))</label>
-                        <input type="number" class="form-control" id="thanhtoan" readonly>
+                        <label for="checkInDate" class="form-label">Số tiền nợ (tiền còn lại sau cọc và phí phát sinh)</label>
+                        <input type="text" name="tienno" class="form-control" id="thanhtoan" readonly>
                     </div>
                     <div id="extraFeesContainer">
                     </div>
@@ -117,7 +117,7 @@
                     <!-- You can add more fields if needed -->
                     <div class="mt-3">
                         <label for="totalPrice" class="form-label">Tổng tiền cần thanh toán</label>
-                        <input type="number" name="totalPrice" class="form-control" id="totalPrice" readonly>
+                        <input type="text" name="totalPrice" class="form-control" id="totalPrice" readonly>
                     </div> <br>
                     <button type="submit" class="btn btn-primary">Xác nhận trả phòng</button>
                 </form>
@@ -154,87 +154,118 @@
         </div>
     </div>
 </div>
+<!-- //bot thanh scroll ngang -->
+<style>
+    .gridjs-wrapper {
+        overflow-x: auto;
+        /* Cho phép cuộn ngang */
+    }
 
+    .gridjs-wrapper::-webkit-scrollbar {
+        display: none;
+        /* Ẩn thanh cuộn ngang trên Chrome, Edge, Safari */
+    }
+</style>
 @endsection
 @section('js')
 
 <script>
-    document.getElementById("addFeeButton").addEventListener("click", function() {
-        // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
-        const ppsInputs = document.querySelectorAll('input[name="pps[]"]');
-        const priceInputs = document.querySelectorAll('input[name="price[]"]');
+document.getElementById("addFeeButton").addEventListener("click", function() {
+    // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
+    const ppsInputs = document.querySelectorAll('input[name="pps[]"]');
+    const priceInputs = document.querySelectorAll('input[name="price[]"]');
 
-        // Kiểm tra nếu tất cả các trường đã điền
-        let allFilled = true;
-        ppsInputs.forEach(input => {
-            if (input.value.trim() === "") {
-                allFilled = false;
-            }
-        });
-        priceInputs.forEach(input => {
-            if (input.value.trim() === "") {
-                allFilled = false;
-            }
-        });
-
-        // Nếu tất cả các trường đã được điền thì cho phép thêm trường mới
-        if (allFilled) {
-            // Tạo một div chứa các trường phát sinh mới
-            const newFeeDiv = document.createElement("div");
-            newFeeDiv.classList.add("mb-3");
-
-            // Tạo trường Phát sinh
-            const newPpsLabel = document.createElement("label");
-            newPpsLabel.classList.add("form-label");
-            newPpsLabel.textContent = "Phát sinh";
-            const newPpsInput = document.createElement("input");
-            newPpsInput.type = "text";
-            newPpsInput.name = "pps[]";
-            newPpsInput.classList.add("form-control");
-
-            // Tạo trường Giá phát sinh
-            const newPriceLabel = document.createElement("label");
-            newPriceLabel.classList.add("form-label");
-            newPriceLabel.textContent = "Giá phát sinh";
-            const newPriceInput = document.createElement("input");
-            newPriceInput.type = "number";
-            newPriceInput.name = "price[]";
-            newPriceInput.classList.add("form-control", "price-input");
-            newPriceInput.oninput = calculateTotal;
-            const hr = document.createElement("hr");
-            // Thêm các trường vào div mới
-            newFeeDiv.appendChild(newPpsLabel);
-            newFeeDiv.appendChild(newPpsInput);
-            newFeeDiv.appendChild(newPriceLabel);
-            newFeeDiv.appendChild(newPriceInput);
-            newFeeDiv.appendChild(hr);
-            // Thêm div mới vào container chính
-            document.getElementById("extraFeesContainer").appendChild(newFeeDiv);
-        } else {
-            alert("Vui lòng nhập Phát sinh và Giá phát sinh trước khi thêm mục mới.");
+    // Kiểm tra nếu tất cả các trường đã điền
+    let allFilled = true;
+    ppsInputs.forEach(input => {
+        if (input.value.trim() === "") {
+            allFilled = false;
+        }
+    });
+    priceInputs.forEach(input => {
+        if (input.value.trim() === "") {
+            allFilled = false;
         }
     });
 
+    // Nếu tất cả các trường đã được điền thì cho phép thêm trường mới
+    if (allFilled) {
+        // Tạo một div chứa các trường phát sinh mới
+        const newFeeDiv = document.createElement("div");
+        newFeeDiv.classList.add("mb-3");
+
+        // Tạo trường Phát sinh
+        const newPpsLabel = document.createElement("label");
+        newPpsLabel.classList.add("form-label");
+        newPpsLabel.textContent = "Phát sinh";
+        const newPpsInput = document.createElement("input");
+        newPpsInput.type = "text";  // Sử dụng "text" để dễ dàng định dạng tiền tệ
+        newPpsInput.name = "pps[]";
+        newPpsInput.classList.add("form-control");
+
+        // Tạo trường Giá phát sinh
+        const newPriceLabel = document.createElement("label");
+        newPriceLabel.classList.add("form-label");
+        newPriceLabel.textContent = "Giá phát sinh";
+        const newPriceInput = document.createElement("input");
+        newPriceInput.type = "text";  // Sử dụng "text" thay vì "number" để định dạng tiền tệ
+        newPriceInput.name = "price[]";
+        newPriceInput.classList.add("form-control", "price-input");
+        
+        // Định dạng giá trị ban đầu nếu cần
+        newPriceInput.value = formatCurrency(0); // Mặc định giá là 0 VNĐ
+
+        // Định dạng tiền tệ khi người dùng nhập
+        newPriceInput.oninput = function(e) {
+            let value = e.target.value.replace(/[^\d]/g, ""); // Loại bỏ các ký tự không phải số
+            e.target.value = formatCurrency(value); // Định dạng lại giá trị nhập
+            calculateTotal(); // Cập nhật tổng khi nhập liệu
+        };
+
+        const hr = document.createElement("hr");
+
+        // Thêm các trường vào div mới
+        newFeeDiv.appendChild(newPpsLabel);
+        newFeeDiv.appendChild(newPpsInput);
+        newFeeDiv.appendChild(newPriceLabel);
+        newFeeDiv.appendChild(newPriceInput);
+        newFeeDiv.appendChild(hr);
+
+        // Thêm div mới vào container chính
+        document.getElementById("extraFeesContainer").appendChild(newFeeDiv);
+    } else {
+        alert("Vui lòng nhập Phát sinh và Giá phát sinh trước khi thêm mục mới.");
+    }
+});
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+    }
     // Hàm tính tổng giá trị các ô Giá phát sinh
     function calculateTotal() {
+        const paymentInput = document.getElementById('thanhtoan');
+        const rawValue = paymentInput.value.replace(/[^0-9]/g, '');
         const priceInputs = document.querySelectorAll('.price-input');
-        const no = parseFloat(document.getElementById('thanhtoan').value) || 0; // Lấy giá trị từ ô "thanhtoan" và chuyển thành số
-        let total = no; // Khởi tạo total với giá trị từ "thanhtoan"
-
+        const no = parseFloat(rawValue) || rawValue;
+        let total = no;
+        document.getElementById("totalPrice").value = total; // Gán tổng vào ô "totalPrice"
         priceInputs.forEach(input => {
             const value = parseFloat(input.value);
             if (!isNaN(value)) {
-                total += value; // Cộng giá trị của mỗi ô "Giá phát sinh" vào tổng
+                total += value;
             }
         });
-
-        document.getElementById("totalPrice").value = total; // Gán tổng vào ô "totalPrice"
+        // document.getElementById("totalPrice").value = total; 
+        document.getElementById("totalPrice").value = formatCurrency(total);
     }
     //end
 
     document.addEventListener("DOMContentLoaded", function() {
+        calculateTotal();
         const bookingsData = @json($bookings);
-
         if (document.getElementById("table-gridjs")) {
             new gridjs.Grid({
                 columns: [{
@@ -442,12 +473,20 @@
     function openCheckinModal(bookingId) {
         // Tìm booking tương ứng
         const booking = @json($bookings).find(b => b.id === bookingId);
+        const now = new Date(); // Lấy thời gian hiện tại
 
+        // Định dạng giờ:phút ngày/tháng/năm
+        const hours = now.getHours().toString().padStart(2, '0'); // Giờ có 2 chữ số
+        const minutes = now.getMinutes().toString().padStart(2, '0'); // Phút có 2 chữ số
+        const day = now.getDate().toString().padStart(2, '0'); // Ngày có 2 chữ số
+        const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Tháng có 2 chữ số (tháng bắt đầu từ 0)
+        const year = now.getFullYear(); // Năm
+        const formattedDate = `${hours}:${minutes} ${day}/${month}/${year}`;
         // Điền dữ liệu vào form
         document.getElementById('bookingId').value = booking.id;
         document.getElementById('userName').value = booking.user_name;
         document.getElementById('roomType').value = booking.room_type;
-        document.getElementById('checkInDate').value = booking.check_in_date;
+        document.getElementById('checkInDate').value = formattedDate;
         window.booking = booking;
     }
     document.getElementById('checkinForm').addEventListener('submit', function(e) {
@@ -468,9 +507,9 @@
 
     //checkout
     function openCheckoutModal(bookingId) {
+
         const booking = @json($bookings).find(b => b.id === bookingId);
         const phiphatsinhs = @json($phiphatsinhs).filter(p => p.booking_id === bookingId);
-        console.log(phiphatsinhs);
         document.getElementById('bookingId1').value = booking.id;
         document.getElementById('userName1').value = booking.user_name;
         const now = new Date();
@@ -483,12 +522,15 @@
         const phiphatsinhSum = phiphatsinhs.reduce((sum, item) => {
             return sum + (parseFloat(item.price) || 0);
         }, 0);
+        const totalPayment = booking.total_price - booking.tien_coc + phiphatsinhSum;
+        // Định dạng và hiển thị số tiền thanh toán trong input
+        const paymentInput = document.getElementById('thanhtoan');
+        paymentInput.value = formatCurrency(totalPayment);
         document.getElementById('checkoutDate1').value = formattedDate;
-        document.getElementById('thanhtoan').value = (booking.total_price - booking.tien_coc + phiphatsinhSum);
         document.getElementById('tiencu').value = (booking.tien_coc);
 
-
-    //thêm phí phát inh cứng
+        calculateTotal();
+        //thêm phí phát inh cứng
         const container = document.getElementById('phiphatsinh-container');
 
         // Tạo các input cho mỗi phí phát sinh
@@ -503,7 +545,7 @@
             inputName.setAttribute('type', 'text');
             inputName.setAttribute('id', `phiphatsinh_name_${index}`);
             inputName.setAttribute('name', `phiphatsinhs[${index}][name]`);
-            inputName.setAttribute('value', item.name);
+            inputName.setAttribute('value', formatCurrency(item.price));
             inputName.classList.add('form-control');
             inputName.setAttribute('readonly', true); // Nếu bạn muốn input readonly
 
@@ -523,13 +565,34 @@
             // Thêm div vào container
             container.appendChild(div);
         });
-    //end thêm phí phát inh cứng
+        //end thêm phí phát inh cứng
     }
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Ngừng hành động gửi form mặc định
 
         const form = this;
         const bookingId = document.getElementById('bookingId1').value;
+        const paymentInput = document.getElementById('thanhtoan');
+        const rawValue = paymentInput.value.replace(/[^0-9]/g, '');
+        const priceInputs = document.querySelectorAll('.price-input');
+        let total = 0;
+        priceInputs.forEach(input => {
+            const value = parseFloat(input.value);
+            if (!isNaN(value)) {
+                total += value;
+            }
+        });
+        paymentInput.value = rawValue;
+        const totalPrice = document.getElementById('totalPrice');
+        totalPrice.value = Number(rawValue) + Number(total);
+        const price = document.querySelectorAll('input[name="price[]"]');
+
+// Lặp qua tất cả các input price[] và xử lý giá trị của từng input
+price.forEach(function(input) {
+    const formatPrice = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không phải số
+    input.value = formatPrice; // Cập nhật giá trị đã được làm sạch
+});
+
         form.action = '/admin/checkin-checkout/checkout/' + bookingId;
         form.method = 'POST';
         form.submit();

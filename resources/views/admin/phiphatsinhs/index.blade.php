@@ -3,6 +3,8 @@
 {{$title}}
 @endsection
 @section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
@@ -126,7 +128,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="booking_id" class="form-label">Mã đơn</label>
-                            <select class="form-select" name="booking_id" id="booking_id">
+                            <select class="form-select" name="booking_id" id="booking_id2">
                                 <!-- Các tùy chọn sẽ được render động từ PHP -->
                                 <?php foreach ($allBooking as $booking): ?>
                                     <option value="{{ $booking->id }}">
@@ -163,15 +165,27 @@
     </div>
 </div>
 
-
-
-
-
+<style>
+    .select2-container--default .select2-selection--single .select2-selection__clear{
+        display: none;
+    }
+</style>
 @endsection
 @section('js')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-// format tiền trong input
-function formatCurrency(value) {
+    $(document).ready(function() {
+        $('#addOtherModal').on('shown.bs.modal', function() {
+            $('#booking_id').select2({
+                dropdownParent: $('#addOtherModal'), // Đảm bảo dropdown hiển thị trong modal
+                placeholder: "Chọn một mã đơn",
+                allowClear: true
+            });
+        });
+    });
+    // format tiền trong input
+    function formatCurrency(value) {
         // Loại bỏ các ký tự không phải là số
         value = value.replace(/[^\d]/g, "");
 
@@ -189,43 +203,43 @@ function formatCurrency(value) {
         // Cập nhật giá trị vào ô input
         e.target.value = formattedValue + " VNĐ";
     });
-// end format tiền trong input
+    // end format tiền trong input
 
 
     // // sửa
     function openCheckinModal(id) {
-    // Tìm đối tượng cần chỉnh sửa
-    const data = @json($phiphatsinhs).find(phiphatsinhs => phiphatsinhs.id === id);
-    // Gán giá trị cho các trường trong modal
-    const modal = document.getElementById('checkinModal'); // ID của modal
-    modal.querySelector('#name').value = data.name || '';
-    modal.querySelector('#description').value = data.description || '';
-    modal.querySelector('#price').value = data.price || '';
+        // Tìm đối tượng cần chỉnh sửa
+        const data = @json($phiphatsinhs).find(phiphatsinhs => phiphatsinhs.id === id);
+        // Gán giá trị cho các trường trong modal
+        const modal = document.getElementById('checkinModal'); // ID của modal
+        modal.querySelector('#name').value = data.name || '';
+        modal.querySelector('#description').value = data.description || '';
+        modal.querySelector('#price').value = data.price || '';
 
-    // Xử lý select để chọn đúng giá trị
-    const bookingSelect = modal.querySelector('#booking_id');
-    const valueToSelect = String(data.booking_id); // Chuyển thành chuỗi để so sánh chính xác
-    Array.from(bookingSelect.options).forEach(option => {
-        option.selected = String(option.value) === valueToSelect;
-    });
+        // Xử lý select để chọn đúng giá trị
+        const bookingSelect = modal.querySelector('#booking_id');
+        const valueToSelect = String(data.booking_id); // Chuyển thành chuỗi để so sánh chính xác
+        Array.from(bookingSelect.options).forEach(option => {
+            option.selected = String(option.value) === valueToSelect;
+        });
 
-    // Hiển thị hình ảnh hiện tại nếu có
-    const currentImageContainer = modal.querySelector('#currentImageContainer');
-    const currentImage = modal.querySelector('#currentImage');
-    if (data.image) {
-        currentImage.src = `/storage/${data.image}`;
-        currentImageContainer.style.display = 'block';
-    } else {
-        currentImageContainer.style.display = 'none';
+        // Hiển thị hình ảnh hiện tại nếu có
+        const currentImageContainer = modal.querySelector('#currentImageContainer');
+        const currentImage = modal.querySelector('#currentImage');
+        if (data.image) {
+            currentImage.src = `/storage/${data.image}`;
+            currentImageContainer.style.display = 'block';
+        } else {
+            currentImageContainer.style.display = 'none';
+        }
+
+        // Cập nhật hành động submit form
+        const editForm = modal.querySelector('#editForm');
+        editForm.action = '{{ route('phiphatsinhs.update', ': id ') }}'.replace(':id', id);
+        // Hiển thị modal
+        const bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.show();
     }
-
-    // Cập nhật hành động submit form
-    const editForm = modal.querySelector('#editForm');
-    editForm.action = '{{ route('phiphatsinhs.update', ':id') }}'.replace(':id', id);
-    // Hiển thị modal
-    const bootstrapModal = new bootstrap.Modal(modal);
-    bootstrapModal.show();
-}
 
 
     // // endsuaw
