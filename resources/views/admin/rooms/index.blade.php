@@ -110,11 +110,12 @@
                                     <tr>
                                         <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
+                                        <th>Hình Ảnh</th>
                                         <th>Loại Phòng</th>
                                         <th>Giá</th>
-                                        <th>Số Người Tối Đa</th>
+                                        <th>Sức chứa</th>
                                         <th>Trạng Thái</th>
-                                        <th>Hình Ảnh</th>
+
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -123,31 +124,6 @@
                                         <tr>
                                             <td>{{ $room->roomId_number }}</td>
                                             <td>{{ $room->title }}</td>
-                                            <td>{{ $room->roomType->type ?? 'Không xác định' }}</td>
-                                            <td>{{ number_format($room->price, 0, ',', '.') }} VND</td>
-                                            <td>{{ $room->max_people }}</td>
-                                            <td>
-                                                @switch($room->status)
-                                                    @case(0)
-                                                        Sẵn sàng
-                                                    @break
-
-                                                    @case(1)
-                                                        Đã cọc
-                                                    @break
-
-                                                    @case(2)
-                                                        Đang sử dụng
-                                                    @break
-
-                                                    @case(3)
-                                                        Hỏng
-                                                    @break
-
-                                                    @default
-                                                        Không xác định
-                                                @endswitch
-                                            </td>
                                             <td>
                                                 @if (!empty($room->image_room))
                                                     @foreach (json_decode($room->image_room, true) as $image)
@@ -158,6 +134,32 @@
                                                     Không có ảnh
                                                 @endif
                                             </td>
+                                            <td>{{ $room->roomType->type ?? 'Không xác định' }}</td>
+                                            <td>{{ number_format($room->price, 0, ',', '.') }} VND</td>
+                                            <td>{{ $room->max_people }} Người</td>
+                                            <td>
+                                                @switch($room->status)
+                                                    @case(0)
+                                                        <span class="badge bg-success">Sẵn sàng</span>
+                                                    @break
+
+                                                    @case(1)
+                                                    <span class="badge bg-warning">Đã cọc</span>
+                                                    @break
+
+                                                    @case(2)
+                                                    <span class="badge bg-info">Đang sử dụng</span>
+                                                    @break
+
+                                                    @case(3)
+                                                    <span class="badge bg-danger">Hỏng</span>
+                                                    @break
+
+                                                    @default
+                                                    <span class="badge bg-bg-secondary">Không xác định</span>
+                                                @endswitch
+                                            </td>
+
 
                                             <td>
                                                 <a href="{{ route('rooms.edit', $room->id) }}"

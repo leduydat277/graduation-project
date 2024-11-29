@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
 use Illuminate\Support\Str;
-
 class CheckInCheckOutController extends RoutingController
 {
     public function index(Request $request)
@@ -23,12 +22,16 @@ class CheckInCheckOutController extends RoutingController
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->select(
                 'bookings.*',
-                'users.name as user_name', 'users.email as user_email', 'users.phone as user_phone',
+                'users.name as user_name',
+                'users.email as user_email',
+                'users.phone as user_phone',
                 'room_types.type as room_type',
                 'rooms.id as room_id'
             )
             ->get();
+
         $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
+
         return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
 
@@ -63,7 +66,7 @@ class CheckInCheckOutController extends RoutingController
             ]);
         }
         $phiphatsinhs = PhiPhatSinh::where('booking_id', $id)->get();
-        foreach ($phiphatsinhs as $phi){
+        foreach ($phiphatsinhs as $phi) {
             $phi->status = 1;
             $phi->save();
         }
@@ -76,7 +79,7 @@ class CheckInCheckOutController extends RoutingController
             }
         }
         if ($booking->check_out_date <= $currentTimestamp) {
-            //xóa dương vô cực cũ, xong đặt dương vô cực từ now 
+            //xóa dương vô cực cũ, xong đặt dương vô cực từ now
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)
                 ->andWhere('to', 0);
         }
@@ -115,8 +118,8 @@ class CheckInCheckOutController extends RoutingController
     {
         $booking = Booking::find($request->id);
         $manage_status_room = ManageStatusRoom::where('from', $booking->check_in_date)
-        ->where('status', 0)
-        ->first();
+            ->where('status', 0)
+            ->first();
         $manage_status_room->status = 1;
         $manage_status_room->save();
         $booking->status = 5;

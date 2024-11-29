@@ -38,7 +38,16 @@
                             class="fw-bold">{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</span></p>
                     <p><strong>Trạng Thái Thanh Toán:</strong>
                         <span
-                            class="badge {{ $payment->payment_status == 3 ? 'bg-success' : 'bg-warning' }}">{{ $payment->payment_status == 3 ? 'Đã thanh toán' : 'Chưa thanh toán' }}</span>
+                            class="badge @if ($payment->payment_status == 3 || $payment->payment_status == 2) bg-success
+                            @else
+                            bg-warning @endif">
+                            @if ($payment->payment_status == 3)
+                                Đã thanh toán tổng tiền
+                            @endif
+                            @if ($payment->payment_status == 2)
+                                Đã thanh toán cọc
+                            @endif
+                        </span>
                     </p>
                 </div>
 
@@ -55,7 +64,21 @@
                     <p><strong>Số Tiền Cọc:</strong> {{ number_format($payment->booking->tien_coc) }} VNĐ</p>
                     <p><strong>Trạng Thái Đặt Phòng:</strong>
                         <span
-                            class="badge {{ $payment->booking->status == 1 ? 'bg-info' : 'bg-danger' }}">{{ $payment->booking->status == 1 ? 'Đang sử dụng' : 'Đã hủy' }}</span>
+                            class="badge @if ($payment->booking->status == 3 || $payment->payment_status == 2) bg-success
+                            @elseif ($payment->booking->status == 4)
+                            bg-primary
+                            @else
+                            bg-warning @endif">
+                            @if ($payment->booking->status == 3)
+                                Đã thanh toán tổng tiền
+                            @endif
+                            @if ($payment->booking->status == 2)
+                                Đã thanh toán cọc
+                            @endif
+                            @if ($payment->booking->status == 4)
+                            Đang sử dụng
+                        @endif
+                        </span>
                     </p>
                 </div>
 
@@ -73,7 +96,7 @@
 
             <!-- Nút Quay Về -->
             <div class="mt-4 text-center">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">Quay về</a>
+                <a href="{{route('payments.index')}}" class="btn btn-secondary">Quay về</a>
             </div>
         </div>
     </div>

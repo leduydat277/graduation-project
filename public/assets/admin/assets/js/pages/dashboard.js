@@ -257,37 +257,50 @@ $(document).ready(function () {
         alert('Lỗi khi tải dữ liệu từ API');
       }
     },
+    pageLength: 5,
+    lengthMenu: [5, 10, 25, 50],
     columns: [
       {
         data: 'room_details.title',
         render: function (data, type, row) {
           return `
-              <div class="d-flex align-items-center">
-                <div class="avatar-sm bg-light rounded p-1 me-2">
-                  <img src="assets/images/products/img-1.png" alt="" class="img-fluid d-block" />
+                <div class="d-flex align-items-center">
+                  <div class="avatar-sm bg-light rounded p-1 me-2">
+                    <img src="assets/images/products/img-1.png" alt="" class="img-fluid d-block" />
+                  </div>
+                  <div>
+                    <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><a href="">${data}</a></h5>
+                    <span class="text-muted">${row.room_details.room_type.type}</span>
+                  </div>
                 </div>
-                <div>
-                  <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><a href="">${data}</a></h5>
-                  <span class="text-muted">${row.room_details.room_type.type}</span>
-                </div>
-              </div>
-            `;
-        },
+              `;
+        }
       },
       {
         data: 'room_details.price',
         render: function (data) {
-          return `<h5 class="fs-14 my-1 fw-normal">${data}vnđ</h5>
-          <span class="text-muted">Giá</span>`;
+          const formattedPrice = new Intl.NumberFormat('vi-VN').format(data);
+          return `<h5 class="fs-14 my-1 fw-normal">${formattedPrice} VNĐ</h5>
+            <span class="text-muted">Giá</span>`;
         }
       },
       {
         data: 'count',
         render: function (data) {
           return `<h5 class="fs-14 my-1 fw-normal">${data}</h5>
-          <span class="text-muted">Lượt đặt</span>`;
+            <span class="text-muted">Lượt đặt</span>`;
         }
       }
-    ]
+    ],
+    language: {
+      paginate: {
+        next: 'Tiếp',
+        previous: 'Trước'
+      },
+      lengthMenu: 'Hiển thị _MENU_ mục',
+      info: 'Hiển thị từ _START_ đến _END_ trên tổng _TOTAL_ mục',
+      infoEmpty: 'Không có dữ liệu để hiển thị',
+      emptyTable: 'Không có dữ liệu'
+    }
   });
 });

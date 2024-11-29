@@ -23,11 +23,11 @@ class RoomAssetController extends Controller
         // Lấy từ khóa tìm kiếm từ request
 
         $roomassets = RoomAsset::query()
+            ->with('room.roomType')
             ->select('room_id', DB::raw('COUNT(*) as asset_count'))
             ->with('room') // Đếm số lượng tiện nghi cho từng phòng
             ->groupBy('room_id')
             ->paginate(10);
-
         // Truyền dữ liệu qua view
         return view(self::VIEW_PATH . __FUNCTION__, compact(['roomassets'], 'title'));
     }

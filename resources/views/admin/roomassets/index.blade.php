@@ -70,7 +70,7 @@
                                 <tbody>
                                     @foreach ($roomassets as $roomasset)
                                         <tr>
-                                            <td>{{ $roomasset['room']['roomId_number'] ?? 'Không xác định' }}</td>
+                                            <td>{{ $roomasset->room->roomId_number ?? 'Không xác định' }}</td>
                                             <td>{{ $roomasset['room']['title'] ?? 'Không xác định' }}</td>
                                             <td><a href="{{ route('room-assets.show', $roomasset['room']['id']) }}">{{ $roomasset['asset_count'] ?? 0 }}
                                                     tiện nghi</a></td>

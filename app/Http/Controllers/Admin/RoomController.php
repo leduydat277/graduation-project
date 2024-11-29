@@ -64,7 +64,7 @@ class RoomController extends Controller
         $roomId = $roomId ? $roomId->id + 1 : 1;
 
         $roomTypes = RoomType::all();
-
+        
         return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'roomTypes', 'roomId'));
     }
 

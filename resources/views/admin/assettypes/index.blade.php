@@ -3,7 +3,6 @@
     {{ $title }}
 @endsection
 @section('css')
-    <!-- App favicon và các css cần thiết -->
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
     <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
         type="text/css" />
@@ -33,7 +32,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <!-- Hiển thị thông báo thành công -->
+
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
@@ -42,7 +41,6 @@
                                 </div>
                             @endif
 
-                            <!-- Hiển thị thông báo lỗi -->
                             @if (session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     {{ session('error') }}
@@ -50,6 +48,7 @@
                                         aria-label="Close"></button>
                                 </div>
                             @endif
+
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
                                     <form method="GET" action="{{ route('asset-types.index') }}">
@@ -78,7 +77,7 @@
                                         <th class="sort" data-sort="id">
                                             <a
                                                 href="{{ route('asset-types.index', ['search' => $search, 'sort_by' => 'id', 'sort_order' => $sortBy == 'id' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
-                                                ID
+                                                Mã tiện nghi
                                                 @if ($sortBy == 'id')
                                                     @if ($sortOrder == 'asc')
                                                         ↑
@@ -88,9 +87,8 @@
                                                 @endif
                                             </a>
                                         </th>
-                                        <th class="sort" data-sort="name">
-                                            Tên loại tiện nghi
-                                        </th>
+                                        <th class="sort" data-sort="name">Tên loại tiện nghi</th>
+                                        <th class="sort" data-sort="image">Hình ảnh</th>
                                         <th class="sort" data-sort="action">Hành động</th>
                                     </tr>
                                 </thead>
@@ -103,8 +101,16 @@
                                                         value="{{ $assetType->id }}">
                                                 </div>
                                             </td>
-                                            <td>{{ $assetType->id }}</td>
+                                            <td>{{ $assetType->assets_number_id }}</td>
                                             <td>{{ $assetType->name }}</td>
+                                            <td>
+                                                @if ($assetType->image)
+                                                    <img src="{{ asset('storage/' . $assetType->image) }}" alt="Hình ảnh"
+                                                        width="100">
+                                                @else
+                                                    Không có hình ảnh
+                                                @endif
+                                            </td>
                                             <td>
                                                 <a href="{{ route('asset-types.edit', $assetType->id) }}"
                                                     class="btn btn-warning">Sửa</a>
@@ -127,7 +133,8 @@
                                             colors="primary:#121331,secondary:#08a88a"
                                             style="width:75px;height:75px"></lord-icon>
                                         <h5 class="mt-2">Xin lỗi! Không có kết quả</h5>
-                                        <p class="text-muted mb-0">Không tìm thấy loại tiện nghi nào phù hợp với tìm kiếm của
+                                        <p class="text-muted mb-0">Không tìm thấy loại tiện nghi nào phù hợp với tìm kiếm
+                                            của
                                             bạn.</p>
                                     </div>
                                 </div>
@@ -138,9 +145,9 @@
                             {{ $assetTypes->appends(request()->input())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
-                </div><!-- end card-body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('js')
@@ -154,7 +161,8 @@
 
                 Swal.fire({
                     title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của loại tiện nghi " + assetType + "!",
+                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của loại tiện nghi " + assetType +
+                        "!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
