@@ -163,7 +163,7 @@ class DashboardController
             $todayStart = Carbon::now()->startOfDay()->timestamp;
             $todayEnd = Carbon::now()->endOfDay()->timestamp;
 
-            $bookingToday = Booking::select('room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+            $bookingToday = Booking::select('id','room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
                 ->with('room')
                 ->whereBetween('created_at', [$todayStart, $todayEnd])
                 ->get();
