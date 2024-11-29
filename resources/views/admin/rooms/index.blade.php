@@ -122,7 +122,7 @@
                                 <tbody>
                                     @foreach ($rooms as $room)
                                         <tr>
-                                            <td>{{ $room->roomType->roomType_number }}</td>
+                                            <td>{{ $room->roomId_number }}</td>
                                             <td>{{ $room->title }}</td>
                                             <td>
                                                 @if (!empty($room->image_room))

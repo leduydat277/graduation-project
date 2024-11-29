@@ -80,7 +80,7 @@
                             <tbody>
                                 @forelse ($statusRooms as $statusRoom)
                                     <tr>
-                                        <td>{{ $statusRoom['room']['room_type']['roomType_number'] ?? 'Không xác định' }}</td>
+                                        <td>{{ $statusRoom['room']['roomId_number'] ?? 'Không xác định' }}</td>
                                         <td>{{ $statusRoom['room']['title'] ?? 'Không xác định' }}</td>
                                         <td>
                                             @switch($statusRoom['status'])

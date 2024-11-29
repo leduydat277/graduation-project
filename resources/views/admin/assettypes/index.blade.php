@@ -133,7 +133,8 @@
                                             colors="primary:#121331,secondary:#08a88a"
                                             style="width:75px;height:75px"></lord-icon>
                                         <h5 class="mt-2">Xin lỗi! Không có kết quả</h5>
-                                        <p class="text-muted mb-0">Không tìm thấy loại tiện nghi nào phù hợp với tìm kiếm của
+                                        <p class="text-muted mb-0">Không tìm thấy loại tiện nghi nào phù hợp với tìm kiếm
+                                            của
                                             bạn.</p>
                                     </div>
                                 </div>
@@ -160,7 +161,8 @@
 
                 Swal.fire({
                     title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của loại tiện nghi " + assetType + "!",
+                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của loại tiện nghi " + assetType +
+                        "!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
