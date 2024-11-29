@@ -40,7 +40,7 @@
                             <div class="col-md-6">
                                 <h6 class="text-muted">Thông tin đơn hàng</h6>
                                 <div class="border rounded p-3 mb-3">
-                                    <p><strong>Mã Đơn:</strong> <span class="text-primary">{{ $booking->id }}</span></p>
+                                    <p><strong>Mã Đơn:</strong> <span class="text-primary">{{ $booking->booking_number_id }}</span></p>
                                     <p><strong>Mã Check-in:</strong> {{ $booking->code_check_in }}</p>
                                     <p><strong>Loại phòng:</strong> {{ $booking->room->roomType->type ?? 'Không rõ' }}</p>
                                     <p><strong>Tên Phòng:</strong> {{ $booking->room->title }}</p>

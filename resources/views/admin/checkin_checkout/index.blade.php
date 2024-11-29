@@ -375,10 +375,10 @@
 
                 ],
                 data: bookingsData.map(booking => [
-                    booking.id,
-                    booking.user_name,
-                    booking.user_email,
-                    booking.user_phone,
+                    booking.booking_number_id,
+                    booking.last_name+' '+booking.first_name,
+                    booking.email,
+                    booking.phone,
                     booking.room_id,
                     booking.room_type,
                     booking.check_in_date,

@@ -117,7 +117,7 @@
                                         <img src="{{ asset('storage/' . $booking->room->image_room) }}" alt="Room Image"
                                             class="img-fluid" style="max-width: 100px;">
                                     </td>
-                                    <td>{{ $booking->user->name }}</td>
+                                    <td>{{ $booking->last_name.' '.$booking->first_name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ $booking->room->title }}</td>
@@ -125,7 +125,7 @@
                                         <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
-                                    
+
                                     <td>
                                         @switch($booking['status'])
                                             @case(0)

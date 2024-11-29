@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+use Str;
 use function Laravel\Prompts\error;
 
 class BookingController
@@ -132,9 +133,12 @@ class BookingController
                 }
             }
 
+            $bookingNumberId = Str::upper(Str::random(5));
+
             if ($request->user_id) {
                 $booking = Booking::create([
                     "room_id" => $room_id,
+                    'booking_number_id' => $bookingNumberId,
                     "user_id" => $user_id,
                     "first_name" => $first_name,
                     "last_name" => $last_name,
@@ -150,6 +154,7 @@ class BookingController
             } else {
                 $booking = Booking::create([
                     "room_id" => $room_id,
+                    'booking_number_id' => $bookingNumberId,
                     "first_name" => $first_name,
                     "last_name" => $last_name,
                     "address" => $address,
@@ -162,7 +167,11 @@ class BookingController
                     "created_at" => $todayTimestamp
                 ]);
             }
+
+            $paymentsIdNumber = Str::upper(Str::random(5));
+
             Payment::create([
+                "payments_id_number" => $paymentsIdNumber,
                 "booking_id" => $booking->id,
                 "total_price" => $depositAmount,
                 "payment_method" => 1,
@@ -235,7 +244,7 @@ class BookingController
 
             $paymentGatewayResponse = json_encode($validatedData);
 
-            if($request->input('vnp_ResponseCode') !== 00){
+            if ($request->input('vnp_ResponseCode') != 00) {
                 return response()->json([
                     "type" => "error",
                     "message" => "Giao dịch không thành công."
@@ -246,20 +255,31 @@ class BookingController
             if (!$booking) {
                 return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
             }
-            $room = Room::select('id', 'title')->where("id", $booking->room_id)->first();
+            $room = Room::select('id', 'title', 'status')->where("id", $booking->room_id)->first();
 
             $check_in_code = rand(100000, 999999);
             $booking->code_check_in = $check_in_code;
             $booking->status = 2;
+            $room->status = 1;
             $booking->save();
 
             $currentTimestamp = time();
+
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('dmY');
+
+            $todayInt = Carbon::createFromFormat('dmY', (string)$today, 'Asia/Ho_Chi_Minh');
+
+            $todayTimestamp = $todayInt->timestamp;
+
             Payment::where("booking_id", "=", $id)->update([
+                'payment_date' => $todayTimestamp,
                 "payment_status" => 2,
                 "vnp_BankCode" => $vnpBankCode,
                 "updated_at" => $currentTimestamp,
                 "vnp_TransactionNo" => $paymentGatewayResponse,
             ]);
+
+            $room->save();
 
             $from_new =  (new DateTime())->setTimestamp($booking->check_in_date)->format('Y-m-d');
             $to_new = (new DateTime())->setTimestamp($booking->check_out_date)->format('Y-m-d');
