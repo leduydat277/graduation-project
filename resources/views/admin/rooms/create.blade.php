@@ -12,6 +12,26 @@
     <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single{
+            height: 36px !important;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            margin-top: 4px;
+            margin-left: 6px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            margin-top: 4px;
+        }
+        
+    </style>
 @endsection
 
 @section('content')
@@ -33,13 +53,14 @@
 
                     <div class="mb-3">
                         <label for="room_type" class="form-label">Loại Phòng</label>
-                        <select class="form-control" id="room_type" name="room_type">
+                        <select class="form-control select2" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>
                             <!-- Loop through room types -->
                             @foreach ($roomTypes as $type)
-                                <option value="{{ $type->id }}" dt-value={{ $type->roomType_number }}
+                                <option value="{{ $type->id }}" dt-value="{{ $type->roomType_number }}"
                                     {{ old('room_type') == $type->id ? 'selected' : '' }}>
-                                    {{ $type->type }}</option>
+                                    {{ $type->type }}
+                                </option>
                             @endforeach
                         </select>
                         @error('room_type')
@@ -136,8 +157,22 @@
 @endsection
 
 @section('js')
+    <!-- CSS Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- JS Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#room_type').select2({
+                placeholder: "Chọn loại phòng",
+                allowClear: true
+            });
+        });
+    </script>
     <script>
         function addImageGallery() {
             let id = 'gen' + '_' + Math.random().toString(36).substring(2, 15).toLowerCase();
