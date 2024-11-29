@@ -23,10 +23,16 @@
                 @method('PUT') <!-- Đặt phương thức PUT cho form chỉnh sửa -->
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên Loại Tiện Nghi</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên loại tiện nghi" value="{{ $assetType->name }}">
+                    <input type="text" class="form-control" id="name" name="name"
+                        placeholder="Nhập tên loại tiện nghi" value="{{ $assetType->name }}">
                     @error('name')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="type" class="form-label">Mã Tiện Nghi</label>
+                    <input type="text" class="form-control" id="assets_number_id" name="assets_number_id"
+                        placeholder="Mã Tiện Nghi" readonly value="{{ $assetType->assets_number_id }}">
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Mô Tả Loại Tiện Nghi</label>
@@ -44,7 +50,8 @@
                     @if ($assetType->image)
                         <div class="mt-3">
                             <label>Hình Ảnh Hiện Tại:</label>
-                            <img src="{{ asset('storage/' . $assetType->image) }}" alt="Hình Ảnh Hiện Tại" class="img-fluid" style="max-width: 100%; height: auto;">
+                            <img src="{{ asset('storage/' . $assetType->image) }}" alt="Hình Ảnh Hiện Tại"
+                                class="img-fluid" style="max-width: 100%; height: auto;">
                         </div>
                     @endif
                 </div>

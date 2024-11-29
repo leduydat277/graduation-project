@@ -77,7 +77,7 @@
                                         <th class="sort" data-sort="id">
                                             <a
                                                 href="{{ route('asset-types.index', ['search' => $search, 'sort_by' => 'id', 'sort_order' => $sortBy == 'id' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
-                                                ID
+                                                Mã tiện nghi
                                                 @if ($sortBy == 'id')
                                                     @if ($sortOrder == 'asc')
                                                         ↑
@@ -101,7 +101,7 @@
                                                         value="{{ $assetType->id }}">
                                                 </div>
                                             </td>
-                                            <td>{{ $assetType->id }}</td>
+                                            <td>{{ $assetType->assets_number_id }}</td>
                                             <td>{{ $assetType->name }}</td>
                                             <td>
                                                 @if ($assetType->image)

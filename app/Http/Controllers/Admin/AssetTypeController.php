@@ -37,7 +37,9 @@ class AssetTypeController extends Controller
     public function create()
     {
         $title = 'Thêm loại tài sản';
-        return view(self::VIEW_PATH . __FUNCTION__, compact('title'));
+        $assets = AssetType::select('id')->orderBy('id','desc')->first();
+        $assets->id = $assets->id+1;
+        return view(self::VIEW_PATH . __FUNCTION__, compact('assets','title'));
     }
 
     public function store(AssetTypeRequest $request)
