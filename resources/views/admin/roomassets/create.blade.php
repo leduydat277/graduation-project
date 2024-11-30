@@ -12,6 +12,26 @@
     <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 36px !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            margin-top: 4px;
+            margin-left: 6px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            margin-top: 4px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -31,7 +51,7 @@
 
                     <div class="mb-3">
                         <label for="room_id" class="form-label">Tên Phòng</label>
-                        <select class="form-control" id="room_id" name="room_id">
+                        <select class="form-control select2" id="room_id" name="room_id">
                             <option value="">Chọn phòng</option>
                             @foreach ($rooms as $room)
                                 <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
@@ -46,7 +66,7 @@
 
                     <div class="mb-3">
                         <label for="asset_type_id" class="form-label">Loại Tiện Nghi</label>
-                        <select class="form-control" id="asset_type_id" name="assets_type_id">
+                        <select class="form-control select2" id="asset_type_id" name="assets_type_id">
                             <option value="">Chọn loại tiện nghi</option>
                             @foreach ($assetTypes as $assetType)
                                 <option value="{{ $assetType->id }}"
@@ -64,7 +84,7 @@
                         <label for="status" class="form-label">Trạng Thái</label>
                         <select name="status" class="form-select" id="">
                             <option value="" selected disabled>Chọn trạng thái</option>
-                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Đang sử dụng</option>
+                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Hoạt động</option>
                             <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Tạm dừng sử dụng</option>
                         </select>
                         @error('status')
@@ -82,6 +102,16 @@
 @endsection
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Chọn một tùy chọn",
+                allowClear: true
+            });
+        });
+    </script>
 @endsection

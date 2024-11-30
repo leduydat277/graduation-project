@@ -98,7 +98,7 @@
                     <table id="bookingTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Mã check-in</th>
+                                <th>Mã đặt</th>
                                 <th>Ảnh phòng</th>
                                 <th>Khách hàng</th>
                                 <th>Ngày đến</th>
@@ -112,7 +112,7 @@
                         <tbody>
                             @foreach ($bookings as $booking)
                                 <tr>
-                                    <td>{{ $booking->code_check_in }}</td>
+                                    <td>{{ $booking->booking_number_id }}</td>
                                     <td>
                                         <img src="{{ asset('storage/' . $booking->room->image_room) }}" alt="Room Image"
                                             class="img-fluid" style="max-width: 100px;">

@@ -17,20 +17,49 @@ class RoomAssetController extends Controller
 
     public function index(Request $request)
     {
-        // Tiêu đề trang
         $title = 'Danh sách tiện nghi phòng';
-
-        // Lấy từ khóa tìm kiếm từ request
-
-        $roomassets = RoomAsset::query()
-            ->with('room.roomType')
-            ->select('room_id', DB::raw('COUNT(*) as asset_count'))
-            ->with('room') // Đếm số lượng tiện nghi cho từng phòng
-            ->groupBy('room_id')
-            ->paginate(10);
+    
+        // Lấy dữ liệu tìm kiếm và sắp xếp từ request
+        $search = $request->get('search');
+        $sort = $request->get('sort');
+    
+        $query = RoomAsset::query()
+            ->join('rooms', 'rooms.id', '=', 'roomassets.room_id') // Join bảng rooms để có thể sắp xếp theo rooms.title
+            ->select('roomassets.room_id', 'rooms.title', DB::raw('COUNT(roomassets.id) as asset_count'))
+            ->groupBy('roomassets.room_id', 'rooms.title'); // Nhóm theo room_id và rooms.title
+    
+        // Tìm kiếm theo tên phòng hoặc mã phòng
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('rooms.title', 'like', "%$search%")
+                  ->orWhere('rooms.roomId_number', 'like', "%$search%");
+            });
+        }
+    
+        // Sắp xếp dữ liệu
+        switch ($sort) {
+            case 'room_name_asc':
+                $query->orderBy('rooms.title', 'asc');
+                break;
+            case 'room_name_desc':
+                $query->orderBy('rooms.title', 'desc');
+                break;
+            case 'asset_count_asc':
+                $query->orderBy('asset_count', 'asc');
+                break;
+            case 'asset_count_desc':
+                $query->orderBy('asset_count', 'desc');
+                break;
+            default:
+                $query->orderBy('rooms.title', 'asc'); // Mặc định sắp xếp theo tên phòng
+        }
+    
+        // Phân trang
+        $roomassets = $query->paginate(10);
+    
         // Truyền dữ liệu qua view
-        return view(self::VIEW_PATH . __FUNCTION__, compact(['roomassets'], 'title'));
-    }
+        return view(self::VIEW_PATH . __FUNCTION__, compact('roomassets', 'title'));
+    }    
 
     public function show($id)
     {
@@ -87,7 +116,7 @@ class RoomAssetController extends Controller
 
         $currentAssets = RoomAsset::where('room_id', $id)->pluck('assets_type_id')->toArray();
 
-        $assetTypes = AssetType::select('id','name')->whereNotIn('id', $currentAssets)->where('status', 0)->get();
+        $assetTypes = AssetType::select('id', 'name')->whereNotIn('id', $currentAssets)->where('status', 0)->get();
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'room', 'assetTypes'));
     }

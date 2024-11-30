@@ -13,18 +13,18 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     <h4 class="card-title mb-0">{{ $title }}</h4>
                 </div>
 
                 <div class="card-body">
-                    <div class="table-responsive table-card mt-3 mb-1">
-                        <table class="table align-middle table-nowrap">
+                    <div class="table-responsive mt-3 mb-1">
+                        <table class="table table-bordered align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>Tên phòng</th>
                                     <th>Diện tích</th>
-                                    <th>Giá</th>
+                                    <th>Giá (VNĐ)</th>
                                     <th>Số người tối đa</th>
                                     <th>Trạng thái</th>
                                 </tr>
@@ -34,43 +34,46 @@
                                     <tr>
                                         <td>{{ $room->title }}</td>
                                         <td>{{ $room->room_area }} m²</td>
-                                        <td>{{ number_format($room->price) }} VNĐ</td>
+                                        <td>{{ number_format($room->price) }}</td>
                                         <td>{{ $room->max_people }}</td>
                                         <td>
                                             @switch($room->status)
                                                 @case(0)
                                                     <span class="badge bg-success">Sẵn sàng</span>
-                                                    @break
+                                                @break
+
                                                 @case(1)
                                                     <span class="badge bg-warning">Đã cọc</span>
-                                                    @break
+                                                @break
+
                                                 @case(2)
                                                     <span class="badge bg-danger">Đang sử dụng</span>
-                                                    @break
+                                                @break
+
                                                 @case(3)
                                                     <span class="badge bg-secondary">Hỏng</span>
-                                                    @break
+                                                @break
                                             @endswitch
                                         </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">Không có phòng nào thuộc loại này.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">Không có phòng nào thuộc loại này.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <div class="mt-3">
-                        <a href="{{ route('room-types.index') }}" class="btn btn-danger">Quay lại danh sách loại phòng</a>
+                        <div class="mt-4 text-end">
+                            <a href="{{ route('room-types.index') }}" class="btn btn-danger">Quay lại danh sách loại phòng</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@section('js')
-    <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
-@endsection
+    @section('js')
+        <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    @endsection

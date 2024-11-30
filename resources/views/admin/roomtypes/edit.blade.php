@@ -18,7 +18,7 @@
     <div class="w-100 d-flex justify-content-center align-items-center">
         <div class="col-6">
             <h2 class="text-center">{{ $title }}</h2>
-            <form action="{{ route('room-types.update', $roomType->id) }}" method="POST">
+            <form action="{{ route('room-types.update', $roomType->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Đặt phương thức PUT cho form chỉnh sửa -->
                 <div class="mb-3">
@@ -30,9 +30,24 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="type" class="form-label">Mã Loại Phòng</label>
+                    <label for="roomType_number" class="form-label">Mã Loại Phòng</label>
                     <input type="text" class="form-control" id="roomType_number" name="roomType_number"
                         placeholder="Mã phòng" readonly value="{{ $roomType->roomType_number }}">
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Ảnh Loại Phòng</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    <small class="text-muted">Chọn một ảnh mới nếu muốn thay đổi. (Hỗ trợ định dạng: JPG, PNG, WEBP)</small>
+                    @error('image')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                    @if ($roomType->image)
+                        <div class="mt-3">
+                            <p>Ảnh hiện tại:</p>
+                            <img src="{{ asset('storage/' . $roomType->image) }}" alt="Ảnh loại phòng"
+                                class="img-thumbnail" style="max-width: 200px;">
+                        </div>
+                    @endif
                 </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Cập Nhật Loại Phòng</button>

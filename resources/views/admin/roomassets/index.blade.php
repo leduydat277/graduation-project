@@ -27,33 +27,35 @@
                         <div class="row g-4 mb-3">
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
-                                    <!-- Dropdown Sort -->
-                                    <div class="">
-                                        <select id="sort" name="sort" class="form-select w-auto"
-                                            onchange="handleSortChange()">
-                                            <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sắp xếp
-                                                theo...
-                                            </option>
-                                            <option value="room_name_asc"
-                                                {{ request('sort') == 'room_name_asc' ? 'selected' : '' }}>Tên Phòng: A-Z
-                                            </option>
-                                            <option value="room_name_desc"
-                                                {{ request('sort') == 'room_name_desc' ? 'selected' : '' }}>Tên Phòng: Z-A
-                                            </option>
-                                            <option value="asset_type_asc"
-                                                {{ request('sort') == 'asset_type_asc' ? 'selected' : '' }}>Loại Tiện Nghi:
-                                                A-Z</option>
-                                            <option value="asset_type_desc"
-                                                {{ request('sort') == 'asset_type_desc' ? 'selected' : '' }}>Loại Tiện
-                                                Nghi: Z-A</option>
-                                            <option value="status_asc"
-                                                {{ request('sort') == 'status_asc' ? 'selected' : '' }}>Trạng Thái: A-Z
-                                            </option>
-                                            <option value="status_desc"
-                                                {{ request('sort') == 'status_desc' ? 'selected' : '' }}>Trạng Thái: Z-A
-                                            </option>
-                                        </select>
+                                    <div class="row g-4 mb-3">
+                                        <div class="col-md-6">
+                                            <label for="search" class="form-label">Tìm kiếm</label>
+                                            <input type="text" id="search" name="search" class="form-control"
+                                                placeholder="Tìm theo tên phòng, mã phòng..."
+                                                value="{{ request('search') }}" onkeyup="applyFilters()">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="sort" class="form-label">Sắp xếp</label>
+                                            <select id="sort" name="sort" class="form-select"
+                                                onchange="applyFilters()">
+                                                <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sắp
+                                                    xếp theo...</option>
+                                                <option value="room_name_asc"
+                                                    {{ request('sort') == 'room_name_asc' ? 'selected' : '' }}>Tên Phòng:
+                                                    A-Z</option>
+                                                <option value="room_name_desc"
+                                                    {{ request('sort') == 'room_name_desc' ? 'selected' : '' }}>Tên Phòng:
+                                                    Z-A</option>
+                                                <option value="asset_count_asc"
+                                                    {{ request('sort') == 'asset_count_asc' ? 'selected' : '' }}>Số tiện
+                                                    nghi: Tăng dần</option>
+                                                <option value="asset_count_desc"
+                                                    {{ request('sort') == 'asset_count_desc' ? 'selected' : '' }}>Số tiện
+                                                    nghi: Giảm dần</option>
+                                            </select>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -64,6 +66,7 @@
                                     <tr>
                                         <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
+                                        <th>Ảnh tiện nghi</th>
                                         <th>Số lượng tiện nghi</th>
                                     </tr>
                                 </thead>
@@ -114,4 +117,17 @@
             window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
         }
     </script>
+    <script>
+    function applyFilters() {
+        const search = document.getElementById('search').value;
+        const sort = document.getElementById('sort').value;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('search', search);
+        urlParams.set('sort', sort);
+
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+    }
+</script>
+
 @endsection

@@ -14,8 +14,10 @@ class AssetType extends Model
 
     // Các trường có thể được gán giá trị
     protected $fillable = [
+        'asset_number_id',
         'name',
         'description',
+        'image'
     ];
 
      /**

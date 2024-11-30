@@ -17,7 +17,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">{{ $title }}</h4>
+                    <h4 class="card-title mb-4">{{ $title }}</h4>
                     <div class="col-sm-auto">
                         <a href="{{ route('room-assets.edit', $room->id) }}" class="btn btn-success">
                             <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi phòng
@@ -30,6 +30,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Tên tiện nghi</th>
+                                    <th>Ảnh tiện nghi</th>
                                     <th>Mô tả</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
@@ -39,6 +40,9 @@
                                 @forelse ($asset as $room)
                                     <tr>
                                         <td>{{ $room->assetType->name }}</td>
+                                        <td>
+                                            <img src="{{ Storage::url($room->assetType->image)}}" alt="" width="110px">
+                                        </td>
                                         <td>{{ $room->assetType->description }}</td>
                                         <td>
                                             @if ($room->assetType->status == 0)
