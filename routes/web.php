@@ -31,8 +31,6 @@ Route::get("/test", function (Request $request) {
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
 //Detail
-Route::get('/detail', [DetailController::class, 'index'])
-    ->name('detail');
 Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
 
 //Checkout

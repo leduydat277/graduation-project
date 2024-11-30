@@ -36,7 +36,6 @@ Route::get('all-payment', [PaymentController::class, 'allPayments'])
 Route::post('filter-payment', [PaymentController::class, 'filterPayments'])
     ->name('api.filter-payment');
 
-
 Route::get('donepayment', [BookingController::class, 'vnpay'])
     ->name('api.donepayment');
 
