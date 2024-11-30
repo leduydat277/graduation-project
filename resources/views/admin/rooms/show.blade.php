@@ -92,14 +92,24 @@
                     <div class="col-md-8">{{ $room->description }}</div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-md-4"><strong>Hình Ảnh:</strong></div>
+                    <div class="col-md-4"><strong>Ảnh Thu Nhỏ:</strong></div>
+                    <div class="col-md-8 image-container">
+                        @if ($room->thumbnail_image)
+                            <img src="{{ asset('storage/' . $room->thumbnail_image) }}" alt="Thumbnail Image" width="120" height="120" class="mb-2">
+                        @else
+                            Không có ảnh thu nhỏ
+                        @endif
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Hình Ảnh Phòng:</strong></div>
                     <div class="col-md-8 image-container">
                         @if (!empty($room->image_room))
                             @foreach (json_decode($room->image_room, true) as $image)
                                 <img src="{{ asset('storage/' . $image) }}" alt="Room Image" width="100" height="100" class="me-2 mb-2">
                             @endforeach
                         @else
-                            Không có ảnh
+                            Không có ảnh phòng
                         @endif
                     </div>
                 </div>
