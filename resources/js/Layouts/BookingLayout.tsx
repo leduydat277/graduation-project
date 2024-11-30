@@ -1,9 +1,10 @@
 import { Head } from '@inertiajs/react';
 import '@fontsource/roboto/400.css';
 import { Stack, Grid, Typography, Box } from "@mui/material";
-import {BookingForm} from "../shared/Form/BooKingForm"
+
 import { BottomHeader } from '@/components/Header/BottomHeader';
 import { ScrollableBox } from '@/shared/ScrollableBox';
+import { BookingForm } from '@/shared/Form/BookingForm';
 
 
 interface BookingLayoutProps {
@@ -26,7 +27,7 @@ export default function BookingLayout({ title, children }: BookingLayoutProps) {
           } />
         </Grid>
         <Grid item xs={6} sm={3.5} >
-          <BookingForm />
+          <BookingForm/>
         </Grid>
       </Grid>
      

@@ -1,5 +1,7 @@
 @extends('admin.layouts.admin')
-{{ $title }} -Admin
+@section('title')
+    {{ $title }}
+@endsection
 @section('css')
     <!-- App favicon và các css cần thiết -->
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
@@ -68,17 +70,17 @@
                         <table class="table align-middle table-nowrap">
                             <thead class="table-light">
                                 <tr>
-                                    <th>ID Phòng</th>
+                                    <th>Mã phòng</th>
                                     <th>Tên Phòng</th>
                                     <th>Loại Trạng Thái</th>
                                     <th>Khoảng Thời Gian</th>
-                                    <th>Chi Tiết Booking (nếu có)</th>
+                                    <th>Chi Tiết đơn hàng(nếu có)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($statusRooms as $statusRoom)
                                     <tr>
-                                        <td>{{ $statusRoom['room']['id'] ?? 'Không xác định' }}</td>
+                                        <td>{{ $statusRoom['room']['roomId_number'] ?? 'Không xác định' }}</td>
                                         <td>{{ $statusRoom['room']['title'] ?? 'Không xác định' }}</td>
                                         <td>
                                             @switch($statusRoom['status'])

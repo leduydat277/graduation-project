@@ -10,6 +10,7 @@ class RoomType extends Model
 
     protected $fillable = [
         'type',
+        'roomType_number'
     ];
 
     public $timestamps = false;

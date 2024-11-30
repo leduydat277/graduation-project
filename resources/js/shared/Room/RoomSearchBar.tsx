@@ -25,7 +25,7 @@ export const RoomSearchBar = (props) => {
       </Stack>
       <Stack>
         <Stack direction="row" alignItems="center" spacing={1} pb={1}>
-          <Typography variant="caption">Phòng & khách</Typography>
+          <Typography variant="caption">Room & Guest</Typography>
           <Users />
         </Stack>
         <GuestCount py={2} position={position} />

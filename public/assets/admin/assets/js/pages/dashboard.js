@@ -1,3 +1,6 @@
+import 'https://code.jquery.com/jquery-3.6.0.min.js';
+import 'https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js';
+
 const ctx = document.getElementById('revenueChart').getContext('2d');
 $.get('/api/dashboard', function (data) {
   const months = [
@@ -170,17 +173,134 @@ $.get('/api/dashboard', function (data) {
 });
 
 function createProgress(selector, percentage) {
-    const bar = new ProgressBar.Line(selector, {
-        strokeWidth: 6,
-        color: '#007bff',
-        trailColor: '#e0e0e0',
-        duration: 1400,
-        text: { value: `${percentage}%`, style: { color: '#000' } },
-    });
-    bar.animate(percentage / 100);
-    document.querySelector(selector).classList.add('progress-bar');
+  const bar = new ProgressBar.Line(selector, {
+    strokeWidth: 6,
+    color: '#007bff',
+    trailColor: '#e0e0e0',
+    duration: 1400,
+    text: { value: `${percentage}%`, style: { color: '#000' } }
+  });
+  bar.animate(percentage / 100);
+  document.querySelector(selector).classList.add('progress-bar');
 }
 
-createProgress('#canada-progress', 75);
-createProgress('#greenland-progress', 47);
-createProgress('#russia-progress', 82);
+// Fetch dữ liệu từ API
+fetch('/api/getWeeks')
+  .then(response => response.json())
+  .then(data => {
+    if (data.type === 'success') {
+      const weeks = data.data.map(week => week.week);
+      const earnings = data.data.map(week => week.earnings);
+      const ctx = document
+        .getElementById('weeklyEarningsChart')
+        .getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: weeks,
+          datasets: [
+            {
+              label: 'Doanh thu (VNĐ)',
+              data: earnings,
+              backgroundColor: '#42A5F5',
+              borderColor: '#1E88E5',
+              borderWidth: 1,
+              barThickness: 30
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y', // Biểu đồ dạng thanh ngang
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  return `${tooltipItem.raw.toLocaleString()} VNĐ`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (value) {
+                  return value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  })
+  .catch(error => console.error('Error:', error));
+
+$(document).ready(function () {
+  $('#countRoomOrders').DataTable({
+    serverSide: true,
+    searching: false,
+    ajax: {
+      url: '/api/countRoomOrders',
+      method: 'GET',
+      data: function (d) {
+        return $.extend({}, d, {});
+      },
+      dataSrc: function (json) {
+        return json.data;
+      },
+      error: function () {
+        alert('Lỗi khi tải dữ liệu từ API');
+      }
+    },
+    pageLength: 5,
+    lengthMenu: [5, 10, 25, 50],
+    columns: [
+      {
+        data: 'room_details.title',
+        render: function (data, type, row) {
+          return `
+                <div class="d-flex align-items-center">
+                  <div class="avatar-sm bg-light rounded p-1 me-2">
+                    <img src="assets/images/products/img-1.png" alt="" class="img-fluid d-block" />
+                  </div>
+                  <div>
+                    <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><a href="">${data}</a></h5>
+                    <span class="text-muted">${row.room_details.room_type.type}</span>
+                  </div>
+                </div>
+              `;
+        }
+      },
+      {
+        data: 'room_details.price',
+        render: function (data) {
+          const formattedPrice = new Intl.NumberFormat('vi-VN').format(data);
+          return `<h5 class="fs-14 my-1 fw-normal">${formattedPrice} VNĐ</h5>
+            <span class="text-muted">Giá</span>`;
+        }
+      },
+      {
+        data: 'count',
+        render: function (data) {
+          return `<h5 class="fs-14 my-1 fw-normal">${data}</h5>
+            <span class="text-muted">Lượt đặt</span>`;
+        }
+      }
+    ],
+    language: {
+      paginate: {
+        next: 'Tiếp',
+        previous: 'Trước'
+      },
+      lengthMenu: 'Hiển thị _MENU_ mục',
+      info: 'Hiển thị từ _START_ đến _END_ trên tổng _TOTAL_ mục',
+      infoEmpty: 'Không có dữ liệu để hiển thị',
+      emptyTable: 'Không có dữ liệu'
+    }
+  });
+});

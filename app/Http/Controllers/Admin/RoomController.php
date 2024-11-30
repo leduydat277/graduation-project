@@ -10,6 +10,7 @@ use App\Models\Admin\RoomType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class RoomController extends Controller
@@ -22,11 +23,25 @@ class RoomController extends Controller
         // Lấy từ khóa tìm kiếm
         $search = $request->input('search');
 
-        // Lấy các tham số sắp xếp
-        $sortBy = $request->input('sort_by', 'id'); // Mặc định sắp xếp theo 'id'
-        $sortOrder = $request->input('sort_order', 'desc'); // Mặc định sắp xếp tăng dần
+        // Lấy giá trị sort từ request
+        $sortOption = $request->input('sort', '');
+        $sortOptionsMap = [
+            'room_area_asc' => ['room_area', 'asc'],
+            'room_area_desc' => ['room_area', 'desc'],
+            'max_people_asc' => ['max_people', 'asc'],
+            'max_people_desc' => ['max_people', 'desc'],
+            'price_asc' => ['price', 'asc'],
+            'price_desc' => ['price', 'desc'],
+            'name_asc' => ['name', 'asc'],
+            'name_desc' => ['name', 'desc'],
+            // Thêm các sort option khác nếu cần
+        ];
 
-        // Lấy danh sách phòng với tìm kiếm và sắp xếp
+        // Lấy cột và thứ tự sắp xếp từ map
+        $sortBy = $sortOptionsMap[$sortOption][0] ?? 'id'; // Mặc định sắp xếp theo 'id'
+        $sortOrder = $sortOptionsMap[$sortOption][1] ?? 'desc'; // Mặc định sắp xếp giảm dần
+
+        // Lấy danh sách phòng
         $rooms = Room::with('roomType')
             ->when($search, function ($query, $search) {
                 return $query->where('title', 'LIKE', '%' . $search . '%')
@@ -35,28 +50,33 @@ class RoomController extends Controller
                     });
             })
             ->orderBy($sortBy, $sortOrder)
-            ->paginate(10); // Phân trang với 10 bản ghi mỗi trang
+            ->paginate(10);
 
-        return view(self::VIEW_PATH . __FUNCTION__, compact('rooms', 'search', 'sortBy', 'sortOrder'))
+        return view(self::VIEW_PATH . __FUNCTION__, compact('rooms', 'search', 'sortOption'))
             ->with('title', 'Danh sách Phòng');
     }
 
     public function create()
     {
-
         $title = 'Thêm phòng';
 
-        $roomTypes = RoomType::all();
+        $roomId = Room::select('id')->orderBy('id', 'DESC')->first();
+        $roomId = $roomId ? $roomId->id + 1 : 1;
 
-        return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'roomTypes'));
+        $roomTypes = RoomType::all();
+        
+        return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'roomTypes', 'roomId'));
     }
 
 
     public function store(RoomRequest $request)
     {
+        // dd($request->all());
         $imagePaths = [];
 
-        // Lưu từng ảnh và lưu đường dẫn vào mảng
+        $sPrice = str_replace(',', '', $request->price);
+        $price = (int) $sPrice;
+
         if ($request->hasFile('image_room')) {
             foreach ($request->file('image_room') as $image) {
 
@@ -68,9 +88,10 @@ class RoomController extends Controller
         // Tạo phòng với dữ liệu đầu vào và lưu đường dẫn ảnh dưới dạng JSON
         $room = Room::create([
             'title' => $request->input('title'),
+            'roomId_number' => $request->input('roomId_number'),
             'room_type_id' => $request->input('room_type'),
             'description' => $request->input('description'),
-            'price' => $request->input('price'),
+            'price' => $price,
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
             'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
@@ -110,6 +131,8 @@ class RoomController extends Controller
     {
         $imagePaths = json_decode($room->image_room, true) ?? []; // Lấy ảnh hiện tại nếu có, nếu không thì là mảng rỗng
 
+        $sPrice = str_replace(',', '', $request->input('price'));
+        $price = (int) $sPrice;
         // Nếu có ảnh mới được tải lên, lưu ảnh mới và cập nhật mảng $imagePaths
         if ($request->hasFile('image_room')) {
             // Xóa ảnh cũ khỏi thư mục (nếu cần thiết)
@@ -128,9 +151,10 @@ class RoomController extends Controller
         // Cập nhật dữ liệu phòng với các trường đầu vào mới và ảnh dưới dạng JSON
         $room->update([
             'title' => $request->input('title'),
+            'roomId_number' => $request->input('roomId_number'),
             'room_type_id' => $request->input('room_type'),
             'description' => $request->input('description'),
-            'price' => $request->input('price'),
+            'price' => $price,
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
             'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
@@ -143,7 +167,7 @@ class RoomController extends Controller
     /**
      * Summary of destroy
      * Fix khi push 1 ảnh thì không được xóa hết
-     * 
+     *
      * @param \App\Models\Admin\Room $room
      * @return \Illuminate\Http\RedirectResponse
      */

@@ -37,7 +37,7 @@
                         <select class="form-control" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>
                             @foreach ($roomTypes as $type)
-                                <option value="{{ $type->id }}"
+                                <option value="{{ $type->id }}" dt-value="{{ $type->roomType_number }}"
                                     {{ $room->room_type_id == $type->id ? 'selected' : '' }}>
                                     {{ $type->type }}</option>
                             @endforeach
@@ -45,6 +45,12 @@
                         @error('room_type')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Mã Phòng</label>
+                        <input type="text" class="form-control" id="roomId_number" name="roomId_number"
+                            placeholder="Mã phòng" readonly value="{{ $room->roomId_number }}">
                     </div>
 
                     <div class="mb-3">
@@ -57,8 +63,8 @@
 
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá Mỗi Đêm</label>
-                        <input type="number" class="form-control" id="price" name="price"
-                            placeholder="Nhập giá mỗi đêm" value="{{ old('price', $room->price) }}">
+                        <input type="text" class="form-control" id="price" name="price"
+                            placeholder="Nhập giá mỗi đêm" value="{{ $room->price }}">
                         @error('price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -82,11 +88,10 @@
                         @enderror
                     </div>
 
-                    <!-- Hiển thị ảnh hiện tại và thêm ảnh mới -->
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header d-flex align-items-center justify-content-between bg-primary">
-                                <h4 class="card-title mb-0 text-white">Gallery</h4>
+                                <h4 class="card-title mb-0 text-white">Thư viện ảnh</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -97,9 +102,11 @@
                                             <div class="d-flex flex-wrap justify-content-center">
                                                 @if (!empty($room->image_room))
                                                     @foreach (json_decode($room->image_room, true) as $key => $image)
-                                                        <div class="position-relative m-2" id="gallery_existing_{{ $key }}">
+                                                        <div class="position-relative m-2"
+                                                            id="gallery_existing_{{ $key }}">
                                                             <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
-                                                                class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                                                                class="img-thumbnail"
+                                                                style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
                                                         </div>
                                                     @endforeach
                                                 @else
@@ -108,19 +115,35 @@
                                             </div>
                                         </div>
                                     </div>
-                    
+
                                     <!-- Khối thêm ảnh mới -->
                                     <div class="col-md-12">
                                         <div class="card border-light shadow-sm p-3">
                                             <h5 class="text-center">Thêm Ảnh Mới</h5>
                                             <div id="new-image-uploads">
                                                 <div class="d-flex align-items-center mb-3">
-                                                    <input type="file" class="form-control" name="image_room[]" multiple>
-                                                    <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeImageInput(this)">Xóa</button>
+                                                    <input type="file"
+                                                        class="form-control @error('image_room') is-invalid @enderror"
+                                                        name="image_room[]" multiple>
+                                                    <button type="button" class="btn btn-danger btn-sm ms-2"
+                                                        onclick="removeImageInput(this)">Xóa</button>
                                                 </div>
+                                                <!-- Hiển thị lỗi nếu có -->
+                                                @error('image_room')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+
+                                                @if ($errors->has('image_room.*'))
+                                                    @foreach ($errors->get('image_room.*') as $index => $errorMessages)
+                                                        @foreach ($errorMessages as $error)
+                                                            <span class="text-danger">{{ $error }}</span><br>
+                                                        @endforeach
+                                                    @endforeach
+                                                @endif
                                             </div>
                                             <div class="text-center">
-                                                <button type="button" class="btn btn-primary btn-sm" onclick="addNewImageInput()">+ Thêm ảnh</button>
+                                                <button type="button" class="btn btn-primary btn-sm"
+                                                    onclick="addNewImageInput()">+ Thêm ảnh</button>
                                             </div>
                                         </div>
                                     </div>
@@ -152,15 +175,63 @@
             `;
             document.getElementById('new-image-uploads').insertAdjacentHTML('beforeend', html);
         }
-    
+
         function removeImageGallery(id) {
             if (confirm('Bạn có chắc chắn muốn xóa ảnh này?')) {
                 document.getElementById(id).remove();
             }
         }
-    
+
         function removeImageInput(element) {
             element.parentNode.remove();
         }
+    </script>
+    <script>
+        function removeVietnameseTones(str) {
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Xóa dấu
+                .replace(/đ/g, 'd') // Chuyển đ -> d
+                .replace(/Đ/g, 'D'); // Chuyển Đ -> D
+        }
+
+        document.getElementById('room_type').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const roomName = selectedOption.getAttribute('dt-value');
+
+            if (roomName) {
+                const normalizedRoomName = removeVietnameseTones(roomName);
+
+                const roomCode = normalizedRoomName
+                    .toUpperCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^A-Z0-9_]/g, '');
+
+                document.getElementById('roomId_number').value = roomCode + '_' + {{ $room->id }};
+            } else {
+                document.getElementById('roomId_number').value = '';
+            }
+        });
+    </script>
+    <script>
+        function formatPrice(value) {
+            let val = value.replace(/\D/g, '');
+
+            return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceInput = document.getElementById('price');
+            priceInput.value = formatPrice(priceInput.value);
+        });
+
+        document.getElementById('price').addEventListener('input', function(e) {
+            let cursorPosition = this.selectionStart;
+            const formattedValue = formatPrice(this.value);
+
+            this.value = formattedValue;
+
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
     </script>
 @endsection

@@ -12,6 +12,26 @@
     <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single{
+            height: 36px !important;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            margin-top: 4px;
+            margin-left: 6px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            margin-top: 4px;
+        }
+        
+    </style>
 @endsection
 
 @section('content')
@@ -33,17 +53,25 @@
 
                     <div class="mb-3">
                         <label for="room_type" class="form-label">Loại Phòng</label>
-                        <select class="form-control" id="room_type" name="room_type">
+                        <select class="form-control select2" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>
                             <!-- Loop through room types -->
                             @foreach ($roomTypes as $type)
-                                <option value="{{ $type->id }}" {{ old('room_type') == $type->id ? 'selected' : '' }}>
-                                    {{ $type->type }}</option>
+                                <option value="{{ $type->id }}" dt-value="{{ $type->roomType_number }}"
+                                    {{ old('room_type') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->type }}
+                                </option>
                             @endforeach
                         </select>
                         @error('room_type')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Mã Phòng</label>
+                        <input type="text" class="form-control" id="roomId_number" name="roomId_number"
+                            placeholder="Mã phòng" readonly value="{{ old('roomId_number') }}">
                     </div>
 
                     <div class="mb-3">
@@ -56,7 +84,7 @@
 
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá Mỗi Đêm</label>
-                        <input type="number" class="form-control" id="price" name="price"
+                        <input type="text" class="form-control" id="price" name="price"
                             placeholder="Nhập giá mỗi đêm" value="{{ old('price') }}">
                         @error('price')
                             <span class="text-danger">{{ $message }}</span>
@@ -84,26 +112,39 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Gallery</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Thư viện ảnh</h4>
                                 <button type="button" class="btn btn-primary" onclick="addImageGallery()">Thêm
                                     ảnh</button>
                             </div><!-- end card header -->
+
                             <div class="card-body">
                                 <div class="live-preview">
                                     <div class="row gy-4" id="gallery_list">
                                         <div class="col-md-4" id="gallery_default_item">
-                                            <label for="gallery_default" class="form-label">Image</label>
+                                            <label for="gallery_default" class="form-label">Hình ảnh</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control" name="image_room[]"
-                                                    id="gallery_default">
+                                                <input type="file"
+                                                    class="form-control @error('image_room') is-invalid @enderror"
+                                                    name="image_room[]" id="gallery_default">
                                             </div>
+                                            <!-- Hiển thị lỗi cho từng file -->
+                                            @error('image_room')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                            @if ($errors->has('image_room.*'))
+                                                @foreach ($errors->get('image_room.*') as $index => $errorMessages)
+                                                    @foreach ($errorMessages as $error)
+                                                        <span class="text-danger">{{ $error }}</span><br>
+                                                    @endforeach
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
+
 
 
                     <div class="text-center">
@@ -116,8 +157,22 @@
 @endsection
 
 @section('js')
+    <!-- CSS Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- JS Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#room_type').select2({
+                placeholder: "Chọn loại phòng",
+                allowClear: true
+            });
+        });
+    </script>
     <script>
         function addImageGallery() {
             let id = 'gen' + '_' + Math.random().toString(36).substring(2, 15).toLowerCase();
@@ -141,5 +196,49 @@
                 $('#' + id).remove();
             }
         }
+    </script>
+    <script>
+        function removeVietnameseTones(str) {
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Xóa dấu
+                .replace(/đ/g, 'd') // Chuyển đ -> d
+                .replace(/Đ/g, 'D'); // Chuyển Đ -> D
+        }
+
+        document.getElementById('room_type').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const roomName = selectedOption.getAttribute('dt-value');
+
+            if (roomName) {
+                const normalizedRoomName = removeVietnameseTones(roomName);
+
+                const roomCode = normalizedRoomName
+                    .toUpperCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^A-Z0-9_]/g, '');
+
+                document.getElementById('roomId_number').value = roomCode + '_' + {{ $roomId }};
+            } else {
+                document.getElementById('roomId_number').value = '';
+            }
+        });
+    </script>
+    <script>
+        function formatPrice(value) {
+            let val = value.replace(/\D/g, '');
+
+            return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        document.getElementById('price').addEventListener('input', function(e) {
+            let cursorPosition = this.selectionStart;
+            const formattedValue = formatPrice(this.value);
+
+            this.value = formattedValue;
+
+            // Đặt lại vị trí con trỏ (cursor) sau khi format
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        });
     </script>
 @endsection

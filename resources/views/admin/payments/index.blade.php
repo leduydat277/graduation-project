@@ -73,20 +73,20 @@
                                 style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>User</th>
-                                        <th>Amount</th>
-                                        <th>Payment Method</th>
-                                        <th>Payment Date</th>
-                                        <th>Payment_status</th>
-                                        <th>Action</th>
+                                        <th>Mã thanh toán</th>
+                                        <th>Người dùng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Phương thức thanh toán</th>
+                                        <th>Ngày thanh toán</th>
+                                        <th>Trạng thái thanh toán</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody id="payment-tbody">
                                     @foreach ($payments as $payment)
                                         <tr>
-                                            <td>{{ $payment->booking_id }}</td>
-                                            <td>{{ $payment->booking->user->name ?? 'N/A' }}</td>
+                                            <td>{{ $payment->payments_id_number }}</td>
+                                            <td>{{ $payment->booking->last_name.' '.$payment->booking->first_name ?? 'N/A' }}</td>
                                             <td>{{ number_format($payment->total_price) }} vnđ</td>
                                             <td>{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d-m-Y') }}</td>

@@ -42,7 +42,7 @@ class PaymentController extends Controller
         }
 
         // Lấy danh sách các bản ghi
-        $payments = $query->where('payment_status',  Payment::PAYMENT_STATUS_PAID)
+        $payments = $query->whereIn('payment_status',  Payment::PAYMENT_STATUS_PAID)
             ->orderBy('payment_date', 'desc')
             ->paginate(10);
         // Truyền dữ liệu sang view
@@ -65,6 +65,6 @@ class PaymentController extends Controller
         $pdf = Pdf::loadView('admin.payments.pdf', compact('payment'))
             ->setPaper('A4', 'portrait'); // Hoặc 'landscape' cho khổ ngang
 
-        return $pdf->download('HoaDon_' . $payment->id . '.pdf');
+        return $pdf->download('HoaDon_' . $payment->payments_id_number . '.pdf');
     }
 }

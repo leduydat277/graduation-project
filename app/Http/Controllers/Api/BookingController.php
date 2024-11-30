@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NotificationMessage;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
 use App\Models\ManageStatusRoom;
+use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+use Str;
 use function Laravel\Prompts\error;
 
 class BookingController
@@ -54,14 +57,16 @@ class BookingController
             $email = $request->input('email');
             $room_id = $request->input('room_id');
 
-            $today = Carbon::today()->format('dmY');
-            $todayInt = Carbon::createFromFormat('dmY', (string)$today);
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('dmY');
+
+            $todayInt = Carbon::createFromFormat('dmY', (string)$today, 'Asia/Ho_Chi_Minh');
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
 
             $checkInDateFormat = Carbon::createFromFormat('dmY', (string)$check_in_date)->setTime(14, 0, 0);
             $checkOutDateFormat = Carbon::createFromFormat('dmY', (string)$check_out_date)->setTime(12, 0, 0);
 
+            $todayTimestamp = $todayInt->timestamp;
             $checkInTimestamp = $checkInDateFormat->timestamp;
             $checkOutTimestamp = $checkOutDateFormat->timestamp;
 
@@ -128,9 +133,12 @@ class BookingController
                 }
             }
 
+            $bookingNumberId = Str::upper(Str::random(5));
+
             if ($request->user_id) {
                 $booking = Booking::create([
                     "room_id" => $room_id,
+                    'booking_number_id' => $bookingNumberId,
                     "user_id" => $user_id,
                     "first_name" => $first_name,
                     "last_name" => $last_name,
@@ -141,10 +149,12 @@ class BookingController
                     "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
+                    "created_at" => $todayTimestamp
                 ]);
             } else {
                 $booking = Booking::create([
                     "room_id" => $room_id,
+                    'booking_number_id' => $bookingNumberId,
                     "first_name" => $first_name,
                     "last_name" => $last_name,
                     "address" => $address,
@@ -154,9 +164,14 @@ class BookingController
                     "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
+                    "created_at" => $todayTimestamp
                 ]);
             }
+
+            $paymentsIdNumber = Str::upper(Str::random(5));
+
             Payment::create([
+                "payments_id_number" => $paymentsIdNumber,
                 "booking_id" => $booking->id,
                 "total_price" => $depositAmount,
                 "payment_method" => 1,
@@ -229,23 +244,42 @@ class BookingController
 
             $paymentGatewayResponse = json_encode($validatedData);
 
+            if ($request->input('vnp_ResponseCode') != 00) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => "Giao dịch không thành công."
+                ], 400);
+            }
+
             $booking = Booking::where("id", $id)->first();
             if (!$booking) {
                 return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
             }
+            $room = Room::select('id', 'title', 'status')->where("id", $booking->room_id)->first();
 
             $check_in_code = rand(100000, 999999);
             $booking->code_check_in = $check_in_code;
             $booking->status = 2;
+            $room->status = 1;
             $booking->save();
 
             $currentTimestamp = time();
+
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('dmY');
+
+            $todayInt = Carbon::createFromFormat('dmY', (string)$today, 'Asia/Ho_Chi_Minh');
+
+            $todayTimestamp = $todayInt->timestamp;
+
             Payment::where("booking_id", "=", $id)->update([
+                'payment_date' => $todayTimestamp,
                 "payment_status" => 2,
                 "vnp_BankCode" => $vnpBankCode,
                 "updated_at" => $currentTimestamp,
                 "vnp_TransactionNo" => $paymentGatewayResponse,
             ]);
+
+            $room->save();
 
             $from_new =  (new DateTime())->setTimestamp($booking->check_in_date)->format('Y-m-d');
             $to_new = (new DateTime())->setTimestamp($booking->check_out_date)->format('Y-m-d');
@@ -263,8 +297,32 @@ class BookingController
             ];
             $mail->SendCheckinCode("Gửi mã Check in", 'checkincode', $data, $booking->email);
 
+            $title = "Đơn đặt phòng mới";
+            $message = "Khách hàng " . $booking->last_name . ' ' . $booking->first_name . " đã đặt phòng " . $room->title . ".";
+
+            $timestamp = $booking->created_at;
+
+            $date = Carbon::createFromTimestamp($timestamp);
+
+            $formattedDate = $date->format('H:i d-m-Y');
+
+            $messageData = [
+                "date" => $formattedDate,
+                "message" => $message,
+                "booking_id" => $booking->id
+            ];
+
+            Notification::create([
+                "user_id" => 1,
+                "title" => $title,
+                "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
+            ]);
+
+
+            $url = route('success');
+            event(new NotificationMessage($message, $title, $formattedDate));
             return response()->json([
-                "url_redirect" => "url_test",
+                "url_redirect" => $url,
                 "message" => "Thanh toán thành công"
             ], 200);
         } catch (Exception $e) {

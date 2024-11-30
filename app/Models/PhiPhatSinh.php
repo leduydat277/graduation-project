@@ -10,11 +10,12 @@ class PhiPhatSinh extends Model
     use HasFactory;
     protected $table = 'phiphatsinhs'; 
     protected $fillable = [
-        'booking_id', 'name', 'description', 'price'
+        'booking_id', 'name', 'description', 'price' ,'created_at' , 'updated_at'
     ];
+    public $timestamps = false;
 
-    public function booking()
-    {
-        return $this->belongsTo(Booking::class);
-    }
+    protected $casts = [
+        'created_at' => 'integer',
+        'updated_at' => 'integer',
+    ];
 }

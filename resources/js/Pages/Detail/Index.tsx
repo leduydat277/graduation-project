@@ -1,33 +1,49 @@
-
 import BookingLayout from '@/Layouts/BookingLayout';
 import React from 'react';
-import HomeBannner1 from '../../../assets/HomeBanner1.jpg';
 import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
-function DetailRoom() {
 
-  const data = {
-    id: 1,
-    title: "Paris Bastille Opera 11th",
-    subtitle: "Vibrant economy hotel, open to everyone",
-    type: "VIP",
-    price: 30000,
-    status: "Active",
-    description: "The ibis Paris Bastille Opera hotel is located in the historic center of Paris, near the Seine, with easy metro links to Notre Dame, the Louvre, Champs Elysees, department stores, etc, and just 10 minutes from Gare de Lyon, Gare du Nord and the Bercy business district.",
-    image: HomeBannner1
+function DetailRoom({ room }) {
+  console.log('detail room line 7 ', room.price);
+  const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [state.setPrice, state.setSubtitle, state.setIdRoom]);
+ 
+  // if (room) {
+  //    setPrice(room.price);
+  //   }
+  
+  // React.useEffect(() => {
+  //   if (room) {
+  //     setPrice(room.price);
+  //     setSubtitle(room.title);
+  //     setIdRoom(room.id);
+  //   }
+  // }, [room.id]);
+  // console.log('detail room line 15 ', room);
+
+  if (!room) {
+    return <div>No room data available</div>;
   }
-  const { title, subtitle, type, price, status, description, image } = data
-  const [setTitle, setSubtitle] = useBookingStore((state) => [state.setTitle, state.setSubtitle]);
-  setTitle(title)
-  setSubtitle(subtitle)
+
+  const { title, id, description, room_area, price, room_type, ...rest } = room;
+
   return (
-    <>
-<DetailContent {...data} />
-    </>
+    <DetailContent 
+      title={title}
+      id={id}
+      description={description}
+      room_area={room_area}
+      price={price}
+      room_type={room_type}
+      {...rest}
+    />
   );
 }
+
+// Layout for the DetailRoom page
 DetailRoom.layout = (page: React.ReactNode) => (
-  <BookingLayout title="DetailRoom" children={page} />
+  <BookingLayout title={`Room Details: ${page.props.room?.title || 'Detail Room'}`}>
+    {page}
+  </BookingLayout>
 );
 
 export default DetailRoom;
