@@ -82,5 +82,15 @@ class OtherController
             return redirect()->route('others.index')->with('success', 'Xóa thành công!');
     }
     
-    
+    public function policy(){
+        $data = Other::where('type', 'policy')->get();
+
+        return response()->json(['status'=> 'success', 'data' => $data->value],200);
+    }
+
+    public function privacy(){
+        $data = Other::where('type', 'privacy')->get();
+
+        return response()->json(['status'=> 'success', 'data' => $data->value],200);
+    }
 }

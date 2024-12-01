@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OtherController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\NotificationsController;
@@ -44,6 +45,9 @@ Route::get('detail/{id}', [DetailController::class, 'detail'])
     ->name('api.detail');
 
 Route::get('all-rooms', [RoomController::class, 'index'])->name('api.rooms');
+
+Route::get('policy', [OtherController::class, 'policy'])->name('api.policy');
+Route::get('privacy', [OtherController::class, 'privacy'])->name('api.privacy');
 
 Route::get('test', function () {
     return 'API is working!';
