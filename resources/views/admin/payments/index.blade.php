@@ -86,7 +86,8 @@
                                     @foreach ($payments as $payment)
                                         <tr>
                                             <td>{{ $payment->payments_id_number }}</td>
-                                            <td>{{ $payment->booking->last_name.' '.$payment->booking->first_name ?? 'N/A' }}</td>
+                                            <td>{{ $payment->booking->last_name . ' ' . $payment->booking->first_name ?? 'N/A' }}
+                                            </td>
                                             <td>{{ number_format($payment->total_price) }} vnđ</td>
                                             <td>{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d-m-Y') }}</td>
@@ -105,6 +106,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            {{ $payments->appends(request()->input())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
