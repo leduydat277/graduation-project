@@ -28,66 +28,61 @@
 
 @section('content')
     <div class="container-fluid">
-        <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Danh sách đặt phòng</h1>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
-                <li class="breadcrumb-item active">Danh sách đặt phòng</li>
-            </ol>
-        </div>
-
-        <!-- Filters -->
-        <div class="card mb-4">
-            <div class="card-header bg-light d-flex justify-content-between">
-                <h5 class="mb-0">Tìm kiếm và bộ lọc</h5>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0 flex-grow-1">Danh sách đặt phòng</h4>
                 <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#filterSection">
                     <i class="ri-filter-3-line"></i> Bộ lọc nâng cao
                 </button>
             </div>
-            <div class="card-body collapse" id="filterSection">
-                <form method="GET" action="{{ route('bookings.index') }}">
-                    <div class="row g-3 d-flex justify-content-center align-items-center">
-                        <!-- Bộ lọc trạng thái -->
-                        <div class="col-md-4">
-                            <label for="status" class="form-label">Trạng thái</label>
-                            <select name="status" class="form-select">
-                                <option value="">Tất cả</option>
-                                <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Chưa thanh toán
-                                </option>
-                                <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Đang thanh toán
-                                </option>
-                                <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Đã thanh toán tiền
-                                    cọc</option>
-                                <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>Đã thanh toán tổng
-                                    tiền đơn</option>
-                                <option value="4" {{ request('status') == '4' ? 'selected' : '' }}>Đang sử dụng
-                                </option>
-                                <option value="5" {{ request('status') == '5' ? 'selected' : '' }}>Đã hủy</option>
-                            </select>
-                        </div>
-                        <!-- Bộ lọc khoảng thời gian -->
-                        <div class="col-md-4">
-                            <label for="date_range" class="form-label">Khoảng thời gian đặt</label>
-                            <div class="col-sm-auto">
-                                <div class="input-group">
-                                    <input type="text" name="date_range" id="date-range-input"
-                                        class="form-control border-0 dash-filter-picker shadow"
-                                        placeholder="Chọn khoảng thời gian" value="{{ request('date_range') }}">
-                                    <div class="input-group-text bg-primary border-primary text-white">
-                                        <i class="ri-calendar-2-line"></i>
+            <div class="card mb-4">
+                <div class="card-body collapse" id="filterSection">
+                    <form method="GET" action="{{ route('bookings.index') }}">
+                        <div class="row g-3 d-flex align-items-center">
+                            <!-- Bộ lọc trạng thái -->
+                            <div class="col-md-4">
+                                <label for="status" class="form-label">Trạng thái</label>
+                                <select name="status" class="form-select">
+                                    <option value="">Tất cả</option>
+                                    <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Chưa thanh toán
+                                    </option>
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Đang thanh toán
+                                    </option>
+                                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Đã thanh toán
+                                        tiền
+                                        cọc</option>
+                                    <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>Đã thanh toán
+                                        tổng
+                                        tiền đơn</option>
+                                    <option value="4" {{ request('status') == '4' ? 'selected' : '' }}>Đang sử dụng
+                                    </option>
+                                    <option value="5" {{ request('status') == '5' ? 'selected' : '' }}>Đã hủy
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Bộ lọc khoảng thời gian -->
+                            <div class="col-md-4">
+                                <label for="date_range" class="form-label">Khoảng thời gian đặt</label>
+                                <div class="col-sm-auto">
+                                    <div class="input-group">
+                                        <input type="text" name="date_range" id="date-range-input"
+                                            class="form-control border-0 dash-filter-picker shadow"
+                                            placeholder="Chọn khoảng thời gian" value="{{ request('date_range') }}">
+                                        <div class="input-group-text bg-primary border-primary text-white">
+                                            <i class="ri-calendar-2-line"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4" style="margin-bottom: -26px !important;">
+                                <button type="submit" class="btn btn-primary">Lọc</button>
+                                <a href="{{ route('bookings.index') }}" class="btn btn-secondary">Xóa bộ lọc</a>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Nút bấm -->
-                    <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">Lọc</button>
-                        <a href="{{ route('bookings.index') }}" class="btn btn-secondary">Xóa bộ lọc</a>
-                    </div>
-                </form>
-
+                        <!-- Nút bấm -->
+                    
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -132,7 +127,8 @@
                                     <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ $booking->room->title }}</td>
                                     <td>
-                                        <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
+                                        <span
+                                            class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
 

@@ -15,7 +15,7 @@
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
-    <div class="page-content">
+    <div class="page-content pt-2">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
@@ -94,12 +94,10 @@
                                             <td>{{ $payment->payment_status_text }}</td>
                                             <td>
                                                 <a class="btn btn-info"
-                                                    href="{{ route('payments.show', $payment->id) }}"><i
-                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i> Xem
+                                                    href="{{ route('payments.show', $payment->id) }}"><i></i> Xem
                                                     chi tiết</a>
                                                 <a class="btn btn-danger"
-                                                    href="{{ route('payments.export_pdf', $payment->id) }}"><i
-                                                        class="ri-file-pdf-fill align-bottom me-2 text-muted"></i>
+                                                    href="{{ route('payments.export_pdf', $payment->id) }}"><i></i>
                                                     In PDF</a>
                                             </td>
                                         </tr>

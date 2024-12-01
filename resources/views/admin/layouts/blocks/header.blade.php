@@ -90,10 +90,10 @@
             <div class="dropdown ms-sm-3 header-item topbar-user">
                 <button type="button" class="btn d-flex align-items-center" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <!-- Avatar -->
+                    {{-- <!-- Avatar -->
                     <img class="rounded-circle header-profile-user"
                         src="{{ Auth::user()->image ?? asset('assets/images/users/default-avatar.jpg') }}"
-                        alt="User Avatar" style="width: 36px; height: 36px; object-fit: cover;">
+                        alt="User Avatar" style="width: 36px; height: 36px; object-fit: cover;"> --}}
                     <!-- User Info -->
                     <span class="text-start ms-2">
                         <span class="d-block fw-medium user-name-text"

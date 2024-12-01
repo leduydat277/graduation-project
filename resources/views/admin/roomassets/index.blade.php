@@ -62,7 +62,7 @@
 
                         <div class="table-responsive table-card mt-3 mb-1">
                             <table class="table align-middle table-nowrap" id="roomAssetTable">
-                                <thead class="table-light">
+                                <thead>
                                     <tr>
                                         <th>Mã phòng</th>
                                         <th>Tên Phòng</th>

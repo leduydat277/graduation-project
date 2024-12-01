@@ -76,7 +76,7 @@
                         <!-- Bảng danh sách loại phòng -->
                         <div class="table-responsive table-card mt-3 mb-1">
                             <table class="table align-middle table-nowrap" id="roomTypeTable">
-                                <thead class="table-light">
+                                <thead>
                                     <tr>
                                         <th>Mã loại phòng</th>
                                         <th>Tên loại phòng</th>
