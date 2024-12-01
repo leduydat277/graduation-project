@@ -17,7 +17,7 @@ Route::middleware('api')->get('/example', function (Request $request) {
 });
 
 
-Route::post('search_room', [SearchRoomController::class, 'apiSearchRoom'])
+Route::get('search_room', [SearchRoomController::class, 'searchRoom'])
     ->name('api.search_room');
 
 // Admin api
@@ -33,6 +33,7 @@ Route::post('booking', [BookingController::class, 'booking'])
 
 Route::get('all-payment', [PaymentController::class, 'allPayments'])
     ->name('api.all-payment');
+
 Route::post('filter-payment', [PaymentController::class, 'filterPayments'])
     ->name('api.filter-payment');
 

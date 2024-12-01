@@ -27,7 +27,6 @@ Route::get("/test", function (Request $request) {
     return response()->json(['status' => 'Notification sent!']);
 });
 
-
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
 //Detail

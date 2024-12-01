@@ -103,6 +103,21 @@ class RoomController extends Controller
             'status' => 0,
         ]);
 
+        $currentTime = Carbon::now();
+
+        // Kiểm tra nếu thời gian hiện tại chưa đến 14h, nếu đúng thì lấy từ 14h hôm nay, nếu không thì lấy từ 14h ngày mai
+        $from = $currentTime->hour < 14
+            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)
+            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0);
+
+        // Tạo bản ghi quản lý trạng thái phòng
+        ManageStatusRoom::create([
+            'room_id' => $room->id,
+            'status' => 1,
+            'from' => $from,
+            'to' => 0,
+        ]);
+
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được thêm thành công.');
     }
 

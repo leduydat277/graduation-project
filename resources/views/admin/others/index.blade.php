@@ -84,7 +84,7 @@
                             <textarea class="form-control" id="otherDescription" name="description"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="otherValue" class="form-label">Số lượng</label>
+                            <label for="otherValue" class="form-label">Giá trị</label>
                             <input type="text" class="form-control" id="otherValue" name="value">
                         </div>
                     </div>
