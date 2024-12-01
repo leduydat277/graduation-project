@@ -110,27 +110,27 @@
             <div class="modal-body">
                 <!-- Form Edit -->
                 <form id="editForm" enctype="multipart/form-data" method="POST">
-    @csrf
-    @method('PUT') <!-- Phương thức PUT để Laravel nhận diện đây là yêu cầu cập nhật -->
-    <div class="mb-3">
-        <label for="name" class="form-label">Tên</label>
-        <input type="text" class="form-control" id="name1" name="name" required>
-    </div>
-    <div class="mb-3">
-        <label for="name" class="form-label">Loại</label>
-        <input type="text" class="form-control" id="type1" name="type" required>
-    </div>
-    <div class="mb-3">
-        <label for="name" class="form-label">Mô tả</label>
-        <input type="text" class="form-control" id="description1" name="description">
-    </div>
-    <div class="mb-3">
-        <label for="otherValue" class="form-label">Dữ liệu (nhập 1 trong 2 loại dưới đây)</label>
-        <input type="file" class="form-control" name="value" id="fileInputU"> <br>
-        <textarea type="text" class="form-control" id="otherValueU" name="valuee" placeholder="nhập dữ liệu"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Lưu</button>
-</form>
+                    @csrf
+                    @method('PUT') <!-- Phương thức PUT để Laravel nhận diện đây là yêu cầu cập nhật -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="name1" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Loại</label>
+                        <input type="text" class="form-control" id="type1" name="type" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Mô tả</label>
+                        <input type="text" class="form-control" id="description1" name="description">
+                    </div>
+                    <div class="mb-3">
+                        <label for="otherValue" class="form-label">Dữ liệu (nhập 1 trong 2 loại dưới đây)</label>
+                        <input type="file" class="form-control" name="value" id="fileInputU"> <br>
+                        <textarea type="text" class="form-control" id="otherValueU" name="valuee" placeholder="nhập dữ liệu"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </form>
 
             </div>
         </div>
@@ -138,24 +138,11 @@
 </div>
 
 
-
-
 @endsection
 @section('js')
 <script>
-// Đảm bảo sự kiện click được gắn sau khi bảng được render
-document.addEventListener("DOMContentLoaded", function() {
-    // Tìm tất cả nút có class "edit-btn"
-    document.querySelectorAll('.edit-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            var id = this.getAttribute('data-id');  // Lấy ID từ data-id
-            var url = '{{ route('others.show', ['other' => ':id']) }}'.replace(':id', id); // Tạo URL với id
-            window.location.href = url;  // Chuyển hướng đến URL đã tạo
-        });
-    });
-});
-
-
+    var editRoute = "{{ route('others.show', ['other' => ':id']) }}";
+    console.log(editRoute);
 
     // check inputfile
     document.getElementById('fileInput').addEventListener('change', function() {
@@ -197,24 +184,31 @@ document.addEventListener("DOMContentLoaded", function() {
                         width: "150px"
                     },
                     {
-                        name: "Dữ liệu"
+                        name: "Dữ liệu",
+                        formatter: (_, row) => {
+                            var value = row.cells[4].data;
+                            if (value && value.startsWith('upload/others/')) {
+                                return gridjs.html(`<img src="/storage/${value}" alt="Ảnh" style="max-width: 100px; height: auto;" />`);
+                            } else {
+                                const truncatedValue = value.length > 100 ? value.substring(0, 100) + '...' : value;
+                                return gridjs.html(truncatedValue);
+                            }
+                        }
                     },
                     {
 
                         name: "Hành động",
                         width: "100px",
                         formatter: (_, row) => gridjs.html(`
-               <button class="btn btn-warning edit-btn" 
-                        data-id="${row.cells[0].data}">
-                    Sửa
-                </button>
+                        <a href="${editRoute.replace(':id', row.cells[0].data)}" class="edit-link">
+                            <button class="btn btn-warning">Sửa</button>
+                        </a>
     <form id="delete-form-${row.cells[0].data}" action="/admin/others/${row.cells[0].data}" method="POST" style="display: inline-block;">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" onclick="return confirm('bạn có muốn xóa?')" class="btn btn-danger">Xóa</button>
     </form>
 `)
-
                     }
 
                 ],
@@ -223,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     other.name || '',
                     other.type || '',
                     other.description || 'Không có mô tả',
-                    other.value || 'Không có giá trị',
+                    other.value,
                 ]),
                 pagination: {
                     limit: 10
