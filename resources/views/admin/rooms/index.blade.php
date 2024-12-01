@@ -165,12 +165,14 @@
                                             </td>
 
 
-                                            <td>
-                                                <a href="{{ route('rooms.edit', $room->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
-                                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info">
-                                                    Xem
-                                                </a>
+                                            <td>    
+                                                @if ($room->status !== 4)
+                                                    <a href="{{ route('rooms.edit', $room->id) }}"
+                                                        class="btn btn-warning">Sửa</a>
+                                                    <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info">
+                                                        Xem
+                                                    </a>
+                                                @endif
                                                 <form
                                                     action="{{ $room->status === 4 ? route('rooms.unlock', $room->id) : route('rooms.lock', $room->id) }}"
                                                     method="POST" class="lock-unlock-form"
@@ -179,7 +181,7 @@
                                                     @method('PUT')
                                                     <button type="button"
                                                         class="btn {{ $room->status === 4 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn">
-                                                        {{ $room->status === 4 ? 'Hoạt động' : 'Dừng hoạt động' }}
+                                                        {{ $room->status === 4 ? 'Mở hoạt động' : 'Dừng hoạt động' }}
                                                     </button>
                                                 </form>
 

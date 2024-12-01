@@ -105,6 +105,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            {{ $payments->appends(request()->input())->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>

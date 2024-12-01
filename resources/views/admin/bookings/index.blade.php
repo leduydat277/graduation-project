@@ -84,7 +84,21 @@
                     </form>
                 </div>
             </div>
-            <div class="card-body" style="">
+        </div>
+
+        <!-- Booking Table -->
+        <div class="card">
+            <div class="card-body">
+                <!-- Hiển thị thông báo -->
+                @if (session('success') || session('error'))
+                    <div class="col">
+                        <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                            role="alert">
+                            {{ session('success') ?? session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <table id="bookingTable" class="table table-striped table-bordered">
                         <thead>
@@ -136,7 +150,7 @@
                                                 <span class="badge bg-success">Đã thanh toán tổng tiền đơn</span>
                                             @break
 
-                                            @case(3)
+                                            @case(4)
                                                 <span class="badge bg-info">Đang sử dụng</span>
                                             @break
 
@@ -145,8 +159,13 @@
                                         @endswitch
                                     </td>
                                     <td>
-                                        <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info">Xem chi
-                                            tiết</a>
+                                        @if ($booking['status'] != 5)
+                                            <a href="{{ route('bookings.show', $booking->id) }}"
+                                                class="btn btn-info mb-3">Xem chi
+                                                tiết</a>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmCancel({{ $booking->id }})">Hủy đặt phòng</button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -179,15 +198,45 @@
                 dateFormat: 'Y-m-d',
             });
         });
+    </script>
 
-        // Xuất file Excel
-        document.getElementById('export-excel-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var table = document.getElementById('model-datatables');
-            var wb = XLSX.utils.table_to_book(table, {
-                sheet: "Payments"
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmCancel(bookingId) {
+            Swal.fire({
+                title: 'Bạn có chắc muốn hủy đơn đặt phòng này không?',
+                text: "Hành động này không thể hoàn tác!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Hủy đặt phòng',
+                cancelButtonText: 'Không, giữ lại'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tạo form động để gửi yêu cầu
+                    const form = document.createElement('form');
+                    form.action = `/admin/bookings/cancel/${bookingId}`; // Cập nhật route với prefix 'admin'
+                    form.method = 'POST';
+
+                    // Thêm CSRF token
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfInput);
+
+                    // Thêm method PUT
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'PUT';
+                    form.appendChild(methodInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
             });
-            XLSX.writeFile(wb, 'DanhSachThanhToan.xlsx');
-        });
+        }
     </script>
 @endsection
