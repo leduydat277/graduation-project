@@ -51,9 +51,10 @@
                                     <!-- Form tìm kiếm -->
                                     <!-- Dropdown sắp xếp -->
                                     <div>
-                                        <select id="sort" class="form-select w-auto">
-                                            <option value="" {{ request('sort') == '' ? 'selected' : '' }}>
-                                                Sắp xếp theo...</option>
+                                        <select id="sort" name="sort" class="form-select w-auto"
+                                            onchange="this.form.submit()">
+                                            <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sắp xếp
+                                                theo...</option>
                                             <option value="title_asc"
                                                 {{ request('sort') == 'title_asc' ? 'selected' : '' }}>Tên phòng: A-Z
                                             </option>
@@ -86,6 +87,7 @@
                                             </option>
                                         </select>
                                     </div>
+
                                     <form method="GET" action="{{ route('rooms.index') }}"
                                         class="d-flex align-items-center">
                                         <div class="input-group">
@@ -125,11 +127,9 @@
                                             <td>{{ $room->roomId_number }}</td>
                                             <td>{{ $room->title }}</td>
                                             <td>
-                                                @if (!empty($room->image_room))
-                                                    @foreach (json_decode($room->image_room, true) as $image)
-                                                        <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
-                                                            width="50">
-                                                    @endforeach
+                                                @if ($room->thumbnail_image)
+                                                    <img src="{{ asset('storage/' . $room->thumbnail_image) }}"
+                                                        alt="Room Image" width="50">
                                                 @else
                                                     Không có ảnh
                                                 @endif
@@ -144,19 +144,23 @@
                                                     @break
 
                                                     @case(1)
-                                                    <span class="badge bg-warning">Đã cọc</span>
+                                                        <span class="badge bg-warning">Đã cọc</span>
                                                     @break
 
                                                     @case(2)
-                                                    <span class="badge bg-info">Đang sử dụng</span>
+                                                        <span class="badge bg-info">Đang sử dụng</span>
                                                     @break
 
                                                     @case(3)
-                                                    <span class="badge bg-danger">Hỏng</span>
+                                                        <span class="badge bg-danger">Hỏng</span>
+                                                    @break
+
+                                                    @case(4)
+                                                        <span class="badge bg-dark">Bị khóa</span>
                                                     @break
 
                                                     @default
-                                                    <span class="badge bg-bg-secondary">Không xác định</span>
+                                                        <span class="badge bg-secondary">Không xác định</span>
                                                 @endswitch
                                             </td>
 
@@ -167,13 +171,18 @@
                                                 <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info">
                                                     Xem
                                                 </a>
-                                                <form action="{{ route('rooms.destroy', $room->id) }}" method="POST"
-                                                    class="delete-form" data-room-name="{{ $room->title }}"
-                                                    style="display:inline-block;">
+                                                <form
+                                                    action="{{ $room->status === 4 ? route('rooms.unlock', $room->id) : route('rooms.lock', $room->id) }}"
+                                                    method="POST" class="lock-unlock-form"
+                                                    data-room-name="{{ $room->title }}" style="display:inline-block;">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn">Xóa</button>
+                                                    @method('PUT')
+                                                    <button type="button"
+                                                        class="btn {{ $room->status === 4 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn">
+                                                        {{ $room->status === 4 ? 'Hoạt động' : 'Dừng hoạt động' }}
+                                                    </button>
                                                 </form>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -206,19 +215,19 @@
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.querySelectorAll('.delete-btn').forEach(button => {
+        document.querySelectorAll('.lock-unlock-btn').forEach(button => {
             button.addEventListener('click', function() {
-                var form = this.closest('.delete-form');
-                var roomName = form.getAttribute('data-room-name');
+                const form = this.closest('form');
+                const roomName = form.dataset.roomName;
+                const isUnlocking = this.classList.contains('btn-success');
 
                 Swal.fire({
-                    title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của phòng " + roomName + "!",
+                    title: `Bạn có chắc chắn muốn ${isUnlocking ? 'mở khóa' : 'khóa'} phòng "${roomName}" không?`,
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: isUnlocking ? '#28a745' : '#ffc107',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Có, xóa nó!',
+                    confirmButtonText: `Có, ${isUnlocking ? 'mở khóa' : 'khóa'}!`,
                     cancelButtonText: 'Hủy'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -228,6 +237,7 @@
             });
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $('#sort').change(function() {

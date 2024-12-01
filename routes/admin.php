@@ -62,6 +62,10 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
             Route::post('/checkout/{id}', [CheckInCheckOutController::class, 'checkOut'])->name('checkout');
             Route::post('/cancel-booking', [CheckInCheckOutController::class, 'cancel'])->name('booking.cancel');
         })->middleware(Role::class);
+
+        Route::put('/rooms/{room}/lock', [RoomController::class, 'lock'])->name('rooms.lock');
+        Route::put('/rooms/{room}/unlock', [RoomController::class, 'unlock'])->name('rooms.unlock');
+        
 });
 
 Route::prefix('admin/searchroom')->controller(SearchRoomController::class)->group(function () {

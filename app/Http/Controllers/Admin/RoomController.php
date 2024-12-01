@@ -26,15 +26,16 @@ class RoomController extends Controller
         // Lấy giá trị sort từ request
         $sortOption = $request->input('sort', '');
         $sortOptionsMap = [
-            'room_area_asc' => ['room_area', 'asc'],
-            'room_area_desc' => ['room_area', 'desc'],
-            'max_people_asc' => ['max_people', 'asc'],
-            'max_people_desc' => ['max_people', 'desc'],
+            'title_asc' => ['title', 'asc'],
+            'title_desc' => ['title', 'desc'],
             'price_asc' => ['price', 'asc'],
             'price_desc' => ['price', 'desc'],
-            'name_asc' => ['name', 'asc'],
-            'name_desc' => ['name', 'desc'],
-            // Thêm các sort option khác nếu cần
+            'room_area_asc' => ['room_area', 'asc'],
+            'room_area_desc' => ['room_area', 'desc'],
+            'capacity_asc' => ['max_people', 'asc'],
+            'capacity_desc' => ['max_people', 'desc'],
+            'status_asc' => ['status', 'asc'],
+            'status_desc' => ['status', 'desc'],
         ];
 
         // Lấy cột và thứ tự sắp xếp từ map
@@ -56,6 +57,7 @@ class RoomController extends Controller
             ->with('title', 'Danh sách Phòng');
     }
 
+
     public function create()
     {
         $title = 'Thêm phòng';
@@ -64,48 +66,46 @@ class RoomController extends Controller
         $roomId = $roomId ? $roomId->id + 1 : 1;
 
         $roomTypes = RoomType::all();
-        
+
         return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'roomTypes', 'roomId'));
     }
 
 
     public function store(RoomRequest $request)
     {
-        // dd($request->all());
+
         $imagePaths = [];
 
-        $sPrice = str_replace(',', '', $request->price);
-        $price = (int) $sPrice;
-
+        // Xử lý upload nhiều ảnh
         if ($request->hasFile('image_room')) {
             foreach ($request->file('image_room') as $image) {
-
-                $path = $image->store('upload/rooms', 'public'); // Lưu ảnh vào thư mục 'rooms' trong 'public'
-                $imagePaths[] = $path; // Thêm đường dẫn ảnh vào mảng
+                $path = $image->store('upload/rooms', 'public');
+                $imagePaths[] = $path;
             }
         }
 
-        // Tạo phòng với dữ liệu đầu vào và lưu đường dẫn ảnh dưới dạng JSON
+        // Xử lý upload ảnh thumbnail
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail_image')) {
+            $thumbnailPath = $request->file('thumbnail_image')->store('upload/room_thumbnails', 'public');
+        }
+
         $room = Room::create([
             'title' => $request->input('title'),
             'roomId_number' => $request->input('roomId_number'),
             'room_type_id' => $request->input('room_type'),
             'description' => $request->input('description'),
-            'price' => $price,
+            'price' => $request->input('price'),
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
-            'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
-            'status' => 0
+            'image_room' => json_encode($imagePaths),
+            'thumbnail_image' => $thumbnailPath,
+            'status' => 0,
         ]);
 
-        ManageStatusRoom::create([
-            'room_id' => $room->id,
-            'status' => 1,
-            'from' => Carbon::tomorrow()->setHour(14)->timestamp,
-            'to' => 0,
-        ]);
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được thêm thành công.');
     }
+
 
 
     public function show($id)
@@ -122,18 +122,19 @@ class RoomController extends Controller
 
         $title = 'Chỉnh sửa phòng';
         $room = Room::findOrFail($id);
+        $roomId = Room::select('id')->orderBy('id', 'DESC')->first();
+        $roomId = $roomId ? $roomId->id + 1 : 1;
+
         $roomTypes = RoomType::all();
 
-        return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title', 'roomTypes'));
+        return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title', 'roomTypes', 'roomId'));
     }
 
     public function update(UpdateRoomRequest $request, Room $room)
     {
+        // Xử lý ảnh phòng (image_room)
         $imagePaths = json_decode($room->image_room, true) ?? []; // Lấy ảnh hiện tại nếu có, nếu không thì là mảng rỗng
 
-        $sPrice = str_replace(',', '', $request->input('price'));
-        $price = (int) $sPrice;
-        // Nếu có ảnh mới được tải lên, lưu ảnh mới và cập nhật mảng $imagePaths
         if ($request->hasFile('image_room')) {
             // Xóa ảnh cũ khỏi thư mục (nếu cần thiết)
             foreach ($imagePaths as $oldImage) {
@@ -148,21 +149,40 @@ class RoomController extends Controller
             }
         }
 
-        // Cập nhật dữ liệu phòng với các trường đầu vào mới và ảnh dưới dạng JSON
+        // Nếu không có file ảnh mới, giữ nguyên ảnh cũ
+        $imageRoomData = !empty($imagePaths) ? json_encode($imagePaths) : $room->image_room;
+
+        // Xử lý ảnh thu nhỏ (thumbnail_image)
+        $thumbnailImagePath = $room->thumbnail_image; // Giữ ảnh thu nhỏ hiện tại nếu không có ảnh mới
+
+        if ($request->hasFile('thumbnail_image')) {
+            // Xóa ảnh thu nhỏ cũ nếu có
+            if ($room->thumbnail_image) {
+                Storage::disk('public')->delete($room->thumbnail_image);
+            }
+
+            // Lưu ảnh thu nhỏ mới
+            $thumbnailImagePath = $request->file('thumbnail_image')->store('upload/rooms/thumbnails', 'public');
+        }
+
+        // Cập nhật dữ liệu phòng
         $room->update([
             'title' => $request->input('title'),
             'roomId_number' => $request->input('roomId_number'),
             'room_type_id' => $request->input('room_type'),
             'description' => $request->input('description'),
-            'price' => $price,
+            'price' => $request->input('price'),
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
-            'image_room' => json_encode($imagePaths), // Lưu ảnh dưới dạng JSON
+            'image_room' => $imageRoomData, // Sử dụng ảnh cũ nếu không có ảnh mới
+            'thumbnail_image' => $thumbnailImagePath, // Cập nhật hoặc giữ nguyên ảnh thu nhỏ
             'status' => $room->status // Giữ nguyên trạng thái nếu không thay đổi
         ]);
 
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được cập nhật thành công.');
     }
+
+
 
     /**
      * Summary of destroy
@@ -171,22 +191,25 @@ class RoomController extends Controller
      * @param \App\Models\Admin\Room $room
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Room $room)
+    public function lock(Room $room)
     {
-        // Xóa tất cả các ảnh liên quan đến phòng nếu có
-        if (!empty($room->image_room)) {
-            $imagePaths = json_decode($room->image_room, true);
+        if ($room->status === 0) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
+            $room->update(['status' => 4]); // Đặt trạng thái phòng là "đã bị khóa"
 
-            // Lặp qua từng đường dẫn ảnh và xóa chúng khỏi thư mục storage
-            foreach ($imagePaths as $image) {
-                Storage::disk('public')->delete($image);
-            }
+            return redirect()->route('rooms.index')->with('success', 'Phòng đã được khóa thành công.');
+        } else {
+            return redirect()->route('rooms.index')->with('error', 'Chỉ có thể khóa phòng khi trạng thái là "Sẵn sàng".');
         }
+    }
 
-        // Xóa phòng khỏi cơ sở dữ liệu
-        $room->delete();
+    public function unlock(Room $room)
+    {
+        if ($room->status === 4) { // Chỉ mở khóa khi phòng đang bị khóa
+            $room->update(['status' => 0]); // Đặt trạng thái phòng là "sẵn sàng"
 
-        // Trả về với thông báo thành công
-        return redirect()->route('rooms.index')->with('success', 'Phòng đã được xóa thành công.');
+            return redirect()->route('rooms.index')->with('success', 'Phòng đã được mở khóa thành công.');
+        } else {
+            return redirect()->route('rooms.index')->with('error', 'Chỉ có thể mở khóa phòng khi trạng thái là "đã bị khóa".');
+        }
     }
 }
