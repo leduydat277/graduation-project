@@ -32,9 +32,20 @@ class OtherController
         $validated = $request->validate([
             'name' => 'required|max:255',
             'type' => 'required|max:255',
-            'description' => 'required',
-            'value' => 'required|string|max:255',
+            'value' => 'nullable|file', 
         ]);
+    
+        if ($request->hasFile('value')) {
+            $imagePath = $request->file('value')->storeAs(
+                'upload/others',
+                uniqid() . '.' . $request->file('value')->getClientOriginalExtension(),
+                'public'
+            );
+            $validated['value'] = $imagePath;
+        }else {
+            $validated['value'] = $request->input('valuee');
+        }
+    
         $other = Other::create($validated);
     
         if ($other) {
@@ -45,31 +56,50 @@ class OtherController
     }
     
     
+    
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        return view('admin.others.edit');
     }
 
     public function update(Request $request, $id)
     {
+        dd($request);
         $other = Other::findOrFail($id);
+        
         $validated = $request->validate([
             'name' => 'required|max:255',
             'type' => 'required|max:255',
-            'description' => 'nullable',
-            'value' => 'required',
+            'value' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', 
         ]);
-        $other->name = $validated['name'];
-        $other->type = $validated['type'];
-        $other->description = $validated['description'];
-        $other->value = $validated['value'];
-        $other->save();
-        return redirect()->route('others.index')->with('success', 'Cập nhật thông tin thành công!', compact('other'));
+    
+        if ($request->hasFile('value')) {
+            $imagePath = $request->file('value')->storeAs(
+                'upload/others',
+                uniqid() . '.' . $request->file('value')->getClientOriginalExtension(),
+                'public'
+            );
+            $validated['value'] = $imagePath; 
+        } else {
+            $validated['value'] = $request->input('valuee');
+
+        }
+    
+        // Cập nhật dữ liệu vào đối tượng
+        $other->update([
+            'name' => $validated['name'],
+            'type' => $validated['type'],
+            'value' => $validated['value'],
+        ]);
+    
+        return redirect()->route('others.index')->with('success', 'Cập nhật thông tin thành công!');
     }
+    
+    
     
 
     /**
