@@ -35,78 +35,78 @@
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-home"></i> <!-- Biểu tượng cho trang chủ -->
+                        <i class="fa-solid fa-house"></i> <!-- Biểu tượng cho trang chủ -->
                         Trang chủ
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-users"></i> <!-- Biểu tượng cho danh sách người dùng -->
+                        <i class="fa-solid fa-user"></i> <!-- Biểu tượng cho danh sách người dùng -->
                         Tài khoản
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('bookings.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
+                        <i class="fa-solid fa-calendar-check"></i> <!-- Biểu tượng cho trang chủ -->
                         Đơn đặt
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
+                        <i class="fa-solid fa-file-invoice-dollar"></i> <!-- Biểu tượng cho trang chủ -->
                         Hóa đơn
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('room-types.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
+                        <i class="fa-solid fa-bed"></i> <!-- Icon for room type list -->
                         Loại phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('rooms.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-bed"></i> <!-- Icon for room list -->
+                        <i class="fa-solid fa-list"></i> <!-- Icon for room list -->
                         Danh sách phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('asset-types.index')}}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
+                        <i class="fa-solid fa-concierge-bell"></i> <!-- Icon for room type list -->
                         Danh sách tiện nghi
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('room-assets.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-th-list"></i> <!-- Icon for room type list -->
+                        <i class="fa-solid fa-tools"></i> <!-- Icon for room type list -->
                         Quản lý tiện nghi phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('manage-status-rooms.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-hotel"></i> <!-- Thay đổi icon cho quản lý trạng thái phòng -->
+                        <i class="fa-solid fa-door-closed"></i> <!-- Thay đổi icon cho quản lý trạng thái phòng -->
                         Quản lý trạng thái phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-comments"></i> <!-- Icon for reviews and comments -->
+                        <i class="fa-solid fa-comments"></i> <!-- Icon for reviews and comments -->
                         Đánh giá và bình luận
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('checkin-checkout.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-th-list"></i>
+                        <i class="fa-solid fa-sign-in-alt"></i>
                         Check-in & Check-out
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('phiphatsinhs.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fas fa-th-list"></i>
+                        <i class="fa-solid fa-money-bill-wave"></i>
                         Phí phát sinh
                     </a>
                 </li>
