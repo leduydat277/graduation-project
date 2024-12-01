@@ -31,6 +31,7 @@
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0||^2.30.0||^3.0.0",
     "eslint": "^8.32.0",
+    "flowbite-react": "^0.10.2",
     "immer": "^10.1.1",
     "laravel-echo": "^1.17.0",
     "lodash": "^4.17.21",
