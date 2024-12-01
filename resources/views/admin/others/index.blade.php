@@ -143,10 +143,18 @@
 @endsection
 @section('js')
 <script>
-<button class="btn btn-warning" 
-        data-id="${row.cells[0].data}">
-    Sửa
-</button>
+// Đảm bảo sự kiện click được gắn sau khi bảng được render
+document.addEventListener("DOMContentLoaded", function() {
+    // Tìm tất cả nút có class "edit-btn"
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            var id = this.getAttribute('data-id');  // Lấy ID từ data-id
+            var url = '{{ route('others.show', ['other' => ':id']) }}'.replace(':id', id); // Tạo URL với id
+            window.location.href = url;  // Chuyển hướng đến URL đã tạo
+        });
+    });
+});
+
 
 
     // check inputfile
@@ -196,7 +204,7 @@
                         name: "Hành động",
                         width: "100px",
                         formatter: (_, row) => gridjs.html(`
-                <button class="btn btn-warning edit-btn" 
+               <button class="btn btn-warning edit-btn" 
                         data-id="${row.cells[0].data}">
                     Sửa
                 </button>
