@@ -115,13 +115,18 @@
                                             </td>
                                             <td>
                                                 <a href="{{ route('asset-types.edit', $assetType->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
+                                                    class="btn btn-warning" title="Sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
                                                 <form action="{{ route('asset-types.destroy', $assetType->id) }}"
                                                     method="POST" class="delete-form"
                                                     data-asset-type="{{ $assetType->name }}" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn">Xóa</button>
+                                                    <button type="button" class="btn btn-danger delete-btn"
+                                                        title="Xóa">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>

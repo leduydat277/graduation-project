@@ -80,7 +80,7 @@
                             </div>
                         </div>
                         <!-- Nút bấm -->
-                    
+
                     </form>
                 </div>
             </div>
@@ -160,13 +160,16 @@
                                     </td>
                                     <td>
                                         @if ($booking['status'] != 5)
-                                            <a href="{{ route('bookings.show', $booking->id) }}"
-                                                class="btn btn-info mb-3">Xem chi
-                                                tiết</a>
-                                            <button type="button" class="btn btn-danger"
-                                                onclick="confirmCancel({{ $booking->id }})">Hủy đặt phòng</button>
+                                            <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info mb-3" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
+                                                onclick="confirmCancel({{ $booking->id }})">
+                                                <i class="fas fa-times-circle"></i>
+                                            </button>
                                         @endif
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody>

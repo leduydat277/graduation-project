@@ -261,7 +261,7 @@
                     total += value;
                 }
             });
-            // document.getElementById("totalPrice").value = total; 
+            // document.getElementById("totalPrice").value = total;
             document.getElementById("totalPrice").value = formatCurrency(total);
         }
         //end
@@ -300,9 +300,9 @@
                             width: "150px", // Tăng chiều rộng để hiển thị thêm thông tin
                             formatter: (cell) => {
                                 const date = new Date(cell *
-                                1000); // Chuyển đổi từ timestamp sang Date
+                                    1000); // Chuyển đổi từ timestamp sang Date
                                 const formattedDate = date.toLocaleDateString(
-                                "vi-VN"); // Định dạng ngày tháng
+                                    "vi-VN"); // Định dạng ngày tháng
                                 return `${formattedDate}`;
                             }
                         },
@@ -378,9 +378,9 @@
                             formatter: (cell, row) => {
                                 const status = row.cells[9].data; // Trạng thái
                                 const checkInDateTimestamp = row.cells[6]
-                                .data; // Lấy check_in_date từ bảng (timestamp)
+                                    .data; // Lấy check_in_date từ bảng (timestamp)
                                 const checkInDate = new Date(checkInDateTimestamp *
-                                1000); // Chuyển đổi sang Date
+                                    1000); // Chuyển đổi sang Date
                                 const today = new Date();
                                 const currentHour = new Date().getHours();
 
@@ -393,19 +393,29 @@
                                 if (status === 2) {
                                     if (isToday && currentHour >= 14) {
                                         return gridjs.html(`
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Check in</button>
-                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
-                `);
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})" title="Check in">
+                <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
+            </button>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})" title="Hủy">
+                <i class="fas fa-times"></i> <!-- Icon Hủy -->
+            </button>
+        `);
                                     } else {
                                         return gridjs.html(`
-                                    <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')">Check in</button>
-                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})">Hủy</button>
-                                `);
+            <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')" title="Check in">
+                <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
+            </button>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})" title="Hủy">
+                <i class="fas fa-times"></i> <!-- Icon Hủy -->
+            </button>
+        `);
                                     }
                                 } else if (status === 4) {
                                     return gridjs.html(`
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})">Check out</button>
-            `);
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})" title="Check out">
+            <i class="fas fa-sign-out-alt"></i> <!-- Icon Check-out -->
+        </button>
+    `);
                                 }
 
                                 return '';

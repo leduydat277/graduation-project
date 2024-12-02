@@ -106,14 +106,19 @@
                                             </td>
                                             <td>
                                                 <a href="{{ route('room-types.edit', $roomType->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
+                                                    class="btn btn-warning" title="Sửa">
+                                                    <i class="fas fa-edit"></i> <!-- Icon chỉnh sửa -->
+                                                </a>
                                                 <form action="{{ route('room-types.destroy', $roomType->id) }}"
                                                     method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger  delete-btn">Xóa</button>
+                                                    <button type="button" class="btn btn-danger delete-btn" title="Xóa">
+                                                        <i class="fas fa-trash"></i> <!-- Icon xóa -->
+                                                    </button>
                                                 </form>
                                             </td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
