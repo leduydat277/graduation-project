@@ -17,16 +17,21 @@
             padding: 0.5rem 0;
             border-bottom: 1px solid #ddd;
         }
+
         .card-body .row:last-child {
             border-bottom: none;
         }
+
         .card-title {
             font-weight: bold;
             color: #333;
         }
-        .btn-primary, .btn-secondary {
+
+        .btn-primary,
+        .btn-secondary {
             min-width: 120px;
         }
+
         .image-container img {
             border-radius: 8px;
             border: 1px solid #ddd;
@@ -37,6 +42,15 @@
 
 @section('content')
     <div class="container mt-4">
+        @if (session('success') || session('error'))
+            <div class="col">
+                <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                    role="alert">
+                    {{ session('success') ?? session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
         <div class="card">
             <div class="card-header text-center bg-primary">
                 <h4 class="card-title mb-0 text-white">Chi Tiết Phòng: {{ $room->title }}</h4>
@@ -71,19 +85,27 @@
                     <div class="col-md-8">
                         @switch($room->status)
                             @case(0)
-                                Sẵn sàng
-                                @break
+                                <span class="badge bg-success">Sẵn sàng</span>
+                            @break
+
                             @case(1)
-                                Đã cọc
-                                @break
+                                <span class="badge bg-warning">Đã cọc</span>
+                            @break
+
                             @case(2)
-                                Đang sử dụng
-                                @break
+                                <span class="badge bg-info">Đang sử dụng</span>
+                            @break
+
                             @case(3)
-                                Hỏng
-                                @break
+                                <span class="badge bg-danger">Hỏng</span>
+                            @break
+
+                            @case(4)
+                                <span class="badge bg-dark">Bị khóa</span>
+                            @break
+
                             @default
-                                Không xác định
+                                <span class="badge bg-secondary">Không xác định</span>
                         @endswitch
                     </div>
                 </div>
@@ -95,7 +117,8 @@
                     <div class="col-md-4"><strong>Ảnh Thu Nhỏ:</strong></div>
                     <div class="col-md-8 image-container">
                         @if ($room->thumbnail_image)
-                            <img src="{{ asset('storage/' . $room->thumbnail_image) }}" alt="Thumbnail Image" width="120" height="120" class="mb-2">
+                            <img src="{{ asset('storage/' . $room->thumbnail_image) }}" alt="Thumbnail Image"
+                                width="120" height="120" class="mb-2">
                         @else
                             Không có ảnh thu nhỏ
                         @endif
@@ -106,7 +129,8 @@
                     <div class="col-md-8 image-container">
                         @if (!empty($room->image_room))
                             @foreach (json_decode($room->image_room, true) as $image)
-                                <img src="{{ asset('storage/' . $image) }}" alt="Room Image" width="100" height="100" class="me-2 mb-2">
+                                <img src="{{ asset('storage/' . $image) }}" alt="Room Image" width="100" height="100"
+                                    class="me-2 mb-2">
                             @endforeach
                         @else
                             Không có ảnh phòng

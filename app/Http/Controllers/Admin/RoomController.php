@@ -191,10 +191,10 @@ class RoomController extends Controller
             'max_people' => $request->input('max_people'),
             'image_room' => $imageRoomData, // Sử dụng ảnh cũ nếu không có ảnh mới
             'thumbnail_image' => $thumbnailImagePath, // Cập nhật hoặc giữ nguyên ảnh thu nhỏ
-            'status' => $room->status // Giữ nguyên trạng thái nếu không thay đổi
+            'status' => $request->input('status'), // Giữ nguyên trạng thái nếu không thay đổi
         ]);
 
-        return redirect()->route('rooms.index')->with('success', 'Phòng đã được cập nhật thành công.');
+        return redirect()->route('rooms.show', $room->id)->with('success', 'Phòng đã được cập nhật thành công.');
     }
 
 
