@@ -23,12 +23,13 @@ class CheckInCheckOutController extends RoutingController
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->select(
                 'bookings.*',
-                'users.name as user_name',
+                'users.name as user_name', 'users.email as user_email', 'users.phone as user_phone',
                 'room_types.type as room_type',
                 'rooms.id as room_id'
             )
             ->get();
-        return view('admin.checkin_checkout.index', compact('bookings', 'title'));
+        $phiphatsinhs = PhiPhatSinh::all();
+        return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
 
 
@@ -52,6 +53,18 @@ class CheckInCheckOutController extends RoutingController
 
     public function checkOut(Request $request, $id)
     {
+        foreach ($request->pps as $index => $name) {
+            $price = $request->price[$index];
+            PhiPhatSinh::insert([
+                'booking_id' => $id,
+                'name' => $name,
+                'price' => $price,
+            ]);
+        }
+        $phiphatsinhs = PhiPhatSinh::where('booking_id', $id)->get();
+        foreach ($phiphatsinhs as $phi){
+            $phi->delete();
+        }
         $currentTimestamp = Carbon::now()->timestamp;
         $booking = Booking::findOrFail($id);
         if ($booking->check_out_date == $currentTimestamp) { // nếu checkout đúng ngày thì xóa
@@ -90,15 +103,20 @@ class CheckInCheckOutController extends RoutingController
             ]
         );
         $payment->save();
-
-        foreach ($request->pps as $index => $name) {
-            $price = $request->price[$index];
-            PhiPhatSinh::insert([
-                'booking_id' => $id,
-                'name' => $name,
-                'price' => $price,
-            ]);
-        }
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
+    }
+
+
+    public function cancel(Request $request)
+    {
+        $booking = Booking::find($request->id);
+        $manage_status_room = ManageStatusRoom::where('from', $booking->check_in_date)
+        ->where('status', 0)
+        ->first();
+        $manage_status_room->status = 1;
+        $manage_status_room->save();
+        $booking->status = 5;
+        $booking->save();
+        return redirect()->route('checkin-checkout.index')->with('success', 'Hủy đơn thành công!');
     }
 }

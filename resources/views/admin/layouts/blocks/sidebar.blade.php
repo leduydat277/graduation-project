@@ -73,7 +73,7 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link" data-key="t-analytics">
+                     <a href="{{ route('bookings.index')}}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-address-book "></i> <!-- Biểu tượng cho trang chủ -->
                          Đơn đặt
                      </a>
@@ -129,6 +129,18 @@
                      <a href="{{ route('checkin-checkout.index') }}" class="nav-link" data-key="t-analytics">
                          <i class="fas fa-th-list"></i>
                          Check-in & Check-out
+                     </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('phiphatsinhs.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fas fa-th-list"></i>
+                            Phí phát sinh
+                        </a>
+                    </li>
+                 <li class="nav-item">
+                     <a href="{{ route('others.index') }}" class="nav-link" data-key="t-analytics">
+                     <i class="fas fa-th-list"></i>
+                         Others
                      </a>
                  </li>
              </ul>

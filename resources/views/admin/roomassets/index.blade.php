@@ -27,42 +27,52 @@
                     <div class="listjs-table" id="roomAssetList">
                         <div class="row g-4 mb-3">
                             <div class="col-sm-auto">
-                                <div>
-                                    <a href="{{ route('room-assets.create') }}" class="btn btn-success">
-                                        <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi phòng
-                                    </a>
-                                </div>
+                                <a href="{{ route('room-assets.create') }}" class="btn btn-success">
+                                    <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi phòng
+                                </a>
                             </div>
-                            <!-- Hiển thị thông báo thành công -->
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-
-                            <!-- Hiển thị thông báo lỗi -->
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ session('error') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
                             <div class="col-sm">
                                 <div class="d-flex justify-content-sm-end">
+                                    <!-- Dropdown Sort -->
+                                    <div class="">
+                                        <select id="sort" name="sort" class="form-select w-auto"
+                                            onchange="handleSortChange()">
+                                            <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sắp xếp
+                                                theo...
+                                            </option>
+                                            <option value="room_name_asc"
+                                                {{ request('sort') == 'room_name_asc' ? 'selected' : '' }}>Tên Phòng: A-Z
+                                            </option>
+                                            <option value="room_name_desc"
+                                                {{ request('sort') == 'room_name_desc' ? 'selected' : '' }}>Tên Phòng: Z-A
+                                            </option>
+                                            <option value="asset_type_asc"
+                                                {{ request('sort') == 'asset_type_asc' ? 'selected' : '' }}>Loại Tiện Nghi:
+                                                A-Z</option>
+                                            <option value="asset_type_desc"
+                                                {{ request('sort') == 'asset_type_desc' ? 'selected' : '' }}>Loại Tiện
+                                                Nghi: Z-A</option>
+                                            <option value="status_asc"
+                                                {{ request('sort') == 'status_asc' ? 'selected' : '' }}>Trạng Thái: A-Z
+                                            </option>
+                                            <option value="status_desc"
+                                                {{ request('sort') == 'status_desc' ? 'selected' : '' }}>Trạng Thái: Z-A
+                                            </option>
+                                        </select>
+                                    </div>
                                     <form method="GET" action="{{ route('room-assets.index') }}"
-                                        class="d-flex align-items-center">
+                                        class="d-flex align-items-center me-3">
+                                        <!-- Tìm kiếm -->
                                         <div class="input-group">
-                                            <input type="text" name="search" value="{{ $search ?? '' }}"
+                                            <input type="text" name="search" value="{{ request('search') }}"
                                                 class="form-control" placeholder="Nhập từ khóa tìm kiếm..."
-                                                aria-label="Tìm kiếm loại phòng">
-                                            <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                                aria-label="Tìm kiếm tiện nghi">
+                                            <button class="btn btn-primary" type="submit">
                                                 <i class="ri-search-line search-icon"></i> Tìm kiếm
                                             </button>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -163,5 +173,14 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        function handleSortChange() {
+            const sort = document.getElementById('sort').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sort', sort);
+            window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+        }
     </script>
 @endsection

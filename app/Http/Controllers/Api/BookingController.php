@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NotificationMessage;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
 use App\Models\ManageStatusRoom;
+use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
@@ -54,14 +56,16 @@ class BookingController
             $email = $request->input('email');
             $room_id = $request->input('room_id');
 
-            $today = Carbon::today()->format('dmY');
-            $todayInt = Carbon::createFromFormat('dmY', (string)$today);
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('dmY');
+
+            $todayInt = Carbon::createFromFormat('dmY', (string)$today, 'Asia/Ho_Chi_Minh');
             $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
             $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
-
+ 
             $checkInDateFormat = Carbon::createFromFormat('dmY', (string)$check_in_date)->setTime(14, 0, 0);
             $checkOutDateFormat = Carbon::createFromFormat('dmY', (string)$check_out_date)->setTime(12, 0, 0);
 
+            $todayTimestamp = $todayInt->timestamp;
             $checkInTimestamp = $checkInDateFormat->timestamp;
             $checkOutTimestamp = $checkOutDateFormat->timestamp;
 
@@ -141,6 +145,7 @@ class BookingController
                     "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
+                    "created_at" => $todayTimestamp
                 ]);
             } else {
                 $booking = Booking::create([
@@ -154,6 +159,7 @@ class BookingController
                     "check_out_date" => $checkOutTimestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
+                    "created_at" => $todayTimestamp
                 ]);
             }
             Payment::create([
@@ -233,6 +239,7 @@ class BookingController
             if (!$booking) {
                 return response()->json(["message" => "Không tìm thấy đơn hàng"], 404);
             }
+            $room = Room::select('id', 'title')->where("id", $booking->room_id)->first();
 
             $check_in_code = rand(100000, 999999);
             $booking->code_check_in = $check_in_code;
@@ -263,6 +270,28 @@ class BookingController
             ];
             $mail->SendCheckinCode("Gửi mã Check in", 'checkincode', $data, $booking->email);
 
+            $title = "Đơn đặt phòng mới";
+            $message = "Khách hàng " . $booking->last_name . ' ' . $booking->first_name . " đã đặt phòng " . $room->title . ".";
+
+            $timestamp = $booking->created_at;
+
+            $date = Carbon::createFromTimestamp($timestamp);
+
+            $formattedDate = $date->format('H:i d-m-Y');
+
+            $messageData = [
+                "date" => $formattedDate,
+                "message" => $message,
+                "booking_id" => $booking->id
+            ];
+
+            Notification::create([
+                "user_id" => 1,
+                "title" => $title,
+                "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
+            ]);
+
+            event(new NotificationMessage($message, $title, $formattedDate));
             return response()->json([
                 "url_redirect" => "url_test",
                 "message" => "Thanh toán thành công"

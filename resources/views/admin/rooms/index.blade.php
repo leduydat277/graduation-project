@@ -25,47 +25,84 @@
 
                 <div class="card-body">
                     <div class="listjs-table" id="roomList">
-                        <div class="row g-4 mb-3">
+                        <div class="row g-4 mb-3 align-items-center">
+                            <!-- Nút thêm phòng -->
                             <div class="col-sm-auto">
-                                <div>
-                                    <a href="{{ route('rooms.create') }}" class="btn btn-success">
-                                        <i class="ri-add-line align-bottom me-1"></i> Thêm phòng
-                                    </a>
-                                </div>
+                                <a href="{{ route('rooms.create') }}" class="btn btn-success">
+                                    <i class="ri-add-line align-bottom me-1"></i> Thêm phòng
+                                </a>
                             </div>
-                            <!-- Hiển thị thông báo thành công -->
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
+
+                            <!-- Hiển thị thông báo -->
+                            @if (session('success') || session('error'))
+                                <div class="col">
+                                    <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                                        role="alert">
+                                        {{ session('success') ?? session('error') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
                                 </div>
                             @endif
 
-                            <!-- Hiển thị thông báo lỗi -->
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ session('error') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
+                            <!-- Form tìm kiếm và dropdown -->
                             <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
+                                <div class="d-flex justify-content-sm-end align-items-center gap-3">
+                                    <!-- Form tìm kiếm -->
+                                    <!-- Dropdown sắp xếp -->
+                                    <div>
+                                        <select id="sort" class="form-select w-auto">
+                                            <option value="" {{ request('sort') == '' ? 'selected' : '' }}>
+                                                Sắp xếp theo...</option>
+                                            <option value="title_asc"
+                                                {{ request('sort') == 'title_asc' ? 'selected' : '' }}>Tên phòng: A-Z
+                                            </option>
+                                            <option value="title_desc"
+                                                {{ request('sort') == 'title_desc' ? 'selected' : '' }}>Tên phòng: Z-A
+                                            </option>
+                                            <option value="price_asc"
+                                                {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá: Thấp đến Cao
+                                            </option>
+                                            <option value="price_desc"
+                                                {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Giá: Cao đến Thấp
+                                            </option>
+                                            <option value="room_area_asc"
+                                                {{ request('sort') == 'room_area_asc' ? 'selected' : '' }}>Diện tích: Tăng
+                                                dần</option>
+                                            <option value="room_area_desc"
+                                                {{ request('sort') == 'room_area_desc' ? 'selected' : '' }}>Diện tích: Giảm
+                                                dần</option>
+                                            <option value="capacity_asc"
+                                                {{ request('sort') == 'capacity_asc' ? 'selected' : '' }}>Số người: Ít đến
+                                                Nhiều</option>
+                                            <option value="capacity_desc"
+                                                {{ request('sort') == 'capacity_desc' ? 'selected' : '' }}>Số người: Nhiều
+                                                đến Ít</option>
+                                            <option value="status_asc"
+                                                {{ request('sort') == 'status_asc' ? 'selected' : '' }}>Trạng thái: A-Z
+                                            </option>
+                                            <option value="status_desc"
+                                                {{ request('sort') == 'status_desc' ? 'selected' : '' }}>Trạng thái: Z-A
+                                            </option>
+                                        </select>
+                                    </div>
                                     <form method="GET" action="{{ route('rooms.index') }}"
                                         class="d-flex align-items-center">
                                         <div class="input-group">
-                                            <input type="text" name="search" value="{{ $search ?? '' }}"
+                                            <input type="text" name="search" value="{{ request('search') }}"
                                                 class="form-control" placeholder="Nhập từ khóa tìm kiếm..."
                                                 aria-label="Tìm kiếm loại phòng">
                                             <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
-                                                <i class="ri-search-line search-icon"></i> Tìm kiếm
+                                                <i class="ri-search-line"></i> Tìm kiếm
                                             </button>
                                         </div>
                                     </form>
+
+
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="table-responsive table-card mt-3 mb-1">
                             <table class="table align-middle table-nowrap" id="roomTable">
@@ -188,6 +225,24 @@
                         form.submit();
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#sort').change(function() {
+                const sortValue = $(this).val(); // Lấy giá trị sort được chọn
+                const urlParams = new URLSearchParams(window.location.search);
+
+                // Cập nhật giá trị sort trong URL
+                if (sortValue) {
+                    urlParams.set('sort', sortValue);
+                } else {
+                    urlParams.delete('sort');
+                }
+
+                // Thay đổi URL và tải lại trang
+                window.location.search = urlParams.toString();
             });
         });
     </script>

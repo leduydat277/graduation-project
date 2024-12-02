@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Banners } from './Banners';
 import { RoomList } from '@/shared/Room/RoomList';
 import { Footer } from '@/components/Footer/Footer';
+import { Banner } from './Banner';
 
 function ScreenPage() {
   
@@ -20,7 +21,8 @@ const onPress = async () => {
     <>
       <Box sx={{ py: 6 }}>
         <Box sx={{ mb: 10, mx: 5 }}>
-          <Banners />
+          {/* <Banners /> */}
+          {/* <Banner /> */}
           <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: blue[50], mb: 6 }}>
             <RoomSearchBar style={{
               backgroundColor: grey[50],
@@ -39,7 +41,7 @@ const onPress = async () => {
             </Button>
           </Paper>
           <BannerImage />
-          <RoomList />
+          <RoomList end={6} start={0} />
 
         </Box>
 

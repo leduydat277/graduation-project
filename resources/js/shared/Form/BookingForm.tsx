@@ -1,27 +1,98 @@
 import { Typography, Stack } from "@mui/material";
 import { Button } from "@/components/ui/button"
 import { RoomSearchBar } from "../Room/RoomSearchBar";
-import { calculateTotalAmount } from "../../../service/hooks/booking";
+import { Booking, calculateTotalAmount } from "../../../service/hooks/booking";
 import { useBookingStore } from "../../../service/stores/booking-store";
+import { userStore } from "../../../service/stores/user-store"
 import { CalendarClock } from "lucide-react";
 import { Link } from '@inertiajs/react'
 import { grey } from "@mui/material/colors";
+import React from "react";
+import { paramsStringify } from "../../../service/utils/params";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from 'react-router-dom';
 export const BookingForm = (props) => {
-  const { type, price, status, description, ...rest } = props
-  const [checkInDate, checkOutDate, totalDays, setTotalPrice, title, subtitle] = useBookingStore((state) => [
+  const { type, status, description, ...rest } = props
+//  const navigate = useNavigate(); 
+
+// Navigate to a new route
+// navigate('/new-route');
+  // const { push } = useRouter()
+  const [checkInDate, checkOutDate, totalDays, setTotalPrice, title, subtitle, price, idRoom, clear] = useBookingStore((state) => [
     state.checkInDate,
     state.checkOutDate,
     state.totalDays, 
     state.setTotalPrice,
     state.title,
-    state.subtitle
+    state.subtitle,
+    state.price,
+    state.idRoom,
+    state.clear
+
   ]);
-
-
+  const [userId, address, email, firstName, lastName, phone] = userStore((state) => [
+    state.userId,
+    state.address,
+    state.email,
+    state.firstName,
+    state.lastName,
+    state.phone
+  ])
+  const ps: any = []
+  const validateLogin = () => {
+    if (checkInDate < checkOutDate && checkInDate > Date.now() && checkOutDate > Date.now()) {
+      
+      return true;
+    }
+    return false;
+  }
   const totalPrice = calculateTotalAmount(totalDays, price)
   if (totalPrice > 0 && totalDays > 0) {
     setTotalPrice(totalPrice)
   }
+
+  // React.useEffect(() => {
+  //   const uid = userStore.getState().userId; 
+  //   if (!uid) {
+  //     const queryString = paramsStringify({
+  //       redirect: '/checkout-screen', 
+  //     });
+  //     navigate(`/login?${queryString}`, { replace: true }); 
+  //   }
+  // }, [navigate, userStore]);
+  ps.push(validateLogin())
+  ps.push(clear())
+  
+
+  
+const onPress = async () => {
+  await Promise.all(ps)
+  console.log('onPress');
+  const bookingData = {
+    user_id: 5,
+  check_in_date: "23112024",
+  check_out_date: "24112024",
+  first_name: "John",
+  last_name: "Doe",
+  address: "123 Main St",
+  phone: "0123456789",
+  email: "johndoe@example.com",
+  room_id: idRoom
+  }
+  try {
+    const booking = await Booking(bookingData); 
+
+    console.log('Booking successful', booking.paymentUrl);
+    if (booking.paymentUrl) {
+      window.location.href = booking.paymentUrl;
+    }
+  } catch (error) {
+    console.error('Booking failed:', error);
+  }
+}
+
+
+ 
   return (
     <>
       <Stack
@@ -39,7 +110,9 @@ export const BookingForm = (props) => {
         <RoomSearchBar position={'detail'} />
         <Typography variant="h6" pb={1}>Total: {totalPrice}</Typography>
       
-      <Link href="checkout-screen"as="button" type="button">Logout</Link>
+ 
+      <Button onClick={onPress} variant="outline">Thanh Toán</Button>
+    
 
       </Stack>
     </>

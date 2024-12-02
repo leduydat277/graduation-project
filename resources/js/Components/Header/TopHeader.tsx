@@ -12,6 +12,9 @@ export const TopHeader =  (props:any) => {
 
 
   return (
-    <Typography variant="h4" {...rest}>Sleep Hotel</Typography>
+    <Typography variant="h4" {...rest}>Sleep Hotel 
+      
+    </Typography>
+    
   );
 };

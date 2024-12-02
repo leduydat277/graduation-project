@@ -22,9 +22,9 @@ export const Banners = () => {
         <Typography variant="body1" color="text.secondary" mb={3}>
           We provide what you need to enjoy your holiday with family. Time to make another memorable moment.
         </Typography>
-        <Button variant="contained" sx={{ backgroundColor:blue[500] , mb: 4, px: 3, py: 1.5, fontSize: '1rem', fontWeight: 'bold', textTransform: 'none', borderRadius: '0.5rem' }}>
+        {/* <Button variant="contained" sx={{ backgroundColor:blue[500] , mb: 4, px: 3, py: 1.5, fontSize: '1rem', fontWeight: 'bold', textTransform: 'none', borderRadius: '0.5rem' }}>
           Show More
-        </Button>
+        </Button> */}
         <Stack direction="row" spacing={5} mt={6}>
           {stats.map((stat, index) => (
             <Box key={index} textAlign="left">
