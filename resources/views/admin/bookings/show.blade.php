@@ -40,7 +40,7 @@
                             <div class="col-md-6">
                                 <h6 class="text-muted">Thông tin đơn hàng</h6>
                                 <div class="border rounded p-3 mb-3">
-                                    <p><strong>Mã Đơn:</strong> <span class="text-primary">{{ $booking->id }}</span></p>
+                                    <p><strong>Mã Đơn:</strong> <span class="text-primary">{{ $booking->booking_number_id }}</span></p>
                                     <p><strong>Mã Check-in:</strong> {{ $booking->code_check_in }}</p>
                                     <p><strong>Loại phòng:</strong> {{ $booking->room->roomType->type ?? 'Không rõ' }}</p>
                                     <p><strong>Tên Phòng:</strong> {{ $booking->room->title }}</p>
@@ -66,9 +66,13 @@
                         </div>
 
                         @php
-                            $checkInDate = date('d-m-Y H:i', $booking->check_in_date);
-                            $checkOutDate = date('d-m-Y H:i', $booking->check_out_date);
-                            $numberOfNights = ($booking->check_out_date - $booking->check_in_date) / (60 * 60 * 24);
+                            $checkInDate = date('d-m-Y', $booking->check_in_date);
+                            $checkOutDate = date('d-m-Y', $booking->check_out_date);
+
+                            $checkInTimestamp = strtotime($checkInDate);
+                            $checkOutTimestamp = strtotime($checkOutDate);
+
+                            $numberOfNights = ($checkOutTimestamp - $checkInTimestamp) / (60 * 60 * 24);
                         @endphp
 
                         <!-- Booking Summary -->
@@ -76,8 +80,8 @@
                             <div class="col-md-6">
                                 <h6 class="text-muted">Chi tiết đặt phòng</h6>
                                 <div class="border rounded p-3 mb-3">
-                                    <p><strong>Ngày Check-in:</strong> {{ $checkInDate }}</p>
-                                    <p><strong>Ngày Check-out:</strong> {{ $checkOutDate }}</p>
+                                    <p><strong>Ngày đến:</strong> {{ $checkInDate }}</p>
+                                    <p><strong>Ngày đi:</strong> {{ $checkOutDate }}</p>
                                     <p><strong>Số đêm ở:</strong> {{ $numberOfNights }}</p>
                                 </div>
                             </div>
@@ -92,14 +96,15 @@
                                     <p><strong>Trạng thái:</strong>
                                         @switch($booking->status)
                                             @case(0)
-                                                <span class="badge bg-info">chưa thanh toán</span>
+                                                <span class="badge bg-warning">chưa thanh toán</span>
                                             @break
+
                                             @case(1)
-                                                <span class="badge bg-info">Đang thanh toán</span>
+                                                <span class="badge bg-warning">Đang thanh toán</span>
                                             @break
 
                                             @case(2)
-                                                <span class="badge bg-warning">Đã thanh toán tiền cọc</span>
+                                                <span class="badge bg-success">Đã thanh toán tiền cọc</span>
                                             @break
 
                                             @case(3)
@@ -107,7 +112,7 @@
                                             @break
 
                                             @case(4)
-                                                <span class="badge bg-danger">Đang sử dụng</span>
+                                                <span class="badge bg-info">Đang sử dụng</span>
                                             @break
 
                                             @case(5)

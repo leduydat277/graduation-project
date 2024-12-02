@@ -5,7 +5,7 @@ export const Banner = () => {
   const images = [
     "https://vielimousine.com/wp-content/uploads/2023/09/Khach-san-Park-Hyatt.webp",
     "https://wallpapers.com/images/featured/hotel-room-background-qad26bgd35ll4qv6.jpg",
-    "https://duopig.com/wp-content/uploads/2015/11/Ch%E1%BB%A5p-h%C3%ACnh-c%C4%83n-h%E1%BB%99-6.jpg",
+    "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/3/21/1170122/296817374_1015897554.jpg",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -6,8 +6,10 @@ use App\Models\Admin\ManageStatusRoom;
 use App\Models\Admin\Room;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class ManageStatusRoomController extends Controller
 {
@@ -58,7 +60,7 @@ class ManageStatusRoomController extends Controller
         }
 
         // Xây dựng query cho `ManageStatusRoom`
-        $query = ManageStatusRoom::query()->with(['room', 'booking']);
+        $query = ManageStatusRoom::query()->with(['room.roomType', 'booking']);
 
         if ($status !== null) {
             $query->where('status', $status);

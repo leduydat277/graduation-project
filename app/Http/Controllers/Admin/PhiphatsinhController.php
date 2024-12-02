@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller;
 
 class PhiphatsinhController extends Controller
 {
-        /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -23,9 +23,7 @@ class PhiphatsinhController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -37,22 +35,22 @@ class PhiphatsinhController extends Controller
             'booking_id' => 'required',
             'price' => 'required',
         ]);
+        $price = preg_replace('/[^\d]/', '', $request->price);
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->storeAs(
                 'upload/phiphatsinhs',
-                uniqid() . '.' . $request->file('image')->getClientOriginalExtension(), 
+                uniqid() . '.' . $request->file('image')->getClientOriginalExtension(),
                 'public'
             );
-                    }
-    
-        // 3. Lưu dữ liệu vào database
+        }
+
         $phiPhatSinh = new PhiPhatSinh();
         $phiPhatSinh->name = $request->name;
         $phiPhatSinh->booking_id = $request->booking_id;
         $phiPhatSinh->description = $request->description;
-        $phiPhatSinh->price = $request->price;
-        $phiPhatSinh->image = $imagePath; 
+        $phiPhatSinh->price = $price;
+        $phiPhatSinh->image = $imagePath;
         $phiPhatSinh->save();
         if ($phiPhatSinh) {
             return redirect()->route('phiphatsinhs.index')->with('success', 'Thêm mới thành công!');
@@ -60,8 +58,8 @@ class PhiphatsinhController extends Controller
             return redirect()->back()->with('error', 'Không thể thêm mới. Vui lòng thử lại.');
         }
     }
-    
-    
+
+
 
     /**
      * Display the specified resource.
@@ -79,7 +77,7 @@ class PhiphatsinhController extends Controller
             'booking_id' => 'required|exists:bookings,id',
             'description' => 'nullable',
             'price' => 'required|numeric|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $phiphatsinh->name = $request->input('name');
         $phiphatsinh->booking_id = $request->input('booking_id');
@@ -99,16 +97,16 @@ class PhiphatsinhController extends Controller
             return redirect()->back()->with('error', 'Không thể sửa. Vui lòng thử lại.');
         }
     }
-    
-    
+
+
 
     // /**
     //  * Remove the specified resource from storage.
     //  */
     public function destroy($id)
-    { 
-            $other = PhiPhatSinh::findOrFail($id); 
-            $other->delete();  
-            return redirect()->route('phiphatsinhs.index')->with('success', 'Xóa thành công!');
+    {
+        $other = PhiPhatSinh::findOrFail($id);
+        $other->delete();
+        return redirect()->route('phiphatsinhs.index')->with('success', 'Xóa thành công!');
     }
 }

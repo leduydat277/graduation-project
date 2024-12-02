@@ -15,20 +15,22 @@ import { QuantitySelectGuest } from "./QuantitySelectGuest"
 import { rest } from "lodash"
 
 export const GuestCount = (props) => {
-  const {position, ...rest} = props
+  const { position, ...rest } = props
   return (
     <Dialog >
       <DialogTrigger asChild>
-        <Button variant="outline" 
-        sx={{ 
-          size: 14,
-          fonWeight: 600,
-        }}
-        >Chọn loại phòng & số người</Button>
+        <Button variant="outline"
+          sx={{
+            size: 14,
+            fonWeight: 600,
+          }}
+        >Type room & Number guest</Button>
       </DialogTrigger>
-      <DialogContent position={position}>
-       <QuantitySelectGuest />
-      </DialogContent>
+      
+        <DialogContent position={position}>
+          <QuantitySelectGuest />
+        </DialogContent>
+    
     </Dialog>
   )
 }

@@ -11,6 +11,7 @@ class Payment extends Model
 
     public $timestamps = false;
     protected $fillable = [
+        'payments_id_number',
         'booking_id',
         'payment_date',
         'total_price',

@@ -10,12 +10,8 @@ use Inertia\Response;
 
 class DetailController extends Controller
 {
-    public function index(): Response
+    public function detail($id)
     {
-        return Inertia::render('Detail/Index');
-    }
-
-    public function detail($id) {
         $room = Room::with('roomType')->select('id', 'room_type_id', 'image_room', 'max_people', 'title', 'price', 'room_area', 'description')->where('id', $id)->first();
         // if (!$room) {
         //     return response()->json([
@@ -24,7 +20,7 @@ class DetailController extends Controller
         //     ], 400);
         // }
         $review = Review::with('user')->select('user_id', 'room_id', 'rating', 'comment')->where('room_id', $id)->get();
-         response()->json([
+        response()->json([
             "type" => "success",
             "room" => $room,
             "review" => $review
@@ -33,6 +29,5 @@ class DetailController extends Controller
             'room' => $room,
             'review' => $review
         ]);
-
     }
 }

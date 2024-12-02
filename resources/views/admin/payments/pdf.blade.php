@@ -90,8 +90,18 @@
                         class="text-danger">{{ number_format($payment->total_price) }} VNĐ</span></div>
                 <div class="col"><strong>Phương Thức Thanh Toán:</strong>
                     {{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</div>
-                <div class="col"><strong>Trạng Thái Thanh Toán:</strong> <span
-                        class="badge {{ $payment->payment_status == 1 ? 'bg-success' : 'bg-warning' }}">{{ $payment->payment_status == 1 ? 'Đã thanh toán' : 'Chưa thanh toán' }}</span>
+                <div class="col"><strong>Trạng Thái Thanh Toán:</strong>
+                    <span
+                        class="badge @if ($payment->payment_status == 3 || $payment->payment_status == 2) bg-success
+                    @else
+                    bg-warning @endif">
+                        @if ($payment->payment_status == 3)
+                            Đã thanh toán tổng tiền
+                        @endif
+                        @if ($payment->payment_status == 2)
+                            Đã thanh toán cọc
+                        @endif
+                    </span>
                 </div>
             </div>
         </div>
@@ -103,9 +113,9 @@
         <div class="section-content">
             <div class="row">
                 <div class="col"><strong>Người Đặt Phòng:</strong> {{ $payment->booking->user->name ?? 'N/A' }}</div>
-                <div class="col"><strong>Ngày Check-in:</strong>
+                <div class="col"><strong>Ngày đến:</strong>
                     {{ \Carbon\Carbon::parse($payment->booking->check_in_date)->format('d-m-Y') }}</div>
-                <div class="col"><strong>Ngày Check-out:</strong>
+                <div class="col"><strong>Ngày đi:</strong>
                     {{ \Carbon\Carbon::parse($payment->booking->check_out_date)->format('d-m-Y') }}</div>
             </div>
             <div class="row">
@@ -113,8 +123,23 @@
                         class="text-danger">{{ number_format($payment->booking->total_price) }} VNĐ</span></div>
                 <div class="col"><strong>Số Tiền Cọc:</strong> {{ number_format($payment->booking->tien_coc) }} VNĐ
                 </div>
-                <div class="col"><strong>Trạng Thái Đặt Phòng:</strong> <span
-                        class="badge {{ $payment->booking->status == 1 ? 'bg-info' : 'bg-danger' }}">{{ $payment->booking->status == 1 ? 'Đang sử dụng' : 'Đã hủy' }}</span>
+                <div class="col"><strong>Trạng Thái Đặt Phòng:</strong>
+                    <span
+                        class="badge @if ($payment->booking->status == 3 || $payment->payment_status == 2) bg-success
+                    @elseif ($payment->booking->status == 4)
+                    bg-primary
+                    @else
+                    bg-warning @endif">
+                        @if ($payment->booking->status == 3)
+                            Đã thanh toán tổng tiền
+                        @endif
+                        @if ($payment->booking->status == 2)
+                            Đã thanh toán cọc
+                        @endif
+                        @if ($payment->booking->status == 4)
+                            Đang sử dụng
+                        @endif
+                    </span>
                 </div>
             </div>
         </div>
@@ -127,8 +152,6 @@
             <div class="row">
                 <div class="col"><strong>Tên Phòng:</strong> {{ $payment->booking->room->title ?? 'N/A' }}</div>
                 <div class="col"><strong>Loại Phòng:</strong> {{ $payment->booking->room->roomType->type ?? 'N/A' }}
-                </div>
-                <div class="col"><strong>Diện Tích:</strong> {{ $payment->booking->room->room_area ?? 'N/A' }} m²
                 </div>
             </div>
             <div class="row">

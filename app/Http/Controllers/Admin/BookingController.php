@@ -6,6 +6,7 @@ use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class BookingController  extends Controller
 {
@@ -69,5 +70,28 @@ class BookingController  extends Controller
         $booking = Booking::with('room.roomType', 'user')->findOrFail($id);
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('booking'));
+    }
+
+    // viết cho tôi hàm hủy đặt phòng
+    // các trạng thái
+    // 0: Chưa thanh toán cọc
+    // 1: Đang thanh toán cọc
+    // 2: Đã thanh toán cọc
+    // 3: Đã thanh toán toàn bộ
+    // 4: Đang sử dụng
+    // 5: huy đặt phòng
+    // nếu trạng thái  === 2,3,4 thì không thể hủy
+
+    public function cancel($id)
+    {
+        $booking = Booking::findOrFail($id);
+        if ($booking->status === 2 || $booking->status === 3 || $booking->status === 4) {
+            return redirect()->back()->with('error', 'Không thể hủy đơn đặt phòng này');
+        }
+
+        $booking->status = 5;
+        $booking->save();
+
+        return redirect()->back()->with('success', 'Hủy đặt phòng thành công');
     }
 }

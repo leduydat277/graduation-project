@@ -37,7 +37,7 @@
                         <div class="col-md-3">
                             <label for="status" class="form-label">Trạng thái phòng</label>
                             <select name="status" class="form-select">
-                                <option value="">Chọn trạng thái</option>
+                                <option value="">Tất cả trạng thái</option>
                                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Đã cọc</option>
                                 <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Sẵn sàng</option>
                                 <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Đang sử dụng
@@ -68,37 +68,47 @@
                     <!-- Bảng danh sách trạng thái phòng -->
                     <div class="table-responsive">
                         <table class="table align-middle table-nowrap">
-                            <thead class="table-light">
+                            <thead >
                                 <tr>
-                                    <th>ID Phòng</th>
+                                    <th>Mã phòng</th>
                                     <th>Tên Phòng</th>
                                     <th>Loại Trạng Thái</th>
                                     <th>Khoảng Thời Gian</th>
-                                    <th>Chi Tiết Booking (nếu có)</th>
+                                    <th>Chi Tiết đơn hàng(nếu có)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($statusRooms as $statusRoom)
                                     <tr>
-                                        <td>{{ $statusRoom['room']['id'] ?? 'Không xác định' }}</td>
+                                        <td>{{ $statusRoom['room']['roomId_number'] ?? 'Không xác định' }}</td>
                                         <td>{{ $statusRoom['room']['title'] ?? 'Không xác định' }}</td>
                                         <td>
                                             @switch($statusRoom['status'])
                                                 @case(0)
-                                                    Đã cọc
+                                                    <span
+                                                        style="background-color: #6c757d; color: #fff; padding: 2px 5px; border-radius: 3px;">Đã
+                                                        cọc</span>
                                                 @break
 
                                                 @case(1)
-                                                    Sẵn sàng
+                                                    <span
+                                                        style="background-color: #28a745; color: #fff; padding: 2px 5px; border-radius: 3px;">Sẵn
+                                                        sàng</span>
                                                 @break
 
                                                 @case(2)
-                                                    Đang sử dụng
+                                                    <span
+                                                        style="background-color: #17a2b8; color: #fff; padding: 2px 5px; border-radius: 3px;">Đang
+                                                        sử dụng</span>
                                                 @break
 
                                                 @default
-                                                    Không xác định
+                                                    <span
+                                                        style="background-color: #dc3545; color: #333; padding: 2px 5px; border-radius: 3px;">Không
+                                                        xác định
+                                                    </span>
                                             @endswitch
+
                                         </td>
                                         <td>
                                             {{ date('d/m/Y H:i', $statusRoom['from']) }} -
@@ -112,10 +122,12 @@
                                         </td>
                                         <td>
                                             @if (!empty($statusRoom['booking']))
-                                                <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}">Xem
-                                                    Booking</a>
+                                                <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}"
+                                                    class="btn btn-info">
+                                                    Xem Booking
+                                                </a>
                                             @else
-                                                Không có
+                                                --
                                             @endif
                                         </td>
                                     </tr>

@@ -18,6 +18,40 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+    <style>
+        /* Phân trang đẹp hơn */
+        .dataTables_paginate {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .dataTables_paginate .paginate_button {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_paginate .paginate_button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            font-weight: bold;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -201,7 +235,6 @@
                             </div>
                             <div class="card-body">
                                 <style>
-                                    /* Thiết lập thông báo khi không có đơn hàng */
                                     .no-orders-message {
                                         text-align: center;
                                         font-size: 16px;
@@ -210,18 +243,15 @@
                                         margin: 20px 0;
                                     }
 
-                                    /* Thiết lập bảng đơn hàng */
                                     #ordersToday {
                                         border: 1px solid #ddd;
                                         border-radius: 5px;
                                         width: 100%;
                                         table-layout: auto;
-                                        /* Đảm bảo các cột co dãn phù hợp */
                                     }
 
                                     #ordersToday thead {
                                         background-color: #f4f4f4;
-                                        /* Màu nền cho phần đầu bảng */
                                         font-weight: bold;
                                         color: #333;
                                     }
@@ -231,35 +261,43 @@
                                         text-align: left;
                                         padding: 10px;
                                         white-space: nowrap;
-                                        /* Ngăn không cho nội dung xuống dòng */
                                     }
 
                                     #ordersToday tbody tr:nth-child(even) {
                                         background-color: #f9f9f9;
-                                        /* Màu nền cho các dòng chẵn */
                                     }
 
-                                    #ordersToday tbody tr:hover {
+                                    <style>#ordersToday tbody tr:hover {
                                         background-color: #e6f7ff;
-                                        /* Màu khi hover */
+                                        cursor: pointer;
+                                        /* Thêm con trỏ dạng tay để người dùng biết rằng có thể click */
                                     }
 
-                                    /* Đảm bảo bảng không bị tràn */
                                     .table-container {
                                         overflow-x: auto;
                                     }
 
-                                    /* Style cho phần thống kê */
                                     .statistics-summary {
                                         font-size: 16px;
                                         font-weight: bold;
                                         color: #444;
                                         margin-top: 20px;
                                     }
+
+                                    .statistics-summary {
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        color: #333;
+                                        margin-top: 20px;
+                                        padding: 10px;
+                                        background: #f7f7f7;
+                                        border: 1px solid #ddd;
+                                        border-radius: 5px;
+                                        text-align: left;
+                                    }
                                 </style>
 
                                 @if (!isset($bookingToday))
-                                    <!-- Kiểm tra danh sách đơn hàng có rỗng không -->
                                     <p class="no-orders-message">
                                         Hôm nay không có đơn hàng nào.
                                     </p>
@@ -299,20 +337,23 @@
                                                                 break;
                                                         }
                                                     @endphp
-                                                    <tr>
+                                                    <tr data-id="{{ $item->id }}">
                                                         <td>{{ $item->room->title }}</td>
-                                                        <td>{{ $item->check_in_date }}</td>
-                                                        <td>{{ $item->check_out_date }}</td>
-                                                        <td>{{ $item->total_price }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($item->check_in_date)->format('d-m-Y') }}
+                                                        </td>
+                                                        <td>{{ \Carbon\Carbon::parse($item->check_out_date)->format('d-m-Y') }}
+                                                        </td>
+                                                        <td>{{ number_format($item->total_price, 0, ',', '.') }}</td>
                                                         <td>{{ $status }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
                                     </div>
+
                                     <div class="statistics-summary">
-                                        <h5>Đơn hàng bị hủy trong hôm nay: {{ $countDes }}</h5>
-                                        <h5>Tổng doanh thu hôm nay: {{ $todayPrice }}</h5>
+                                        <h5 class="delete-orders">Đơn hàng bị hủy trong hôm nay: {{ $countDes }}</h5>
+                                        <h5 class="total-orders">Tổng doanh thu hôm nay: {{ $todayPrice }}</h5>
                                     </div>
                                 @endif
                             </div>
@@ -555,4 +596,15 @@
 @endsection
 @section('js')
     <script type="module" src="{{ asset('assets/admin/assets/js/pages/dashboard.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#ordersToday tbody').on('click', 'tr', function() {
+                var orderId = $(this).data('id');
+                console.log(orderId);
+                var url = '/admin/bookings/' + orderId;
+                window.location.href = url;
+            });
+        });
+    </script>
+
 @endsection

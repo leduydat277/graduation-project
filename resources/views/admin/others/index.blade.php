@@ -1,6 +1,6 @@
 @extends('admin.layouts.admin')
 @section('title')
-{{$title}}
+{{ $title }}
 @endsection
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -16,7 +16,8 @@
 <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('assets/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
+    type="text/css" />
 @endsection
 @section('content')
 @if (session('success'))
@@ -25,13 +26,13 @@
 </div>
 @endif
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 
@@ -39,9 +40,10 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0 flex-grow-1">Danh sách Orthers</h4>
+                <h4 class="card-title mb-0 flex-grow-1">Danh sách khác</h4>
             </div><!-- end card header -->
-            <button style="width: 120px; margin: 10px;" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addOtherModal">
+            <button style="width: 120px; margin: 10px;" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#addOtherModal">
                 Thêm mới
             </button>
 
@@ -64,26 +66,28 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addOtherModalLabel">Thêm mới Others</h5>
+                <h5 class="modal-title" id="addOtherModalLabel">Thêm mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="addOtherForm">
+            <form id="addOtherForm" action="{{ route('others.store') }}" enctype="multipart/form-data" method="post">
+                @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="otherName" class="form-label">Name</label>
+                        <label for="otherName" class="form-label">Tên</label>
                         <input type="text" class="form-control" id="otherName" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="otherType" class="form-label">Type</label>
+                        <label for="otherType" class="form-label">Loại</label>
                         <input type="text" class="form-control" id="otherType" name="type">
                     </div>
                     <div class="mb-3">
-                        <label for="otherDescription" class="form-label">Description</label>
+                        <label for="otherDescription" class="form-label">Mô tả</label>
                         <textarea class="form-control" id="otherDescription" name="description"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="otherValue" class="form-label">Value</label>
-                        <input type="text" class="form-control" id="otherValue" name="value">
+                        <label for="otherValue" class="form-label">Dữ liệu (nhập 1 trong 2 loại dưới đây)</label>
+                        <input type="file" class="form-control" name="value" id="fileInput"> <br>
+                        <textarea type="text" class="form-control" id="otherValue" name="valuee" placeholder="nhập dữ liệu"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -105,113 +109,106 @@
             </div>
             <div class="modal-body">
                 <!-- Form Edit -->
-                <form id="editForm" method="POST" action="">
+                <form id="editForm" enctype="multipart/form-data" method="POST">
                     @csrf
-                    @method('PUT')
+                    @method('PUT') <!-- Phương thức PUT để Laravel nhận diện đây là yêu cầu cập nhật -->
                     <div class="mb-3">
                         <label for="name" class="form-label">Tên</label>
                         <input type="text" class="form-control" id="name1" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">Type</label>
+                        <label for="name" class="form-label">Loại</label>
                         <input type="text" class="form-control" id="type1" name="type" required>
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description1" name="description" required>
+                        <label for="name" class="form-label">Mô tả</label>
+                        <input type="text" class="form-control" id="description1" name="description">
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">Value</label>
-                        <input type="text" class="form-control" id="value1" name="value" required>
+                        <label for="otherValue" class="form-label">Dữ liệu (nhập 1 trong 2 loại dưới đây)</label>
+                        <input type="file" class="form-control" name="value" id="fileInputU"> <br>
+                        <textarea type="text" class="form-control" id="otherValueU" name="valuee" placeholder="nhập dữ liệu"></textarea>
                     </div>
-                    <!-- Thêm các trường sửa ở đây -->
                     <button type="submit" class="btn btn-primary">Lưu</button>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
 
 
-
-
 @endsection
 @section('js')
 <script>
-    // thêm mới
-    document.addEventListener("DOMContentLoaded", function() {
-        const addOtherForm = document.getElementById("addOtherForm");
+    var editRoute = "{{ route('others.show', ['other' => ':id']) }}";
+    console.log(editRoute);
 
-        addOtherForm.addEventListener("submit", function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(addOtherForm);
-
-            fetch("{{ route('others.store') }}", {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-                body: formData
-            })
-            window.location.reload();
-        });
+    // check inputfile
+    document.getElementById('fileInput').addEventListener('change', function() {
+        document.getElementById('otherValue').disabled = this.files.length > 0;
     });
-    // end thêm mới
 
-// sửa
-    function openCheckinModal(id) {
-        const data = @json($others).find(others => others.id === id);
-        document.getElementById('name1').value = data.name;
-            document.getElementById('type1').value = data.type;
-            document.getElementById('description1').value = data.description;
-            document.getElementById('value1').value = data.value;
-        
-            document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const form = this;
-            form.action = '{{ route('others.update', ':id') }}'.replace(':id', id);
-            form.submit();
-    });        
-    }
-// endsuaw
+    document.getElementById('otherValue').addEventListener('input', function() {
+        document.getElementById('fileInput').disabled = this.value.trim() !== '';
+    });
+
+
+    document.getElementById('fileInputU').addEventListener('change', function() {
+        document.getElementById('otherValueU').disabled = this.files.length > 0;
+    });
+
+    document.getElementById('otherValueU').addEventListener('input', function() {
+        document.getElementById('fileInputU').disabled = this.value.trim() !== '';
+    });
+    // end check inputfile
+
 
     document.addEventListener("DOMContentLoaded", function() {
         const othersData = @json($others);
         if (document.getElementById("table-gridjs")) {
             new gridjs.Grid({
                 columns: [{
-                        name: "Others ID",
+                        name: "Id",
                         width: "100px"
-                    },
-                    {
-                        name: "Name",
+                    }, {
+                        name: "Tên",
                         width: "150px"
                     },
                     {
-                        name: "Type",
+                        name: "Loại",
                         width: "100px"
                     },
                     {
-                        name: "Description",
+                        name: "Mô tả",
                         width: "150px"
                     },
                     {
-                        name: "Value"
+                        name: "Dữ liệu",
+                        formatter: (_, row) => {
+                            var value = row.cells[4].data;
+                            if (value && value.startsWith('upload/others/')) {
+                                return gridjs.html(`<img src="/storage/${value}" alt="Ảnh" style="max-width: 100px; height: auto;" />`);
+                            } else {
+                                const truncatedValue = value.length > 100 ? value.substring(0, 100) + '...' : value;
+                                return gridjs.html(truncatedValue);
+                            }
+                        }
                     },
                     {
 
-                        name: "Action",
+                        name: "Hành động",
                         width: "100px",
                         formatter: (_, row) => gridjs.html(`
-<button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Sửa</button>
+                        <a href="${editRoute.replace(':id', row.cells[0].data)}" class="edit-link">
+                            <button class="btn btn-warning">Sửa</button>
+                        </a>
     <form id="delete-form-${row.cells[0].data}" action="/admin/others/${row.cells[0].data}" method="POST" style="display: inline-block;">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" onclick="return confirm('bạn có muốn xóa?')" class="btn btn-danger">Xóa</button>
     </form>
 `)
-
                     }
 
                 ],
@@ -220,7 +217,7 @@
                     other.name || '',
                     other.type || '',
                     other.description || 'Không có mô tả',
-                    other.value || 'Không có giá trị',
+                    other.value,
                 ]),
                 pagination: {
                     limit: 10
@@ -249,5 +246,4 @@
 
 <!-- App js -->
 <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
-
 @endsection

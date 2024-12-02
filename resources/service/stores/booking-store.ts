@@ -3,52 +3,75 @@ import { addDays } from 'date-fns';
 import { shallow } from 'zustand/shallow';
 import { immer } from 'zustand/middleware/immer';
 import { createWithEqualityFn } from 'zustand/traditional';
-
 import {
   persist,
   devtools,
   subscribeWithSelector,
-  createJSONStorage
+  createJSONStorage,
 } from 'zustand/middleware';
+const calculateTotalDays = (checkInDate, checkOutDate) => {
+  if (checkInDate && checkOutDate && checkOutDate > checkInDate) {
+    const totalDays = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)); 
+    console.log('totalDays: ', totalDays);
+    return totalDays;
+  }
+  return 2; 
+};
+
 
 const initialBookingRange = {
-  checkInDate: new Date(),
-  checkOutDate: addDays(new Date(), 1),
-  typeRoom: 'normal',
+  checkInDate: Date.now(), 
+  checkOutDate: addDays(new Date(), 1).getTime(), 
   title: '',
   idRoom: 0,
   price: 0,
   subtitle: '',
-  totalDays: 1,
+  totalDays: 0,
   totalPrice: 0,
   numberOfGuests: 1,
   numberOfAdults: 1,
   numberOfChildren: 0,
   note: '',
-
 };
+
 
 export const useBookingStore = createWithEqualityFn(
   devtools(
     persist(
       subscribeWithSelector(
-        immer <any>((set, get) => ({
+        immer((set, get) => ({
           ...initialBookingRange,
           resetState: () => set({ ...initialBookingRange }),
-          setIsOpen: (isOpen) => set((state) => { state.isOpen = isOpen; }),
-          setCheckInDate: (checkInDate) => set((state) => { 
-            state.checkInDate = checkInDate; 
-            state.totalDays = state.checkOutDate ? Math.floor((state.checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)) : 0;
-          }),
-          setCheckOutDate: (checkOutDate) => set((state) => { 
-            state.checkOutDate = checkOutDate; 
-            state.totalDays = state.checkInDate ? Math.floor((checkOutDate - state.checkInDate) / (1000 * 60 * 60 * 24)) : 0;
-          }),
+          setCheckInDate: (checkInDate) =>
+            set((state) => {
+              state.checkInDate = checkInDate;
+              state.totalDays = calculateTotalDays(checkInDate, state.checkOutDate);
+              console.log('Updated totalDays after checkInDate change: ', state.totalDays); 
+            }),
+          
+            setCheckOutDate: (checkOutDate) =>
+              set((state) => {
+                state.checkOutDate = checkOutDate;
+                const totalDays = calculateTotalDays(state.checkInDate, checkOutDate);
+                state.totalDays = totalDays; 
+                console.log('Updated totalDays after checkOutDate change: ', totalDays); 
+              }),
+            setTotalDays: (totalDays) =>
+              set((state) => {
+                state.totalDays = totalDays;
+                console.log('Updated totalDays via setTotalDays: ', totalDays); 
+              }),
+          setPrice: (price) =>
+            set((state) => {
+              state.price = price;
+              if (state.totalDays > 0) {
+                state.totalPrice = state.totalDays * price;
+              }
+            }),
+
           setIdRoom: (idRoom) => set((state) => { state.idRoom = idRoom; }),
           setTitle: (title) => set((state) => { state.title = title; }),
           setSubtitle: (subtitle) => set((state) => { state.subtitle = subtitle; }),
-          setTotalPrice: (totalPrice) => set((state) => { state.totalPrice = totalPrice; }),
-          setPrice: (price) => set((state) => { state.price = price; }),
           setNumberOfGuests: (numberOfGuests) => set((state) => { state.numberOfGuests = numberOfGuests; }),
           setNumberOfChildren: (numberOfChildren) => set((state) => { state.numberOfChildren = numberOfChildren; }),
           setNote: (note) => set((state) => { state.note = note; }),
@@ -57,7 +80,7 @@ export const useBookingStore = createWithEqualityFn(
       ),
       {
         name: 'booking-store',
-        storage:createJSONStorage(() => localStorage),
+        storage: createJSONStorage(() => localStorage),
       }
     )
   ),

@@ -31,7 +31,7 @@ export const QuantitySelectGuest = () => {
   return (
     <Stack spacing={2}>
       <Stack spacing={1} direction="row" alignItems="center">
-        <Typography variant="body1" sx={{ pr: 3 }}>Số người lớn: </Typography>
+        <Typography variant="body1" sx={{ pr: 3 }}> Number Of Guests: </Typography>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Button variant="secondary" onClick={downGuests}>-</Button>
           <Typography variant="h6">{numberOfGuests}</Typography>
@@ -39,14 +39,14 @@ export const QuantitySelectGuest = () => {
         </Stack>
       </Stack>
       <Stack spacing={1} direction="row" alignItems="center">
-        <Typography variant="body1" sx={{ pr: 5.7 }}>Số trẻ em: </Typography>
+        <Typography variant="body1" sx={{ pr: 2 }}> Number Of Children: </Typography>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Button variant="secondary" onClick={downChildren}>-</Button>
           <Typography variant="h6">{numberOfChildren}</Typography>
           <Button variant="secondary" onClick={upChildren}>+</Button>
         </Stack>
       </Stack>
-      <SelectTypeRoom />
+      {/* <SelectTypeRoom /> */}
     </Stack>
   );
 };
@@ -55,17 +55,17 @@ export const QuantitySelectGuest = () => {
 export const SelectTypeRoom = () => {
   const [setTypeRoom] = useBookingStore((state) => [state.setTypeRoom]);
 
-  const changeRoomType = (value) => {
-    console.log(value);
-    setTypeRoom(value);
-  };
+  // const changeRoomType = (value) => {
+  //   console.log(value);
+  //   setTypeRoom(value);
+  // };
 
   return (
     <Stack spacing={1} direction="row" alignItems="center">
-    <Typography sx={{ pr: 4 }}>Loại phòng: </Typography>
+    <Typography sx={{ pr: 4 }}> Type Room: </Typography>
     <Select onValueChange={changeRoomType}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Chọn loại phòng" />
+        <SelectValue placeholder="Choose Type Room" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

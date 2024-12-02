@@ -91,8 +91,9 @@ class SearchRoomController extends Controller
                 $item_arr['to'] = (new DateTime())->setTimestamp($item_arr['to'])->format('d-m-Y');
 
                 $current_time = new DateTime();
-                if (($item_arr['to'] < $current_time->getTimestamp()) && $item_arr['to'] != "01-01-1970") {
+                if (((new DateTime($item_arr['to']))->getTimestamp() < $current_time->getTimestamp()) && $item_arr['to'] != "01-01-1970") {
                     unset($current_time_room[$key]);
+                    echo "khôi";
                 }
 
                 if ($item_arr['from'] < $current_time->getTimestamp()) {
@@ -110,9 +111,10 @@ class SearchRoomController extends Controller
                     && $item_arr['to'] != "01-01-1970"
                 ) {
                     unset($current_time_room[$key]);
+                    echo "khôi";
                 }
             }
-
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Rooms retrieved successfully.',
@@ -127,7 +129,7 @@ class SearchRoomController extends Controller
             ->select('id')
             ->get()
             ->toArray();
-
+            
         if (empty($arr_rooms)) {
             return response()->json([
                 'status' => 'error',

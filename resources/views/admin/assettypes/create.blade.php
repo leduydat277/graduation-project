@@ -18,14 +18,20 @@
     <div class="w-100 d-flex justify-content-center align-items-center">
         <div class="col-6">
             <h2 class="text-center">{{ $title }}</h2>
-            <form action="{{ route('asset-types.store') }}" method="POST">
+            <form action="{{ route('asset-types.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên Loại Tiện Nghi</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên loại tiện nghi" value="{{ old('name') }}">
+                    <input type="text" class="form-control" id="name" name="name"
+                        placeholder="Nhập tên loại tiện nghi" value="{{ old('name') }}">
                     @error('name')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="type" class="form-label">Mã Tiện Nghi</label>
+                    <input type="text" class="form-control" id="assets_number_id" name="assets_number_id"
+                        placeholder="Mã Tiện Nghi" readonly value="{{ old('assets_number_id') }}">
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Mô Tả Loại Tiện Nghi</label>
@@ -34,7 +40,13 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                
+                <div class="mb-3">
+                    <label for="image" class="form-label">Hình Ảnh</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    @error('image')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Thêm Loại Tiện Nghi</button>
                 </div>
@@ -46,4 +58,8 @@
 @section('js')
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    <script>
+        var assets = "{{ $assets->id }}";
+        document.getElementById('assets_number_id').value = 'TN_' + assets;
+    </script>
 @endsection

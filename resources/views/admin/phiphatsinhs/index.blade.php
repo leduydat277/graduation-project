@@ -3,6 +3,8 @@
 {{$title}}
 @endsection
 @section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
@@ -90,7 +92,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="otherValue" class="form-label">Giá</label>
-                        <input type="number" class="form-control" id="otherValue" name="price">
+                        <input type="text" class="form-control" id="price" name="price">
                     </div>
                     <div class="mb-3">
                         <label for="otherValue" class="form-label">Hình ảnh</label>
@@ -126,7 +128,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="booking_id" class="form-label">Mã đơn</label>
-                            <select class="form-select" name="booking_id" id="booking_id">
+                            <select class="form-select" name="booking_id" id="booking_id2">
                                 <!-- Các tùy chọn sẽ được render động từ PHP -->
                                 <?php foreach ($allBooking as $booking): ?>
                                     <option value="{{ $booking->id }}">
@@ -143,7 +145,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Giá</label>
-                            <input type="number" class="form-control" id="price" name="price">
+                            <input type="number" class="form-control" name="price">
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label">Hình ảnh</label>
@@ -163,47 +165,81 @@
     </div>
 </div>
 
-
-
-
-
+<style>
+    .select2-container--default .select2-selection--single .select2-selection__clear{
+        display: none;
+    }
+</style>
 @endsection
 @section('js')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-    // // sửa
-    function openCheckinModal(id) {
-    // Tìm đối tượng cần chỉnh sửa
-    const data = @json($phiphatsinhs).find(phiphatsinhs => phiphatsinhs.id === id);
-    // Gán giá trị cho các trường trong modal
-    const modal = document.getElementById('checkinModal'); // ID của modal
-    modal.querySelector('#name').value = data.name || '';
-    modal.querySelector('#description').value = data.description || '';
-    modal.querySelector('#price').value = data.price || '';
-
-    // Xử lý select để chọn đúng giá trị
-    const bookingSelect = modal.querySelector('#booking_id');
-    const valueToSelect = String(data.booking_id); // Chuyển thành chuỗi để so sánh chính xác
-    Array.from(bookingSelect.options).forEach(option => {
-        option.selected = String(option.value) === valueToSelect;
+    $(document).ready(function() {
+        $('#addOtherModal').on('shown.bs.modal', function() {
+            $('#booking_id').select2({
+                dropdownParent: $('#addOtherModal'), // Đảm bảo dropdown hiển thị trong modal
+                placeholder: "Chọn một mã đơn",
+                allowClear: true
+            });
+        });
     });
+    // format tiền trong input
+    function formatCurrency(value) {
+        // Loại bỏ các ký tự không phải là số
+        value = value.replace(/[^\d]/g, "");
 
-    // Hiển thị hình ảnh hiện tại nếu có
-    const currentImageContainer = modal.querySelector('#currentImageContainer');
-    const currentImage = modal.querySelector('#currentImage');
-    if (data.image) {
-        currentImage.src = `/storage/${data.image}`;
-        currentImageContainer.style.display = 'block';
-    } else {
-        currentImageContainer.style.display = 'none';
+        // Thêm dấu phân cách hàng nghìn
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // Cập nhật hành động submit form
-    const editForm = modal.querySelector('#editForm');
-    editForm.action = '{{ route('phiphatsinhs.update', ':id') }}'.replace(':id', id);
-    // Hiển thị modal
-    const bootstrapModal = new bootstrap.Modal(modal);
-    bootstrapModal.show();
-}
+    // Lắng nghe sự kiện nhập liệu trong ô input
+    document.getElementById('price').addEventListener('input', function(e) {
+        let value = e.target.value;
+
+        // Format giá trị nhập vào và thêm "VNĐ"
+        let formattedValue = formatCurrency(value);
+
+        // Cập nhật giá trị vào ô input
+        e.target.value = formattedValue + " VNĐ";
+    });
+    // end format tiền trong input
+
+
+    // // sửa
+    function openCheckinModal(id) {
+        // Tìm đối tượng cần chỉnh sửa
+        const data = @json($phiphatsinhs).find(phiphatsinhs => phiphatsinhs.id === id);
+        // Gán giá trị cho các trường trong modal
+        const modal = document.getElementById('checkinModal'); // ID của modal
+        modal.querySelector('#name').value = data.name || '';
+        modal.querySelector('#description').value = data.description || '';
+        modal.querySelector('#price').value = data.price || '';
+
+        // Xử lý select để chọn đúng giá trị
+        const bookingSelect = modal.querySelector('#booking_id');
+        const valueToSelect = String(data.booking_id); // Chuyển thành chuỗi để so sánh chính xác
+        Array.from(bookingSelect.options).forEach(option => {
+            option.selected = String(option.value) === valueToSelect;
+        });
+
+        // Hiển thị hình ảnh hiện tại nếu có
+        const currentImageContainer = modal.querySelector('#currentImageContainer');
+        const currentImage = modal.querySelector('#currentImage');
+        if (data.image) {
+            currentImage.src = `/storage/${data.image}`;
+            currentImageContainer.style.display = 'block';
+        } else {
+            currentImageContainer.style.display = 'none';
+        }
+
+        // Cập nhật hành động submit form
+        const editForm = modal.querySelector('#editForm');
+        editForm.action = '{{ route('phiphatsinhs.update', ': id ') }}'.replace(':id', id);
+        // Hiển thị modal
+        const bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.show();
+    }
 
 
     // // endsuaw
@@ -245,19 +281,29 @@
                         formatter: (cell) => gridjs.html(cell),
                     },
                     {
+                        name: "Trạng thái",
+                        width: "120px",
+                        formatter: (cell, row) => {
+                            const status = row.cells[6].data;
+                            let statusText = '';
+                            let statusClass = '';
 
-                        name: "Action",
-                        width: "150px",
-                        formatter: (_, row) => gridjs.html(`
-<button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})">Sửa</button>
-    <form id="delete-form-${row.cells[0].data}" action="/admin/phiphatsinhs/${row.cells[0].data}" method="POST" style="display: inline-block;">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="_method" value="DELETE">
-        <button type="submit" onclick="return confirm('bạn có muốn xóa?')" class="btn btn-danger">Xóa</button>
-    </form>
-`)
+                            // Kiểm tra trạng thái và trả về giá trị tương ứng với màu sắc
+                            switch (status) {
+                                case 0:
+                                    statusText = "Chưa thanh toán"; // Trạng thái 2
+                                    statusClass = 'bg-danger'; // Màu vàng
+                                    break;
+                                case 1:
+                                    statusText = "Đã thanh toán"; // Trạng thái 3
+                                    statusClass = 'bg-success'; // Màu xanh dương
+                                    break;
+                            }
 
-                    }
+                            // Trả về HTML với lớp CSS cho màu sắc
+                            return gridjs.html(`<span class="badge ${statusClass}">${statusText}</span>`);
+                        }
+                    },
 
                 ],
                 data: othersData.map(phiphatsinhs => [
@@ -269,6 +315,7 @@
                     phiphatsinhs.image ?
                     `<img src="/storage/${phiphatsinhs.image}" alt="Hình ảnh" style="width: 50px; height: 50px; object-fit: cover;">` :
                     'Không có hình ảnh',
+                    phiphatsinhs.status,
                 ]),
                 pagination: {
                     limit: 10

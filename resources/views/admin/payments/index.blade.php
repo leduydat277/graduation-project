@@ -15,7 +15,7 @@
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
-    <div class="page-content">
+    <div class="page-content pt-2">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
@@ -73,38 +73,40 @@
                                 style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>User</th>
-                                        <th>Amount</th>
-                                        <th>Payment Method</th>
-                                        <th>Payment Date</th>
-                                        <th>Payment_status</th>
-                                        <th>Action</th>
+                                        <th>Mã thanh toán</th>
+                                        <th>Người dùng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Phương thức thanh toán</th>
+                                        <th>Ngày thanh toán</th>
+                                        <th>Trạng thái thanh toán</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody id="payment-tbody">
                                     @foreach ($payments as $payment)
                                         <tr>
-                                            <td>{{ $payment->booking_id }}</td>
-                                            <td>{{ $payment->booking->user->name ?? 'N/A' }}</td>
+                                            <td>{{ $payment->payments_id_number }}</td>
+                                            <td>{{ $payment->booking->last_name . ' ' . $payment->booking->first_name ?? 'N/A' }}
+                                            </td>
                                             <td>{{ number_format($payment->total_price) }} vnđ</td>
                                             <td>{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d-m-Y') }}</td>
                                             <td>{{ $payment->payment_status_text }}</td>
                                             <td>
                                                 <a class="btn btn-info"
-                                                    href="{{ route('payments.show', $payment->id) }}"><i
-                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i> Xem
+                                                    href="{{ route('payments.show', $payment->id) }}"><i></i> Xem
                                                     chi tiết</a>
                                                 <a class="btn btn-danger"
-                                                    href="{{ route('payments.export_pdf', $payment->id) }}"><i
-                                                        class="ri-file-pdf-fill align-bottom me-2 text-muted"></i>
+                                                    href="{{ route('payments.export_pdf', $payment->id) }}"><i></i>
                                                     In PDF</a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            {{ $payments->appends(request()->input())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>

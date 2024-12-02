@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Admin\AssetType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,6 @@ class RoomAsset extends Model
 
     public function assetsType()
     {
-        return $this->belongsTo(AssetsType::class);
+        return $this->belongsTo(AssetType::class, 'assets_type_id');
     }
 }
