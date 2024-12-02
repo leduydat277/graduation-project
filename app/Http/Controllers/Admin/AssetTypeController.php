@@ -44,7 +44,8 @@ class AssetTypeController extends Controller
     }
 
     public function store(AssetTypeRequest $request)
-    {
+    {   
+        dd($request->all());
         $data = $request->except('_token');
 
         // Xử lý upload ảnh
@@ -82,7 +83,7 @@ class AssetTypeController extends Controller
         return redirect()->route('asset-types.index')->with('success', 'Cập nhật loại tài sản thành công');
     }
 
-    public function destroy($id)
+    public function lock($id)
     {
         $assetType = AssetType::select('id', 'status')->find($id);
 
@@ -100,5 +101,19 @@ class AssetTypeController extends Controller
         }
 
         return redirect()->route('asset-types.index')->with('success', 'Tạm ngưng sử dụng tiện nghi thành công');
+    }
+
+    public function unlock($id)
+    {
+        $assetType = AssetType::select('id', 'status')->find($id);
+
+        if (!$assetType) {
+            return redirect()->route('asset-types.index')->with('error', 'Loại tài sản không tồn tại');
+        }
+
+        $assetType->status = 0;
+        $assetType->save();
+
+        return redirect()->route('asset-types.index')->with('success', 'Mở khóa tiện nghi thành công');
     }
 }

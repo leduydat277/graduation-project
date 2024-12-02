@@ -55,6 +55,14 @@
                         </div>
                     @endif
                 </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Trạng Thái</label>
+                    <select class="form-select" name="status">
+                        <option value="0" {{ $assetType->status == 0 ? 'selected' : '' }}>Sẵn sàng</option>
+                        <option value="2" {{ $assetType->status == 2 ? 'selected' : '' }}>Hỏng</option>
+                    </select>
+                </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Cập Nhật Loại Tiện Nghi</button>
                 </div>
