@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\NotificationMessage;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Request;
 include_once "admin.php";
 
 Route::get("/test", function (Request $request) {
-    event(new NotificationMessage('Lê Duy Linh','Đơn đặt phòng mới', 'dfjghidsgh'));
+    event(new NotificationMessage('Lê Duy Linh', 'Đơn đặt phòng mới', 'dfjghidsgh'));
     return response()->json(['status' => 'Notification sent!']);
 });
 
@@ -37,4 +38,15 @@ Route::get('/success', [SuccesssController::class, 'index'])
     ->name('success');
 
 Route::get('/rooms', [RoomsController::class, 'index'])
-    ->name('rooms');    
+    ->name('rooms');
+
+Route::get('login', [LoginController::class, 'create'])
+    ->name('login');
+    // ->middleware('guest');
+
+Route::post('login', [LoginController::class, 'store'])
+    ->name('login.store');
+    // ->middleware('guest');;
+
+Route::delete('logout', [LoginController::class, 'destroy'])
+    ->name('logout');

@@ -38,6 +38,7 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
     </script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script src="{{ asset('assets/admin/assets/js/notification.js') }}"></script>
     <!-- App favicon -->
     @yield('css')
@@ -129,8 +130,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <script type="module" src="{{ asset('assets/admin/assets/js/notification.js') }}">
-    </script>
+    <script type="module" src="{{ asset('assets/admin/assets/js/notification.js') }}"></script>
     @yield('js')
 </body>
 

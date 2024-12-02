@@ -48,8 +48,8 @@ class BookingController
     {
         try {
             $user_id = $request->user_id;
-            $check_in_date = $request->input('check_in_date');
-            $check_out_date = $request->input('check_out_date');
+            $check_in_timestamp = $request->input('check_in_date');
+            $check_out_timestamp = $request->input('check_out_date');
             $first_name = $request->input('first_name');
             $last_name = $request->input('last_name');
             $address = $request->input('address');
@@ -57,19 +57,24 @@ class BookingController
             $email = $request->input('email');
             $room_id = $request->input('room_id');
 
-            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('dmY');
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
-            $todayInt = Carbon::createFromFormat('dmY', (string)$today, 'Asia/Ho_Chi_Minh');
-            $checkInDate = Carbon::createFromFormat('dmY', (string)$check_in_date);
-            $checkOutDate = Carbon::createFromFormat('dmY', (string)$check_out_date);
+            if ($check_in_timestamp < $today) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
+                ], 400);
+            }
 
-            $checkInDateFormat = Carbon::createFromFormat('dmY', (string)$check_in_date)->setTime(14, 0, 0);
-            $checkOutDateFormat = Carbon::createFromFormat('dmY', (string)$check_out_date)->setTime(12, 0, 0);
+            if ($check_out_timestamp <= $check_in_timestamp) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => 'Ngày trả phòng không được nhỏ hơn hoặc bằng ngày nhận phòng.'
+                ], 400);
+            }
 
-            $todayTimestamp = $todayInt->timestamp;
-            $checkInTimestamp = $checkInDateFormat->timestamp;
-            $checkOutTimestamp = $checkOutDateFormat->timestamp;
-
+            $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
+            $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
             $daysBooked = $checkInDate->diffInDays($checkOutDate);
 
             $validator = Validator::make($request->all(), [
@@ -78,8 +83,8 @@ class BookingController
                 'first_name' => ['required', 'max:50'],
                 'last_name' => ['required', 'max:50'],
                 'email' => 'required|email',
-                'check_in_date' => 'required',
-                'check_out_date' => 'required',
+                'check_in_date' => 'required|integer',
+                'check_out_date' => 'required|integer',
             ], $this->messages);
 
             if ($validator->fails()) {
@@ -89,84 +94,62 @@ class BookingController
                 ], 400);
             }
 
-            if ($checkInDate < $todayInt) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
-                ], 400);
-            }
-
-            if ($checkOutDate <= $checkInDate) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => 'Ngày trả phòng không được nhỏ hơn ngày nhận phòng.'
-                ], 400);
-            }
-
             if ($request->user_id) {
                 $user = User::where('id', $user_id)->first();
-                $user->first_name = $first_name;
-                $user->last_name = $last_name;
-                $user->address = $address;
-                $user->phone = $phone;
-                $user->save();
+                if ($user) {
+                    $user->first_name = $first_name;
+                    $user->last_name = $last_name;
+                    $user->address = $address;
+                    $user->phone = $phone;
+                    $user->save();
+                }
             }
 
             $room = Room::where('id', $room_id)->first();
+            if (!$room) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => "Phòng không tồn tại."
+                ], 404);
+            }
+
             $total_price = $room->price * $daysBooked;
             $depositAmount = $total_price * 0.3;
 
-            $bookings = Booking::select('room_id', 'check_in_date', 'check_out_date', 'status')
-                ->where('room_id', $room->id)
-                ->get();
+            $bookings = Booking::where('room_id', $room->id)
+                ->where(function ($query) use ($check_in_timestamp, $check_out_timestamp) {
+                    $query->where(function ($q) use ($check_in_timestamp, $check_out_timestamp) {
+                        $q->where('check_in_date', '<', $check_out_timestamp)
+                            ->where('check_out_date', '>', $check_in_timestamp);
+                    });
+                })
+                ->whereIn('status', [1, 2, 3, 4]) // Chỉ kiểm tra các trạng thái phòng đã đặt
+                ->exists();
 
-            foreach ($bookings as $booking) {
-
-                if (($checkInTimestamp >= $booking->check_in_date
-                        && $checkInTimestamp < $booking->check_out_date)
-                    && in_array($booking->status, [1, 2, 3, 4])
-                ) {
-                    return response()->json([
-                        "type" => "error",
-                        "message" => "Phòng đã có người đặt trước đó."
-                    ], 406);
-                }
+            if ($bookings) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => "Phòng đã có người đặt trước đó."
+                ], 406);
             }
 
             $bookingNumberId = Str::upper(Str::random(5));
 
-            if ($request->user_id) {
-                $booking = Booking::create([
-                    "room_id" => $room_id,
-                    'booking_number_id' => $bookingNumberId,
-                    "user_id" => $user_id,
-                    "first_name" => $first_name,
-                    "last_name" => $last_name,
-                    "address" => $address,
-                    "phone" => $phone,
-                    "email" => $email,
-                    "check_in_date" => $checkInTimestamp,
-                    "check_out_date" => $checkOutTimestamp,
-                    "total_price" => $total_price,
-                    "tien_coc" => $depositAmount,
-                    "created_at" => $todayTimestamp
-                ]);
-            } else {
-                $booking = Booking::create([
-                    "room_id" => $room_id,
-                    'booking_number_id' => $bookingNumberId,
-                    "first_name" => $first_name,
-                    "last_name" => $last_name,
-                    "address" => $address,
-                    "phone" => $phone,
-                    "email" => $email,
-                    "check_in_date" => $checkInTimestamp,
-                    "check_out_date" => $checkOutTimestamp,
-                    "total_price" => $total_price,
-                    "tien_coc" => $depositAmount,
-                    "created_at" => $todayTimestamp
-                ]);
-            }
+            $booking = Booking::create([
+                "room_id" => $room_id,
+                'booking_number_id' => $bookingNumberId,
+                "user_id" => $user_id ?? null,
+                "first_name" => $first_name,
+                "last_name" => $last_name,
+                "address" => $address,
+                "phone" => $phone,
+                "email" => $email,
+                "check_in_date" => $check_in_timestamp,
+                "check_out_date" => $check_out_timestamp,
+                "total_price" => $total_price,
+                "tien_coc" => $depositAmount,
+                "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
+            ]);
 
             $paymentsIdNumber = Str::upper(Str::random(5));
 
@@ -260,7 +243,6 @@ class BookingController
             $check_in_code = rand(100000, 999999);
             $booking->code_check_in = $check_in_code;
             $booking->status = 2;
-            $room->status = 1;
             $booking->save();
 
             $currentTimestamp = time();
@@ -278,8 +260,6 @@ class BookingController
                 "updated_at" => $currentTimestamp,
                 "vnp_TransactionNo" => $paymentGatewayResponse,
             ]);
-
-            $room->save();
 
             $from_new =  (new DateTime())->setTimestamp($booking->check_in_date)->format('Y-m-d');
             $to_new = (new DateTime())->setTimestamp($booking->check_out_date)->format('Y-m-d');
