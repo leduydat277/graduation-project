@@ -10,14 +10,26 @@ use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Str;
 class CheckInCheckOutController extends RoutingController
 {
+
+    public function detail($id){
+        $booking = Booking::find($id);
+        $room = Room::find($booking->room_id);
+        $phiPhatSinh = PhiPhatSinh::where('booking_id', $id)->first();
+        $payments = Payment::where('booking_id', $id)->get();
+        $title = "Chi tiết đơn";
+        return view('admin.checkin_checkout.detail', compact('booking', 'room', 'phiPhatSinh', 'payments', 'title'));
+    }
+
     public function index(Request $request)
     {
+        $today = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
         $title = "Danh sách Đơn";
         $bookings = Booking::whereIn('bookings.status', [2, 4])
-            ->join('users', 'bookings.user_id', '=', 'users.id')
+        ->whereRaw('DATE(FROM_UNIXTIME(check_in_date)) = ? OR DATE(FROM_UNIXTIME(check_out_date)) = ?', [$today, $today])            ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->select(
@@ -26,11 +38,12 @@ class CheckInCheckOutController extends RoutingController
                 'users.email as user_email',
                 'users.phone as user_phone',
                 'room_types.type as room_type',
-                'rooms.id as room_id'
+                'rooms.roomId_number as room_id'
             )
             ->get();
 
-        $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
+   
+            $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
 
         return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
@@ -78,18 +91,22 @@ class CheckInCheckOutController extends RoutingController
                 $manage_status_room->delete();
             }
         }
-        if ($booking->check_out_date <= $currentTimestamp) {
-            //xóa dương vô cực cũ, xong đặt dương vô cực từ now
+        if ($booking->check_out_date <= $currentTimestamp) { // Kiểm tra check-out sớm
+            // Xóa dương vô cực cũ, sau đó đặt dương vô cực từ now
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)
-                ->andWhere('to', 0);
+                ->where('to', 0)
+                ->get();
+        
+            //đoạn này chưa xong
         }
+        
         $booking->status = 3;
         $booking->check_out_date = $currentTimestamp;
         $booking->total_price = $request->totalPrice; //update tiền ở booking
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
-            $status_room->status = 2;
+            $status_room->status = 1;
             $status_room->save();
         }
 

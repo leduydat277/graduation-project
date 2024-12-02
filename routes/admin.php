@@ -59,6 +59,7 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
         ->as('checkin-checkout.')
         ->group(function () {
             Route::get('/', [CheckInCheckOutController::class, 'index'])->name('index');
+            Route::get('/detail/{id}', [CheckInCheckOutController::class, 'detail'])->name('detail');
             Route::post('/checkin/{id}', [CheckInCheckOutController::class, 'checkIn'])->name('checkin');
             Route::post('/checkout/{id}', [CheckInCheckOutController::class, 'checkOut'])->name('checkout');
             Route::post('/cancel-booking', [CheckInCheckOutController::class, 'cancel'])->name('booking.cancel');
