@@ -36,7 +36,7 @@ class PaymentController
     VD: // Lấy IP của người dùng
         $ipAddr = $request->ip();
      $customReturnUrl: đường đẫn của frontend sau khi thanh toán xong
-
+     
      Tài khoản để test:
      Số thẻ	9704198526191432198
      Tên chủ thẻ	NGUYEN VAN A
