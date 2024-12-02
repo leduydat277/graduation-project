@@ -66,7 +66,7 @@
 
                     <div class="mb-3">
                         <label for="asset_type_id" class="form-label">Loại Tiện Nghi</label>
-                        <select class="form-control select2" id="asset_type_id" name="assets_type_id">
+                        <select class="form-control select2" id="asset_type_id" name="assets_type_id[]" multiple>
                             <option value="">Chọn loại tiện nghi</option>
                             @foreach ($assetTypes as $assetType)
                                 <option value="{{ $assetType->id }}"
@@ -76,18 +76,6 @@
                             @endforeach
                         </select>
                         @error('assets_type_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Trạng Thái</label>
-                        <select name="status" class="form-select" id="">
-                            <option value="" selected disabled>Chọn trạng thái</option>
-                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Hoạt động</option>
-                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Tạm dừng sử dụng</option>
-                        </select>
-                        @error('status')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

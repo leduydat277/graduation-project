@@ -20,7 +20,12 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách tiện nghi phòng</h4>
+                    <h4 class="card-title mb-4">{{ $title }}</h4>
+                    <div class="col-sm-auto">
+                        <a href="{{ route('room-assets.create') }}" class="btn btn-success">
+                            <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi cho phòng
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="listjs-table" id="roomAssetList">
@@ -66,7 +71,6 @@
                                     <tr>
                                         <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
-                                        <th>Ảnh tiện nghi</th>
                                         <th>Số lượng tiện nghi</th>
                                     </tr>
                                 </thead>

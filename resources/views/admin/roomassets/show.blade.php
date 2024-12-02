@@ -41,19 +41,22 @@
                                     <tr>
                                         <td>{{ $room->assetType->name }}</td>
                                         <td>
-                                            <img src="{{ Storage::url($room->assetType->image)}}" alt="" width="110px">
+                                            <img src="{{ Storage::url($room->assetType->image) }}" alt=""
+                                                width="110px">
                                         </td>
                                         <td>{{ $room->assetType->description }}</td>
                                         <td>
                                             @if ($room->assetType->status == 0)
                                                 <p style="color: green">Hoạt động</p>
+                                            @elseif ($room->assetType->status == 1)
+                                                <p style="color: red">Tạm ngưng<br>sử dụng</p>
                                             @else
                                                 <p style="color: red">Hỏng</p>
                                             @endif
                                         </td>
                                         <td>
-                                            <form action="{{ route('room-assets.destroy', $room->id) }}"
-                                                method="POST" style="display:inline-block;">
+                                            <form action="{{ route('room-assets.destroy', $room->id) }}" method="POST"
+                                                style="display:inline-block;">
                                                 <input type="hidden" name="room_id" value="{{ $room->room_id }}">
                                                 @csrf
                                                 @method('DELETE')

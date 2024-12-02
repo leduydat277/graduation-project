@@ -18,24 +18,22 @@ class RoomAssetController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh sách tiện nghi phòng';
-    
-        // Lấy dữ liệu tìm kiếm và sắp xếp từ request
+
         $search = $request->get('search');
         $sort = $request->get('sort');
-    
+
         $query = RoomAsset::query()
-            ->join('rooms', 'rooms.id', '=', 'roomassets.room_id') // Join bảng rooms để có thể sắp xếp theo rooms.title
+            ->join('rooms', 'rooms.id', '=', 'roomassets.room_id')
             ->select('roomassets.room_id', 'rooms.title', DB::raw('COUNT(roomassets.id) as asset_count'))
-            ->groupBy('roomassets.room_id', 'rooms.title'); // Nhóm theo room_id và rooms.title
-    
-        // Tìm kiếm theo tên phòng hoặc mã phòng
+            ->groupBy('roomassets.room_id', 'rooms.title');
+
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('rooms.title', 'like', "%$search%")
                   ->orWhere('rooms.roomId_number', 'like', "%$search%");
             });
         }
-    
+
         // Sắp xếp dữ liệu
         switch ($sort) {
             case 'room_name_asc':
@@ -53,20 +51,20 @@ class RoomAssetController extends Controller
             default:
                 $query->orderBy('rooms.title', 'asc'); // Mặc định sắp xếp theo tên phòng
         }
-    
+
         // Phân trang
         $roomassets = $query->paginate(10);
-    
+
         // Truyền dữ liệu qua view
         return view(self::VIEW_PATH . __FUNCTION__, compact('roomassets', 'title'));
-    }    
+    }
 
     public function show($id)
     {
-        $title = 'Danh sách tiện nghi phòng';
+        $room = Room::select('id', 'title')->where('id', $id)->first();
+        $title = 'Danh sách tiện nghi của phòng '. $room->title;
 
         $asset = RoomAsset::select('id', 'assets_type_id', 'room_id')->with('assetType')->where('room_id', $id)->where('status', 0)->get();
-        $room = Room::select('id')->where('id', $id)->first();
 
         return view(self::VIEW_PATH . __FUNCTION__, compact(['asset', 'room'], 'title'));
     }
@@ -77,35 +75,38 @@ class RoomAssetController extends Controller
         $title = 'Thêm tiện nghi phòng';
 
         //danh sách phòng
-        $rooms = Room::all();
+        $roomAsset = RoomAsset::select('room_id')->get();
+        $rooms = Room::select('id', 'title')->whereNotIn('id', $roomAsset)->get();
 
         //danh sach loại tiện nghi
-        $assetTypes = AssetType::all();
-
+        $assetTypes = AssetType::select('id', 'name', 'status')->where('status', 0)->get();
 
         // Truyền các tham số sang view
         return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'rooms', 'assetTypes'));
     }
 
-    public function store(RoomAssetRequest $request)
+    public function store(Request $request)
     {
         $data = $request->except('_token');
 
-        // Kiểm tra xem phòng đã có loại tiện nghi này chưa
         $existingRoomAsset = RoomAsset::where('room_id', $data['room_id'])
             ->where('assets_type_id', $data['assets_type_id'])
             ->first();
 
         if ($existingRoomAsset) {
-            // Nếu đã tồn tại, trả về với thông báo lỗi
             return redirect()->back()->with('error', 'Phòng này đã có loại tiện nghi này rồi.');
         }
 
-        // Tạo mới room asset nếu không có xung đột
-        $rooms = RoomAsset::create($data);
+        foreach ($data['assets_type_id'] as $key) {
+            RoomAsset::create([
+                'assets_type_id' => $key,
+                'room_id' => $data['room_id'],
+            ]);
+        }
 
-        // Chuyển hướng đến trang danh sách room assets với thông báo thành công
-        return redirect()->route('room-assets.show', $rooms->id)->with('success', 'Thêm mới thành công');
+        $room = Room::select('id')->where('id', $data['room_id'])->first();
+
+        return redirect()->route('room-assets.show', $room)->with('success', 'Thêm mới thành công');
     }
 
 
@@ -131,10 +132,12 @@ class RoomAssetController extends Controller
             return redirect()->back()->with('error', 'Vui lòng chọn tiện nghi.');
         }
 
-        RoomAsset::create([
-            'room_id' => $id,
-            'assets_type_id' => $asset
-        ]);
+        foreach($asset as $item){
+            RoomAsset::create([
+                'room_id' => $id,
+                'assets_type_id' => $item
+            ]);
+        }
 
         return redirect()->route('room-assets.show', $id)->with('success', 'Cập nhật thành công');
     }

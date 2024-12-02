@@ -50,7 +50,7 @@
 
                     <div class="mb-3">
                         <label for="asset_type_id" class="form-label">Tiện Nghi</label>
-                        <select class="form-control select2" id="asset_type_id" name="assets_type_id">
+                        <select class="form-control select2" id="asset_type_id" name="assets_type_id[]" multiple>
                             <option value="">Chọn tiện nghi</option>
                             @foreach ($assetTypes as $assetType)
                                 <option value="{{ $assetType->id }}"

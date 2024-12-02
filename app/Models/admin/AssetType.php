@@ -17,7 +17,8 @@ class AssetType extends Model
         'asset_number_id',
         'name',
         'description',
-        'image'
+        'image',
+        'status'
     ];
 
      /**
