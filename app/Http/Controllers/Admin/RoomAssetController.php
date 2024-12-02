@@ -85,7 +85,7 @@ class RoomAssetController extends Controller
         return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'rooms', 'assetTypes'));
     }
 
-    public function store(Request $request)
+    public function store(RoomAssetRequest $request)
     {
         $data = $request->except('_token');
 
