@@ -17,6 +17,11 @@ Route::middleware('api')->get('/example', function (Request $request) {
     return response()->json(['message' => 'This is an example API response.']);
 });
 
+Route::middleware('api')->group(function () {
+    Route::get('/rooms', [RoomController::class, 'index']);
+    Route::get('/rooms/booking', [RoomController::class, 'getRoomBooking']);
+});
+
 
 Route::get('search_room', [SearchRoomController::class, 'searchRoom'])
     ->name('api.search_room');
