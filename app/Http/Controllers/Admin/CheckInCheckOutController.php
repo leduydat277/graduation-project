@@ -93,11 +93,20 @@ class CheckInCheckOutController extends RoutingController
         }
         if ($booking->check_out_date <= $currentTimestamp) { // Kiểm tra check-out sớm
             // Xóa dương vô cực cũ, sau đó đặt dương vô cực từ now
-            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)
-                ->where('to', 0)
-                ->get();
-        
-            //đoạn này chưa xong
+            $today = Carbon::now()->timestamp;
+            $checkoutNew = $booking->check_out_date;
+            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
+            foreach ($manage_status_rooms as $manage_status_room) {
+                $manage_status_room->delete();
+            }
+            ManageStatusRoom::create([
+                'booking_id' => $id,
+                'room_id' => $booking->room_id,
+                'from' => $today,
+                'to' => $checkoutNew,
+                'status' => 1,
+            ]);
+
         }
         
         $booking->status = 3;
