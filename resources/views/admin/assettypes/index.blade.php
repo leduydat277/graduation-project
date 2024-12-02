@@ -162,9 +162,9 @@
                 var assetType = form.getAttribute('data-asset-type');
 
                 Swal.fire({
-                    title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của loại tiện nghi " + assetType +
-                        "!",
+                    title: 'Bạn có chắc chắn muốn tạm ngưng sử dụng tiện nghi này không?',
+                    text: "Tiện nghi " + assetType +
+                        " ở các phòng sẽ được bỏ ra.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

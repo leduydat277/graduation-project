@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\AssetTypeRequest;
 use App\Models\Admin\AssetType;
+use App\Models\Admin\RoomAsset;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -37,9 +38,9 @@ class AssetTypeController extends Controller
     public function create()
     {
         $title = 'Thêm loại tài sản';
-        $assets = AssetType::select('id')->orderBy('id','desc')->first();
-        $assets->id = $assets->id+1;
-        return view(self::VIEW_PATH . __FUNCTION__, compact('assets','title'));
+        $assets = AssetType::select('id')->orderBy('id', 'desc')->first();
+        $assets->id = $assets->id + 1;
+        return view(self::VIEW_PATH . __FUNCTION__, compact('assets', 'title'));
     }
 
     public function store(AssetTypeRequest $request)
@@ -83,23 +84,21 @@ class AssetTypeController extends Controller
 
     public function destroy($id)
     {
-        $assetType = AssetType::find($id);
+        $assetType = AssetType::select('id', 'status')->find($id);
 
         if (!$assetType) {
-            return redirect()->route(self::VIEW_PATH . __FUNCTION__)->with('error', 'Loại tài sản không tồn tại');
+            return redirect()->route('asset-types.index')->with('error', 'Loại tài sản không tồn tại');
         }
 
-        if ($assetType->roomAssets()->exists()) {
-            return redirect()->route(self::VIEW_PATH . __FUNCTION__)->with('error', 'Không thể xóa loại tài sản vì có bản ghi liên kết trong tiện nghi phòng');
+        $assetType->status = 1;
+        $assetType->save();
+
+        $roomAssets = RoomAsset::where('assets_type_id', $id)->get();
+
+        foreach ($roomAssets as $item) {
+            $item->delete();
         }
 
-        // Xóa file ảnh nếu tồn tại
-        if ($assetType->image) {
-            Storage::disk('public')->delete($assetType->image);
-        }
-
-        $assetType->delete();
-
-        return redirect()->route('asset-types.index')->with('success', 'Xóa loại tài sản thành công');
+        return redirect()->route('asset-types.index')->with('success', 'Tạm ngưng sử dụng tiện nghi thành công');
     }
 }
