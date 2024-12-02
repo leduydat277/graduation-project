@@ -47,6 +47,7 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <input type="hidden" name="status" value="0">
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Thêm Loại Tiện Nghi</button>
                 </div>
