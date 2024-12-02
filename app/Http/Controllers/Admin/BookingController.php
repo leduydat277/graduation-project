@@ -6,6 +6,7 @@ use App\Models\Admin\Booking;
 use App\Models\Admin\Room;
 use App\Models\Admin\RoomType;
 use App\Models\Admin\Users;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,7 @@ class BookingController  extends Controller
     private $dateNow;
     public function __construct()
     {
-        $this->dateNow = date('Y-m-d H:i:s');
+        $this->dateNow = Carbon::now()->timestamp;
         $this->messages = [
             "name.required" => "Tên khách hàng không được để trống",
             "name.string" => "Tên phải là chuỗi",
@@ -94,23 +95,24 @@ class BookingController  extends Controller
 
         $total_price = Room::find($room_id)->price * $days;
 
-
         $dataUsers = Users::where("email", $email)->first();
         if ($dataUsers) {
             $dataUsers->update([
                 "name" => $name,
                 "cccd" => $CCCD,
-                "updated_at" => $this->dateNow,
             ]);
         } else {
-            $dataUsers = Users::create([
-                "name" => $name,
-                "email" => $email,
-                "password" => bcrypt($password),
-                "role" => 0,
-                "cccd" => $CCCD,
-                "created_at" => $this->dateNow,
-            ]);
+            $dataUsers = Users::create(
+                [
+                    "name" => $name,
+                    "email" => $email,
+                    "password" => bcrypt($password),
+                    "role" => 0,
+                    "cccd" => $CCCD,
+                    "created_at" => $this->dateNow,
+                    "updated_at" => $this->dateNow,
+                ]
+            );
         }
 
 
@@ -120,10 +122,10 @@ class BookingController  extends Controller
             "total_price" => $total_price,
             "status" => 0,
             "tien_coc" => 0,
-            "check_in_date" => $check_in_date,
-            "check_out_date" => $check_out_date,
-            "created_at" => $this->dateNow,
-            "updated_at" => $this->dateNow,
+            "check_in_date" => $check_in_timestamp,
+            "check_out_date" => $check_out_timestamp,
+            // "created_at" => $this->dateNow,
+            // "updated_at" => $this->dateNow,
         ]);
 
         return redirect()->route('admin.booking.addUI')->with('success', 'Đặt phòng thành công.');

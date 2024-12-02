@@ -14,4 +14,5 @@ class Users extends Model
 
     protected $fillable = ["name", "email", "password", "image", "role", "phone", "address", "status_id", "code"];
     protected $table = "users";
+    public $timestamps = false;
 }
