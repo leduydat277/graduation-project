@@ -29,7 +29,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0 flex-grow-1">Danh sách Check-in & Check-out</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">Danh sách Check-in & Check-out hôm nay</h4>
                 </div><!-- end card header -->
 
                 <div class="card-body">
@@ -158,18 +158,7 @@
             </div>
         </div>
     </div>
-    <!-- //bot thanh scroll ngang -->
-    <style>
-        .gridjs-wrapper {
-            overflow-x: auto;
-            /* Cho phép cuộn ngang */
-        }
 
-        .gridjs-wrapper::-webkit-scrollbar {
-            display: none;
-            /* Ẩn thanh cuộn ngang trên Chrome, Edge, Safari */
-        }
-    </style>
 @endsection
 @section('js')
     <script>
@@ -277,7 +266,7 @@
                         },
                         {
                             name: "Người dùng",
-                            width: "150px"
+                            width: "120px"
                         },
                         {
                             name: "Email",
@@ -288,16 +277,12 @@
                             width: "100px"
                         },
                         {
-                            name: "Mã phòng",
-                            width: "100px"
-                        },
-                        {
                             name: "Loại phòng",
                             width: "100px"
                         },
                         {
                             name: "Ngày đến",
-                            width: "150px", // Tăng chiều rộng để hiển thị thêm thông tin
+                            width: "100px", // Tăng chiều rộng để hiển thị thêm thông tin
                             formatter: (cell) => {
                                 const date = new Date(cell *
                                     1000); // Chuyển đổi từ timestamp sang Date
@@ -318,7 +303,7 @@
                             name: "Tổng tiền",
                             width: "100px",
                             formatter: (cell, row) => {
-                                const totalPrice = row.cells[8].data; // Dữ liệu cột total_price
+                                const totalPrice = row.cells[7].data; // Dữ liệu cột total_price
                                 const formattedPrice = new Intl.NumberFormat('vi-VN', {
                                     style: 'currency',
                                     currency: 'VND',
@@ -330,7 +315,7 @@
                             name: "Trạng thái",
                             width: "120px",
                             formatter: (cell, row) => {
-                                const status = row.cells[9].data;
+                                const status = row.cells[8].data;
                                 let statusText = '';
                                 let statusClass = '';
 
@@ -376,8 +361,8 @@
                             name: "Tùy chọn",
                             width: "120px",
                             formatter: (cell, row) => {
-                                const status = row.cells[9].data; // Trạng thái
-                                const checkInDateTimestamp = row.cells[6]
+                                const status = row.cells[8].data; // Trạng thái
+                                const checkInDateTimestamp = row.cells[5]
                                     .data; // Lấy check_in_date từ bảng (timestamp)
                                 const checkInDate = new Date(checkInDateTimestamp *
                                     1000); // Chuyển đổi sang Date
@@ -393,28 +378,43 @@
                                 if (status === 2) {
                                     if (isToday && currentHour >= 14) {
                                         return gridjs.html(`
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[0].data})" title="Check in">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[10].data})" title="Check in">
                 <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
             </button>
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})" title="Hủy">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[10].data})" title="Hủy">
                 <i class="fas fa-times"></i> <!-- Icon Hủy -->
             </button>
+            <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <button class="btn btn-primary" title="Xem chi tiết">
+                <i class="fas fa-eye"></i>
+            </button>
+            </a>
         `);
                                     } else {
                                         return gridjs.html(`
             <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')" title="Check in">
                 <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
             </button>
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[0].data})" title="Hủy">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[10].data})" title="Hủy">
                 <i class="fas fa-times"></i> <!-- Icon Hủy -->
             </button>
+            <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <button class="btn btn-primary" title="Xem chi tiết">
+                <i class="fas fa-eye"></i>
+            </button>
+            </a>
         `);
                                     }
                                 } else if (status === 4) {
                                     return gridjs.html(`
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[0].data})" title="Check out">
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[10].data})" title="Check out">
             <i class="fas fa-sign-out-alt"></i> <!-- Icon Check-out -->
         </button>
+                    <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <button class="btn btn-primary" title="Xem chi tiết">
+                <i class="fas fa-eye"></i>
+            </button>
+            </a>
     `);
                                 }
 
@@ -428,13 +428,13 @@
                         booking.last_name + ' ' + booking.first_name,
                         booking.email,
                         booking.phone,
-                        booking.room_id,
                         booking.room_type,
                         booking.check_in_date,
                         booking.check_out_date,
                         booking.total_price,
                         booking.status,
-                        booking.created_at
+                        booking.created_at,
+                        booking.id
                     ]),
                     pagination: {
                         limit: 10
