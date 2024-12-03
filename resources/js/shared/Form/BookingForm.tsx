@@ -14,7 +14,7 @@ export const BookingForm = (props) => {
   const [checkInDate, checkOutDate, totalDays, setTotalPrice, title, subtitle, price, idRoom, clear, setPrice] = useBookingStore((state) => [
     state.checkInDate,
     state.checkOutDate,
-    state.totalDays, 
+    state.totalDays,
     state.setTotalPrice,
     state.title,
     state.subtitle,
@@ -36,7 +36,7 @@ export const BookingForm = (props) => {
   const ps: any = []
   const validateLogin = () => {
     if (checkInDate < checkOutDate && checkInDate > Date.now() && checkOutDate > Date.now()) {
-      
+
       return true;
     }
     return false;
@@ -48,26 +48,28 @@ export const BookingForm = (props) => {
   // }
 
   // React.useEffect(() => {
-  //   const uid = userStore.getState().userId; 
+
+  //   const uid = userStore.getState().userId;
   //   if (!uid) {
   //     const queryString = paramsStringify({
-  //       redirect: '/checkout-screen', 
+  //       redirect: '/checkout-screen',
   //     });
-  //     navigate(`/login?${queryString}`, { replace: true }); 
+  //     navigate(`/login?${queryString}`, { replace: true });
   //   }
   // }, [navigate, userStore]);
   ps.push(validateLogin())
-  // ps.push(clear())
-  
+  ps.push(clear())
 
-  
+
+
+
 const onPress = async () => {
   await Promise.all(ps)
   console.log('onPress');
   const bookingData = {
   user_id: 5,
   check_in_date: checkInDate,
-  check_out_date: checkOutDate ,
+  check_out_date: checkOutDate,
   first_name: "John",
   last_name: "Doe",
   address: "123 Main St",
@@ -79,7 +81,7 @@ const onPress = async () => {
   room_id: idRoom || 5
   }
   try {
-    const booking = await Booking(bookingData); 
+    const booking = await Booking(bookingData);
 
     console.log('Booking successful', booking.paymentUrl);
     if (booking.paymentUrl) {
@@ -91,7 +93,7 @@ const onPress = async () => {
 }
 
 
- 
+
   return (
     <>
       <Stack
@@ -107,11 +109,10 @@ const onPress = async () => {
           <Typography pl={2}> Check-in 2:00 PM | Check-out 12:00 PM</Typography>
         </Stack>
         <RoomSearchBar position={'detail'} />
+
         <Typography variant="h6" pb={1}>Total: {formatPrice(totalPrice)}</Typography>
-      
- 
       <Button onClick={onPress} variant="outline">Thanh Toán</Button>
-    
+
 
       </Stack>
     </>
