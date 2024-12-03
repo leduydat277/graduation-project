@@ -118,17 +118,18 @@
                             @foreach ($bookings as $booking)
                                 <tr>
                                     <td>{{ $booking->booking_number_id }}</td>
-                                    <td>
-                                        <img src="{{ asset('storage/' . $booking->room->image_room) }}" alt="Room Image"
-                                            class="img-fluid" style="max-width: 100px;">
+                                    <td class="d-flex justify-content-evenly align-content-center">
+
+                                        <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}" alt="Room Image"
+                                            class="img-fluid mb-2 mt-2" style="width: 80px; height: 80px">
+
                                     </td>
                                     <td>{{ $booking->last_name . ' ' . $booking->first_name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ $booking->room->title }}</td>
                                     <td>
-                                        <span
-                                            class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
+                                        <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
 
@@ -160,7 +161,8 @@
                                     </td>
                                     <td>
                                         @if ($booking['status'] != 5)
-                                            <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info mb-3" title="Xem chi tiết">
+                                            <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info"
+                                                title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
