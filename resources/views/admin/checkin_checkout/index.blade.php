@@ -276,10 +276,7 @@
                             name: "SĐT",
                             width: "100px"
                         },
-                        {
-                            name: "Loại phòng",
-                            width: "100px"
-                        },
+
                         {
                             name: "Ngày đến",
                             width: "100px", // Tăng chiều rộng để hiển thị thêm thông tin
@@ -303,7 +300,7 @@
                             name: "Tổng tiền",
                             width: "100px",
                             formatter: (cell, row) => {
-                                const totalPrice = row.cells[7].data; // Dữ liệu cột total_price
+                                const totalPrice = row.cells[6].data; // Dữ liệu cột total_price
                                 const formattedPrice = new Intl.NumberFormat('vi-VN', {
                                     style: 'currency',
                                     currency: 'VND',
@@ -315,7 +312,7 @@
                             name: "Trạng thái",
                             width: "120px",
                             formatter: (cell, row) => {
-                                const status = row.cells[8].data;
+                                const status = row.cells[7].data;
                                 let statusText = '';
                                 let statusClass = '';
 
@@ -361,7 +358,7 @@
                             name: "Tùy chọn",
                             width: "120px",
                             formatter: (cell, row) => {
-                                const status = row.cells[8].data; // Trạng thái
+                                const status = row.cells[7].data; // Trạng thái
                                 const checkInDateTimestamp = row.cells[5]
                                     .data; // Lấy check_in_date từ bảng (timestamp)
                                 const checkInDate = new Date(checkInDateTimestamp *
@@ -374,17 +371,13 @@
                                     checkInDate.getDate() === today.getDate() &&
                                     checkInDate.getMonth() === today.getMonth() &&
                                     checkInDate.getFullYear() === today.getFullYear();
-
                                 if (status === 2) {
                                     if (isToday && currentHour >= 14) {
                                         return gridjs.html(`
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[10].data})" title="Check in">
-                <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
-            </button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[10].data})" title="Hủy">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[9].data})" title="Hủy">
                 <i class="fas fa-times"></i> <!-- Icon Hủy -->
             </button>
-            <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <a href="/admin/checkin-checkout/detail/${row.cells[9].data}"
             <button class="btn btn-primary" title="Xem chi tiết">
                 <i class="fas fa-eye"></i>
             </button>
@@ -392,13 +385,10 @@
         `);
                                     } else {
                                         return gridjs.html(`
-            <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')" title="Check in">
-                <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
-            </button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[10].data})" title="Hủy">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[9].data})" title="Hủy">
                 <i class="fas fa-times"></i> <!-- Icon Hủy -->
             </button>
-            <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <a href="/admin/checkin-checkout/detail/${row.cells[9].data}"
             <button class="btn btn-primary" title="Xem chi tiết">
                 <i class="fas fa-eye"></i>
             </button>
@@ -407,10 +397,10 @@
                                     }
                                 } else if (status === 4) {
                                     return gridjs.html(`
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[10].data})" title="Check out">
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[9].data})" title="Check out">
             <i class="fas fa-sign-out-alt"></i> <!-- Icon Check-out -->
         </button>
-                    <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+                    <a href="/admin/checkin-checkout/detail/${row.cells[9].data}"
             <button class="btn btn-primary" title="Xem chi tiết">
                 <i class="fas fa-eye"></i>
             </button>
@@ -428,7 +418,6 @@
                         booking.last_name + ' ' + booking.first_name,
                         booking.email,
                         booking.phone,
-                        booking.room_type,
                         booking.check_in_date,
                         booking.check_out_date,
                         booking.total_price,
@@ -628,12 +617,8 @@
 
     <!-- prismjs plugin -->
     <script src="{{ asset('assets/admin/assets/libs/prismjs/prism.js') }}"></script>
-
     <!-- gridjs js -->
     <script src="{{ asset('assets/admin/assets/libs/gridjs/gridjs.umd.js') }}"></script>
-    <!-- gridjs init -->
-    <!-- <script src="{{ asset('assets/admin/assets/js/pages/gridjs.init.js') }}"></script> -->
-
     <!-- App js -->
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
 @endsection
