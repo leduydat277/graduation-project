@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\AssetType;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
@@ -163,7 +164,7 @@ class DashboardController
             $todayStart = Carbon::now()->startOfDay()->timestamp;
             $todayEnd = Carbon::now()->endOfDay()->timestamp;
 
-            $bookingToday = Booking::select('id','room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+            $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
                 ->with('room')
                 ->whereBetween('created_at', [$todayStart, $todayEnd])
                 ->get();
@@ -193,9 +194,6 @@ class DashboardController
                 'earningsPercentage',
                 'ordersComparison',
                 'ordersPercentage',
-                'bookingToday',
-                'todayPrice',
-                'countDes'
             ]));
         } catch (Exception $e) {
             return response()->json([
@@ -339,7 +337,7 @@ class DashboardController
 
             $roomIds = $roomCounts->pluck('room_id');
 
-            $rooms = Room::select('id', 'title', 'price', 'image_room', 'room_type_id')
+            $rooms = Room::select('id', 'title', 'price', 'thumbnail_image', 'room_type_id')
                 ->with('roomType')
                 ->whereIn('id', $roomIds)
                 ->get()
@@ -361,6 +359,63 @@ class DashboardController
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
+    public function getBookingsToday(Request $request)
+    {
+        $todayStart = Carbon::now()->startOfDay()->timestamp;
+        $todayEnd = Carbon::now()->endOfDay()->timestamp;
+
+        $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+            ->with('room')
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->get();
+
+        $todayPrice = 0;
+        $countDes = 0;
+
+        foreach ($bookingToday as $item) {
+            if ($item->status == 3) {
+                $todayPrice += $item->total_price;
+            }
+            if ($item->status == 5) {
+                $countDes++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $bookingToday,
+            'price' => $todayPrice,
+            'count' => $countDes
+        ]);
+    }
+
+    public function assetsDie(Request $request)
+    {
+        try {
+            $perPage = $request->input('per_page', 10);
+
+            $assets = AssetType::select('id', 'name', 'status', 'image')
+                ->where('status', 2)
+                ->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'data' => $assets,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Failed to get assets",
                 "error" => [
                     "message" => $e->getMessage(),
                     "file" => $e->getFile(),
