@@ -208,7 +208,7 @@ class RoomController extends Controller
      */
     public function lock(Room $room)
     {
-        if ($room->status === 0) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
+        if ($room->status === 0 || $room->status === 3) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
             $room->update(['status' => 4]); // Đặt trạng thái phòng là "đã bị khóa"
 
             return redirect()->route('rooms.index')->with('success', 'Phòng đã được khóa thành công.');
