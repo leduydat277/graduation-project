@@ -120,8 +120,8 @@
                                     <td>{{ $booking->booking_number_id }}</td>
                                     <td class="d-flex justify-content-evenly align-content-center">
 
-                                        <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}" alt="Room Image"
-                                            class="img-fluid mb-2 mt-2" style="width: 80px; height: 80px">
+                                        <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}"
+                                            alt="Room Image" class="img-fluid mb-2 mt-2" style="width: 80px; height: 80px">
 
                                     </td>
                                     <td>{{ $booking->last_name . ' ' . $booking->first_name }}</td>
@@ -165,10 +165,12 @@
                                                 title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
-                                                onclick="confirmCancel({{ $booking->id }})">
-                                                <i class="fas fa-times-circle"></i>
-                                            </button>
+                                            @if ($booking['status'] != 3)
+                                                <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
+                                                    onclick="confirmCancel({{ $booking->id }})">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </button>
+                                            @endif
                                         @endif
                                     </td>
 
