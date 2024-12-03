@@ -107,8 +107,8 @@ class RoomController extends Controller
 
         // Kiểm tra nếu thời gian hiện tại chưa đến 14h, nếu đúng thì lấy từ 14h hôm nay, nếu không thì lấy từ 14h ngày mai
         $from = $currentTime->hour < 14
-            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)
-            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0);
+            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)->timestamp
+            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0)->timestamp;
 
         // Tạo bản ghi quản lý trạng thái phòng
         ManageStatusRoom::create([

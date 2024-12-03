@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Booking;
+use App\Models\ManageStatusRoom;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -85,12 +86,31 @@ class BookingController  extends Controller
     public function cancel($id)
     {
         $booking = Booking::findOrFail($id);
-        if ($booking->status === 2 || $booking->status === 3 || $booking->status === 4) {
+        if ($booking->status === 3 || $booking->status === 4) {
             return redirect()->back()->with('error', 'Không thể hủy đơn đặt phòng này');
+        }
+
+        
+        $currentTimestamp = Carbon::now()->timestamp;
+        if ($booking->check_in_date < $currentTimestamp) {
+            // $today = Carbon::now()->timestamp;
+            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
+            foreach ($manage_status_rooms as $manage_status_room) {
+                $manage_status_room->delete();
+            }
+
+            ManageStatusRoom::create([
+                'booking_id' => $id,
+                'room_id' => $booking->room_id,
+                'from' => $currentTimestamp,
+                'to' => 0,
+                'status' => 1,
+            ]);
         }
 
         $booking->status = 5;
         $booking->save();
+
 
         return redirect()->back()->with('success', 'Hủy đặt phòng thành công');
     }
