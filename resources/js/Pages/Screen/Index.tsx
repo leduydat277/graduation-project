@@ -11,6 +11,7 @@ import { RoomList } from '@/shared/Room/RoomList';
 // import { Footer } from '@/components/Footer/Footer';
 import { Introduce } from './Introduce';
 import { ListTypeRoom } from './ListTypeRooms';
+import { Footer } from '@/components/Footer/Footer';
 
 function ScreenPage() {
   
@@ -32,7 +33,7 @@ const onPress = async () => {
             backgroundColor: 'white',
             mb: 6,
             position: 'absolute',
-            top: '1%',
+            top: '-100px',
             left: '50%',
             transform: 'translate(-50%, -50%)', 
             padding: '1rem',}}>
@@ -84,7 +85,7 @@ const onPress = async () => {
         </Box>
 
       </Box>
-
+      <Footer />
     </>
     
   );

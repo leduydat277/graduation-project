@@ -2,15 +2,16 @@ import BookingLayout from '@/Layouts/BookingLayout';
 import React from 'react';
 import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
+import { BottomHeader } from '@/components/Header/BottomHeader';
 
 function DetailRoom({ room }) {
   console.log('detail room line 7 ', room);
   const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [state.setPrice, state.setSubtitle, state.setIdRoom]);
- 
+
   // if (room) {
   //    setPrice(room.price);
   //   }
-  
+
   // React.useEffect(() => {
   //   if (room) {
   //     setPrice(room.price);
@@ -27,15 +28,19 @@ function DetailRoom({ room }) {
   const { title, id, description, room_area, price, room_type, ...rest } = room;
 
   return (
-    <DetailContent 
-      title={title}
-      id={id}
-      description={description}
-      room_area={room_area}
-      price={price}
-      room_type={room_type}
-      {...rest}
-    />
+    <>
+      
+      <DetailContent
+        title={title}
+        id={id}
+        description={description}
+        room_area={room_area}
+        price={price}
+        room_type={room_type}
+        {...rest}
+      />
+    </>
+
   );
 }
 
