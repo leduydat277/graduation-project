@@ -47,16 +47,21 @@ class BookingController
     {
         try {
             $user_id = $request->user_id;
-            $check_in_timestamp = $request->input('check_in_date');
-            $check_out_timestamp = $request->input('check_out_date');
+            $check_in = $request->input('check_in_date');
+            $check_out = $request->input('check_out_date');
             $first_name = $request->input('first_name');
             $last_name = $request->input('last_name');
             $address = $request->input('address');
             $phone = $request->input('phone');
             $email = $request->input('email');
             $room_id = $request->input('room_id');
+            Log::error($check_in);
+            Log::error($check_out);
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
+
+            $check_in_timestamp = floor($check_in / 1000);  
+            $check_out_timestamp = floor($check_out / 1000);
 
             if ($check_in_timestamp < $today) {
                 return response()->json([
@@ -77,6 +82,7 @@ class BookingController
             $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
 
             Log::error($daysBooked);
+
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
@@ -152,8 +158,8 @@ class BookingController
                 "address" => $address,
                 "phone" => $phone,
                 "email" => $email,
-                "check_in_date" => $check_in_timestamp,
-                "check_out_date" => $check_out_timestamp,
+                "check_in_date" => $check_in,
+                "check_out_date" => $check_out,
                 "total_price" => $total_price,
                 "tien_coc" => $depositAmount,
                 "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
