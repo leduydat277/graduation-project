@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 use Str;
@@ -71,12 +72,11 @@ class BookingController
                 ], 400);
             }
 
-            $check_in_timestamp = floor($check_in_timestamp / 1000);
-            $check_out_timestamp = floor($check_out_timestamp / 1000);
-
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
             $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
+
+            Log::error($daysBooked);
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
