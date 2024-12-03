@@ -1,5 +1,5 @@
-import MainMenuItem from '@/components/Menu/MainMenuItem';
 import { Building, CircleGauge, Printer, Users } from 'lucide-react';
+import MainMenuItem from '@/Components/Menu/MainMenuItem';
 
 interface MainMenuProps {
   className?: string;

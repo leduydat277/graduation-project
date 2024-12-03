@@ -7,11 +7,14 @@ import { Menu } from 'lucide-react';
 
 import {containerProps} from '@/components/Responsive';
 
-export const TopHeader =  (props) => {
+export const TopHeader =  (props:any) => {
   const { fullWidth, ...rest } = props
 
 
   return (
-    <Typography variant="h4" {...rest}>Sleep Hotel</Typography>
+    <Typography variant="h4" {...rest}>Sleep Hotel 
+      
+    </Typography>
+    
   );
 };
