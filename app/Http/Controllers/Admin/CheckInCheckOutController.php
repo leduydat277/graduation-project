@@ -5,33 +5,47 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Booking;
 use App\Models\ManageStatusRoom;
 use App\Models\Payment;
+use App\Models\PhiPhatSinh;
 use App\Models\Room;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
-use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Carbon as SupportCarbon;
+use Illuminate\Support\Str;
 class CheckInCheckOutController extends RoutingController
 {
+
+    public function detail($id){
+        $booking = Booking::find($id);
+        $room = Room::find($booking->room_id);
+        $phiPhatSinh = PhiPhatSinh::where('booking_id', $id)->first();
+        $payments = Payment::where('booking_id', $id)->get();
+        $title = "Chi tiết đơn";
+        return view('admin.checkin_checkout.detail', compact('booking', 'room', 'phiPhatSinh', 'payments', 'title'));
+    }
+
     public function index(Request $request)
     {
+        $today = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
         $title = "Danh sách Đơn";
-        $bookings = Booking::whereIn('bookings.status', [2, 3, 4])
-            ->join('users', 'bookings.user_id', '=', 'users.id')
+        $bookings = Booking::whereIn('bookings.status', [2, 4])
+        ->whereRaw('DATE(FROM_UNIXTIME(check_in_date)) = ? OR DATE(FROM_UNIXTIME(check_out_date)) = ?', [$today, $today])            ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
-            ->leftJoin(DB::raw('(SELECT booking_id, GROUP_CONCAT(name) as phiphatsinh, SUM(price) as giaphiphatsinh FROM phiphatsinhs GROUP BY booking_id) as extra_fees'), 'extra_fees.booking_id', '=', 'bookings.id')
             ->select(
                 'bookings.*',
                 'users.name as user_name',
+                'users.email as user_email',
+                'users.phone as user_phone',
                 'room_types.type as room_type',
-                'rooms.id as room_id',
-                DB::raw('COALESCE(extra_fees.phiphatsinh, "") as phiphatsinh'),
-                DB::raw('COALESCE(extra_fees.giaphiphatsinh, 0) as giaphiphatsinh')
+                'rooms.roomId_number as room_id'
             )
             ->get();
-        return view('admin.checkin_checkout.index', compact('bookings', 'title'));
+
+   
+            $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
+
+        return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
 
 
@@ -39,57 +53,103 @@ class CheckInCheckOutController extends RoutingController
     {
         $booking = Booking::findOrFail($id);
         $booking->status = 4;
+        $booking->check_in_date = Carbon::now()->timestamp;  
+        $booking->CCCD_booking = $request->cccd; 
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
             $status_room->status = 2;
             $status_room->save();
         }
-        $id_user = $booking->user_id;
-        $id_user = $booking->user_id;
-        $user = User::find($id_user);
-        $user->cccd = $request->cccd;
-        $user->save();
         $room_id = $booking->room_id;
         $room = Room::find($room_id);
         $room->status = 2;
         $room->save();
-        // $payment = Payment::where('booking_id', $id)->first();
-        // $payment->payment_status = 3;
-        // $payment->save();
-        return redirect()->route('checkin-checkout.index')->with('success', 'Check-in thành công (đã lưu cccd vào csdl)');
+        return redirect()->route('checkin-checkout.index')->with('success', 'Check-in thành công');
     }
 
     public function checkOut(Request $request, $id)
     {
+        foreach ($request->pps as $index => $name) {
+            $price = $request->price[$index];
+            PhiPhatSinh::insert([
+                'booking_id' => $id,
+                'name' => $name,
+                'price' => $price,
+            ]);
+        }
+        $phiphatsinhs = PhiPhatSinh::where('booking_id', $id)->get();
+        foreach ($phiphatsinhs as $phi) {
+            $phi->status = 1;
+            $phi->save();
+        }
         $currentTimestamp = Carbon::now()->timestamp;
         $booking = Booking::findOrFail($id);
-        // dd($currentTimestamp , $booking->check_out_date);
         if ($booking->check_out_date == $currentTimestamp) { // nếu checkout đúng ngày thì xóa
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
             foreach ($manage_status_rooms as $manage_status_room) {
                 $manage_status_room->delete();
             }
         }
-        if ($booking->check_out_date <= $currentTimestamp) {
-            //xóa dương vô cực cũ, xong đặt dương vô cực từ now 
-            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)
-                ->andWhere('to', 0);
+        if ($booking->check_out_date <= $currentTimestamp) { // Kiểm tra check-out sớm
+            // Xóa dương vô cực cũ, sau đó đặt dương vô cực từ now
+            $today = Carbon::now()->timestamp;
+            $checkoutNew = $booking->check_out_date;
+            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
+            foreach ($manage_status_rooms as $manage_status_room) {
+                $manage_status_room->delete();
+            }
+            ManageStatusRoom::create([
+                'booking_id' => $id,
+                'room_id' => $booking->room_id,
+                'from' => $today,
+                'to' => $checkoutNew,
+                'status' => 1,
+            ]);
+
         }
+        
         $booking->status = 3;
+        $booking->check_out_date = $currentTimestamp;
+        $booking->total_price = $request->totalPrice; //update tiền ở booking
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
-            $status_room->status = 2;
+            $status_room->status = 1;
             $status_room->save();
         }
+
         $room_id = $booking->room_id;
         $room = Room::find($room_id);
         $room->status = 0;
         $room->save();
         $payment = Payment::where('booking_id', $id)->first();
         $payment->payment_status = 3;
+        $payment->insert(
+            [
+                'booking_id' => $id,
+                'payments_id_number' => Str::random(6),
+                'payment_date' => Carbon::now()->timestamp,
+                'payment_method' => 0,
+                'payment_status' => 3,
+                'total_price' => ($request->totalPrice - $request->tiencu),
+            ]
+        );
         $payment->save();
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
+    }
+
+
+    public function cancel(Request $request)
+    {
+        $booking = Booking::find($request->id);
+        $manage_status_room = ManageStatusRoom::where('from', $booking->check_in_date)
+            ->where('status', 0)
+            ->first();
+        $manage_status_room->status = 1;
+        $manage_status_room->save();
+        $booking->status = 5;
+        $booking->save();
+        return redirect()->route('checkin-checkout.index')->with('success', 'Hủy đơn thành công!');
     }
 }

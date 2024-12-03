@@ -1,4 +1,4 @@
-import { Link, Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Link} from "@mui/material";
 import { red } from '@mui/material/colors';
 import { Profile } from '../Profile/Profile';
 
@@ -40,11 +40,22 @@ const NavLink = (props) => {
 
   return (
     <Stack direction="row" gap={2} pl={7}>
-      <Typography variant="h6">Home</Typography>
-      <Typography variant="h6">Rooms</Typography>
-      <Typography variant="h6">About</Typography>
-      <Typography variant="h6">Policy</Typography>
-    </Stack>
+
+
+<Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+        Home
+      </Link>
+      <Link href={`/rooms`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+        Rooms
+      </Link>
+      <Link href={`/about`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+        About
+      </Link>
+      <Link href={`/policy`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+        Policy
+      </Link>
+    
+ </Stack>
   )
 
 

@@ -11,6 +11,7 @@
         "php": "^8.2",
         "ext-exif": "*",
         "ext-gd": "*",
+        "barryvdh/laravel-dompdf": "^3.0",
         "fakerphp/faker": "^1.23",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^1.0",
@@ -19,6 +20,7 @@
         "laravel/tinker": "^2.9",
         "league/glide-symfony": "^2.0",
         "nunomaduro/collision": "^8.5",
+        "pusher/pusher-php-server": "^7.2",
         "symfony/error-handler": "^7.1",
         "tightenco/ziggy": "^2.2"
     },

@@ -1,10 +1,16 @@
 <?php
 
-use App\Http\Controllers\Web\AboutController;
+
+use App\Events\NotificationMessage;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
-use App\Http\Controllers\Web\PolyciController;
+use App\Http\Controllers\Web\SuccesssController;
+use App\Http\Controllers\Web\RoomsController;
+use App\Http\Controllers\Web\CheckoutScreenController;
+use Illuminate\Support\Facades\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,14 +25,15 @@ use App\Http\Controllers\Web\PolyciController;
 
 include_once "admin.php";
 
-Route::get("/test", function () {
-    return view('admin.index');
+Route::get("/test", function (Request $request) {
+    event(new NotificationMessage('Lê Duy Linh', 'Đơn đặt phòng mới', 'dfjghidsgh'));
+    return response()->json(['status' => 'Notification sent!']);
 });
-
 
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
 //Detail
+
 Route::get('/detail', [DetailController::class, 'index'])
     ->name('detail');
 // // Users

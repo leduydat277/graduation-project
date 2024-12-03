@@ -66,7 +66,7 @@
                         @endif
                         <div class="table-responsive table-card mt-3 mb-1">
                             <table class="table align-middle table-nowrap" id="reviewTable">
-                                <thead class="table-light">
+                                <thead >
                                     <tr>
                                         <th>ID</th>
                                         <th>Người dùng</th>
@@ -87,12 +87,13 @@
                                             <td>{{ $review->comment }}</td>
                                             <td>{{ $review->created_at->format('Y-m-d') }}</td>
                                             <td>
-                                                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST"
-                                                    class="delete-form" data-review-id="{{ $review->id }}"
-                                                    style="display:inline-block;">
+                                                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" class="delete-form"
+                                                    data-review-id="{{ $review->id }}" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn">Xóa</button>
+                                                    <button type="button" class="btn btn-danger delete-btn" title="Xóa">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>

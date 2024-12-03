@@ -23,6 +23,9 @@ class UpdateRoomRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'room_area' => 'required|numeric|min:0',
             'description' => 'nullable|string',
+            'image_room' => 'array', // Bắt buộc phải có mảng ảnh
+            'image_room.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate từng file ảnh
+            'thumbnail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate thumbnail
         ];
     }
 
@@ -40,7 +43,15 @@ class UpdateRoomRequest extends FormRequest
             'price.min' => 'Giá phải lớn hơn hoặc bằng 0.',
             'room_area.required' => 'Diện tích là bắt buộc.',
             'room_area.numeric' => 'Diện tích phải là số.',
-            'room_area.min' => 'Diện tích phải lớn hơn hoặc bằng 0.'
+            'room_area.min' => 'Diện tích phải lớn hơn hoặc bằng 0.',
+            'description.string' => 'Mô tả phải là chuỗi.',
+            'image_room.array' => 'Ảnh phải được gửi dưới dạng mảng.',
+            'image_room.*.image' => 'Mỗi file phải là một hình ảnh.',
+            'image_room.*.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
+            'image_room.*.max' => 'Dung lượng ảnh không được vượt quá 2MB.',
+            'thumbnail_image.image' => 'Ảnh thu nhỏ phải là một hình ảnh.',
+            'thumbnail_image.mimes' => 'Ảnh thu nhỏ phải có định dạng jpeg, png, jpg, gif hoặc svg.',
+            'thumbnail_image.max' => 'Dung lượng ảnh thu nhỏ không được vượt quá 2MB.',
         ];
     }
 }

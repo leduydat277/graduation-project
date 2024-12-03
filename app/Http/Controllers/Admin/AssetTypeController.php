@@ -4,108 +4,116 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\AssetTypeRequest;
 use App\Models\Admin\AssetType;
+use App\Models\Admin\RoomAsset;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 
-class AssetTypeController  extends Controller
+class AssetTypeController extends Controller
 {
     const VIEW_PATH = 'admin.assettypes.';
 
     public function index(Request $request)
     {
-        //Tiêu đề trang
         $title = 'Danh sách loại tài sản';
-
-        // Lấy từ khóa tìm kiếm từ request
         $search = $request->input('search');
-
-        // Lấy cột sắp xếp và thứ tự sắp xếp từ request (mặc định sắp xếp theo 'id' tăng dần)
         $sortBy = $request->input('sort_by', 'id');
         $sortOrder = $request->input('sort_order', 'asc');
 
-        // Kiểm tra tính hợp lệ của cột sắp xếp để tránh lỗi
-        if (!in_array($sortBy, ['id', 'name', 'description'])) {
+        if (!in_array($sortBy, ['id', 'name', 'description', 'status', 'image'])) {
             $sortBy = 'id';
         }
 
-        // Truy vấn danh sách asset types với tìm kiếm và sắp xếp
         $assetTypes = AssetType::query()
             ->when($search, function ($query, $search) {
                 return $query->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
             })
             ->orderBy($sortBy, $sortOrder)
-            ->paginate(10); // Sử dụng phân trang
+            ->paginate(10);
 
-        // Truyền các tham số sang view
-        return view(self::VIEW_PATH . 'index', compact('assetTypes', 'search', 'sortBy', 'sortOrder', 'title'));
+        return view(self::VIEW_PATH . __FUNCTION__, compact('assetTypes', 'search', 'sortBy', 'sortOrder', 'title'));
     }
-
 
     public function create()
     {
-        //Tiêu đề trang
         $title = 'Thêm loại tài sản';
-
-        // Truyền các tham số sang view
-        return view(self::VIEW_PATH . __FUNCTION__, compact('title'));
+        $assets = AssetType::select('id')->orderBy('id', 'desc')->first();
+        $assets->id = $assets->id + 1;
+        return view(self::VIEW_PATH . __FUNCTION__, compact('assets', 'title'));
     }
 
-
     public function store(AssetTypeRequest $request)
-    {
+    {   
+        dd($request->all());
         $data = $request->except('_token');
 
+        // Xử lý upload ảnh
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('assets_types', 'public');
+        }
 
-        // Tạo mới một bản ghi trong bảng asset types
         AssetType::create($data);
 
-        // Chuyển hướng về trang danh sách asset types với thông báo
         return redirect()->route('asset-types.index')->with('success', 'Thêm loại tài sản thành công');
     }
 
     public function edit($id)
     {
-        //Tiêu đề trang
         $title = 'Sửa loại tài sản';
-
-        // Lấy thông tin loại tài sản theo $id
         $assetType = AssetType::findOrFail($id);
-
-        // Truyền các tham số sang view
         return view(self::VIEW_PATH . __FUNCTION__, compact('assetType', 'title'));
     }
 
     public function update(AssetTypeRequest $request, $id)
     {
         $assetType = AssetType::findOrFail($id);
-
         $data = $request->except('_token', '_method');
+
+        // Xử lý upload ảnh
+        if ($request->hasFile('image')) {
+            if ($assetType->image) {
+                Storage::disk('public')->delete($assetType->image);
+            }
+            $data['image'] = $request->file('image')->store('assets_types', 'public');
+        }
 
         $assetType->update($data);
 
-        // Chuyển hướng về trang danh sách asset types với thông báo
         return redirect()->route('asset-types.index')->with('success', 'Cập nhật loại tài sản thành công');
     }
 
-    public function destroy($id)
+    public function lock($id)
     {
-        // Tìm asset type theo id
-        $assetType = AssetType::find($id);
+        $assetType = AssetType::select('id', 'status')->find($id);
 
         if (!$assetType) {
             return redirect()->route('asset-types.index')->with('error', 'Loại tài sản không tồn tại');
         }
 
-        // Kiểm tra xem asset type có bất kỳ bản ghi nào trong room-assets không
-        if ($assetType->roomAssets()->exists()) {
-            return redirect()->route('asset-types.index')->with('error', 'Không thể xóa loại tài sản vì có bản ghi liên kết trong tiện nghi phòng');
+        $assetType->status = 1;
+        $assetType->save();
+
+        $roomAssets = RoomAsset::where('assets_type_id', $id)->get();
+
+        foreach ($roomAssets as $item) {
+            $item->delete();
         }
 
-        // Xóa asset type
-        $assetType->delete();
+        return redirect()->route('asset-types.index')->with('success', 'Tạm ngưng sử dụng tiện nghi thành công');
+    }
 
-        // Chuyển hướng về trang danh sách asset types với thông báo thành công
-        return redirect()->route('asset-types.index')->with('success', 'Xóa loại tài sản thành công');
+    public function unlock($id)
+    {
+        $assetType = AssetType::select('id', 'status')->find($id);
+
+        if (!$assetType) {
+            return redirect()->route('asset-types.index')->with('error', 'Loại tài sản không tồn tại');
+        }
+
+        $assetType->status = 0;
+        $assetType->save();
+
+        return redirect()->route('asset-types.index')->with('success', 'Mở khóa tiện nghi thành công');
     }
 }

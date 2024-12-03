@@ -24,7 +24,7 @@ export const GuestCount = (props) => {
           size: 14,
           fonWeight: 600,
         }}
-        >Chọn loại phòng & số người</Button>
+        >Type room & Number guest</Button>
       </DialogTrigger>
       <DialogContent position={position}>
        <QuantitySelectGuest />

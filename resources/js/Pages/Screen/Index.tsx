@@ -9,15 +9,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Banners } from './Banners';
 import { RoomList } from '@/shared/Room/RoomList';
 
-import { AlignCenter } from 'lucide-react';
-import { Footer } from '@/components/Footer/Footer';
-
-
-
 function ScreenPage() {
+  
+const onPress = async () => {
+  
+}
+  
   return (
     <>
-      <Box sx={{ py: 6 }}>
+      <Box sx={{ pt: 6, pb: 3 }}>
         <Box sx={{ mb: 10, mx: 5 }}>
           <Banners />
           <Paper elevation={3} sx={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', borderRadius: '2rem', justifyContent: 'center', backgroundColor: blue[50], mb: 6 }}>
@@ -38,12 +38,12 @@ function ScreenPage() {
             </Button>
           </Paper>
           <BannerImage />
-          <RoomList />
+          <RoomList end={6} start={0} />
 
         </Box>
 
       </Box>
-      <Footer />
+     
     </>
     
   );

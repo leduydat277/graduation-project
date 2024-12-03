@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\AssetType;
 use App\Models\Booking;
+use App\Models\Room;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -159,6 +161,26 @@ class DashboardController
                 $uPercentage = 0;
             }
 
+            $todayStart = Carbon::now()->startOfDay()->timestamp;
+            $todayEnd = Carbon::now()->endOfDay()->timestamp;
+
+            $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+                ->with('room')
+                ->whereBetween('created_at', [$todayStart, $todayEnd])
+                ->get();
+
+            $todayPrice = 0;
+            $countDes = 0;
+
+            foreach ($bookingToday as $item) {
+                if ($item->status == 3) {
+                    $todayPrice += $item->total_price;
+                }
+                if ($item->status == 5) {
+                    $countDes++;
+                }
+            }
+
             return view('admin.dashboard.index', compact([
                 'weeklyEarnings',
                 'weeklyOrders',
@@ -171,7 +193,7 @@ class DashboardController
                 'earningsComparison',
                 'earningsPercentage',
                 'ordersComparison',
-                'ordersPercentage'
+                'ordersPercentage',
             ]));
         } catch (Exception $e) {
             return response()->json([
@@ -197,6 +219,7 @@ class DashboardController
 
             foreach ($bookings as $booking) {
                 $monthYear = Carbon::createFromTimestamp($booking->created_at)->format('Y-m');
+                Log::error($monthYear);
 
                 if (!isset($monthlyEarnings[$monthYear])) {
                     $monthlyEarnings[$monthYear] = 0;
@@ -232,6 +255,168 @@ class DashboardController
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
+    function getWeeksInCurrentMonth()
+    {
+        try {
+            $month = Carbon::now()->month;
+            $year = Carbon::now()->year;
+
+            $startOfMonth = Carbon::create($year, $month, 1)->startOfDay();
+            $endOfMonth = $startOfMonth->copy()->endOfMonth();
+            $weeks = [];
+            $current = $startOfMonth->copy()->startOfWeek();
+
+            while ($current->lessThanOrEqualTo($endOfMonth)) {
+                $weeks[] = [
+                    'start' => $current->format('Y-m-d'),
+                    'end' => $current->copy()->endOfWeek()->format('Y-m-d'),
+                ];
+                $current->addWeek();
+            }
+
+            $bookings = Booking::select('total_price', 'status', 'created_at')
+                ->where('status', 3)
+                ->get();
+
+            $weeklyEarnings = [];
+            foreach ($weeks as $week) {
+                $startOfWeek = Carbon::parse($week['start'])->startOfDay();
+                $endOfWeek = Carbon::parse($week['end'])->endOfDay();
+
+                $earnings = $bookings->filter(function ($booking) use ($startOfWeek, $endOfWeek) {
+                    $bookingDate = Carbon::createFromTimestamp($booking->created_at);
+                    return $bookingDate->between($startOfWeek, $endOfWeek);
+                })->sum('total_price');
+
+                $weeklyEarnings[] = [
+                    'start' => $week['start'],
+                    'end' => $week['end'],
+                    'earnings' => $earnings,
+                ];
+            }
+
+            return response()->json([
+                "type" => "success",
+                "month" => $month,
+                "data" => $weeklyEarnings
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
+    function countRoomOrders(Request $request)
+    {
+        try {
+            $perPage = $request->input('length', 10);
+            $currentPage = ($request->input('start', 0) / $perPage) + 1;
+
+            $roomCounts = Booking::select('room_id', \DB::raw('count(*) as count'))
+                ->whereIn('status', [2, 3, 4])
+                ->groupBy('room_id')
+                ->orderByDesc('count')
+                ->paginate($perPage, ['*'], 'page', $currentPage);
+
+            $roomIds = $roomCounts->pluck('room_id');
+
+            $rooms = Room::select('id', 'title', 'price', 'thumbnail_image', 'room_type_id')
+                ->with('roomType')
+                ->whereIn('id', $roomIds)
+                ->get()
+                ->keyBy('id');
+
+            $roomCounts->getCollection()->transform(function ($room) use ($rooms) {
+                $room->room_details = $rooms->get($room->room_id);
+                return $room;
+            });
+
+            return response()->json([
+                "type" => "success",
+                "data" => $roomCounts->items(),
+                "recordsTotal" => $roomCounts->total(),
+                "recordsFiltered" => $roomCounts->total(),
+                "currentPage" => $roomCounts->currentPage(),
+                "totalPages" => $roomCounts->lastPage(),
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
+    public function getBookingsToday(Request $request)
+    {
+        $todayStart = Carbon::now()->startOfDay()->timestamp;
+        $todayEnd = Carbon::now()->endOfDay()->timestamp;
+
+        $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+            ->with('room')
+            ->where('status', 2)
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->get();
+
+        $todayPrice = 0;
+        $countDes = 0;
+
+        foreach ($bookingToday as $item) {
+            if ($item->status == 3) {
+                $todayPrice += $item->total_price;
+            }
+            if ($item->status == 5) {
+                $countDes++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $bookingToday,
+            'price' => $todayPrice,
+            'count' => $countDes
+        ]);
+    }
+
+    public function assetsDie(Request $request)
+    {
+        try {
+            $perPage = $request->input('per_page', 10);
+
+            $assets = AssetType::select('id', 'name', 'status', 'image')
+                ->where('status', 2)
+                ->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'data' => $assets,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Failed to get assets",
                 "error" => [
                     "message" => $e->getMessage(),
                     "file" => $e->getFile(),
