@@ -111,6 +111,13 @@ class BookingController
                 ], 404);
             }
 
+            if($room->status == 3 || $room->status == 4){
+                return response()->json([
+                    "type" => "error",
+                    "message" => "Hiện tại không được đặt phòng này."
+                ], 406);
+            }
+
             $total_price = $room->price * $daysBooked;
             $depositAmount = $total_price * 0.3;
 
