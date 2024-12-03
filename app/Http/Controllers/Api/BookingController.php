@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 use Str;
@@ -73,7 +74,9 @@ class BookingController
 
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
-            $daysBooked = $checkInDate->diffInDays($checkOutDate);
+            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
+
+            Log::error($daysBooked);
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
@@ -109,6 +112,13 @@ class BookingController
                     "type" => "error",
                     "message" => "Phòng không tồn tại."
                 ], 404);
+            }
+
+            if($room->status == 3 || $room->status == 4){
+                return response()->json([
+                    "type" => "error",
+                    "message" => "Hiện tại không được đặt phòng này."
+                ], 406);
             }
 
             $total_price = $room->price * $daysBooked;

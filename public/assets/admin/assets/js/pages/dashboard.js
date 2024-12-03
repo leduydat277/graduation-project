@@ -263,17 +263,22 @@ $(document).ready(function () {
       {
         data: 'room_details.title',
         render: function (data, type, row) {
+          const baseURL = 'http://127.0.0.1:8000/storage/';
+          const thumbnailPath = row.room_details.thumbnail_image;
+          const fullImageURL = `${baseURL}${thumbnailPath}`;
+          const id = row.room_details.id;
+          const showRoom = `/admin/rooms/` + id;
           return `
-                <div class="d-flex align-items-center">
-                  <div class="avatar-sm bg-light rounded p-1 me-2">
-                    <img src="assets/images/products/img-1.png" alt="" class="img-fluid d-block" />
-                  </div>
-                  <div>
-                    <h5 class="fs-14 my-1"><a href="apps-ecommerce-product-details.html" class="text-reset"><a href="">${data}</a></h5>
-                    <span class="text-muted">${row.room_details.room_type.type}</span>
-                  </div>
-                </div>
-              `;
+          <div class="d-flex align-items-center">
+            <div class="avatar-lg bg-light rounded p-1">
+              <img src="${fullImageURL}" alt="Room Image" class="img-fluid d-block" />
+            </div>
+            <div>
+              <h5 class="fs-14 my-1"><a href="${showRoom}" class="text-dark text-decoration-none">${data}</a></h5>
+              <span class="text-muted">${row.room_details.room_type.type}</span>
+            </div>
+          </div>
+        `;
         }
       },
       {
@@ -304,3 +309,186 @@ $(document).ready(function () {
     }
   });
 });
+
+$(document).ready(function () {
+  const table = $('#bookingsTodayTable').DataTable({
+    processing: true,
+    serverSide: false,
+    searching: false,
+    lengthChange: false,
+    autoWidth: false,
+    ajax: {
+      url: '/api/getBookingsToday',
+      type: 'GET',
+      dataSrc: function (json) {
+        if (json.success) {
+          $('.statistics-summary').remove();
+          $('body').append(`
+                      <div class="statistics-summary">
+                          <h5 class="delete-orders">Đơn hàng bị hủy trong hôm nay: ${
+                            json.count
+                          }</h5>
+                          <h5 class="total-orders">Tổng doanh thu hôm nay: ${json.price.toLocaleString()}</h5>
+                      </div>
+                  `);
+        }
+        return json.data;
+      }
+    },
+    columns: [
+      {
+        data: 'room.title',
+        title: 'Tên phòng',
+        render: function (data) {
+          return data ?? 'Không có tên phòng';
+        }
+      },
+      {
+        data: 'check_in_date',
+        title: 'Ngày đến',
+        render: function (data) {
+          return moment.unix(data).format('DD-MM-YYYY');
+        }
+      },
+      {
+        data: 'check_out_date',
+        title: 'Ngày đi',
+        render: function (data) {
+          return moment.unix(data).format('DD-MM-YYYY');
+        }
+      },
+      {
+        data: 'total_price',
+        title: 'Tổng tiền',
+        render: function (data) {
+          return parseInt(data).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+          });
+        }
+      },
+      {
+        data: 'status',
+        title: 'Trạng thái',
+        render: function (data) {
+          switch (data) {
+            case 1:
+              return 'Đang thanh toán cọc';
+            case 2:
+              return 'Đã thanh toán cọc';
+            case 3:
+              return 'Đã thanh toán tổng tiền';
+            case 4:
+              return 'Đang sử dụng';
+            case 5:
+              return 'Đã hủy';
+            default:
+              return 'Không xác định';
+          }
+        }
+      },
+      {
+        data: 'created_at',
+        title: 'Ngày tạo',
+        render: function (data) {
+          return moment.unix(data).format('DD-MM-YYYY HH:mm:ss');
+        }
+      }
+    ],
+    columnDefs: [{ targets: '_all', className: 'text-center' }],
+    language: {
+      paginate: {
+        next: 'Tiếp',
+        previous: 'Trước'
+      },
+      lengthMenu: 'Hiển thị _MENU_ mục',
+      info: 'Hiển thị từ _START_ đến _END_ trên tổng _TOTAL_ mục',
+      infoEmpty: 'Không có dữ liệu để hiển thị',
+      emptyTable: 'Không có dữ liệu'
+    }
+  });
+
+  $('#bookingsTodayTable tbody').on('click', 'tr', function () {
+    const data = table.row(this).data(); // Lấy dữ liệu hàng được nhấp
+    if (data) {
+      $('#detailsModal .modal-body').html(`
+        <p>Tên phòng: ${data.room.title}</p>
+        <p>Ngày đến: ${moment.unix(data.check_in_date).format('DD-MM-YYYY')}</p>
+        <p>Ngày đi: ${moment.unix(data.check_out_date).format('DD-MM-YYYY')}</p>
+        <p>Tổng tiền: ${parseInt(data.total_price).toLocaleString('vi-VN', {
+          style: 'currency',
+          currency: 'VND'
+        })}</p>
+        <p>Trạng thái: ${getStatusText(data.status)}</p>
+        <p>Ngày tạo: ${moment
+          .unix(data.created_at)
+          .format('DD-MM-YYYY HH:mm:ss')}</p>
+      `);
+      $('#detailsModal').modal('show');
+    }
+  });
+
+  function getStatusText(status) {
+    switch (status) {
+      case 1:
+        return 'Đang thanh toán cọc';
+      case 2:
+        return 'Đã thanh toán cọc';
+      case 3:
+        return 'Đã thanh toán tổng tiền';
+      case 4:
+        return 'Đang sử dụng';
+      case 5:
+        return 'Đã hủy';
+      default:
+        return 'Không xác định';
+    }
+  }
+});
+
+$(document).ready(function () {
+  $('#assetsDie').DataTable({
+      processing: true,
+      serverSide: false,
+      ajax: {
+          url: '/api/assetsDie',
+          type: 'GET',
+          data: function (d) {
+          }
+      },
+      columns: [
+          { data: 'id', title: 'ID', className: 'text-center' },
+          { data: 'name', title: 'Tên tài sản' },
+          {
+              data: 'image',
+              title: 'Hình ảnh',
+              render: function (data) {
+                  return `<img src="${data}" alt="Asset Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">`;
+              }
+          },
+          {
+              data: 'status',
+              title: 'Trạng thái',
+              render: function (data) {
+                  return data === 2 ? 'Hỏng' : 'Không xác định';
+              }
+          }
+      ],
+      language: {
+          processing: "Đang tải...",
+          paginate: {
+              next: "Tiếp",
+              previous: "Trước"
+          },
+          lengthMenu: "Hiển thị _MENU_ bản ghi mỗi trang",
+          info: "Hiển thị từ _START_ đến _END_ trên tổng _TOTAL_ bản ghi",
+          infoEmpty: "Không có bản ghi nào",
+          emptyTable: "Không có dữ liệu",
+          search: "Tìm kiếm:",
+      },
+      pageLength: 10,
+      lengthChange: true,
+      searching: false
+  });
+});
+

@@ -8,11 +8,11 @@ import { PageProps } from "@/types";
 import { ChevronDown } from "lucide-react";
 import { Box, Stack, Link, Menu, MenuItem } from "@mui/material";
 
-import {containerProps} from '@/components/Responsive';
 
 import React, { useState } from 'react';
+import { containerProps } from "../Responsive";
 
-export const Profile = (props) => {
+export const Profile = (props:any) => {
     const { fullWidth, pressCart, ...rest } = props
     const { auth } = usePage<PageProps>().props;
     const [menuOpened, setMenuOpened] = useState(false);
