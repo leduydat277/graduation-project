@@ -25,10 +25,17 @@ const onPress = async () => {
           {/* <Banners /> */}
           {/* <Banner /> */}
           <Paper elevation={3}
-           sx={{  display: 'flex', 
-           gap: '1rem', alignItems: 'center', borderRadius: 
-           '2rem', justifyContent: 'center', 
-           backgroundColor: 'white', mb: 6 , position: 'absolute', top: '-130px', left: '160px'}}>
+           sx={{  display: 'flex',
+            gap: '1rem',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            mb: 6,
+            position: 'absolute',
+            top: '1%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)', 
+            padding: '1rem',}}>
             <RoomSearchBar style={{
               backgroundColor: grey[50],
               borderRadius: 10,
