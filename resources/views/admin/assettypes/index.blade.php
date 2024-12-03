@@ -91,6 +91,7 @@
                                         </th>
                                         <th class="sort" data-sort="name">Tên loại tiện nghi</th>
                                         <th class="sort" data-sort="image">Hình ảnh</th>
+                                        <th class="sort" data-sort="image">Trạng thái</th>
                                         <th class="sort" data-sort="action">Hành động</th>
                                     </tr>
                                 </thead>
@@ -113,15 +114,52 @@
                                                     Không có hình ảnh
                                                 @endif
                                             </td>
+                                            {{-- 
+                                                0 là hoạt động
+                                                1 là tạm ngừng kinh doanh
+                                                2 là hỏng 
+                                                dùng switch case để hiển thị trạng thái của loại tiện nghi
+                                            --}}
                                             <td>
-                                                <a href="{{ route('asset-types.edit', $assetType->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
-                                                <form action="{{ route('asset-types.destroy', $assetType->id) }}"
-                                                    method="POST" class="delete-form"
-                                                    data-asset-type="{{ $assetType->name }}" style="display:inline-block;">
+                                                @switch($assetType->status)
+                                                    @case(0)
+                                                        <span class="badge bg-success">Sẵn sàng</span>
+                                                    @break
+
+                                                    @case(1)
+                                                        <span class="badge bg-warning">Tạm ngưng kinh doanh</span>
+                                                    @break
+
+                                                    @case(2)
+                                                        <span class="badge bg-danger">Hỏng</span>
+                                                    @break
+
+                                                    @default
+                                                        <span class="badge bg-secondary">Không xác định</span>
+                                                @endswitch
+
+                                            </td>
+                                            <td>
+                                                {{-- nếu trạng thái  != 1 thì mới hiển thị nút unlock không thì hiển thị cả 2 --}}
+                                                @if ($assetType->status != 1)
+                                                    <a href="{{ route('asset-types.edit', $assetType->id) }}"
+                                                        class="btn btn-warning" title="Sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @endif
+                                                <form
+                                                    action="{{ $assetType->status === 1 ? route('asset-types.unlock', $assetType->id) : route('asset-types.lock', $assetType->id) }}"
+                                                    method="POST" class="lock-unlock-form"
+                                                    data-room-name="{{ $assetType->title }}"
+                                                    style="display:inline-block;">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn">Xóa</button>
+                                                    @method('PUT')
+                                                    <button type="button"
+                                                        class="btn {{ $assetType->status === 1 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn"
+                                                        title="{{ $assetType->status === 1 ? 'Mở hoạt động' : 'Dừng hoạt động' }}">
+                                                        <i
+                                                            class="{{ $assetType->status === 1 ? 'fas fa-unlock' : 'fas fa-lock' }}"></i>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -156,20 +194,19 @@
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.querySelectorAll('.delete-btn').forEach(button => {
+        document.querySelectorAll('.lock-unlock-btn').forEach(button => {
             button.addEventListener('click', function() {
-                var form = this.closest('.delete-form');
-                var assetType = form.getAttribute('data-asset-type');
+                const form = this.closest('.lock-unlock-form');
+                const roomName = form.dataset.roomName;
+                const isUnlocking = this.classList.contains('btn-success');
 
                 Swal.fire({
-                    title: 'Bạn có chắc chắn muốn tạm ngưng sử dụng tiện nghi này không?',
-                    text: "Tiện nghi " + assetType +
-                        " ở các phòng sẽ được bỏ ra.",
+                    title: `Bạn có chắc chắn muốn ${isUnlocking ? 'mở khóa' : 'khóa'} phòng "${roomName}" không?`,
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: isUnlocking ? '#28a745' : '#ffc107',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Có, xóa nó!',
+                    confirmButtonText: `Có, ${isUnlocking ? 'mở khóa' : 'khóa'}!`,
                     cancelButtonText: 'Hủy'
                 }).then((result) => {
                     if (result.isConfirmed) {

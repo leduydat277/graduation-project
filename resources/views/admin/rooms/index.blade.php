@@ -163,29 +163,35 @@
                                                         <span class="badge bg-secondary">Không xác định</span>
                                                 @endswitch
                                             </td>
-
-
-                                            <td>    
-                                                @if ($room->status !== 4)
-                                                    <a href="{{ route('rooms.edit', $room->id) }}"
-                                                        class="btn btn-warning">Sửa</a>
-                                                    <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info">
-                                                        Xem
-                                                    </a>
-                                                @endif
-                                                <form
-                                                    action="{{ $room->status === 4 ? route('rooms.unlock', $room->id) : route('rooms.lock', $room->id) }}"
-                                                    method="POST" class="lock-unlock-form"
-                                                    data-room-name="{{ $room->title }}" style="display:inline-block;">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="button"
-                                                        class="btn {{ $room->status === 4 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn">
-                                                        {{ $room->status === 4 ? 'Mở hoạt động' : 'Dừng hoạt động' }}
-                                                    </button>
-                                                </form>
-
+                                            <td>
+                                                <div
+                                                    style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+                                                    @if ($room->status !== 4)
+                                                        <a href="{{ route('rooms.edit', $room->id) }}"
+                                                            class="btn btn-warning" title="Sửa">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info"
+                                                            title="Xem">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    @endif
+                                                    <form
+                                                        action="{{ $room->status === 4 ? route('rooms.unlock', $room->id) : route('rooms.lock', $room->id) }}"
+                                                        method="POST" class="lock-unlock-form"
+                                                        data-room-name="{{ $room->title }}" style="display:inline-block;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="button"
+                                                            class="btn {{ $room->status === 4 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn"
+                                                            title="{{ $room->status === 4 ? 'Mở hoạt động' : 'Dừng hoạt động' }}">
+                                                            <i
+                                                                class="{{ $room->status === 4 ? 'fas fa-unlock' : 'fas fa-lock' }}"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>

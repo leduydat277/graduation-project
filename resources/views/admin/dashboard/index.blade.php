@@ -19,7 +19,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
     <style>
-        /* Phân trang đẹp hơn */
         .dataTables_paginate {
             display: flex;
             justify-content: center;
@@ -50,6 +49,66 @@
             color: white;
             border-color: #007bff;
             font-weight: bold;
+        }
+    </style>
+    <style>
+        .table-container {
+            overflow-x: auto;
+            margin: 20px auto;
+            max-width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            text-align: left;
+            table-layout: auto;
+        }
+
+        table th,
+        table td {
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+            white-space: nowrap;
+        }
+
+        table thead th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+        }
+
+        table tbody tr {
+            line-height: 1.6;
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background-color: #999;
+        }
+    </style>
+    <style>
+        .table {
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
         }
     </style>
 @endsection
@@ -217,7 +276,7 @@
                 </div> <!-- end row-->
 
                 <div class="row">
-                    <div class="col-xl-8">
+                    <div class="col-xl-6">
                         <div class="card">
                             <div class="card-header border-0 align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Thống kê theo tháng</h4>
@@ -228,134 +287,27 @@
                             <canvas id="revenueChart" width="400" height="300"></canvas>
                         </div>
                     </div>
-                    <div class="col-xl-4">
+                    <div class="col-xl-6">
                         <div class="card card-height-100">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Các đơn đặt hôm nay</h4>
                             </div>
-                            <div class="card-body">
-                                <style>
-                                    .no-orders-message {
-                                        text-align: center;
-                                        font-size: 16px;
-                                        color: #666;
-                                        font-style: italic;
-                                        margin: 20px 0;
-                                    }
-
-                                    #ordersToday {
-                                        border: 1px solid #ddd;
-                                        border-radius: 5px;
-                                        width: 100%;
-                                        table-layout: auto;
-                                    }
-
-                                    #ordersToday thead {
-                                        background-color: #f4f4f4;
-                                        font-weight: bold;
-                                        color: #333;
-                                    }
-
-                                    #ordersToday th,
-                                    #ordersToday td {
-                                        text-align: left;
-                                        padding: 10px;
-                                        white-space: nowrap;
-                                    }
-
-                                    #ordersToday tbody tr:nth-child(even) {
-                                        background-color: #f9f9f9;
-                                    }
-
-                                    <style>#ordersToday tbody tr:hover {
-                                        background-color: #e6f7ff;
-                                        cursor: pointer;
-                                        /* Thêm con trỏ dạng tay để người dùng biết rằng có thể click */
-                                    }
-
-                                    .table-container {
-                                        overflow-x: auto;
-                                    }
-
-                                    .statistics-summary {
-                                        font-size: 16px;
-                                        font-weight: bold;
-                                        color: #444;
-                                        margin-top: 20px;
-                                    }
-
-                                    .statistics-summary {
-                                        font-size: 16px;
-                                        font-weight: bold;
-                                        color: #333;
-                                        margin-top: 20px;
-                                        padding: 10px;
-                                        background: #f7f7f7;
-                                        border: 1px solid #ddd;
-                                        border-radius: 5px;
-                                        text-align: left;
-                                    }
-                                </style>
-
-                                @if (!isset($bookingToday))
-                                    <p class="no-orders-message">
-                                        Hôm nay không có đơn hàng nào.
-                                    </p>
-                                @else
-                                    <div class="table-container">
-                                        <table id="ordersToday"
-                                            class="table table-hover table-centered align-middle table-nowrap mb-0">
-                                            <thead>
-                                                <th>Tên phòng</th>
-                                                <th>Ngày đến</th>
-                                                <th>Ngày đi</th>
-                                                <th>Tổng tiền</th>
-                                                <th>Trạng thái</th>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($bookingToday as $item)
-                                                    @php
-                                                        $status = '';
-                                                        switch ($item->status) {
-                                                            case 1:
-                                                                $status = 'Đang thanh toán cọc';
-                                                                break;
-                                                            case 2:
-                                                                $status = 'Đã thanh toán cọc';
-                                                                break;
-                                                            case 3:
-                                                                $status = 'Đã thanh toán tổng tiền';
-                                                                break;
-                                                            case 4:
-                                                                $status = 'Đang sử dụng';
-                                                                break;
-                                                            case 5:
-                                                                $status = 'Đã hủy';
-                                                                break;
-                                                            default:
-                                                                $status = 'Không xác định';
-                                                                break;
-                                                        }
-                                                    @endphp
-                                                    <tr data-id="{{ $item->id }}">
-                                                        <td>{{ $item->room->title }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($item->check_in_date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>{{ \Carbon\Carbon::parse($item->check_out_date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>{{ number_format($item->total_price, 0, ',', '.') }}</td>
-                                                        <td>{{ $status }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="statistics-summary">
-                                        <h5 class="delete-orders">Đơn hàng bị hủy trong hôm nay: {{ $countDes }}</h5>
-                                        <h5 class="total-orders">Tổng doanh thu hôm nay: {{ $todayPrice }}</h5>
-                                    </div>
-                                @endif
+                            <div class="table">
+                                <table id="bookingsTodayTable"
+                                    class="table table-hover table-centered align-middle table-nowrap mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên phòng</th>
+                                            <th>Ngày đến</th>
+                                            <th>Ngày đi</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Ngày tạo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -382,216 +334,36 @@
                 </div>
             </div>
         </div>
-
         <div class="col-xl-6">
-            <div class="card card-height-100">
+            <div class="card">
                 <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Top Sellers</h4>
-                    <div class="flex-shrink-0">
-                        <div class="dropdown card-header-dropdown">
-                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <span class="text-muted">Report<i class="mdi mdi-chevron-down ms-1"></i></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#">Download Report</a>
-                                <a class="dropdown-item" href="#">Export</a>
-                                <a class="dropdown-item" href="#">Import</a>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card header -->
-
+                    <h4 class="card-title mb-0 flex-grow-1">Các tiện nghi đang hỏng</h4>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive table-card">
-                        <table class="table table-centered table-hover align-middle table-nowrap mb-0">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-2">
-                                                <img src="assets/images/companies/img-1.png" alt=""
-                                                    class="avatar-sm p-2" />
-                                            </div>
-                                            <div>
-                                                <h5 class="fs-14 my-1 fw-medium">
-                                                    <a href="apps-ecommerce-seller-details.html" class="text-reset">iTest
-                                                        Factory</a>
-                                                </h5>
-                                                <span class="text-muted">Oliver Tyler</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">Bags and Wallets</span>
-                                    </td>
-                                    <td>
-                                        <p class="mb-0">8547</p>
-                                        <span class="text-muted">Stock</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">$541200</span>
-                                    </td>
-                                    <td>
-                                        <h5 class="fs-14 mb-0">32%<i
-                                                class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i></h5>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-2">
-                                                <img src="assets/images/companies/img-2.png" alt=""
-                                                    class="avatar-sm p-2" />
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="fs-14 my-1 fw-medium"><a
-                                                        href="apps-ecommerce-seller-details.html"
-                                                        class="text-reset">Digitech Galaxy</a></h5>
-                                                <span class="text-muted">John Roberts</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">Watches</span>
-                                    </td>
-                                    <td>
-                                        <p class="mb-0">895</p>
-                                        <span class="text-muted">Stock</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">$75030</span>
-                                    </td>
-                                    <td>
-                                        <h5 class="fs-14 mb-0">79%<i
-                                                class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i></h5>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-2">
-                                                <img src="assets/images/companies/img-3.png" alt=""
-                                                    class="avatar-sm p-2" />
-                                            </div>
-                                            <div class="flex-gow-1">
-                                                <h5 class="fs-14 my-1 fw-medium"><a
-                                                        href="apps-ecommerce-seller-details.html" class="text-reset">Nesta
-                                                        Technologies</a></h5>
-                                                <span class="text-muted">Harley Fuller</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">Bike Accessories</span>
-                                    </td>
-                                    <td>
-                                        <p class="mb-0">3470</p>
-                                        <span class="text-muted">Stock</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">$45600</span>
-                                    </td>
-                                    <td>
-                                        <h5 class="fs-14 mb-0">90%<i
-                                                class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i></h5>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-2">
-                                                <img src="assets/images/companies/img-8.png" alt=""
-                                                    class="avatar-sm p-2" />
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="fs-14 my-1 fw-medium"><a
-                                                        href="apps-ecommerce-seller-details.html"
-                                                        class="text-reset">Zoetic Fashion</a></h5>
-                                                <span class="text-muted">James Bowen</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">Clothes</span>
-                                    </td>
-                                    <td>
-                                        <p class="mb-0">5488</p>
-                                        <span class="text-muted">Stock</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">$29456</span>
-                                    </td>
-                                    <td>
-                                        <h5 class="fs-14 mb-0">40%<i
-                                                class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i></h5>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-2">
-                                                <img src="assets/images/companies/img-5.png" alt=""
-                                                    class="avatar-sm p-2" />
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="fs-14 my-1 fw-medium">
-                                                    <a href="apps-ecommerce-seller-details.html"
-                                                        class="text-reset">Meta4Systems</a>
-                                                </h5>
-                                                <span class="text-muted">Zoe Dennis</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">Furniture</span>
-                                    </td>
-                                    <td>
-                                        <p class="mb-0">4100</p>
-                                        <span class="text-muted">Stock</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">$11260</span>
-                                    </td>
-                                    <td>
-                                        <h5 class="fs-14 mb-0">57%<i
-                                                class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i></h5>
-                                    </td>
-                                </tr><!-- end -->
-                            </tbody>
-                        </table><!-- end table -->
-                    </div>
+                        <table id="assetsDie"
+                            class="table table-hover table-centered align-middle table-nowrap mb-0">
 
-                    <div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
-                        <div class="col-sm">
-                            <div class="text-muted">
-                                Showing <span class="fw-semibold">5</span> of <span class="fw-semibold">25</span> Results
-                            </div>
-                        </div>
-                        <div class="col-sm-auto  mt-3 mt-sm-0">
-                            <ul class="pagination pagination-separated pagination-sm mb-0 justify-content-center">
-                                <li class="page-item disabled">
-                                    <a href="#" class="page-link">←</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">1</a>
-                                </li>
-                                <li class="page-item active">
-                                    <a href="#" class="page-link">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a href="#" class="page-link">→</a>
-                                </li>
-                            </ul>
-                        </div>
+                        </table>
                     </div>
-
-                </div> <!-- .card-body-->
-            </div> <!-- .card-->
-        </div> <!-- .col-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Chi tiết đơn đặt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('js')
@@ -606,5 +378,4 @@
             });
         });
     </script>
-
 @endsection

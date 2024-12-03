@@ -107,8 +107,8 @@ class RoomController extends Controller
 
         // Kiểm tra nếu thời gian hiện tại chưa đến 14h, nếu đúng thì lấy từ 14h hôm nay, nếu không thì lấy từ 14h ngày mai
         $from = $currentTime->hour < 14
-            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)
-            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0);
+            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)->timestamp
+            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0)->timestamp;
 
         // Tạo bản ghi quản lý trạng thái phòng
         ManageStatusRoom::create([
@@ -191,10 +191,10 @@ class RoomController extends Controller
             'max_people' => $request->input('max_people'),
             'image_room' => $imageRoomData, // Sử dụng ảnh cũ nếu không có ảnh mới
             'thumbnail_image' => $thumbnailImagePath, // Cập nhật hoặc giữ nguyên ảnh thu nhỏ
-            'status' => $room->status // Giữ nguyên trạng thái nếu không thay đổi
+            'status' => $request->input('status'), // Giữ nguyên trạng thái nếu không thay đổi
         ]);
 
-        return redirect()->route('rooms.index')->with('success', 'Phòng đã được cập nhật thành công.');
+        return redirect()->route('rooms.show', $room->id)->with('success', 'Phòng đã được cập nhật thành công.');
     }
 
 
@@ -208,7 +208,7 @@ class RoomController extends Controller
      */
     public function lock(Room $room)
     {
-        if ($room->status === 0) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
+        if ($room->status === 0 || $room->status === 3) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
             $room->update(['status' => 4]); // Đặt trạng thái phòng là "đã bị khóa"
 
             return redirect()->route('rooms.index')->with('success', 'Phòng đã được khóa thành công.');

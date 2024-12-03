@@ -60,7 +60,9 @@
                                                 <input type="hidden" name="room_id" value="{{ $room->room_id }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger delete-btn">Xóa</button>
+                                                <button type="button" class="btn btn-danger delete-btn" title="Xóa">
+                                                    <i class="fas fa-trash"></i> <!-- Icon xóa -->
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>

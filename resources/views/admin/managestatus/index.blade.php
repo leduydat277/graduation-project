@@ -68,7 +68,7 @@
                     <!-- Bảng danh sách trạng thái phòng -->
                     <div class="table-responsive">
                         <table class="table align-middle table-nowrap">
-                            <thead >
+                            <thead>
                                 <tr>
                                     <th>Mã phòng</th>
                                     <th>Tên Phòng</th>
@@ -123,8 +123,8 @@
                                         <td>
                                             @if (!empty($statusRoom['booking']))
                                                 <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}"
-                                                    class="btn btn-info">
-                                                    Xem Booking
+                                                    class="btn btn-info" title="Xem Booking">
+                                                    <i class="fas fa-calendar-alt"></i>
                                                 </a>
                                             @else
                                                 --

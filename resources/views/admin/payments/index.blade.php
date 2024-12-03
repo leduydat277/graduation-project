@@ -93,12 +93,14 @@
                                             <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d-m-Y') }}</td>
                                             <td>{{ $payment->payment_status_text }}</td>
                                             <td>
-                                                <a class="btn btn-info"
-                                                    href="{{ route('payments.show', $payment->id) }}"><i></i> Xem
-                                                    chi tiết</a>
+                                                <a class="btn btn-info" href="{{ route('payments.show', $payment->id) }}"
+                                                    title="Xem chi tiết">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
                                                 <a class="btn btn-danger"
-                                                    href="{{ route('payments.export_pdf', $payment->id) }}"><i></i>
-                                                    In PDF</a>
+                                                    href="{{ route('payments.export_pdf', $payment->id) }}" title="In PDF">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
