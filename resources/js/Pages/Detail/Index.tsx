@@ -4,7 +4,7 @@ import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
 
 function DetailRoom({ room }) {
-  console.log('detail room line 7 ', room.price);
+  console.log('detail room line 7 ', room);
   const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [state.setPrice, state.setSubtitle, state.setIdRoom]);
  
   // if (room) {
