@@ -91,7 +91,7 @@ class BookingController  extends Controller
         }
 
         
-        $currentTimestamp = Carbon::now()->timestamp;
+        $currentTimestamp = Carbon::now()->setTime(14, 0)->timestamp;
         if ($booking->check_in_date < $currentTimestamp) {
             // $today = Carbon::now()->timestamp;
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
