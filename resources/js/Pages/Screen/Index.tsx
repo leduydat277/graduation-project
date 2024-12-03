@@ -84,7 +84,7 @@ const onPress = async () => {
         </Box>
 
       </Box>
-      {/* <Footer /> */}
+
     </>
     
   );

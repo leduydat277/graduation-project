@@ -1,33 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
-
 import { Box, Typography, Card, CardContent, Snackbar } from "@mui/material";
-import { useState } from "react";
-import {pink, grey} from "@mui/material/colors";
-import HomeBannner5 from '../../../assets/HomeBanner5.jpg';
+import { grey } from "@mui/material/colors";
+import HomeBannner5 from "../../../assets/HomeBanner5.jpg";
+import { useBookingStore } from "../../../service/stores/booking-store";
+import { CarouselCustom } from "../CarouselCustom";
 
 export const RoomItem = (props) => {
-    console.log('RoomItem', props);
-    const { id, image, title, subtitle, description, type, status, ...rest } = props;
+    const { id, image, title, subtitle, description, type, status, price } = props;
+
+    const [setPrice] = useBookingStore((state) => [state.setPrice]);
+
+    const items = [
+        { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-1-2000px.jpg", alt: "DELUXE - ROOM" },
+        { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-2-2000px.jpg", alt: "ECONOMY - ROOM" },
+        { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-3-2000px.jpg", alt: "EXECUTIVE - ROOM" },
+        { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-4-2000px.jpg", alt: "FAMILY - ROOM" },
+        { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-5-2000px.jpg", alt: "KING - ROOM" }
+      ];
+      
+
     const [toastOpen, setToastOpen] = useState(false);
 
+    // Chỉ cập nhật giá khi cần
+    useEffect(() => {
+        setPrice(price);
+    }, [price, setPrice]);
+
+    // Xác định trạng thái phòng
+    const isUnavailable = status === "Occupied" || status === "Maintenance";
+    const message =
+        status === "Occupied" ? "Phòng đã được sử dụng!" : status === "Maintenance" ? "Phòng đang sửa chữa!" : "";
 
     const handleLinkClick = (e) => {
-        if (status === "Occupied" || status === "Maintenance") {
+        if (isUnavailable) {
             e.preventDefault();
             setToastOpen(true);
         }
     };
-    let message = "";
-    if (status === "Occupied") {
-        message = "Phòng đã được sử dụng!";
-    } else if (status === "Maintenance") {
-        message = "Phòng đang sửa chữa!";
-    }
 
-    const handleCloseToast = () => {
-        setToastOpen(false);
-    };
+    const handleCloseToast = () => setToastOpen(false);
 
     return (
         <>
@@ -39,28 +51,18 @@ export const RoomItem = (props) => {
                         backgroundColor: "#fff",
                         borderRadius: 4,
                         transition: "transform 0.2s ease",
-                        boxShadow: "rgba(0, 0, 0, 0.1) 0px 10px 20px 3px, rgba(0, 0, 0, 0.04) 0px 10px 10px 0px",
-                        transform: status === "Occupied" || status === "Maintenance" ? "none" : "scale(1)",
-                        opacity: status === "Occupied" || status === "Maintenance" ? 0.5 : 1,
+                        boxShadow:
+                            "rgba(0, 0, 0, 0.1) 0px 10px 20px 3px, rgba(0, 0, 0, 0.04) 0px 10px 10px 0px",
+                        transform: isUnavailable ? "none" : "scale(1)",
+                        opacity: isUnavailable ? 0.5 : 1,
                         "&:hover": {
-                            backgroundColor: status === "Occupied" || status === "Maintenance" ? "#fff" : "#f9f9f9",
-                            transform: status === "Occupied" || status === "Maintenance" ? "none" : "scale(1.05)",
+                            backgroundColor: isUnavailable ? "#fff" : "#f9f9f9",
+                            transform: isUnavailable ? "none" : "scale(1.05)",
                         },
                     }}
                 >
                     <CardContent>
-                        <Box
-                            component="img"
-                            src={HomeBannner5}
-                            borderRadius={4}
-                            alt="Sample Image"
-                            sx={{
-                                height: "100%",
-                                width: "100%",
-                                objectFit: "cover",
-                                loading: "lazy",
-                            }}
-                        />
+                        <CarouselCustom items={items} />
                         <Typography variant="h5" component="div" pt={2}>
                             {title}
                         </Typography>
@@ -75,7 +77,6 @@ export const RoomItem = (props) => {
             </Link>
 
             <Snackbar
-              
                 open={toastOpen}
                 onClose={handleCloseToast}
                 autoHideDuration={3000}

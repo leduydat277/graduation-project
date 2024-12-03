@@ -78,16 +78,9 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
 const NavLink = ({ scrolled }) => {
   return (
     <Stack direction="row" gap={2} pl={7}>
-      
-      <Link
-        href="/"
-        variant="h6"
-        sx={{
-          textDecoration: "none",
-          color: scrolled ? "white" : "#fff", // Chữ sáng hơn khi header trong suốt
-          transition: "color 0.3s ease",
-        }}
-      >
+
+<Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+
         Home
       </Link>
       <Link
@@ -123,6 +116,10 @@ const NavLink = ({ scrolled }) => {
       >
         Policy
       </Link>
-    </Stack>
-  );
+
+    
+ </Stack>
+  )
+  
+
 };

@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Events\NotificationMessage;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Web\SuccesssController;
 use App\Http\Controllers\Web\RoomsController;
 use App\Http\Controllers\Web\CheckoutScreenController;
 use Illuminate\Support\Facades\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,7 @@ Route::get("/test", function (Request $request) {
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
 //Detail
+
 Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
 
 //Checkout
@@ -50,3 +53,4 @@ Route::post('login', [LoginController::class, 'store'])
 
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
+

@@ -77,7 +77,7 @@ export const ListTypeRoom = () => {
                 }}
 
             >
-                DANH SÁCH LOẠI PHÒNG
+               DỊCH VỤ CUNG CẤP
             </Typography>
             <Box
                 sx={{

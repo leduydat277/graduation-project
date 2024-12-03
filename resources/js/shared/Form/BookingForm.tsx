@@ -6,11 +6,12 @@ import { useBookingStore } from "../../../service/stores/booking-store";
 import { userStore } from "../../../service/stores/user-store"
 import { CalendarClock } from "lucide-react";
 import { grey } from "@mui/material/colors";
+import {formatPrice} from '../../../service/hooks/price'
 
 export const BookingForm = (props) => {
   const { type, status, description, ...rest } = props
 
-  const [checkInDate, checkOutDate, totalDays, setTotalPrice, title, subtitle, price, idRoom, clear] = useBookingStore((state) => [
+  const [checkInDate, checkOutDate, totalDays, setTotalPrice, title, subtitle, price, idRoom, clear, setPrice] = useBookingStore((state) => [
     state.checkInDate,
     state.checkOutDate,
     state.totalDays,
@@ -19,9 +20,11 @@ export const BookingForm = (props) => {
     state.subtitle,
     state.price,
     state.idRoom,
-    state.clear
+    state.clear,
+    state.setPrice
 
   ]);
+  console.log('price  : ', price);
   const [userId, address, email, firstName, lastName, phone] = userStore((state) => [
     state.userId,
     state.address,
@@ -38,12 +41,14 @@ export const BookingForm = (props) => {
     }
     return false;
   }
-  // const totalPrice = calculateTotalAmount(totalDays, price)
+
+  const totalPrice = calculateTotalAmount(totalDays, price)
   // if (totalPrice > 0 && totalDays > 0) {
   //   setTotalPrice(totalPrice)
   // }
 
   // React.useEffect(() => {
+
   //   const uid = userStore.getState().userId;
   //   if (!uid) {
   //     const queryString = paramsStringify({
@@ -57,6 +62,7 @@ export const BookingForm = (props) => {
 
 
 
+
 const onPress = async () => {
   await Promise.all(ps)
   console.log('onPress');
@@ -67,6 +73,9 @@ const onPress = async () => {
   first_name: "John",
   last_name: "Doe",
   address: "123 Main St",
+  total_price: 1000,
+  tien_coc: 100,
+  created_at: Date.now(),
   phone: "0123456789",
   email: "johndoe@example.com",
   room_id: idRoom || 5
@@ -100,9 +109,8 @@ const onPress = async () => {
           <Typography pl={2}> Check-in 2:00 PM | Check-out 12:00 PM</Typography>
         </Stack>
         <RoomSearchBar position={'detail'} />
-        {/* <Typography variant="h6" pb={1}>Total: {totalPrice}</Typography>
-       */}
 
+        <Typography variant="h6" pb={1}>Total: {formatPrice(totalPrice)}</Typography>
       <Button onClick={onPress} variant="outline">Thanh Toán</Button>
 
 
