@@ -1,6 +1,9 @@
 <?php
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f6b74a7e5d61d0056615acca06edf2a3b1fb00af
 use App\Events\NotificationMessage;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +13,10 @@ use App\Http\Controllers\Web\SuccesssController;
 use App\Http\Controllers\Web\RoomsController;
 use App\Http\Controllers\Web\CheckoutScreenController;
 use Illuminate\Support\Facades\Request;
+<<<<<<< HEAD
 
+=======
+>>>>>>> f6b74a7e5d61d0056615acca06edf2a3b1fb00af
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +39,7 @@ Route::get("/test", function (Request $request) {
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
 //Detail
+<<<<<<< HEAD
 
 Route::get('/detail', [DetailController::class, 'index'])
     ->name('detail');
@@ -115,3 +122,24 @@ Route::get('/policy', [PolyciController::class, 'index'])
     //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
     // });
     // ->name('detail');
+=======
+Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
+
+//Checkout
+Route::get('/success', [SuccesssController::class, 'index'])
+    ->name('success');
+
+Route::get('/rooms', [RoomsController::class, 'index'])
+    ->name('rooms');
+
+Route::get('login', [LoginController::class, 'create'])
+    ->name('login');
+    // ->middleware('guest');
+
+Route::post('login', [LoginController::class, 'store'])
+    ->name('login.store');
+    // ->middleware('guest');;
+
+Route::delete('logout', [LoginController::class, 'destroy'])
+    ->name('logout');
+>>>>>>> f6b74a7e5d61d0056615acca06edf2a3b1fb00af
