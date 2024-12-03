@@ -376,6 +376,7 @@ class DashboardController
 
         $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
             ->with('room')
+            ->where('status', 2)
             ->whereBetween('created_at', [$todayStart, $todayEnd])
             ->get();
 
