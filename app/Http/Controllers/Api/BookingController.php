@@ -71,9 +71,12 @@ class BookingController
                 ], 400);
             }
 
+            $check_in_timestamp = floor($check_in_timestamp / 1000);
+            $check_out_timestamp = floor($check_out_timestamp / 1000);
+
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
-            $daysBooked = $checkInDate->diffInDays($checkOutDate);
+            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
