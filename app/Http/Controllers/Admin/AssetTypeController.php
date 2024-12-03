@@ -45,7 +45,6 @@ class AssetTypeController extends Controller
 
     public function store(AssetTypeRequest $request)
     {   
-        dd($request->all());
         $data = $request->except('_token');
 
         // Xử lý upload ảnh
