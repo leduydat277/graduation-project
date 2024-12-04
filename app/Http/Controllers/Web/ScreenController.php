@@ -14,4 +14,8 @@ class ScreenController extends Controller
     public function about(): Response{
         return Inertia::render('About/Index');
     }
+
+    public function policy(): Response{
+        return Inertia::render('Policy/Index');
+    }
 }
