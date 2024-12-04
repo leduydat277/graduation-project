@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\SuccesssController;
 use App\Http\Controllers\Web\RoomsController;
 use App\Http\Controllers\Web\CheckoutScreenController;
 use Illuminate\Support\Facades\Request;
+use App\Http\Controllers\Web\PaymentHistoryController;
 
 
 /*
@@ -39,6 +40,10 @@ Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
 //Checkout
 Route::get('/success', [SuccesssController::class, 'index'])
     ->name('success');
+
+
+    Route::get('/payment-history', [PaymentHistoryController::class, 'index'])
+    ->name('payment-history');
 
 Route::get('/rooms', [RoomsController::class, 'index'])
     ->name('rooms');

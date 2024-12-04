@@ -75,7 +75,7 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
   );
 };
 
-const NavLink = ({ scrolled }) => {
+export const NavLink = ({ scrolled }) => {
   return (
     <Stack direction="row" gap={2} pl={7}>
 
@@ -114,6 +114,43 @@ const NavLink = ({ scrolled }) => {
           transition: "color 0.3s ease",
         }}
       >
+        Policy
+      </Link>
+
+    
+ </Stack>
+  )
+  
+
+};
+
+export const NavLink2 = () => {
+  return (
+    <Stack direction="row" gap={2} pl={7}>
+
+<Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+
+        Home
+      </Link>
+      <Link
+        href="/rooms"
+        variant="h6"
+        sx={{ textDecoration: "none", color: "inherit" }}>
+
+        Rooms
+      </Link>
+      <Link
+        href="/about"
+        variant="h6"
+        sx={{ textDecoration: "none", color: "inherit" }}>
+
+        About
+      </Link>
+      <Link
+        href="/policy"
+        variant="h6"
+        sx={{ textDecoration: "none", color: "inherit" }}>
+
         Policy
       </Link>
 
