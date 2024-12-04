@@ -5,6 +5,7 @@ import { DetailContent } from './DetailContent';
 import { Box, Stack, Link } from "@mui/material";
 import { TopHeader } from '@/components/Header/TopHeader';
 import { Footer } from '@/components/Footer/Footer';
+import { BottomHeader } from '@/components/Header/BottomHeader';
 
 function DetailRoom({ room }) {
   console.log('detail room line 7 ', room);
@@ -39,6 +40,7 @@ function DetailRoom({ room }) {
           zIndex: 1000,
           backgroundColor: "#092533",
           left: 0,
+           marginBottom: '30px'
           
         }}
       >
@@ -51,7 +53,8 @@ function DetailRoom({ room }) {
 
             borderBottom: "1px solid #eee",
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+           
           }}
         >
           <Link
@@ -116,6 +119,8 @@ function DetailRoom({ room }) {
           </Link>
         </Stack>
       </Box>
+      {/* <BottomHeader /> */}
+      
       <DetailContent
         title={title}
         id={id}
@@ -125,7 +130,6 @@ function DetailRoom({ room }) {
         room_type={room_type}
         {...rest}
       />
-      <Footer />
     </>
 
   );
@@ -133,9 +137,13 @@ function DetailRoom({ room }) {
 
 // Layout for the DetailRoom page
 DetailRoom.layout = (page: React.ReactNode) => (
+  <>
   <BookingLayout title={`Room Details: ${page.props.room?.title || 'Detail Room'}`}>
     {page}
   </BookingLayout>
+  
+  <Footer />
+  </>
 );
 
 export default DetailRoom;
