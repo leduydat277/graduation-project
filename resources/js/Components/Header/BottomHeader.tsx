@@ -57,7 +57,7 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
             zIndex: 1,
           }}
         >
-          
+
         </Box>
         <Box
           sx={{
@@ -79,7 +79,7 @@ const NavLink = ({ scrolled }) => {
   return (
     <Stack direction="row" gap={2} pl={7}>
 
-<Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+      <Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
 
         Home
       </Link>
@@ -117,9 +117,9 @@ const NavLink = ({ scrolled }) => {
         Policy
       </Link>
 
-    
- </Stack>
+
+    </Stack>
   )
-  
+
 
 };

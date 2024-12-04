@@ -2,7 +2,7 @@ import BookingLayout from '@/Layouts/BookingLayout';
 import React from 'react';
 import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
-import { BottomHeader } from '@/components/Header/BottomHeader';
+import { Box, Stack, Link } from "@mui/material";
 
 function DetailRoom({ room }) {
   console.log('detail room line 7 ', room);
@@ -29,7 +29,47 @@ function DetailRoom({ room }) {
 
   return (
     <>
-      
+      <Box>
+      <Stack direction="row" gap={2} pl={7}>
+
+<Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
+
+  Home
+</Link>
+<Link
+  href="/rooms"
+  variant="h6"
+  sx={{
+    textDecoration: "none",
+    transition: "color 0.3s ease",
+  }}
+>
+  Rooms
+</Link>
+<Link
+  href="/about"
+  variant="h6"
+  sx={{
+    textDecoration: "none",
+    transition: "color 0.3s ease",
+  }}
+>
+  About
+</Link>
+<Link
+  href="/policy"
+  variant="h6"
+  sx={{
+    textDecoration: "none",
+    transition: "color 0.3s ease",
+  }}
+>
+  Policy
+</Link>
+
+
+</Stack>
+      </Box>
       <DetailContent
         title={title}
         id={id}
