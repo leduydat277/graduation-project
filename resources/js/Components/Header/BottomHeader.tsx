@@ -44,7 +44,7 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
       </Stack>
 
       {/* Banner */}
-      <Banner />
+      {/* <Banner /> */}
       <Box>
         <Box
           sx={{
@@ -57,7 +57,7 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
             zIndex: 1,
           }}
         >
-          
+
         </Box>
         <Box
           sx={{
@@ -66,7 +66,7 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
             left: 0,
             width: "100%",
             height: "100%",
-            // background: "rgba(0, 0, 0, 0.5)", 
+            // background: "rgba(0, 0, 0, 0.5)",
             zIndex: 0,
           }}
         />
@@ -117,9 +117,9 @@ const NavLink = ({ scrolled }) => {
         Policy
       </Link>
 
-    
+
  </Stack>
   )
-  
+
 
 };
