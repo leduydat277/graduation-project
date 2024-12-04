@@ -3,6 +3,7 @@ import React from 'react';
 import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
 import { Box, Stack, Link } from "@mui/material";
+import { TopHeader } from '@/components/Header/TopHeader';
 
 function DetailRoom({ room }) {
   console.log('detail room line 7 ', room);
@@ -29,46 +30,89 @@ function DetailRoom({ room }) {
 
   return (
     <>
-      <Box>
-      <Stack direction="row" gap={2} pl={7}>
-
-<Link href={`/`} variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
-
-  Home
-</Link>
-<Link
-  href="/rooms"
-  variant="h6"
-  sx={{
-    textDecoration: "none",
-    transition: "color 0.3s ease",
-  }}
->
-  Rooms
-</Link>
-<Link
-  href="/about"
-  variant="h6"
-  sx={{
-    textDecoration: "none",
-    transition: "color 0.3s ease",
-  }}
->
-  About
-</Link>
-<Link
-  href="/policy"
-  variant="h6"
-  sx={{
-    textDecoration: "none",
-    transition: "color 0.3s ease",
-  }}
->
-  Policy
-</Link>
-
-
-</Stack>
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          width: "100%",
+          zIndex: 1000,
+          backgroundColor: "#092533",
+          boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+          padding: 0,
+          margin: 0,
+        }}
+      >
+        <Stack
+          direction="row"
+          gap={4}
+          pl={7}
+          sx={{
+            padding: "20px 0",
+            borderBottom: "1px solid #eee",
+            // backgroundColor: "#f8f9fa",
+          }}
+        >
+          <Link
+            href={`/`}
+            variant="h6"
+            sx={{
+              textDecoration: "none",
+              color: "#f8f9fa",
+              fontWeight: "bold",
+              transition: "color 0.3s ease",
+              "&:hover": {
+                color: "#007bff",
+              },
+            }}
+          >
+            Home
+          </Link>
+          <Link
+            href="/rooms"
+            variant="h6"
+            sx={{
+              textDecoration: "none",
+              color: "#f8f9fa",
+              fontWeight: "bold",
+              transition: "color 0.3s ease",
+              "&:hover": {
+                color: "#007bff",
+              },
+            }}
+          >
+            Rooms
+          </Link>
+          <Link
+            href="/about"
+            variant="h6"
+            sx={{
+              textDecoration: "none",
+              color: "#f8f9fa",
+              fontWeight: "bold",
+              transition: "color 0.3s ease",
+              "&:hover": {
+                color: "#007bff",
+              },
+            }}
+          >
+            About
+          </Link>
+          <Link
+            href="/policy"
+            variant="h6"
+            sx={{
+              textDecoration: "none",
+              color: "#f8f9fa",
+              fontWeight: "bold",
+              transition: "color 0.3s ease",
+              "&:hover": {
+                color: "#007bff",
+              },
+            }}
+          >
+            Policy
+          </Link>
+        </Stack>
       </Box>
       <DetailContent
         title={title}
