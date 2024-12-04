@@ -60,7 +60,7 @@ class BookingController
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
-            $check_in_timestamp = floor($check_in / 1000);  
+            $check_in_timestamp = floor($check_in / 1000);
             $check_out_timestamp = floor($check_out / 1000);
 
             if ($check_in_timestamp < $today) {
@@ -120,7 +120,7 @@ class BookingController
                 ], 404);
             }
 
-            if($room->status == 3 || $room->status == 4){
+            if ($room->status == 3 || $room->status == 4) {
                 return response()->json([
                     "type" => "error",
                     "message" => "Hiện tại không được đặt phòng này."
@@ -131,10 +131,10 @@ class BookingController
             $depositAmount = $total_price * 0.3;
 
             $bookings = Booking::where('room_id', $room->id)
-                ->where(function ($query) use ($check_in_timestamp, $check_out_timestamp) {
-                    $query->where(function ($q) use ($check_in_timestamp, $check_out_timestamp) {
-                        $q->where('check_in_date', '<', $check_out_timestamp)
-                            ->where('check_out_date', '>', $check_in_timestamp);
+                ->where(function ($query) use ($check_in, $check_out) {
+                    $query->where(function ($q) use ($check_in, $check_out) {
+                        $q->where('check_in_date', '<', $check_out)
+                            ->where('check_out_date', '>', $check_in);
                     });
                 })
                 ->whereIn('status', [1, 2, 3, 4]) // Chỉ kiểm tra các trạng thái phòng đã đặt
@@ -312,13 +312,13 @@ class BookingController
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
 
-
-            $url = route('success');
             event(new NotificationMessage($message, $title, $formattedDate));
             return response()->json([
-                "url_redirect" => $url,
-                "message" => "Thanh toán thành công"
-            ], 200);
+                "status" => "success",
+                "message" => "Thanh toán thành công",
+                "booking" => $booking,
+                "redirect_url" => route('success')
+            ]);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",
