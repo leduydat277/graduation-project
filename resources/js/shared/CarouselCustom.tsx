@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent } from "@mui/material";
 import {
   Carousel,
   CarouselContent,
@@ -8,8 +8,30 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { rest } from "lodash";
 
-export const CarouselCustom = () => {
+
+const baseUrl = "http://127.0.0.1:8000/storage/";
+// const imagePaths = [
+//   "upload/rooms/KyngHOdKsq5gLV5GJFj0xIZfpUObG9PpPBCdfMIT.jpg",
+//   "upload/rooms/cMt910F0IsoET8hjKRn47zXwayJJna727sVI28xv.jpg",
+//   "upload/rooms/aJLs8e2YLAeIdJoKdOshmuqsP7NTAuCi6S7gW4g2.jpg",
+//   "upload/rooms/iXNGeIfRfKuiPk5z5dfgpDx8uPyRlUv3ezbzKBkw.jpg",
+//   "upload/rooms/uI1tI9eiheJFzegmkfaOtAxacfxzQYpEXHnChvpo.jpg",
+// ];
+
+export const CarouselCustom = ({ image_room }) => {
+
+  console.log("image_room type:", typeof image_room)
+
+if (Array.isArray(image_room) && image_room.every(item => typeof item === "string")) {
+  const sanitizedImageRoom = image_room.map((path: string) => {
+    return path.replace(/\\/g, "/");
+  });
+  console.log("Sanitized image paths:", sanitizedImageRoom);
+} else {
+  console.error("image_room không phải là mảng hoặc chứa phần tử không phải chuỗi.");
+}
   const [api, setApi] = React.useState<CarouselApi | null>(null);
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -17,16 +39,16 @@ export const CarouselCustom = () => {
   React.useEffect(() => {
     if (!api) return;
 
-    setCount(api.scrollSnapList().length); 
-    setCurrent(api.selectedScrollSnap() + 1); 
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
     const onSelect = () => {
       setCurrent(api.selectedScrollSnap() + 1);
     };
     api.on("select", onSelect);
 
-    const interval = setInterval(() => {
-      api.next(); 
-    }, 3000);
+    // const interval = setInterval(() => {
+    //   api.next();
+    // }, 3000);
 
     return () => {
       clearInterval(interval);
@@ -38,11 +60,15 @@ export const CarouselCustom = () => {
     <>
       <Carousel setApi={setApi} className="w-5/5 mx-auto relative">
         <CarouselContent>
-          {Array.from({ length: 5 }).map((_, index) => (
+          {image_room.map((src, index) => (
             <CarouselItem key={index}>
               <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{index + 1}</span>
+                <CardContent className="flex aspect-square items-center justify-center p-0">
+                  <img
+                    src={`${baseUrl}${src}`}
+                    alt={`Room ${index + 1}`}
+                    className="object-cover w-full h-full rounded"
+                  />
                 </CardContent>
               </Card>
             </CarouselItem>
@@ -61,4 +87,4 @@ export const CarouselCustom = () => {
       </div>
     </>
   );
-}
+};
