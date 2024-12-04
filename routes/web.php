@@ -33,6 +33,9 @@ Route::get("/test", function (Request $request) {
 
 Route::get('/', [ScreenController::class, 'index'])
     ->name('screen');
+
+Route::get('/about', [ScreenController::class, 'about'])
+    ->name('about');
 //Detail
 
 Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
@@ -50,12 +53,11 @@ Route::get('/rooms', [RoomsController::class, 'index'])
 
 Route::get('login', [LoginController::class, 'create'])
     ->name('login');
-    // ->middleware('guest');
+// ->middleware('guest');
 
 Route::post('login', [LoginController::class, 'store'])
     ->name('login.store');
-    // ->middleware('guest');;
+// ->middleware('guest');;
 
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
-
