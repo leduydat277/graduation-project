@@ -46,9 +46,9 @@ if (Array.isArray(image_room) && image_room.every(item => typeof item === "strin
     };
     api.on("select", onSelect);
 
-    // const interval = setInterval(() => {
-    //   api.next();
-    // }, 3000);
+    const interval = setInterval(() => {
+      api.next();
+    }, 3000);
 
     return () => {
       clearInterval(interval);

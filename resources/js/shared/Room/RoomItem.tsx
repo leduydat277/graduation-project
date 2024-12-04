@@ -6,22 +6,21 @@ import { useBookingStore } from "../../../service/stores/booking-store";
 import { CarouselCustom } from "../CarouselCustom";
 
 export const RoomItem = (props) => {
-  const { id, title, subtitle, description, status, price } = props;
+  const { id, title, subtitle="", description, status, price, image_room } = props;
+  console.log('image_room', image_room)
 
   const [setPrice] = useBookingStore((state) => [state.setPrice]);
   const [toastOpen, setToastOpen] = useState(false);
+
+  // let imageRoomArray = JSON.parse(image_room);
+
+  // console.log("Sanitized image room:", imageRoomArray);
 
   useEffect(() => {
     setPrice(price);
   }, [price, setPrice]);
 
-  const items = [
-    { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-1-2000px.jpg", alt: "DELUXE - ROOM" },
-    { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-2-2000px.jpg", alt: "ECONOMY - ROOM" },
-    { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-3-2000px.jpg", alt: "EXECUTIVE - ROOM" },
-    { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-4-2000px.jpg", alt: "FAMILY - ROOM" },
-    { src: "https://image-tc.galaxy.tf/wijpeg-afu0zj5rhmyyirzditj3g96mk/deluxe-room-king-5-2000px.jpg", alt: "KING - ROOM" },
-  ];
+ 
 
   const isUnavailable = status === "Occupied" || status === "Maintenance";
   const message =
@@ -60,7 +59,7 @@ export const RoomItem = (props) => {
           }}
         >
           <CardContent>
-            <CarouselCustom items={items} />
+            <CarouselCustom image_room={image_room} />
             <Typography variant="h5" component="div" pt={2}>
               {title}
             </Typography>
