@@ -1,14 +1,52 @@
-
 import MainLayout from '@/Layouts/MainLayout';
-import React, { useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import '@fontsource/roboto/400.css';
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Typography,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell
+} from '@mui/material';
+import axios from 'axios'; // Import axios
 import { Footer } from '@/components/Footer/Footer';
 
-
-
-
 function PolicyPage() {
+  const [policyData, setPolicyData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
 
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:8000/api/policy')
+      .then(response => {
+        const data = JSON.parse(response.data.data[0].value);
+        setPolicyData(data.chinh_sach); // Lưu chính sách vào state
+        setLoading(false);
+      })
+      .catch(error => {
+        setError('Error loading policy data');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <Typography variant="h6" align="center">
+        Loading...
+      </Typography>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography variant="h6" align="center" color="error">
+        {error}
+      </Typography>
+    );
+  }
 
   return (
     <>
@@ -16,95 +54,218 @@ function PolicyPage() {
         <Typography variant="h4" align="center" gutterBottom>
           CHÍNH SÁCH KHÁCH SẠN
         </Typography>
+        <Box sx={{ width: '100%', margin: 'auto' }}>
+          {/* Kiểm tra sự tồn tại của policyData */}
+          {policyData ? (
+            <>
+              {/* Hiển thị giờ nhận phòng và trả phòng */}
+              {policyData.chinh_sach_nguoi_dung
+                ?.thoi_gian_check_in_va_check_out && (
+                <Box sx={{ marginBottom: 2 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Giờ nhận phòng và trả phòng:
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.8, fontSize: '15px' }}>
+                    Tại Sleep Hotel, chúng tôi hiểu rằng việc có thời gian nhận
+                    phòng và trả phòng linh hoạt là rất quan trọng đối với sự
+                    thoải mái của khách hàng. Vì vậy, chúng tôi cam kết mang đến
+                    một quy trình nhận phòng và trả phòng nhanh chóng và thuận
+                    tiện.
+                    <br />
+                    . Nếu bạn có yêu cầu đặc biệt về thời gian nhận hoặc trả
+                    phòng, vui lòng liên hệ với lễ tân của chúng tôi để được hỗ
+                    trợ.
+                    <br />
+                    Sleep Hotel luôn cố gắng đảm bảo sự thuận tiện và linh hoạt
+                    nhất cho khách hàng, giúp bạn có một kỳ nghỉ trọn vẹn và
+                    thoải mái nhất.
+                  </Typography>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold' }}>
+                          Giờ nhận phòng
+                        </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>
+                          Giờ trả phòng
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .thoi_gian_check_in_va_check_out.check_in
+                          }
+                        </TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .thoi_gian_check_in_va_check_out.check_out
+                          }
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Box>
+              )}
 
-        {/* <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 4 }}>
-          <Typography variant="body1" color="textSecondary">VỀ CHÚNG TÔI</Typography>
-          <Typography variant="body1" color="textPrimary">CHÍNH SÁCH KHÁCH SẠN</Typography>
-          <Typography variant="body1" color="textSecondary">VỊ TRÍ KHÁCH SẠN</Typography>
-        </Box> */}
+              {/* Hiển thị chính sách đặt cọc */}
+              {policyData.chinh_sach_nguoi_dung?.dat_coc && (
+                <Box sx={{ marginBottom: 2 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Chính sách đặt cọc:
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.8, fontSize: '15px' }}>
+                    Chính sách đặt cọc tại Sleep Hotel giúp đảm bảo an toàn cho
+                    khách sạn cũng như sự thoải mái của bạn trong suốt kỳ nghỉ.
+                    Chúng tôi yêu cầu một khoản đặt cọc để bảo vệ quyền lợi của
+                    khách và tránh trường hợp huỷ phòng vào phút chót.
+                    <br />
+                    Nếu bạn có thắc mắc về chính sách đặt cọc, vui lòng liên hệ
+                    lễ tân để được tư vấn.
+                  </Typography>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Yêu cầu đặt cọc</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Giá trị đặt cọc</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          {policyData.chinh_sach_nguoi_dung.dat_coc.yeu_cau
+                            ? 'Có'
+                            : 'Không'}
+                        </TableCell>
+                        <TableCell>
+                          {policyData.chinh_sach_nguoi_dung.dat_coc.gia_tri}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Box>
+              )}
 
-        <Box sx={{ width: '60%', margin: 'auto' }}>
-          <Typography variant="h6" gutterBottom>Giờ nhận phòng: 14:00</Typography>
-          <Typography variant="h6" gutterBottom>Giờ trả phòng: 12:00</Typography>
+              {/* Hiển thị chính sách hủy phòng */}
+              {policyData.chinh_sach_nguoi_dung?.chinh_sach_huy_phong && (
+                <Box sx={{ marginBottom: 2 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Chính sách hủy phòng:
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.8, fontSize: '15px' }}>
+                    Chính sách hủy phòng của Sleep Hotel cho phép khách hàng hủy
+                    phòng với những điều kiện linh hoạt và rõ ràng. Bạn sẽ nhận
+                    được thông báo về các khoản hoàn trả tùy thuộc vào thời gian
+                    hủy phòng.
+                  </Typography>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Điều kiện hủy</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Hoàn trả</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Hủy trong vòng 1 giờ</TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .chinh_sach_huy_phong.huy_trong_vong_1_gio
+                          }
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Hủy trước 12h ngày check-in</TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .chinh_sach_huy_phong.huy_truoc_12h_ngay_check_in
+                          }
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Hủy sau 12h ngày check-in</TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .chinh_sach_huy_phong.huy_sau_12h_ngay_check_in
+                          }
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Không check-in trước 21h</TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .chinh_sach_huy_phong
+                              .khong_check_in_truoc_21h_ngay_check_in.trang_thai
+                          }
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          Hoàn tiền khi không check-in trước 21h
+                        </TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung
+                              .chinh_sach_huy_phong
+                              .khong_check_in_truoc_21h_ngay_check_in.hoan_tien
+                          }
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Box>
+              )}
 
-          <Typography variant="h6" gutterBottom>Chính sách Nhận – Trả phòng sớm và muộn:</Typography>
-          <List>
-
-            <ListItemText primary="Nhận phòng sớm:" secondary="Trước 6:00: 100% tiền phòng. Sau 6:00: 50% tiền phòng (không bao gồm ăn sáng)." />
-
-
-            <ListItemText primary="Trả phòng muộn:" secondary="Trước 18:00: 50% tiền phòng. Sau 18:00: 100% tiền phòng." />
-
-          </List>
-
-          <Typography variant="h6" gutterBottom>Chính sách ăn sáng trẻ em và phí kê giường phụ:</Typography>
-          <List>
-
-            <ListItemText primary="Dưới 5 tuổi" secondary="Miễn phí ăn sáng, ngủ chung." />
-
-
-            <ListItemText primary="Từ 6-11 tuổi" secondary="VND 300,000/ trẻ/ phòng/ đêm." />
-
-
-            <ListItemText primary="Trên 12 tuổi" secondary="Tính như người lớn: VND 400,000/ phòng/ đêm." />
-
-
-            <ListItemText primary="Phí kê giường phụ" secondary="VND 800,000/ khách (áp dụng với người lớn hoặc trẻ em từ 12 tuổi trở lên)." />
-
-          </List>
-
-          <Typography variant="h6" gutterBottom>Chính sách hủy phòng:</Typography>
-          <Typography variant="body1" paragraph>
-            Tất cả các yêu cầu đặt/hủy phòng phải được gửi bằng văn bản, fax hoặc thư điện tử và được khách sạn xác nhận.
-            Sau khi nhận được xác nhận đặt phòng từ phía khách sạn, khách hàng thanh toán toàn bộ chi phí đặt phòng.
-            Đặt phòng không hoàn lại tiền phải thanh toán toàn bộ chi phí và chỉ được nhận email xác nhận đặt phòng.
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>Chính sách đổi phòng, đổi ngày nhận trả phòng:</Typography>
-          <Typography variant="body1" paragraph>
-            Trong trường hợp Quý khách hàng muốn thay đổi ngày nhận/trả phòng, hoặc thay đổi hạng phòng, loại phòng, vui lòng liên hệ với bộ phận đặt phòng của chúng tôi để được hỗ trợ.
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>Chính sách hoàn tiền (bao gồm thời hạn hoàn trả, phương thức trả):</Typography>
-          <Typography variant="body1" paragraph>
-            Trong trường hợp Khách hàng đã thanh toàn tiền cọc, thanh toán đầy đủ tiền đặt phòng, nhưng do điều kiện khách quan nên hủy chuyến đi của mình, chúng tôi sẽ xem xét hoàn lại số tiền cho Khách hàng. Việc hoàn tiền sẽ dựa vào quy định của mỗi đơn đặt phòng khác nhau và việc hoàn tiền này sẽ được nhân viên của chúng tôi thông báo chính thức cho Khách hàng qua email.
-            <ListItemText secondary="- Thời gian bồi hoàn là trong vòng 21-30 ngày làm việc tuỳ vào ngân hàng." />
-            <ListItemText secondary="- Hình thức bồi hoàn: bồi hoàn tài khoản ngân hàng đã được cung cấp hoặc thẻ đã thu tiền." />
-            <ListItemText secondary="- Chi phí bồi hoàn: miễn phí." />
-            <Typography> Lưu ý:
-              Chúng tôi có quyền thay đổi điều kiện, hủy bỏ chính sách bất cứ lúc nào không cần thông báo trước.
-              Chúng tôi không chịu trách nhiệm bồi thường thiệt hại, thay đổi ngày, loại phòng… gián tiếp, ngẫu nhiên hay do hậu quả phát sinh hoặc trong trường hợp bất khả kháng (thiên tai, chiến tranh…).</Typography>
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>Trường hợp bất khả kháng:</Typography>
-          <Typography variant="body1" paragraph>
-            Trong các trường hợp bất khả kháng (có nghĩa là bất kỳ hoàn cảnh khách quan nào không lường trước được và không thể tránh khỏi, bao gồm nhưng không giới hạn như các cuộc đình công, rối loạn dân sự, chiến tranh, hoả hoạn, lũ lụt, các trường hợp khẩn cấp khác hoặc bất kỳ sự chậm trễ nào trong việc sửa chữa cần thiết và thiết yếu của khách sạn…) khiến cho khách sạn không thể thực hiện nghĩa vụ được nêu, khách sạn sẽ không chịu trách nhiệm về bất kỳ sự tổn thất, thiệt hại, chi phí, khiếu nại, …. vượt ngoài tầm kiểm soát của chúng tôi.
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>Nghĩa vụ của người bán và nghĩa vụ của Khách hàng trong mỗi giao dịch:</Typography>
-          <Typography >Nghĩa vụ bên cung cấp dịch vụ:
-            <ListItemText secondary="- Cung cấp sản phẩm đúng chất lượng, đúng thời hạn và địa điểm mà Quý khách hàng đã đăng ký." />
-            <ListItemText secondary="-  Bảo mật thông tin của người sử dụng địch vụ theo chính sách bảo mật." />
-          </Typography>
-          <Typography >Nghĩa vụ người sử dụng dịch vụ:
-            <ListItemText secondary="- Nghĩa vụ thanh toán tiền và nhận phòng theo thỏa thuận." />
-            <ListItemText secondary="- Nếu chúng tôi yêu cầu bạn cung cấp bằng chứng về giấy tờ tùy thân, vui lòng cung cấp trong vòng 30 ngày." />
-            <ListItemText secondary="- Bạn chịu trách nhiệm giữ thông tin đăng nhập của mình được an toàn và bảo mật." />
-          </Typography>
-          <Typography >Chính sách kiểm tra thông tin đặt phòng:
-            <ListItemText secondary="- Khi Quý khách đặt phòng online, công ty chúng tôi sẽ gửi thông tin đặt phòng cho khách hàng qua email, Khách hàng có thể kiểm tra thông tin và có thể liên hệ qua Hotline: 84 214 356 6666 trong trường hợp có thắc mắc gì, bộ phận chăm sóc khách hàng của chúng tôi sẽ hỗ trợ Quý khách. Xin chân thành cảm ơn." />
-          </Typography>
-          <Typography >Hình thức thanh toán:
-            <ListItemText secondary="1. Thanh toán qua chuyển khoản ngân hàng: Tên tài khoản: Khách sạn Sleep, Số tài khoản: 0363691084 " />
-            <ListItemText secondary="2. Thanh toán bằng tiền mặt hoặc quẹt thẻ tín dụng tại máy POS ở quầy Lễ tân khách sạn." />
-          </Typography>
+              {/* Hiển thị quy định khác */}
+              {policyData.chinh_sach_nguoi_dung?.quy_dinh_khac && (
+                <Box sx={{ marginBottom: 2 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Quy định khác:
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.8, fontSize: '15px' }}>
+                    Sleep Hotel cam kết mang đến một không gian lưu trú an toàn
+                    và tiện nghi. Dưới đây là các quy định quan trọng mà khách
+                    hàng cần lưu ý trong suốt kỳ nghỉ tại khách sạn của chúng
+                    tôi.
+                  </Typography>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Quy định</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Thông tin</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Giải quyết tranh chấp</TableCell>
+                        <TableCell>
+                          {
+                            policyData.chinh_sach_nguoi_dung.quy_dinh_khac
+                              .giai_quyet_tranh_chap
+                          }
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Box>
+              )}
+            </>
+          ) : (
+            <Typography variant="h6" align="center" color="error">
+              No data available
+            </Typography>
+          )}
         </Box>
-
-        {/* Add more sections here following similar pattern as above */}
       </Box>
       <Footer />
     </>
-
   );
 }
 
