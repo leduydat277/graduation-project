@@ -40,50 +40,6 @@
         <!-- end col -->
     </div>
 
-    <!-- Modal checkin -->
-    <div class="modal fade" id="checkinModal" tabindex="-1" aria-labelledby="checkinModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkinModalLabel">Khách Hàng Nhận phòng</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="checkinForm">
-                        @csrf
-                        <!-- Form fields -->
-                        <input type="hidden" id="bookingId" name="bookingId">
-                        <div class="mb-3">
-                            <label for="userName" class="form-label">Người dùng</label>
-                            <input type="text" class="form-control" id="userName" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="roomType" class="form-label">Loại phòng</label>
-                            <input type="text" class="form-control" id="roomType" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="checkInDate" class="form-label">Thời gian đến</label>
-                            <input type="text" class="form-control" id="checkInDate" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="checkInDate" class="form-label">CCCD</label>
-                            <input type="number" name="cccd" class="form-control" id="cccd"
-                                placeholder="nhập số cccd" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="checkInDate" class="form-label">Mã nhận phòng</label>
-                            <input type="text" name="code" class="form-control" id="code"
-                                placeholder="nhập code của bạn" required>
-                        </div>
-                        <div id="error-message"></div>
-                        <!-- You can add more fields if needed -->
-                        <button type="submit" class="btn btn-primary">Xác nhận nhận phòng</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal checkout-->
     <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkinModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -276,10 +232,7 @@
                             name: "SĐT",
                             width: "100px"
                         },
-                        {
-                            name: "Loại phòng",
-                            width: "100px"
-                        },
+
                         {
                             name: "Ngày đến",
                             width: "100px", // Tăng chiều rộng để hiển thị thêm thông tin
@@ -303,7 +256,7 @@
                             name: "Tổng tiền",
                             width: "100px",
                             formatter: (cell, row) => {
-                                const totalPrice = row.cells[7].data; // Dữ liệu cột total_price
+                                const totalPrice = row.cells[6].data; // Dữ liệu cột total_price
                                 const formattedPrice = new Intl.NumberFormat('vi-VN', {
                                     style: 'currency',
                                     currency: 'VND',
@@ -315,7 +268,7 @@
                             name: "Trạng thái",
                             width: "120px",
                             formatter: (cell, row) => {
-                                const status = row.cells[8].data;
+                                const status = row.cells[7].data;
                                 let statusText = '';
                                 let statusClass = '';
 
@@ -361,8 +314,8 @@
                             name: "Tùy chọn",
                             width: "120px",
                             formatter: (cell, row) => {
-                                const status = row.cells[8].data; // Trạng thái
-                                const checkInDateTimestamp = row.cells[5]
+                                const status = row.cells[7].data; // Trạng thái
+                                const checkInDateTimestamp = row.cells[4]
                                     .data; // Lấy check_in_date từ bảng (timestamp)
                                 const checkInDate = new Date(checkInDateTimestamp *
                                     1000); // Chuyển đổi sang Date
@@ -374,17 +327,13 @@
                                     checkInDate.getDate() === today.getDate() &&
                                     checkInDate.getMonth() === today.getMonth() &&
                                     checkInDate.getFullYear() === today.getFullYear();
-
                                 if (status === 2) {
                                     if (isToday && currentHour >= 14) {
                                         return gridjs.html(`
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkinModal" onclick="openCheckinModal(${row.cells[10].data})" title="Check in">
-                <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
-            </button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[10].data})" title="Hủy">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[9].data})" title="Hủy">
                 <i class="fas fa-times"></i> <!-- Icon Hủy -->
             </button>
-            <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <a href="/admin/checkin-checkout/detail/${row.cells[9].data}"
             <button class="btn btn-primary" title="Xem chi tiết">
                 <i class="fas fa-eye"></i>
             </button>
@@ -392,13 +341,10 @@
         `);
                                     } else {
                                         return gridjs.html(`
-            <button class="btn btn-success" onclick="alert('Chưa đến thời gian nhận phòng')" title="Check in">
-                <i class="fas fa-sign-in-alt"></i> <!-- Icon Check-in -->
-            </button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[10].data})" title="Hủy">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exitModal" onclick="openCancelModal(${row.cells[9].data})" title="Hủy">
                 <i class="fas fa-times"></i> <!-- Icon Hủy -->
             </button>
-            <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+            <a href="/admin/checkin-checkout/detail/${row.cells[9].data}"
             <button class="btn btn-primary" title="Xem chi tiết">
                 <i class="fas fa-eye"></i>
             </button>
@@ -407,10 +353,10 @@
                                     }
                                 } else if (status === 4) {
                                     return gridjs.html(`
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[10].data})" title="Check out">
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#checkoutModal" onclick="openCheckoutModal(${row.cells[9].data})" title="Check out">
             <i class="fas fa-sign-out-alt"></i> <!-- Icon Check-out -->
         </button>
-                    <a href="/admin/checkin-checkout/detail/${row.cells[10].data}"
+                    <a href="/admin/checkin-checkout/detail/${row.cells[9].data}"
             <button class="btn btn-primary" title="Xem chi tiết">
                 <i class="fas fa-eye"></i>
             </button>
@@ -428,7 +374,6 @@
                         booking.last_name + ' ' + booking.first_name,
                         booking.email,
                         booking.phone,
-                        booking.room_type,
                         booking.check_in_date,
                         booking.check_out_date,
                         booking.total_price,
@@ -487,42 +432,6 @@
         }
 
         // end hủy
-        //checkin
-        function openCheckinModal(bookingId) {
-            // Tìm booking tương ứng
-            const booking = @json($bookings).find(b => b.id === bookingId);
-            const now = new Date(); // Lấy thời gian hiện tại
-
-            // Định dạng giờ:phút ngày/tháng/năm
-            const hours = now.getHours().toString().padStart(2, '0'); // Giờ có 2 chữ số
-            const minutes = now.getMinutes().toString().padStart(2, '0'); // Phút có 2 chữ số
-            const day = now.getDate().toString().padStart(2, '0'); // Ngày có 2 chữ số
-            const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Tháng có 2 chữ số (tháng bắt đầu từ 0)
-            const year = now.getFullYear(); // Năm
-            const formattedDate = `${hours}:${minutes} ${day}/${month}/${year}`;
-            // Điền dữ liệu vào form
-            document.getElementById('bookingId').value = booking.id;
-            document.getElementById('userName').value = booking.user_name;
-            document.getElementById('roomType').value = booking.room_type;
-            document.getElementById('checkInDate').value = formattedDate;
-            window.booking = booking;
-        }
-        document.getElementById('checkinForm').addEventListener('submit', function(e) {
-            const code = document.getElementById('code').value;
-            const bookingCode = window.booking.code_check_in;
-            if (code.trim() !== bookingCode.trim()) {
-                alert('Mã Check in không đúng');
-            } else {
-                e.preventDefault();
-                const form = this;
-                const bookingId = document.getElementById('bookingId').value;
-                form.action = '/admin/checkin-checkout/checkin/' + bookingId;
-                form.method = 'POST';
-                form.submit();
-            }
-        });
-        //endcheckin
-
         //checkout
         function openCheckoutModal(bookingId) {
 
@@ -628,12 +537,8 @@
 
     <!-- prismjs plugin -->
     <script src="{{ asset('assets/admin/assets/libs/prismjs/prism.js') }}"></script>
-
     <!-- gridjs js -->
     <script src="{{ asset('assets/admin/assets/libs/gridjs/gridjs.umd.js') }}"></script>
-    <!-- gridjs init -->
-    <!-- <script src="{{ asset('assets/admin/assets/js/pages/gridjs.init.js') }}"></script> -->
-
     <!-- App js -->
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
 @endsection
