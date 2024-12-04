@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\RoomsController;
 use App\Http\Controllers\Web\CheckoutScreenController;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Web\PaymentHistoryController;
+use App\Http\Controllers\Web\UsersController;
 
 
 /*
@@ -61,3 +62,32 @@ Route::post('login', [LoginController::class, 'store'])
 
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
+ 
+
+    Route::get('users', [UsersController::class, 'index'])
+    ->name('users');
+    // ->middleware('auth');
+
+Route::get('users/create', [UsersController::class, 'create'])
+    ->name('users.create');
+    // ->middleware('auth');
+
+Route::post('users', [UsersController::class, 'store'])
+    ->name('users.store');
+    // ->middleware('auth');
+
+Route::get('users/{user}/edit', [UsersController::class, 'edit'])
+    ->name('users.edit');
+    // ->middleware('auth');
+
+Route::put('users/{user}', [UsersController::class, 'update'])
+    ->name('users.update');
+    // ->middleware('auth');
+
+Route::delete('users/{user}', [UsersController::class, 'destroy'])
+    ->name('users.destroy');
+    // ->middleware('auth');
+
+Route::put('users/{user}/restore', [UsersController::class, 'restore'])
+    ->name('users.restore');
+    // ->middleware('auth');
