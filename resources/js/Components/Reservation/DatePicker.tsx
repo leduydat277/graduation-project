@@ -1,27 +1,39 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { useBookingStore } from "./../../../service/stores/booking-store"
+import * as React from 'react';
+import { addDays, format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { DateRange } from 'react-day-picker';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
+import { useBookingStore } from './../../../service/stores/booking-store';
 
 export function DatePickerWithRange({
   className,
   type,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-
-  const [date, setDate] = React.useState<{ from: number | null; to: number | null }>({
+  const [date, setDate] = React.useState<{
+    from: number | null;
+    to: number | null;
+  }>({
     from: +new Date(),
-    to: +addDays(new Date(), 20),
+    to: +addDays(new Date(), 20)
   });
 
-  const [setCheckInDate, setCheckOutDate, checkInDate, checkOutDate, setTotalPrice] = useBookingStore((state) => [
+  const [
+    setCheckInDate,
+    setCheckOutDate,
+    checkInDate,
+    checkOutDate,
+    setTotalPrice
+  ] = useBookingStore(state => [
     state.setCheckInDate,
     state.setCheckOutDate,
     state.checkInDate,
@@ -30,18 +42,29 @@ export function DatePickerWithRange({
   ]);
 
   const handleDateChange = (rangeDate: DateRange | undefined) => {
-    const newFrom = rangeDate?.from ? +rangeDate.from : null;
-    const newTo = rangeDate?.to ? +rangeDate.to : null;
+    // Chuyển đổi từ ngày sang timestamp, sử dụng Date.UTC để tránh lỗi múi giờ
+    const newFrom = rangeDate?.from
+      ? Date.UTC(rangeDate.from.getFullYear(), rangeDate.from.getMonth(), rangeDate.from.getDate()) // Giữ giờ là 00:00:00 UTC
+      : null;
+
+    const newTo = rangeDate?.to
+      ? Date.UTC(rangeDate.to.getFullYear(), rangeDate.to.getMonth(), rangeDate.to.getDate()) // Giữ giờ là 00:00:00 UTC
+      : null;
 
     setDate({ from: newFrom, to: newTo });
 
+    // Gửi timestamp vào booking store
     if (newFrom) {
-      setCheckInDate(newFrom);
+      setCheckInDate(newFrom); // Cập nhật check-in date với timestamp
+      console.log('Updated checkInDate:', newFrom);
     }
+
     if (newTo) {
-      setCheckOutDate(newTo);
+      setCheckOutDate(newTo); // Cập nhật check-out date với timestamp
+      console.log('Updated checkOutDate:', newTo);
     }
   };
+
 
   // React.useEffect(() => {
   //   // Ensure that after setting dates, the totalDays and totalPrice are calculated correctly.
@@ -52,25 +75,26 @@ export function DatePickerWithRange({
   // }, [checkInDate, checkOutDate, setTotalPrice]); // React to changes in checkInDate and checkOutDate
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn('grid gap-2', className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant="outline"
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              'w-[300px] justify-start text-left font-normal',
+              !date && 'text-muted-foreground'
             )}
           >
             <CalendarIcon />
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                  {format(date.from, 'LLL dd, y')} -{' '}
+                  {format(date.to, 'LLL dd, y')}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, 'LLL dd, y')
               )
             ) : (
               <span>Pick a date</span>

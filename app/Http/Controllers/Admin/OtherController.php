@@ -112,16 +112,16 @@ class OtherController
     public function destroy($id)
     {
         $other = Other::findOrFail($id);
-            Storage::delete($other->value); 
+            Storage::delete($other->value);
         $other->delete();
         return redirect()->route('others.index')->with('success', 'Xóa thành công!');
     }
 
     public function policy()
     {
-        $data = Other::where('type', 'policy')->get();
+        $data = Other::select('value')->where('type', 'policy')->get();
 
-        return response()->json(['status' => 'success', 'data' => $data->value], 200);
+        return response()->json(['status' => 'success', 'data' => $data], 200);
     }
 
     public function privacy()

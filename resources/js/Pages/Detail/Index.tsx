@@ -1,5 +1,5 @@
 import BookingLayout from '@/Layouts/BookingLayout';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
 import { Box, Stack, Link } from "@mui/material";
@@ -9,20 +9,21 @@ import { BottomHeader } from '@/components/Header/BottomHeader';
 
 function DetailRoom({ room }) {
   console.log('detail room line 7 ', room);
-  const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [state.setPrice, state.setSubtitle, state.setIdRoom]);
 
-  // if (room) {
-  //    setPrice(room.price);
-  //   }
+  const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [
+    state.setPrice,
+    state.setSubtitle,
+    state.setIdRoom
+  ]);
 
-  // React.useEffect(() => {
-  //   if (room) {
-  //     setPrice(room.price);
-  //     setSubtitle(room.title);
-  //     setIdRoom(room.id);
-  //   }
-  // }, [room.id]);
-  // console.log('detail room line 15 ', room);
+  // Chỉ khi có room, bạn mới cần gọi setIdRoom, setPrice và setSubtitle
+  useEffect(() => {
+    if (room) {
+      setPrice(room.price); // Cập nhật giá phòng
+      setSubtitle(room.title); // Cập nhật tiêu đề
+      setIdRoom(room.id); // Cập nhật id phòng
+    }
+  }, [room, setPrice, setSubtitle, setIdRoom]); // Đảm bảo chạy lại mỗi khi room thay đổi
 
   if (!room) {
     return <div>No room data available</div>;

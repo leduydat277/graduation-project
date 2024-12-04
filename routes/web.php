@@ -37,6 +37,9 @@ Route::get('/', [ScreenController::class, 'index'])
 
 Route::get('/about', [ScreenController::class, 'about'])
     ->name('about');
+
+Route::get('/policy', [ScreenController::class, 'policy'])
+    ->name('policy');
 //Detail
 
 Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
