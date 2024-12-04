@@ -60,7 +60,7 @@ class BookingController  extends Controller
         }
         // dd($query->toSql() , $query->getBindings());
         // Lấy danh sách đặt phòng
-        $bookings = $query->get(); // Phân trang, mỗi trang 10 bản ghi
+        $bookings = $query->whereNot('status', [0,1])->get(); // Phân trang, mỗi trang 10 bản ghi
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('bookings'));
     }
