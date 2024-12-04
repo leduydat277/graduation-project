@@ -6,6 +6,7 @@ export const BannerSuccess = () => {
         width={'84%'}
         height={130}
         justifyContent={'center'}
+        backgroundColor={'#f2f2f2'}
         mt={10}
         borderRadius={6}
         sx={{
