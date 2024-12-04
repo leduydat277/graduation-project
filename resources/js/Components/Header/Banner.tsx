@@ -7,7 +7,12 @@ export const Banner = () => {
     "https://wallpapers.com/images/featured/hotel-room-background-qad26bgd35ll4qv6.jpg",
     "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/3/21/1170122/296817374_1015897554.jpg",
   ];
-
+  if (location.pathname === '/about') {
+    return null;
+  }
+  if (location.pathname === '/detail/{id}') {
+    return null;
+  }
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {

@@ -21,8 +21,8 @@ export const DetailContent = (props) => {
 
 
   return (
-    <Box sx={{ marginTop: '40px'}}>
-      <Box sx={{width: '70%', margin: "auto"}}><CarouselCustom image_room={imageRoomArray} /></Box>
+    <Box sx={{ minHeight: '300px' }}>
+      <CarouselCustom image_room={imageRoomArray} />
       <Typography variant="h3" pt={4}> {title}</Typography>
 
       <Typography variant="h5" pt={3}>{subtitle}</Typography>

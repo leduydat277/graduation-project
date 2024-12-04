@@ -21,7 +21,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-6 bg-indigo-900">
+    <div className="flex items-center justify-center min-h-screen p-6"
+    style={{
+      backgroundImage: 'url(https://img.freepik.com/premium-photo/rest-area-office-building-with-orange-walls-yellow-wall-background-3d-render_295714-6200.jpg)',  // Đường dẫn tĩnh từ server
+      backgroundSize: 'cover',  
+      backgroundPosition: 'center',
+    }}
+    >
       <Head title="Login" />
 
       <div className="w-full max-w-md">
@@ -34,10 +40,10 @@ export default function LoginPage() {
           className="mt-8 overflow-hidden bg-white rounded-lg shadow-xl"
         >
           <div className="px-10 py-12">
-            <h1 className="text-3xl font-bold text-center">Welcome Back!</h1>
+            <h1 className="text-3xl font-bold text-center">Chào mừng bạn đến với Sleep Hotel</h1>
             <div className="w-24 mx-auto mt-6 border-b-2" />
             <div className="grid gap-6">
-              <FieldGroup label="Email" name="email" error={errors.email}>
+              <FieldGroup label="Tài khoản" name="email" error={errors.email}>
                 <TextInput
                   name="email"
                   type="email"
@@ -48,7 +54,7 @@ export default function LoginPage() {
               </FieldGroup>
 
               <FieldGroup
-                label="Password"
+                label="Mật khẩu"
                 name="password"
                 error={errors.password}
               >
@@ -60,7 +66,7 @@ export default function LoginPage() {
                 />
               </FieldGroup>
 
-              <FieldGroup>
+              {/* <FieldGroup>
                 <CheckboxInput
                   label="Remember Me"
                   name="remember"
@@ -68,19 +74,19 @@ export default function LoginPage() {
                   checked={data.remember}
                   onChange={e => setData('remember', e.target.checked)}
                 />
-              </FieldGroup>
+              </FieldGroup> */}
             </div>
           </div>
           <div className="flex items-center justify-between px-10 py-4 bg-gray-100 border-t border-gray-200">
             <a className="hover:underline" tabIndex={-1} href="#reset-password">
-              Forgot password?
+              Quên mật khẩu?
             </a>
             <LoadingButton
               type="submit"
               loading={processing}
               className="btn-indigo"
             >
-              Login
+              Đăng nhập
             </LoadingButton>
           </div>
         </form>

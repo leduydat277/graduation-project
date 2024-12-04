@@ -4,6 +4,7 @@ import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
 import { Box, Stack, Link } from "@mui/material";
 import { TopHeader } from '@/components/Header/TopHeader';
+import { Footer } from '@/components/Footer/Footer';
 
 function DetailRoom({ room }) {
   console.log('detail room line 7 ', room);
@@ -37,9 +38,8 @@ function DetailRoom({ room }) {
           width: "100%",
           zIndex: 1000,
           backgroundColor: "#092533",
-          boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-          padding: 0,
-          margin: 0,
+          left: 0,
+          
         }}
       >
         <Stack
@@ -47,9 +47,11 @@ function DetailRoom({ room }) {
           gap={4}
           pl={7}
           sx={{
-            padding: "20px 0",
+            height: '70px',
+
             borderBottom: "1px solid #eee",
-            // backgroundColor: "#f8f9fa",
+            display: "flex",
+            alignItems: "center"
           }}
         >
           <Link
@@ -123,6 +125,7 @@ function DetailRoom({ room }) {
         room_type={room_type}
         {...rest}
       />
+      <Footer />
     </>
 
   );
