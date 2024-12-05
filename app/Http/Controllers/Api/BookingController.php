@@ -55,8 +55,7 @@ class BookingController
             $phone = $request->input('phone');
             $email = $request->input('email');
             $room_id = $request->input('room_id');
-            Log::error($check_in);
-            Log::error($check_out);
+            $payment_type = $request->input('payment_type');
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
@@ -80,9 +79,6 @@ class BookingController
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
             $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
-
-            Log::error($daysBooked);
-
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
@@ -137,7 +133,7 @@ class BookingController
                             ->where('check_out_date', '>', $check_in);
                     });
                 })
-                ->whereIn('status', [1, 2, 3, 4]) // Chỉ kiểm tra các trạng thái phòng đã đặt
+                ->whereIn('status', [1, 2, 3, 4])
                 ->exists();
 
             if ($bookings) {
@@ -149,21 +145,39 @@ class BookingController
 
             $bookingNumberId = Str::upper(Str::random(5));
 
-            $booking = Booking::create([
-                "room_id" => $room_id,
-                'booking_number_id' => $bookingNumberId,
-                "user_id" => $user_id ?? null,
-                "first_name" => $first_name,
-                "last_name" => $last_name,
-                "address" => $address,
-                "phone" => $phone,
-                "email" => $email,
-                "check_in_date" => $check_in,
-                "check_out_date" => $check_out,
-                "total_price" => $total_price,
-                "tien_coc" => $depositAmount,
-                "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
-            ]);
+            if ($payment_type == 1) {
+                $booking = Booking::create([
+                    "room_id" => $room_id,
+                    'booking_number_id' => $bookingNumberId,
+                    "user_id" => $user_id ?? null,
+                    "first_name" => $first_name,
+                    "last_name" => $last_name,
+                    "address" => $address,
+                    "phone" => $phone,
+                    "email" => $email,
+                    "check_in_date" => $check_in,
+                    "check_out_date" => $check_out,
+                    "total_price" => $total_price,
+                    "tien_coc" => $depositAmount,
+                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
+                ]);
+            }
+            if ($payment_type == 2) {
+                $booking = Booking::create([
+                    "room_id" => $room_id,
+                    'booking_number_id' => $bookingNumberId,
+                    "user_id" => $user_id ?? null,
+                    "first_name" => $first_name,
+                    "last_name" => $last_name,
+                    "address" => $address,
+                    "phone" => $phone,
+                    "email" => $email,
+                    "check_in_date" => $check_in,
+                    "check_out_date" => $check_out,
+                    "total_price" => $total_price,
+                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
+                ]);
+            }
 
             $paymentsIdNumber = Str::upper(Str::random(5));
 
@@ -175,13 +189,24 @@ class BookingController
             ]);
 
             $ipAddr = $request->ip();
-            $order = [
-                "code" => $booking->id,
-                "info" => "booking_payment_$booking->id",
-                "type" => "billpayment",
-                "bankCode" => "NCB",
-                "total" => $depositAmount * 100,
-            ];
+            if ($payment_type == 1) {
+                $order = [
+                    "code" => $booking->id,
+                    "info" => "booking_payment_$booking->id",
+                    "type" => "billpayment",
+                    "bankCode" => "NCB",
+                    "total" => $depositAmount * 100,
+                ];
+            }
+            if ($payment_type == 2) {
+                $order = [
+                    "code" => $booking->id,
+                    "info" => "booking_payment_$booking->id",
+                    "type" => "billpayment",
+                    "bankCode" => "NCB",
+                    "total" => $total_price * 100,
+                ];
+            }
 
             $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr);
 
@@ -256,7 +281,12 @@ class BookingController
 
             $check_in_code = rand(100000, 999999);
             $booking->code_check_in = $check_in_code;
-            $booking->status = 2;
+            if($booking->tien_coc === NULL){
+                $booking->status = 3;
+            }
+            if($booking->tien_coc !== NULL){
+                $booking->status = 2;
+            }
             $booking->save();
 
             $currentTimestamp = time();
