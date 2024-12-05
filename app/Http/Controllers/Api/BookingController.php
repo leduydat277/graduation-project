@@ -155,8 +155,8 @@ class BookingController
                     "address" => $address,
                     "phone" => $phone,
                     "email" => $email,
-                    "check_in_date" => $check_in,
-                    "check_out_date" => $check_out,
+                    "check_in_date" => $check_in_timestamp,
+                    "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
                     "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
@@ -172,8 +172,8 @@ class BookingController
                     "address" => $address,
                     "phone" => $phone,
                     "email" => $email,
-                    "check_in_date" => $check_in,
-                    "check_out_date" => $check_out,
+                    "check_in_date" => $check_in_timestamp,
+                    "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
                     "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
                 ]);
