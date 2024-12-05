@@ -184,7 +184,7 @@
                             </p>
                         </div>
                     </div>
-                    @if(in_array($booking->status, [1, 2]) && $submitCheckIn == 0)
+                    @if(in_array($booking->status, [1, 2, 3]) && $submitCheckIn == 0)
                     <button class="btn btn-success w-25" data-bs-toggle="modal" data-bs-target="#checkinModal" type="submit">CheckIn</button>
                     @endif
                 </div>

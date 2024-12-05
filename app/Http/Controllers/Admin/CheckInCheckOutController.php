@@ -35,11 +35,9 @@ class CheckInCheckOutController extends RoutingController
     }
 
     public function index(Request $request)
-    {
-        $today = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
-        $title = "Danh sách Đơn";
-        $bookings = Booking::whereIn('bookings.status', [2, 4])
-            ->whereRaw('DATE(FROM_UNIXTIME(check_in_date)) = ? OR DATE(FROM_UNIXTIME(check_out_date)) = ?', [$today, $today])->join('users', 'bookings.user_id', '=', 'users.id')
+    {$title = "Checkin & Checkout";
+        $bookings = Booking::whereIn('bookings.status', [2,3, 4])
+            ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->select(
@@ -51,7 +49,6 @@ class CheckInCheckOutController extends RoutingController
                 'rooms.roomId_number as room_id'
             )
             ->get();
-
 
         $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
 

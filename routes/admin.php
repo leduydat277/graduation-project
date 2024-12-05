@@ -36,7 +36,6 @@ use Illuminate\Support\Facades\Auth;
 
 Route::prefix('admin')->middleware(Role::class)->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('users', UserController::class);
     Route::resource('tokens', TokenController::class);
     Route::resource('reviews', ReviewController::class);
     Route::resource('bookings', BookingController::class);
@@ -48,7 +47,6 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('others', OtherController::class);
-    // Route::post('others/{id}', OtherController::class, 'update')->name('others.updatee');
     Route::resource('phiphatsinhs', PhiphatsinhController::class);
     Route::prefix('change-password')->as('change-password.')->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
