@@ -18,6 +18,17 @@ $.get('/api/dashboard', function (data) {
     'Dec'
   ];
 
+  const totalEarnings = data.totals.total_earnings;
+  const totalOrders = data.totals.total_orders;
+  const totalCanceled = data.totals.total_canceled;
+
+  // Hiển thị tổng số liệu ra giao diện
+  $('#totalEarnings').text(
+    new Intl.NumberFormat('vi-VN').format(totalEarnings) + ' VNĐ'
+  );
+  $('#totalOrders').text(totalOrders + ' lượt');
+  $('#totalCanceled').text(totalCanceled + ' lượt');
+
   // Khởi tạo dữ liệu cho các tháng
   const earningsData = months.map((_, index) => {
     const monthYear = `2024-${(index + 1).toString().padStart(2, '0')}`; // Định dạng YYYY-MM
@@ -35,13 +46,10 @@ $.get('/api/dashboard', function (data) {
   });
 
   const maxEarningsData = Math.max(...earningsData);
-  const maxOrdersData = Math.ceil(Math.max(...ordersData));
+  const maxOrdersData = totalCanceled + totalOrders;
 
-  let doanhthuChart;
-  let orderChart;
-  let isRevenueChart = false;
-
-  doanhthuChart = new Chart(ctx, {
+  // Khởi tạo biểu đồ doanh thu
+  let doanhthuChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: months,
@@ -75,12 +83,10 @@ $.get('/api/dashboard', function (data) {
     }
   });
 
+  let isRevenueChart = false;
   document.getElementById('changeChartBtn').addEventListener('click', () => {
     if (isRevenueChart) {
-      if (orderChart) {
-        orderChart.destroy();
-      }
-
+      doanhthuChart.destroy();
       doanhthuChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -88,11 +94,10 @@ $.get('/api/dashboard', function (data) {
           datasets: [
             {
               label: 'Doanh thu',
-              type: 'bar',
+              data: earningsData,
               backgroundColor: 'rgba(46, 204, 113, 0.6)',
               borderColor: 'rgba(46, 204, 113, 1)',
-              borderWidth: 1,
-              data: earningsData
+              borderWidth: 1
             }
           ]
         },
@@ -117,14 +122,10 @@ $.get('/api/dashboard', function (data) {
 
       document.getElementById('changeChartBtn').textContent =
         'Thống kê số lượng đặt và hủy theo tháng';
-
       isRevenueChart = false;
     } else {
-      if (doanhthuChart) {
-        doanhthuChart.destroy();
-      }
-
-      orderChart = new Chart(ctx, {
+      doanhthuChart.destroy();
+      doanhthuChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: months,
@@ -150,7 +151,13 @@ $.get('/api/dashboard', function (data) {
           scales: {
             y: {
               beginAtZero: true,
-              max: Math.ceil(maxOrdersData)
+              max: maxOrdersData,
+              ticks: {
+                stepSize: 1, // Đảm bảo các bước trục y là số nguyên
+                callback: function (value) {
+                  return value % 1 === 0 ? value : ''; // Hiển thị chỉ số nguyên
+                }
+              }
             }
           },
           plugins: {
@@ -166,8 +173,50 @@ $.get('/api/dashboard', function (data) {
 
       document.getElementById('changeChartBtn').textContent =
         'Thống kê doanh thu theo tháng';
-
       isRevenueChart = true;
+    }
+  });
+});
+
+$.get('/api/dashboard', function (data) {
+  var ctx = document.getElementById('bookingStatusChart').getContext('2d');
+
+  var bookingStatusChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Đặt thành công', 'Hủy'],
+      datasets: [
+        {
+          label: 'Tỷ lệ Đặt thành công và Hủy',
+          data: [data.totals.success_rate, data.totals.cancel_rate],
+          backgroundColor: [
+            'rgba(46, 134, 193, 0.2)',
+            'rgba(255, 99, 132, 0.2)'
+          ],
+          borderColor: ['rgba(46, 134, 193, 1)', 'rgba(255, 99, 132, 1)'],
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#000'
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function (tooltipItem) {
+              return (
+                tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%'
+              );
+            }
+          }
+        }
+      }
     }
   });
 });
@@ -244,6 +293,7 @@ $(document).ready(function () {
   $('#countRoomOrders').DataTable({
     serverSide: true,
     searching: false,
+    paging: false,
     ajax: {
       url: '/api/countRoomOrders',
       method: 'GET',
@@ -257,8 +307,6 @@ $(document).ready(function () {
         alert('Lỗi khi tải dữ liệu từ API');
       }
     },
-    pageLength: 5,
-    lengthMenu: [5, 10, 25, 50],
     columns: [
       {
         data: 'room_details.title',
@@ -269,16 +317,16 @@ $(document).ready(function () {
           const id = row.room_details.id;
           const showRoom = `/admin/rooms/` + id;
           return `
-          <div class="d-flex align-items-center">
-            <div class="avatar-lg bg-light rounded p-1">
-              <img src="${fullImageURL}" alt="Room Image" class="img-fluid d-block" />
+            <div class="d-flex align-items-center">
+              <div class="avatar-lg bg-light rounded p-1">
+                <img src="${fullImageURL}" alt="Room Image" class="img-fluid d-block" />
+              </div>
+              <div>
+                <h5 class="fs-14 my-1"><a href="${showRoom}" class="text-dark text-decoration-none">${data}</a></h5>
+                <span class="text-muted">${row.room_details.room_type.type}</span>
+              </div>
             </div>
-            <div>
-              <h5 class="fs-14 my-1"><a href="${showRoom}" class="text-dark text-decoration-none">${data}</a></h5>
-              <span class="text-muted">${row.room_details.room_type.type}</span>
-            </div>
-          </div>
-        `;
+          `;
         }
       },
       {
@@ -286,25 +334,21 @@ $(document).ready(function () {
         render: function (data) {
           const formattedPrice = new Intl.NumberFormat('vi-VN').format(data);
           return `<h5 class="fs-14 my-1 fw-normal">${formattedPrice} VNĐ</h5>
-            <span class="text-muted">Giá</span>`;
+              <span class="text-muted">Giá</span>`;
         }
       },
       {
         data: 'count',
         render: function (data) {
           return `<h5 class="fs-14 my-1 fw-normal">${data}</h5>
-            <span class="text-muted">Lượt đặt</span>`;
+              <span class="text-muted">Lượt đặt</span>`;
         }
       }
     ],
     language: {
-      paginate: {
-        next: 'Tiếp',
-        previous: 'Trước'
-      },
-      lengthMenu: 'Hiển thị _MENU_ mục',
-      info: 'Hiển thị từ _START_ đến _END_ trên tổng _TOTAL_ mục',
-      infoEmpty: 'Không có dữ liệu để hiển thị',
+      lengthMenu: '',
+      info: '',
+      infoEmpty: '',
       emptyTable: 'Không có dữ liệu'
     }
   });
@@ -446,49 +490,69 @@ $(document).ready(function () {
   }
 });
 
-$(document).ready(function () {
-  $('#assetsDie').DataTable({
-      processing: true,
-      serverSide: false,
-      ajax: {
-          url: '/api/assetsDie',
-          type: 'GET',
-          data: function (d) {
-          }
-      },
-      columns: [
-          { data: 'id', title: 'ID', className: 'text-center' },
-          { data: 'name', title: 'Tên tài sản' },
-          {
-              data: 'image',
-              title: 'Hình ảnh',
-              render: function (data) {
-                  return `<img src="${data}" alt="Asset Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">`;
-              }
-          },
-          {
-              data: 'status',
-              title: 'Trạng thái',
-              render: function (data) {
-                  return data === 2 ? 'Hỏng' : 'Không xác định';
-              }
-          }
-      ],
-      language: {
-          processing: "Đang tải...",
-          paginate: {
-              next: "Tiếp",
-              previous: "Trước"
-          },
-          lengthMenu: "Hiển thị _MENU_ bản ghi mỗi trang",
-          info: "Hiển thị từ _START_ đến _END_ trên tổng _TOTAL_ bản ghi",
-          infoEmpty: "Không có bản ghi nào",
-          emptyTable: "Không có dữ liệu",
-          search: "Tìm kiếm:",
-      },
-      pageLength: 10,
-      lengthChange: true,
-      searching: false
-  });
-});
+document.addEventListener('DOMContentLoaded', function () {
+  const apiUrl = 'http://127.0.0.1:8000/api/thongKeTongThe';
 
+  async function fetchData(startDate, endDate) {
+    try {
+      let url = apiUrl;
+      if (startDate && endDate) {
+        url += `?start_date=${startDate}&end_date=${endDate}`;
+      }
+
+      console.log('Fetching data from URL:', url);
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('API Response:', data);
+
+      renderData(data);
+    } catch (error) {
+      console.error('Lỗi khi gọi API:', error);
+    }
+  }
+
+  function renderData(data) {
+    if (data) {
+      document.getElementById('allTotalEarnings').innerText =
+        data.totalEarnings.toLocaleString();
+      document.getElementById('totalSuccessfulOrders').innerText =
+        data.totalSuccessfulOrders;
+      document.getElementById('totalCanceledOrders').innerText =
+        data.totalCanceledOrders;
+    }
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+
+  document.getElementById('startDate').setAttribute('max', today);
+  document.getElementById('endDate').setAttribute('max', today);
+
+  document.getElementById('filterBtn').addEventListener('click', function () {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    if (startDate && endDate) {
+      if (endDate < startDate) {
+        alert('Ngày kết thúc không được nhỏ hơn ngày bắt đầu!');
+        return;
+      }
+      fetchData(startDate, endDate);
+    } else {
+      alert('Vui lòng chọn khoảng ngày hợp lệ!');
+    }
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+
+    fetchData();
+  });
+
+  fetchData();
+});

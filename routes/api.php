@@ -24,6 +24,7 @@ Route::get('search_room', [SearchRoomController::class, 'searchRoom'])
 // Admin api
 Route::get('dashboard', [DashboardController::class, 'statistical'])->name('api.dashboard');
 Route::get('getBookingsToday', [DashboardController::class, 'getBookingsToday'])->name('api.getBookingsToday');
+Route::get('thongKeTongThe', [DashboardController::class, 'thongKeTongThe'])->name('api.thongKeTongThe');
 Route::get('assetsDie', [DashboardController::class, 'assetsDie'])->name('api.assetsDie');
 Route::get('getWeeks', [DashboardController::class, 'getWeeksInCurrentMonth'])->name('api.getWeeks');
 Route::get('countRoomOrders', [DashboardController::class, 'countRoomOrders'])->name('api.countRoomOrders');

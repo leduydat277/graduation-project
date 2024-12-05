@@ -118,197 +118,92 @@
         <div class="col">
 
             <div class="h-100">
-                <div class="row">
-                    <div class="col-xl-3 col-md-6">
-                        <!-- card -->
-                        <div class="card card-animate">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted mb-0">Doanh thu trong tuần
-                                        </p>
-                                    </div>
-                                    @if ($earningsComparison === 'Tăng' && $earningsPercentage > 0)
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-success fs-14 mb-0">
-                                                <i
-                                                    class="ri-arrow-right-up-line fs-13 align-middle"></i>+{{ $earningsPercentage }}%
-                                            </h5>
-                                        </div>
-                                    @elseif ($earningsComparison === 'Giảm' && $earningsPercentage > 0)
-                                        <h5 class="text-danger fs-14 mb-0">
-                                            <i
-                                                class="ri-arrow-right-down-line fs-13 align-middle"></i>-{{ $earningsPercentage }}%
-                                        </h5>
-                                    @endif
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
+                <div class="container">
+                    <!-- Filter form -->
+                    <div class="row mb-4">
+                        <div class="col-md-5">
+                            <label for="startDate" class="form-label">Từ ngày:</label>
+                            <input type="date" id="startDate" class="form-control">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="endDate" class="form-label">Đến ngày:</label>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <button id="filterBtn" class="btn btn-primary w-100">Lọc</button>
+                            <button id="resetBtn" class="btn btn-secondary w-100 mt-2">Reset</button>
+                        </div>
+                    </div>
+
+                    <div class="row" id="statistics">
+                        <div class="col-xl-4 col-md-6">
+                            <div class="card card-animate">
+                                <div class="card-body">
+                                    <p class="text-uppercase fw-medium text-muted mb-0">Doanh thu</p>
+                                    <div class="mt-4">
                                         <h4 class="fs-22 fw-semibold ff-secondary mb-4">
-                                            <span class="counter-value"
-                                                data-target="{{ number_format($weeklyEarnings, 0, ',', '.') }}">{{ number_format($weeklyEarnings, 0, ',', '.') }}
-                                                đ</span>
+                                            <span id="allTotalEarnings">0</span> đ
                                         </h4>
                                     </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-success-subtle rounded fs-3">
-                                            <i class="bx bx-dollar-circle text-success"></i>
-                                        </span>
-                                    </div>
                                 </div>
-                            </div><!-- end card body -->
-                        </div><!-- end card -->
-                    </div><!-- end col -->
+                            </div>
+                        </div>
 
-                    <div class="col-xl-3 col-md-6">
-                        <!-- card -->
-                        <div class="card card-animate">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted mb-0">Lượt đặt hàng thành công của
-                                            tuần</p>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        @if ($ordersComparison === 'Tăng' && $ordersPercentage > 0)
-                                            <div class="flex-shrink-0">
-                                                <h5 class="text-success fs-14 mb-0">
-                                                    <i
-                                                        class="ri-arrow-right-up-line fs-13 align-middle"></i>+{{ $ordersPercentage }}%
-                                                </h5>
-                                            </div>
-                                        @elseif ($ordersComparison === 'Giảm' && $ordersPercentage > 0)
-                                            <h5 class="text-danger fs-14 mb-0">
-                                                <i
-                                                    class="ri-arrow-right-down-line fs-13 align-middle"></i>-{{ $ordersPercentage }}%
-                                            </h5>
-                                        @endif
+                        <!-- Lượt đặt hàng thành công -->
+                        <div class="col-xl-4 col-md-6">
+                            <div class="card card-animate">
+                                <div class="card-body">
+                                    <p class="text-uppercase fw-medium text-muted mb-0">Lượt đặt hàng thành công</p>
+                                    <div class="mt-4">
+                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                                            <span style="color: green" id="totalSuccessfulOrders">0</span> đơn
+                                        </h4>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
-                                                data-target="36894">{{ $weeklyOrders }}</span></h4>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-info-subtle rounded fs-3">
-                                            <i class="bx bx-shopping-bag text-info"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div><!-- end card body -->
-                        </div><!-- end card -->
-                    </div><!-- end col -->
+                            </div>
+                        </div>
 
-                    <div class="col-xl-3 col-md-6">
-                        <!-- card -->
-                        <div class="card card-animate">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted mb-0">Số lượng hủy đơn trong tuần</p>
-                                    </div>
-                                    @if ($canceledComparison === 'Tăng' && $canceledPercentage > 0)
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-danger fs-14 mb-0">
-                                                <i
-                                                    class="ri-arrow-right-up-line fs-13 align-middle"></i>+{{ $canceledPercentage }}%
-                                            </h5>
-                                        </div>
-                                    @elseif ($canceledComparison === 'Giảm' && $canceledPercentage > 0)
-                                        <h5 class="text-success fs-14 mb-0">
-                                            <i
-                                                class="ri-arrow-right-down-line fs-13 align-middle"></i>-{{ $canceledPercentage }}%
-                                        </h5>
-                                    @endif
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
-                                                data-target="36894">{{ $weeklyCanceled }}</span></h4>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                            <i class="bx bxs-x-circle text-primary"></i>
-                                        </span>
+                        <!-- Số lượng hủy đơn -->
+                        <div class="col-xl-4 col-md-6">
+                            <div class="card card-animate">
+                                <div class="card-body">
+                                    <p class="text-uppercase fw-medium text-muted mb-0">Số lượng hủy đơn</p>
+                                    <div class="mt-4">
+                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                                            <span style="color: red" id="totalCanceledOrders">0</span> đơn
+                                        </h4>
                                     </div>
                                 </div>
-                            </div><!-- end card body -->
-                        </div><!-- end card -->
-                    </div><!-- end col -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="col-xl-3 col-md-6">
-                        <!-- card -->
-                        <div class="card card-animate">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted mb-0">Người dùng mới</p>
-                                    </div>
-                                    @if ($uComparison === 'Tăng' && $uPercentage > 0)
-                                        <div class="flex-shrink-0">
-                                            <h5 class="text-success fs-14 mb-0">
-                                                <i
-                                                    class="ri-arrow-right-up-line fs-13 align-middle"></i>+{{ $uPercentage }}%
-                                            </h5>
-                                        </div>
-                                    @elseif ($uComparison === 'Giảm' && $uPercentage > 0)
-                                        <h5 class="text-danger fs-14 mb-0">
-                                            <i
-                                                class="ri-arrow-right-down-line fs-13 align-middle"></i>-{{ $uPercentage }}%
-                                        </h5>
-                                    @endif
-                                </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value"
-                                                data-target="183.35">{{ $newUsersThisWeek }}</span> </h4>
-                                    </div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                            <i class="bx bx-user-circle text-warning"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div><!-- end card body -->
-                        </div><!-- end card -->
-                    </div><!-- end col -->
-                </div> <!-- end row-->
 
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="card">
                             <div class="card-header border-0 align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Thống kê theo tháng</h4>
+                                <h4 class="card-title mb-0 flex-grow-1">Thống kê theo tháng của năm {{ $yearNow }}</h4>
                                 <button type="button" id="changeChartBtn" class="btn btn-soft-secondary btn-sm">
                                     Thống kê số lượng đặt và hủy theo tháng
                                 </button>
                             </div>
                             <canvas id="revenueChart" width="400" height="300"></canvas>
+                            <div>
+                                <h4>Tổng số liệu cả năm {{ $yearNow }}</h4>
+                                <p>Doanh thu: <span id="totalEarnings">0 VNĐ</span></p>
+                                <p>Số lượng đặt thành công: <span id="totalOrders">0 lượt</span></p>
+                                <p>Số lượng đặt hủy: <span id="totalCanceled">0 lượt</span></p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-6">
-                        <div class="card card-height-100">
-                            <div class="card-header align-items-center d-flex">
-                                <h4 class="card-title mb-0 flex-grow-1">Các đơn đặt hôm nay</h4>
+                        <div class="card">
+                            <div class="card-header border-0 align-items-center d-flex">
+                                <h4 class="card-title mb-0 flex-grow-1">Tỷ lệ Đặt phòng thành công và Hủy</h4>
                             </div>
-                            <div class="table">
-                                <table id="bookingsTodayTable"
-                                    class="table table-hover table-centered align-middle table-nowrap mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Tên phòng</th>
-                                            <th>Ngày đến</th>
-                                            <th>Ngày đi</th>
-                                            <th>Tổng tiền</th>
-                                            <th>Trạng thái</th>
-                                            <th>Ngày tạo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <canvas id="bookingStatusChart" width="400" height="300"></canvas>
                         </div>
                     </div>
                 </div>
@@ -321,7 +216,7 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Phòng được đặt nhiều nhất</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">Top 5 phòng được đặt nhiều nhất</h4>
                 </div><!-- end card header -->
 
                 <div class="card-body">
@@ -337,15 +232,24 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Các tiện nghi đang hỏng</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">Các đơn đặt hôm nay</h4>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive table-card">
-                        <table id="assetsDie"
-                            class="table table-hover table-centered align-middle table-nowrap mb-0">
-
-                        </table>
-                    </div>
+                <div class="table">
+                    <table id="bookingsTodayTable"
+                        class="table table-hover table-centered align-middle table-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th>Tên phòng</th>
+                                <th>Ngày đến</th>
+                                <th>Ngày đi</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
