@@ -115,9 +115,19 @@ class CheckInCheckOutController extends RoutingController
             ]);
         }
 
-        $booking->status = 3;
+        $booking->status = 6;
         $booking->check_out_date = $currentTimestamp;
-        $booking->total_price = $request->totalPrice; //update tiền ở booking
+        $totalUpdate = $booking->total_price;
+        if($booking->tien_coc == null){
+            $booking->total_price = $totalUpdate + $request->totalPrice;
+        }
+        else{
+            $cocs = 0;
+            foreach($request->price as $coc){
+                $cocs += $coc;
+            }
+            $booking->total_price = $totalUpdate + $cocs; //update tiền ở booking
+        }
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
@@ -138,7 +148,7 @@ class CheckInCheckOutController extends RoutingController
                 'payment_date' => Carbon::now()->timestamp,
                 'payment_method' => 0,
                 'payment_status' => 3,
-                'total_price' => ($request->totalPrice - $request->tiencu),
+                'total_price' => ($request->totalPrice),
             ]
         );
         $payment->save();

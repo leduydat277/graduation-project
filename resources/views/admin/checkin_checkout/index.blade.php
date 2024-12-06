@@ -119,11 +119,8 @@
 @section('js')
 <script>
     document.getElementById("addFeeButton").addEventListener("click", function() {
-        // Lấy tất cả các trường Phát sinh và Giá phát sinh hiện có
         const ppsInputs = document.querySelectorAll('input[name="pps[]"]');
         const priceInputs = document.querySelectorAll('input[name="price[]"]');
-
-        // Kiểm tra nếu tất cả các trường đã điền
         let allFilled = true;
         ppsInputs.forEach(input => {
             if (input.value.trim() === "") {
@@ -135,14 +132,9 @@
                 allFilled = false;
             }
         });
-
-        // Nếu tất cả các trường đã được điền thì cho phép thêm trường mới
         if (allFilled) {
-            // Tạo một div chứa các trường phát sinh mới
             const newFeeDiv = document.createElement("div");
             newFeeDiv.classList.add("mb-3");
-
-            // Tạo trường Phát sinh
             const newPpsLabel = document.createElement("label");
             newPpsLabel.classList.add("form-label");
             newPpsLabel.textContent = "Phát sinh";
@@ -150,8 +142,6 @@
             newPpsInput.type = "text"; // Sử dụng "text" để dễ dàng định dạng tiền tệ
             newPpsInput.name = "pps[]";
             newPpsInput.classList.add("form-control");
-
-            // Tạo trường Giá phát sinh
             const newPriceLabel = document.createElement("label");
             newPriceLabel.classList.add("form-label");
             newPriceLabel.textContent = "Giá phát sinh";
@@ -159,27 +149,21 @@
             newPriceInput.type = "text"; // Sử dụng "text" thay vì "number" để định dạng tiền tệ
             newPriceInput.name = "price[]";
             newPriceInput.classList.add("form-control", "price-input");
-
-            // Định dạng giá trị ban đầu nếu cần
             newPriceInput.value = formatCurrency(0); // Mặc định giá là 0 VNĐ
-
-            // Định dạng tiền tệ khi người dùng nhập
             newPriceInput.oninput = function(e) {
-                let value = e.target.value.replace(/[^\d]/g, ""); // Loại bỏ các ký tự không phải số
-                e.target.value = formatCurrency(value); // Định dạng lại giá trị nhập
-                calculateTotal(); // Cập nhật tổng khi nhập liệu
+                let rawValue = e.target.value.replace(/[^\d]/g, "");
+                e.target.value = formatCurrency(rawValue);
+                const numericValue = parseFloat(rawValue) || 0;
+                e.target.dataset.value = numericValue;
+                calculateTotal();
             };
 
             const hr = document.createElement("hr");
-
-            // Thêm các trường vào div mới
             newFeeDiv.appendChild(newPpsLabel);
             newFeeDiv.appendChild(newPpsInput);
             newFeeDiv.appendChild(newPriceLabel);
             newFeeDiv.appendChild(newPriceInput);
             newFeeDiv.appendChild(hr);
-
-            // Thêm div mới vào container chính
             document.getElementById("extraFeesContainer").appendChild(newFeeDiv);
         } else {
             alert("Vui lòng nhập Phát sinh và Giá phát sinh trước khi thêm mục mới.");
@@ -194,38 +178,34 @@
     }
     // Hàm tính tổng giá trị các ô Giá phát sinh
     function calculateTotal() {
-        const paymentInput = document.getElementById('thanhtoan');
-        const rawValue = paymentInput.value.replace(/[^0-9]/g, '');
+        const paymentInput = document.getElementById('thanhtoan'); 
+        const rawValue = paymentInput.value.replace(/[^0-9]/g, ''); 
+        let no = parseFloat(rawValue) || 0; 
         const priceInputs = document.querySelectorAll('.price-input');
-        const no = parseFloat(rawValue) || rawValue;
-        let total = no;
-        document.getElementById("totalPrice").value = total; // Gán tổng vào ô "totalPrice"
+        let additionalFeesTotal = 0;
         priceInputs.forEach(input => {
-            const value = parseFloat(input.value);
-            if (!isNaN(value)) {
-                total += value;
-            }
+            const value = parseFloat(input.dataset.value) || 0; 
+            additionalFeesTotal += value;
         });
-        // document.getElementById("totalPrice").value = total;
+        const total = no + additionalFeesTotal;
         document.getElementById("totalPrice").value = formatCurrency(total);
     }
-    //end
 
     document.addEventListener("DOMContentLoaded", function() {
         calculateTotal();
         let bookingsData = @json($bookings);
         const startOfToday = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000); // 00:00:00 hôm nay
-const endOfToday = Math.floor(new Date().setHours(23, 59, 59, 999) / 1000); // 23:59:59 hôm nay
+        const endOfToday = Math.floor(new Date().setHours(23, 59, 59, 999) / 1000); // 23:59:59 hôm nay
 
-// Lọc dữ liệu theo điều kiện
-bookingsData = bookingsData.filter(booking => {
-    if ([2, 3].includes(booking.status)) {
-        return booking.check_in_date >= startOfToday ;
-    } else if (booking.status === 4) {
-        return true;
-    }
-    return false;
-});
+        // Lọc dữ liệu theo điều kiện
+        bookingsData = bookingsData.filter(booking => {
+            if ([2, 3].includes(booking.status)) {
+                return booking.check_in_date >= startOfToday && booking.check_in_date <= endOfToday;
+            } else if (booking.status === 4) {
+                return true;
+            }
+            return false;
+        });
 
 
         if (document.getElementById("table-gridjs")) {
@@ -285,8 +265,6 @@ bookingsData = bookingsData.filter(booking => {
                             const status = row.cells[7].data;
                             let statusText = '';
                             let statusClass = '';
-
-                            // Kiểm tra trạng thái và trả về giá trị tương ứng với màu sắc
                             switch (status) {
                                 case 2:
                                     statusText = "Đã thanh toán cọc"; // Trạng thái 2
@@ -335,8 +313,6 @@ bookingsData = bookingsData.filter(booking => {
                                 1000); // Chuyển đổi sang Date
                             const today = new Date();
                             const currentHour = new Date().getHours();
-
-                            // So sánh ngày hôm nay và ngày check_in_date
                             const isToday =
                                 checkInDate.getDate() === today.getDate() &&
                                 checkInDate.getMonth() === today.getMonth() &&
@@ -411,14 +387,8 @@ bookingsData = bookingsData.filter(booking => {
         const modalMessage = document.getElementById('exitModalMessage');
         const confirmButton = document.getElementById('confirmButton');
         const check_in_date = booking.check_in_date;
-
-        // Chuyển đổi timestamp sang đối tượng Date
         const checkInDate = new Date(check_in_date * 1000); // Chuyển timestamp từ giây sang milliseconds
-
-        // Lấy ngày hiện tại
         const today = new Date();
-
-        // Kiểm tra xem check_in_date có cùng ngày với ngày hiện tại không
         const isSameDay = checkInDate.getDate() === today.getDate() &&
             checkInDate.getMonth() === today.getMonth() &&
             checkInDate.getFullYear() === today.getFullYear();
@@ -427,7 +397,8 @@ bookingsData = bookingsData.filter(booking => {
             const currentHour = now.getHours();
             if (currentHour < 12) {
                 modalMessage.textContent = "Chưa đến giờ nhận phòng. Vẫn hủy?";
-            } else if (currentHour >= 21) {thanhtoan
+            } else if (currentHour >= 21) {
+                thanhtoan
                 modalMessage.textContent = "Đã quá giờ nhận phòng. Hủy đơn?";
             } else {
                 modalMessage.textContent = "Đang trong khoảng thời gian nhận phòng. Hủy đơn?";
@@ -448,7 +419,6 @@ bookingsData = bookingsData.filter(booking => {
     // end hủy
     //checkout
     function openCheckoutModal(bookingId) {
-
         const booking = @json($bookings).find(b => b.id === bookingId);
         const phiphatsinhs = @json($phiphatsinhs).filter(p => p.booking_id === bookingId);
         document.getElementById('bookingId1').value = booking.id;
@@ -463,8 +433,8 @@ bookingsData = bookingsData.filter(booking => {
         const phiphatsinhSum = phiphatsinhs.reduce((sum, item) => {
             return sum + (parseFloat(item.price) || 0);
         }, 0);
-        const totalPayment = booking.total_price - booking.tien_coc + phiphatsinhSum;
-        // Định dạng và hiển thị số tiền thanh toán trong input
+        const tienthanhtoanfull = booking.tien_coc ?? booking.total_price; // check ở đây
+        const totalPayment = booking.total_price - tienthanhtoanfull + phiphatsinhSum;
         const paymentInput = document.getElementById('thanhtoan');
         paymentInput.value = formatCurrency(totalPayment);
         document.getElementById('checkoutDate1').value = formattedDate;
@@ -478,8 +448,6 @@ bookingsData = bookingsData.filter(booking => {
             // Tạo div cho mỗi phí phát sinh
             const div = document.createElement('div');
             div.classList.add('mb-3');
-
-
             // Tạo input cho name
             const inputName = document.createElement('input');
             inputName.setAttribute('type', 'text');
@@ -526,8 +494,6 @@ bookingsData = bookingsData.filter(booking => {
         const totalPrice = document.getElementById('totalPrice');
         totalPrice.value = Number(rawValue) + Number(total);
         const price = document.querySelectorAll('input[name="price[]"]');
-
-        // Lặp qua tất cả các input price[] và xử lý giá trị của từng input
         price.forEach(function(input) {
             const formatPrice = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không phải số
             input.value = formatPrice; // Cập nhật giá trị đã được làm sạch

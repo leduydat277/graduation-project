@@ -115,7 +115,6 @@
                             </p>
                             <p><strong>Email:</strong> {{ $booking->email }}</p>
                             <p><strong>Số điện thoại:</strong> {{ $booking->phone }}</p>
-                            <p><strong>Số điện thoại:</strong> {{ $booking->code_check_in }}</p>
                             <p><strong>Địa chỉ:</strong> {{ $booking->address }}</p>
                             <p><strong>CCCD:</strong> {{ $booking->CCCD_booking ?? 'Không rõ' }}</p>
                         </div>
@@ -141,13 +140,45 @@
                             <p><strong>Thời gian đặt:</strong> {{ $TimeDate }}</p>
                             <p><strong>Ngày đến:</strong> {{ $checkInDate }}</p>
                             <p><strong>Ngày đi:</strong> {{ $checkOutDate }}</p>
-                            <p><strong>Số đêm ở:</strong> {{ $numberOfNights }}</p>
+                            <p><strong>Số đêm ở:</strong>{{ $numberOfNights }}</p>
+                            <p><strong>Code:</strong> {{ $booking->code_check_in }}</p>
+
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <h6 class="text-muted">Trạng thái đơn hàng</h6>
                         <div class="border rounded p-3 mb-3">
+                            @if($booking->tien_coc == null)
+                            <span
+                            class="badge bg-warning fs-6">Đã thanh toán tổng tiền đơn</span> <br> <br>
+                            <p><strong>Trạng thái:</strong>
+                                @switch($booking->status)
+                                @case(0)
+                                <span class="badge bg-warning">chưa thanh toán</span>
+                                @break
+
+                                @case(1)
+                                <span class="badge bg-warning">Đang thanh toán</span>
+                                @break
+
+                                @case(2)
+                                <span class="badge bg-success">Đã thanh toán tiền cọc</span>
+                                @break
+
+                                @case(4)
+                                <span class="badge bg-info">Đang sử dụng</span>
+                                @break
+
+                                @case(5)
+                                <span class="badge bg-danger">Đã hủy</span>
+                                @break
+
+                                @default
+                                <span class="badge bg-secondary">Không rõ</span>
+                                @endswitch
+                            </p>
+                            @else
                             <p><strong>Tiền cọc:</strong>
                                 <span
                                     class="badge bg-warning fs-6">{{ number_format($booking->tien_coc, 0, ',', '.') }}đ</span>
@@ -182,6 +213,7 @@
                                 <span class="badge bg-secondary">Không rõ</span>
                                 @endswitch
                             </p>
+                            @endif                            
                         </div>
                     </div>
                     @if(in_array($booking->status, [1, 2, 3]) && $submitCheckIn == 0)
