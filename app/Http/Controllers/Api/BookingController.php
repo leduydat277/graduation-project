@@ -62,23 +62,23 @@ class BookingController
             $check_in_timestamp = floor($check_in / 1000);
             $check_out_timestamp = floor($check_out / 1000);
 
-            if ($check_in_timestamp < $today) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
-                ], 400);
-            }
+            // if ($check_in_timestamp < $today) {
+            //     return response()->json([
+            //         "type" => "error",
+            //         "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
+            //     ], 400);
+            // }
 
-            if ($check_out_timestamp <= $check_in_timestamp) {
-                return response()->json([
-                    "type" => "error",
-                    "message" => 'Ngày trả phòng không được nhỏ hơn hoặc bằng ngày nhận phòng.'
-                ], 400);
-            }
+            // if ($check_out_timestamp <= $check_in_timestamp) {
+            //     return response()->json([
+            //         "type" => "error",
+            //         "message" => 'Ngày trả phòng không được nhỏ hơn hoặc bằng ngày nhận phòng.'
+            //     ], 400);
+            // }
 
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
-            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
+            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate) + 1;
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
@@ -97,9 +97,11 @@ class BookingController
                 ], 400);
             }
 
-            if ($request->user_id) {
-                $user = User::where('id', $user_id)->first();
+            if ($user_id) {
+                $user = User::find($user_id);
+
                 if ($user) {
+                    $user->name = $last_name.' '.$first_name;
                     $user->first_name = $first_name;
                     $user->last_name = $last_name;
                     $user->address = $address;
@@ -107,6 +109,7 @@ class BookingController
                     $user->save();
                 }
             }
+
 
             $room = Room::where('id', $room_id)->first();
             if (!$room) {
@@ -281,10 +284,10 @@ class BookingController
 
             $check_in_code = rand(100000, 999999);
             $booking->code_check_in = $check_in_code;
-            if($booking->tien_coc === NULL){
+            if ($booking->tien_coc === NULL) {
                 $booking->status = 3;
             }
-            if($booking->tien_coc !== NULL){
+            if ($booking->tien_coc !== NULL) {
                 $booking->status = 2;
             }
             $booking->save();
