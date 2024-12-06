@@ -172,12 +172,12 @@
                                         @endswitch
                                     </td>
                                     <td>
-                                        @if ($booking->status != 6 && $booking->status != 5)
+                                        @if ($booking->status != 5)
                                             <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info"
                                                 title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            @if ($booking->status !== 3 || $booking->status !== 6)
+                                            @if ($booking->status != 3 && $booking->status != 6)
                                                 <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
                                                     onclick="confirmCancel({{ $booking->id }})">
                                                     <i class="fas fa-times-circle"></i>
