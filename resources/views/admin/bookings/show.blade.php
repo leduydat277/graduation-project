@@ -46,7 +46,7 @@
                                     <p><strong>Tên Phòng:</strong> {{ $booking->room->title }}</p>
                                     <p><strong>Tổng tiền:</strong>
                                         <span
-                                            class="badge bg-success fs-6">{{ number_format($booking->total_price, 0, ',', '.') }}đ</span>
+                                            class="badge bg-info fs-6">{{ number_format($booking->total_price, 0, ',', '.') }}đ</span>
                                     </p>
                                 </div>
                             </div>

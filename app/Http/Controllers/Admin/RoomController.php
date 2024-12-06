@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\RoomRequest;
 use App\Http\Requests\Admin\UpdateRoomRequest;
 use App\Models\Admin\ManageStatusRoom;
+use App\Models\Admin\Review;
 use App\Models\Admin\Room;
+use App\Models\Admin\RoomAsset;
 use App\Models\Admin\RoomType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -124,12 +126,14 @@ class RoomController extends Controller
 
 
     public function show($id)
-    {
+    {   
 
         $title = 'Chi tiết phòng';
         $room = Room::findOrFail($id);
-
-        return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title'));
+        $roomAssets = RoomAsset::with('assetType')->where('room_id', $id)->get();
+        $reviews = Review::where('room_id', $id)->get();
+        
+        return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title', 'roomAssets', 'reviews'));
     }
 
     public function edit($id)

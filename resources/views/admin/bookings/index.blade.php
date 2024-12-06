@@ -110,6 +110,7 @@
                                 <th>Ngày đi</th>
                                 <th>Phòng</th>
                                 <th>Tiền cọc</th>
+                                <th>Tổng tiền</th>
                                 <th>Trạng thái đơn</th>
                                 <th>Hành Động</th>
                             </tr>
@@ -132,7 +133,10 @@
                                         <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
-
+                                    <td>
+                                        <span class="badge bg-info">{{ number_format($booking->total_price, 0, ',', '.') }}
+                                            đ</span>
+                                    </td>
                                     <td>
                                         @switch($booking['status'])
                                             @case(0)
