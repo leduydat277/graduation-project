@@ -148,7 +148,7 @@
                                             @break
 
                                             @case(2)
-                                                <span class="badge bg-success">Đã thanh toán cọc</span>
+                                                <span class="badge bg-warning">Đã thanh toán cọc</span>
                                             @break
 
                                             @case(3)
@@ -159,17 +159,25 @@
                                                 <span class="badge bg-info">Đang sử dụng</span>
                                             @break
 
-                                            @default
+                                            @case(5)
                                                 <span class="badge bg-danger">Đã hủy</span>
+                                            @break
+
+                                            @case(6)
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                            @break
+
+                                            @default
+                                                <span class="badge bg-success">Không xác định</span>
                                         @endswitch
                                     </td>
                                     <td>
-                                        @if ($booking['status'] != 5)
+                                        @if ($booking->status != 6 && $booking->status != 5)
                                             <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info"
                                                 title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            @if ($booking['status'] != 3)
+                                            @if ($booking->status !== 3 || $booking->status !== 6)
                                                 <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
                                                     onclick="confirmCancel({{ $booking->id }})">
                                                     <i class="fas fa-times-circle"></i>

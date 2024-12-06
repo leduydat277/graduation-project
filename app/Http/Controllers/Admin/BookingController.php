@@ -86,7 +86,7 @@ class BookingController  extends Controller
     public function cancel($id)
     {
         $booking = Booking::findOrFail($id);
-        if ($booking->status === 3 || $booking->status === 4) {
+        if ($booking->status === 3 || $booking->status === 4 || $booking->status === 6) {
             return redirect()->back()->with('error', 'Không thể hủy đơn đặt phòng này');
         }
 
