@@ -87,6 +87,9 @@
                                             <td>{{ $review->comment }}</td>
                                             <td>{{ $review->created_at->format('Y-m-d') }}</td>
                                             <td>
+                                                <a href="{{ route('rooms.show', $review->room_id) }}" class="btn btn-info" title="Chi tiết phòng">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
                                                 <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" class="delete-form"
                                                     data-review-id="{{ $review->id }}" style="display:inline-block;">
                                                     @csrf
