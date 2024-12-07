@@ -1,17 +1,16 @@
 import { Typography, Stack } from '@mui/material';
 import { Button } from '@/components/ui/button';
 import { RoomSearchBar } from '../Room/RoomSearchBar';
-import { Booking, calculateTotalAmount } from '../../../service/hooks/booking';
+import { Booking, calculateTotalAmount, calculateTotalGuest } from '../../../service/hooks/booking';
 import { useBookingStore } from '../../../service/stores/booking-store';
 import { userStore } from '../../../service/stores/user-store';
-import { CalendarClock } from 'lucide-react';
+import { ArrowRight, CalendarClock } from 'lucide-react';
 import { grey } from '@mui/material/colors';
 import { formatPrice } from '../../../service/hooks/price';
 import React from 'react';
+import { Link } from '@inertiajs/react';
 
-export const BookingForm = props => {
-  const { type, status, description, ...rest } = props;
-
+export const BookingForm = (props) => {
   const [
     checkInDate,
     checkOutDate,
@@ -22,7 +21,11 @@ export const BookingForm = props => {
     price,
     idRoom,
     clear,
-    setPrice
+    setPrice,
+    numberOfAdults,
+    numberOfChildren,
+    capacity
+
   ] = useBookingStore(state => [
     state.checkInDate,
     state.checkOutDate,
@@ -33,10 +36,13 @@ export const BookingForm = props => {
     state.price,
     state.idRoom,
     state.clear,
-    state.setPrice
+    state.setPrice,
+    state.numberOfAdults,
+    state.numberOfChildren,
+    state.capacity
   ]);
 
-
+  const guest = calculateTotalGuest(numberOfAdults, numberOfChildren);
   const [userId, address, email, firstName, lastName, phone] = userStore(
     state => [
       state.userId,
@@ -58,52 +64,29 @@ export const BookingForm = props => {
     }
     return false;
   };
+ 
+
 
   const totalPrice = calculateTotalAmount(totalDays, price);
-  // if (totalPrice > 0 && totalDays > 0) {
-  //   setTotalPrice(totalPrice)
-  // }
 
-  // React.useEffect(() => {
 
-  //   const uid = userStore.getState().userId;
-  //   if (!uid) {
-  //     const queryString = paramsStringify({
-  //       redirect: '/checkout-screen',
-  //     });
-  //     navigate(`/login?${queryString}`, { replace: true });
-  //   }
-  // }, [navigate, userStore]);
-  ps.push(validateLogin());
-  ps.push(clear());
 
+ const validateNumberGuest = () => {
+    if (
+      guest > capacity
+    ) {
+      console.log('true');
+    }
+    return false;
+    
+  }
   const onPress = async () => {
     await Promise.all(ps);
-    console.log('onPress');
-    const bookingData = {
-      user_id: 5,
-      check_in_date: checkInDate,
-      check_out_date: checkOutDate,
-      first_name: 'John',
-      last_name: 'Doe',
-      address: '123 Main St',
-      created_at: Date.now(),
-      phone: '0123456789',
-      email: 'johndoe@example.com',
-      room_id: idRoom || 5
-    };
-    try {
-      const booking = await Booking(bookingData);
-      console.log(checkInDate, checkOutDate);
-
-      console.log('Booking successful', booking.paymentUrl);
-      if (booking.paymentUrl) {
-        window.location.href = booking.paymentUrl;
-      }
-    } catch (error) {
-      console.error('Booking failed:', error);
-    }
+   
+    
   };
+  ps.push(validateLogin());
+  ps.push(validateNumberGuest());
 
   return (
     <>
@@ -121,9 +104,11 @@ export const BookingForm = props => {
         <Typography variant="h6" pb={1}>
           Total: {formatPrice(totalPrice)}
         </Typography>
-        <Button onClick={onPress} variant="outline">
-          Thanh Toán
+        <Link href="/confirmation" as="button">
+        <Button variant="outline">
+          Tiếp theo <ArrowRight />
         </Button>
+        </Link>
       </Stack>
     </>
   );

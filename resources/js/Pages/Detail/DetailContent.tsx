@@ -8,8 +8,8 @@ import { useBookingStore } from '../../../service/stores/booking-store';
 
 export const DetailContent = (props) => {
 console.log('props', props.image_room)
-  const { title, description, subtitle='Trải nghiệm sang trọng và thoải mái bậc nhất', price, image_room } = props
-  console.log('image_room', image_room)
+  const { title, description, subtitle='Trải nghiệm sang trọng và thoải mái bậc nhất', price, image_room, max_people } = props
+  console.log('image_room', max_people)
 
   let imageRoomArray = JSON.parse(props.image_room);
   console.log("Sanitized image room:", imageRoomArray);

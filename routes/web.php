@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\ScreenController;
 use App\Http\Controllers\Web\DetailController;
 use App\Http\Controllers\Web\SuccesssController;
+use App\Http\Controllers\Web\ConfirmationController;
 use App\Http\Controllers\Web\RoomsController;
 use App\Http\Controllers\Web\CheckoutScreenController;
 use Illuminate\Support\Facades\Request;
@@ -47,9 +48,12 @@ Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
 //Checkout
 Route::get('/success', [SuccesssController::class, 'index'])
     ->name('success');
+// Confirmation
+Route::get('/confirmation', [ConfirmationController::class, 'index'])
+    ->name('confirmation');
 
 
-    Route::get('/payment-history', [PaymentHistoryController::class, 'index'])
+Route::get('/payment-history', [PaymentHistoryController::class, 'index'])
     ->name('payment-history');
 
 Route::get('/rooms', [RoomsController::class, 'index'])

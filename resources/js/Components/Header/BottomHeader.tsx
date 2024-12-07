@@ -44,7 +44,7 @@ export const BottomHeader = ({ fullWidth, ...rest }) => {
       </Stack>
 
       {/* Banner */}
-      {/* <Banner /> */}
+      <Banner />
       <Box>
         <Box
           sx={{

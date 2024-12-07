@@ -4,33 +4,38 @@ import { useBookingStore } from '../../../service/stores/booking-store';
 import { DetailContent } from './DetailContent';
 
 function DetailRoom({ room }) {
-  console.log('detail room line 7 ', room);
-
-  const [setPrice, setSubtitle, setIdRoom] = useBookingStore((state) => [
+console.log('room:line7', room);
+  const [setPrice, setSubtitle, setIdRoom, setType, setTapacity] = useBookingStore((state) => [
     state.setPrice,
     state.setSubtitle,
-    state.setIdRoom
+    state.setIdRoom,
+    state.setType,
+    state.setTapacity
   ]);
 
-  // Chỉ khi có room, bạn mới cần gọi setIdRoom, setPrice và setSubtitle
+
   useEffect(() => {
     if (room) {
-      setPrice(room.price); // Cập nhật giá phòng
-      setSubtitle(room.title); // Cập nhật tiêu đề
-      setIdRoom(room.id); // Cập nhật id phòng
+
+      setPrice(room.price); 
+      setSubtitle(room.title); 
+      setIdRoom(room.id); 
+      setType(room.room_type.type);
+      setTapacity(room.max_people);
     }
-  }, [room, setPrice, setSubtitle, setIdRoom]); // Đảm bảo chạy lại mỗi khi room thay đổi
+  }, [room, setPrice, setSubtitle, setIdRoom]); 
 
   if (!room) {
     return <div>No room data available</div>;
   }
 
-  const { title, id, description, room_area, price, room_type, ...rest } = room;
+  const { title, id, description, room_area, price, room_type, max_people, ...rest } = room;
 
   return (
     <DetailContent
       title={title}
       id={id}
+      max_people={max_people}
       description={description}
       room_area={room_area}
       price={price}
@@ -42,7 +47,7 @@ function DetailRoom({ room }) {
 
 // Layout for the DetailRoom page
 DetailRoom.layout = (page: React.ReactNode) => (
-  <BookingLayout title={`Room Details: ${page.props.room?.title || 'Detail Room'}`}>
+  <BookingLayout  title={`Room Details: ${page.props.room?.title || 'Detail Room'}`}>
     {page}
   </BookingLayout>
 );

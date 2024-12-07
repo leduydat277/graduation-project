@@ -11,3 +11,8 @@ export const Booking =  async (data: any) => {
   });
   return booking
 }
+ export const calculateTotalGuest = (adults: number, children: number) => {
+  const totalGuest = adults + children;
+  return totalGuest
+
+}

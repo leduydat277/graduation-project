@@ -10,6 +10,7 @@ import { BookingForm } from '@/shared/Form/BookingForm';
 interface BookingLayoutProps {
   title?: string;
   children: React.ReactNode;
+
 }
 
 export default function BookingLayout({ title, children }: BookingLayoutProps) {
@@ -27,7 +28,7 @@ export default function BookingLayout({ title, children }: BookingLayoutProps) {
           } />
         </Grid>
         <Grid item xs={6} sm={3.5} >
-          <BookingForm/>
+          <BookingForm />
         </Grid>
       </Grid>
      
