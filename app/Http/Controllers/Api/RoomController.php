@@ -33,13 +33,11 @@ class RoomController
     // }
     public function index()
     {
-        $rooms = Room::all()->map(function ($room) {
+        $rooms = Room::whereIn('status', [0, 1, 2])->get()->map(function ($room) {
             $statusMap = [
                 0 => 'sẵn sàng',
                 1 => 'đã cọc',
                 2 => 'đang sử dụng',
-                3 => 'hỏng',
-                4 => 'tạm ngưng sử dụng',
             ];
 
             return [

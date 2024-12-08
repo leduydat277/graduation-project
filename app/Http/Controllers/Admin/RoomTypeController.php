@@ -82,6 +82,7 @@ class RoomTypeController extends Controller
         RoomType::create([
             'roomType_number' => $request->roomType_number,
             'type' => $data['type'],
+            'description' => $data['description'],
             'image' => $imagePath,
         ]);
 
@@ -120,6 +121,7 @@ class RoomTypeController extends Controller
         $roomType->update([
             'roomType_number' => $request->roomType_number,
             'type' => $data['type'],
+            'description' => $data['description'],
             'image' => $imagePath,
         ]);
 

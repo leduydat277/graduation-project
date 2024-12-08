@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\RoomRequest;
 use App\Http\Requests\Admin\UpdateRoomRequest;
 use App\Models\Admin\ManageStatusRoom;
+use App\Models\Admin\Review;
 use App\Models\Admin\Room;
+use App\Models\Admin\RoomAsset;
 use App\Models\Admin\RoomType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -107,8 +109,8 @@ class RoomController extends Controller
 
         // Kiểm tra nếu thời gian hiện tại chưa đến 14h, nếu đúng thì lấy từ 14h hôm nay, nếu không thì lấy từ 14h ngày mai
         $from = $currentTime->hour < 14
-            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)
-            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0);
+            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)->timestamp
+            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0)->timestamp;
 
         // Tạo bản ghi quản lý trạng thái phòng
         ManageStatusRoom::create([
@@ -124,12 +126,14 @@ class RoomController extends Controller
 
 
     public function show($id)
-    {
+    {   
 
         $title = 'Chi tiết phòng';
         $room = Room::findOrFail($id);
-
-        return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title'));
+        $roomAssets = RoomAsset::with('assetType')->where('room_id', $id)->get();
+        $reviews = Review::where('room_id', $id)->get();
+        
+        return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title', 'roomAssets', 'reviews'));
     }
 
     public function edit($id)
@@ -208,7 +212,7 @@ class RoomController extends Controller
      */
     public function lock(Room $room)
     {
-        if ($room->status === 0) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
+        if ($room->status === 0 || $room->status === 3) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
             $room->update(['status' => 4]); // Đặt trạng thái phòng là "đã bị khóa"
 
             return redirect()->route('rooms.index')->with('success', 'Phòng đã được khóa thành công.');

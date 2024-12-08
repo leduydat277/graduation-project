@@ -131,10 +131,10 @@
                     @else
                     bg-warning @endif">
                         @if ($payment->booking->status == 3)
-                            Đã thanh toán tổng tiền
+                            Đã check-out
                         @endif
                         @if ($payment->booking->status == 2)
-                            Đã thanh toán cọc
+                            Đã cọc
                         @endif
                         @if ($payment->booking->status == 4)
                             Đang sử dụng

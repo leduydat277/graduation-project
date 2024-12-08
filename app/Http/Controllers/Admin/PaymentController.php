@@ -15,38 +15,46 @@ class PaymentController extends Controller
 
     public function index(Request $request)
     {
-        // Nhận dữ liệu từ request
         $dateRange = $request->input('date_range');
         $status = $request->input('payment_status');
+        $search = $request->input('search');
         $title = 'Danh sách thanh toán';
 
-        // Tạo query cơ bản
-        $query = Payment::query();
+        $query = Payment::with('booking');
 
-        // Lọc theo khoảng ngày nếu có
-        if ($dateRange) {
-            // Tách khoảng ngày thành ngày bắt đầu và ngày kết thúc
-            [$startDate, $endDate] = explode(' to ', $dateRange);
-
-            // Chuyển đổi chuỗi ngày sang định dạng `Y-m-d`
-            $startDate = (new DateTime($startDate))->setTime(14, 0, 0)->getTimestamp();
-            $endDate = (new DateTime($endDate))->setTime(14, 0, 0)->getTimestamp();
-
-            // Lọc theo khoảng ngày
-            $query->whereBetween('payment_date', [$startDate, $endDate]);
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                // Tìm kiếm theo mã đơn
+                $q->where('payments_id_number', 'LIKE', "%{$search}%")
+                    // Tìm kiếm theo họ, tên riêng biệt hoặc cả họ và tên kết hợp
+                    ->orWhereHas('booking', function ($subQuery) use ($search) {
+                        $subQuery->whereRaw("CONCAT(first_name, ' ',last_name) LIKE ?", ["%{$search}%"])
+                            ->orWhere('last_name', 'LIKE', "%{$search}%")
+                            ->orWhere('first_name', 'LIKE', "%{$search}%");
+                    });
+            });
         }
 
-        // Lọc theo trạng thái thanh toán nếu có
-        if ($status !== null) {
-            $query->where('payment_status', $status);
+        if ($dateRange || $status !== null) {
+
+            if ($dateRange) {
+
+                [$startDate, $endDate] = explode(' to ', $dateRange);
+
+                $startTimestamp = strtotime($startDate);
+                $endTimestamp = strtotime($endDate);
+
+                $query->whereBetween('payment_date', [$startTimestamp, $endTimestamp]);
+            }
+
+            if (!is_null($status)) {
+                $query->where('payment_status', $status);
+            }
         }
 
-        // Lấy danh sách các bản ghi
-        $payments = $query->whereIn('payment_status',  Payment::PAYMENT_STATUS_PAID)
-            ->orderBy('payment_date', 'desc')
-            ->paginate(10);
-        // Truyền dữ liệu sang view
-        return view(self::VIEW_PATH . __FUNCTION__, compact('payments', 'dateRange', 'status', 'title'));
+        $payments = $query->orderBy('payment_date', 'desc')->paginate(10);
+
+        return view(self::VIEW_PATH . __FUNCTION__, compact('payments', 'dateRange', 'status', 'search', 'title'));
     }
 
     public function show($id)

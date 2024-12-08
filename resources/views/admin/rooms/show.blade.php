@@ -111,18 +111,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Mô tả:</strong></div>
-                    <div class="col-md-8">{{ $room->description }}</div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4"><strong>Ảnh Thu Nhỏ:</strong></div>
-                    <div class="col-md-8 image-container">
-                        @if ($room->thumbnail_image)
-                            <img src="{{ asset('storage/' . $room->thumbnail_image) }}" alt="Thumbnail Image"
-                                width="120" height="120" class="mb-2">
-                        @else
-                            Không có ảnh thu nhỏ
-                        @endif
-                    </div>
+                    <div class="col-md-8 truncate-text">{{ $room->description }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Hình Ảnh Phòng:</strong></div>
@@ -137,15 +126,73 @@
                         @endif
                     </div>
                 </div>
-                <div class="text-center mt-4">
-                    <a href="{{ route('rooms.index') }}" class="btn btn-secondary">Quay lại</a>
-                    <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary">Chỉnh Sửa</a>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <h5 class="mb-3">Tiện nghi:</h5>
+                        <div class="row">
+                            <!-- Cột bên trái -->
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    @foreach ($roomAssets->take(ceil($roomAssets->count() / 2)) as $item)
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="ri-check-line text-primary me-2"></i> <!-- Icon -->
+                                            <span>{{ $item->assetType->name }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <!-- Cột bên phải -->
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    @foreach ($roomAssets->skip(ceil($roomAssets->count() / 2)) as $item)
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="ri-check-line text-primary me-2"></i> <!-- Icon -->
+                                            <span>{{ $item->assetType->name }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card mt-4">
+                    <div class="card-header bg-secondary">
+                        <h5 class="card-title text-white mb-0">Bình luận và Đánh giá</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Hiển thị danh sách bình luận -->
+                        @if ($reviews->count() > 0)
+                            <ul class="list-group">
+                                @foreach ($reviews as $review)
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong>{{ $review->user->name ?? 'Người dùng ẩn danh' }}</strong>
+                                            <small class="text-muted">{{ date('d/m/Y H:i', $review->created_at) }}</small>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-warning text-dark">Đánh giá: {{ $review->rating }}
+                                                ⭐</span>
+                                        </div>
+                                        <p class="mt-2 mb-0">{{ $review->comment }}</p>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p class="text-muted">Chưa có bình luận hoặc đánh giá nào.</p>
+                        @endif
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{{ route('rooms.index') }}" class="btn btn-secondary">Quay lại</a>
+                        <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary">Chỉnh Sửa</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@section('js')
-    <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
-@endsection
+    @section('js')
+        <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    @endsection

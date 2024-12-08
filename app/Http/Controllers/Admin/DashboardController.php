@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\AssetType;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
@@ -163,7 +164,7 @@ class DashboardController
             $todayStart = Carbon::now()->startOfDay()->timestamp;
             $todayEnd = Carbon::now()->endOfDay()->timestamp;
 
-            $bookingToday = Booking::select('id','room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+            $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
                 ->with('room')
                 ->whereBetween('created_at', [$todayStart, $todayEnd])
                 ->get();
@@ -180,6 +181,8 @@ class DashboardController
                 }
             }
 
+            $yearNow = Carbon::now()->format('Y');
+
             return view('admin.dashboard.index', compact([
                 'weeklyEarnings',
                 'weeklyOrders',
@@ -193,9 +196,7 @@ class DashboardController
                 'earningsPercentage',
                 'ordersComparison',
                 'ordersPercentage',
-                'bookingToday',
-                'todayPrice',
-                'countDes'
+                'yearNow'
             ]));
         } catch (Exception $e) {
             return response()->json([
@@ -210,53 +211,44 @@ class DashboardController
         }
     }
 
-    public function statistical()
+    public function thongKeTongThe(Request $request)
     {
         try {
-            $bookings = Booking::select('total_price', 'status', 'created_at')->where('status', 3)->get();
-            $monthlyEarnings = [];
-            $monthlyOrders = [];
-            $canceled = Booking::select('total_price', 'status', 'created_at')->where('status', 5)->get();
-            $monthlyCanceled = [];
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
 
-            foreach ($bookings as $booking) {
-                $monthYear = Carbon::createFromTimestamp($booking->created_at)->format('Y-m');
-                Log::error($monthYear);
+            if ($startDate && $endDate) {
+                $startTimestamp = strtotime($startDate . ' 00:00:00');
+                $endTimestamp = strtotime($endDate . ' 23:59:59');
 
-                if (!isset($monthlyEarnings[$monthYear])) {
-                    $monthlyEarnings[$monthYear] = 0;
-                }
-                $monthlyEarnings[$monthYear] += $booking->total_price;
-
-                if (!isset($monthlyOrders[$monthYear])) {
-                    $monthlyOrders[$monthYear] = 0;
-                }
-                $monthlyOrders[$monthYear] += 1;
+                $successfulBookings = Booking::select('id', 'total_price', 'status', 'created_at')
+                    ->where('status', 6)
+                    ->whereBetween('created_at', [$startTimestamp, $endTimestamp])
+                    ->get();
+            } else {
+                $successfulBookings = Booking::select('id', 'total_price', 'status', 'created_at')
+                    ->where('status', 6)
+                    ->get();
             }
 
-            ksort($monthlyEarnings);
-            ksort($monthlyOrders);
-            ksort($monthlyCanceled);
+            $totalEarnings = $successfulBookings->sum('total_price');
+            $totalSuccessfulOrders = $successfulBookings->count();
 
-            foreach ($canceled as $cancele) {
-                $monthYear = Carbon::createFromTimestamp($cancele->created_at)->format('Y-m');
+            $canceledBookings = Booking::select('id', 'total_price', 'status', 'created_at')
+                ->where('status', 5)
+                ->whereBetween('created_at', [$startTimestamp ?? 0, $endTimestamp ?? time()])
+                ->get();
 
-                if (!isset($monthlyCanceled[$monthYear])) {
-                    $monthlyCanceled[$monthYear] = 0;
-                }
-                $monthlyCanceled[$monthYear] += 1;
-            }
+            $totalCanceledOrders = $canceledBookings->count();
 
-            $data = [
-                "earnings" => $monthlyEarnings,
-                "orders" => $monthlyOrders,
-                "canceled" => $monthlyCanceled
-            ];
-
-            return response()->json($data, 200);
+            return response()->json([
+                "totalEarnings" => $totalEarnings,
+                "totalSuccessfulOrders" => $totalSuccessfulOrders,
+                "totalCanceledOrders" => $totalCanceledOrders,
+            ]);
         } catch (Exception $e) {
             return response()->json([
-                "message" => "Booking failed",
+                "message" => "Failed to retrieve statistics",
                 "error" => [
                     "message" => $e->getMessage(),
                     "file" => $e->getFile(),
@@ -266,6 +258,90 @@ class DashboardController
             ], 500);
         }
     }
+
+    public function statistical()
+    {
+        try {
+            $bookings = Booking::select('total_price', 'status', 'created_at')
+                ->where('status', 6)
+                ->get();
+
+            $canceled = Booking::select('status', 'created_at')
+                ->where('status', 5)
+                ->get();
+
+            $monthlyEarnings = [];
+            $monthlyOrders = [];
+            $monthlyCanceled = [];
+            $totalEarnings = 0;
+            $totalOrders = 0;
+            $totalCanceled = 0;
+
+            foreach ($bookings as $booking) {
+                $monthYear = Carbon::parse($booking->created_at)->format('Y-m');
+
+                if (!isset($monthlyEarnings[$monthYear])) {
+                    $monthlyEarnings[$monthYear] = 0;
+                }
+                $monthlyEarnings[$monthYear] += $booking->total_price;
+                $totalEarnings += $booking->total_price;
+
+                if (!isset($monthlyOrders[$monthYear])) {
+                    $monthlyOrders[$monthYear] = 0;
+                }
+                $monthlyOrders[$monthYear]++;
+                $totalOrders++;
+            }
+
+            foreach ($canceled as $cancel) {
+                $monthYear = Carbon::parse($cancel->created_at)->format('Y-m');
+
+                if (!isset($monthlyCanceled[$monthYear])) {
+                    $monthlyCanceled[$monthYear] = 0;
+                }
+                $monthlyCanceled[$monthYear]++;
+                $totalCanceled++;
+            }
+
+            ksort($monthlyEarnings);
+            ksort($monthlyOrders);
+            ksort($monthlyCanceled);
+
+            $successRate = 0;
+            $cancelRate = 0;
+
+            if ($totalOrders + $totalCanceled > 0) {
+                $successRate = ($totalOrders / ($totalOrders + $totalCanceled)) * 100;
+                $cancelRate = ($totalCanceled / ($totalOrders + $totalCanceled)) * 100;
+            }
+
+            $data = [
+                "earnings" => $monthlyEarnings,
+                "orders" => $monthlyOrders,
+                "canceled" => $monthlyCanceled,
+                "totals" => [
+                    "total_earnings" => $totalEarnings,
+                    "total_orders" => $totalOrders,
+                    "total_canceled" => $totalCanceled,
+                    "success_rate" => round($successRate, 2),
+                    "cancel_rate" => round($cancelRate, 2)
+                ]
+            ];
+
+            return response()->json($data, 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Thống kê thất bại",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
 
     function getWeeksInCurrentMonth()
     {
@@ -328,39 +404,95 @@ class DashboardController
     function countRoomOrders(Request $request)
     {
         try {
-            $perPage = $request->input('length', 10);
-            $currentPage = ($request->input('start', 0) / $perPage) + 1;
-
             $roomCounts = Booking::select('room_id', \DB::raw('count(*) as count'))
-                ->whereIn('status', [2, 3, 4])
+                ->whereIn('status', [2, 3, 4, 6])
                 ->groupBy('room_id')
                 ->orderByDesc('count')
-                ->paginate($perPage, ['*'], 'page', $currentPage);
+                ->limit(5)
+                ->get();
 
             $roomIds = $roomCounts->pluck('room_id');
 
-            $rooms = Room::select('id', 'title', 'price', 'image_room', 'room_type_id')
+            $rooms = Room::select('id', 'title', 'price', 'thumbnail_image', 'room_type_id')
                 ->with('roomType')
                 ->whereIn('id', $roomIds)
                 ->get()
                 ->keyBy('id');
 
-            $roomCounts->getCollection()->transform(function ($room) use ($rooms) {
+            $roomCounts->transform(function ($room) use ($rooms) {
                 $room->room_details = $rooms->get($room->room_id);
                 return $room;
             });
 
             return response()->json([
                 "type" => "success",
-                "data" => $roomCounts->items(),
-                "recordsTotal" => $roomCounts->total(),
-                "recordsFiltered" => $roomCounts->total(),
-                "currentPage" => $roomCounts->currentPage(),
-                "totalPages" => $roomCounts->lastPage(),
+                "data" => $roomCounts,
+                "recordsTotal" => $roomCounts->count(),
+                "recordsFiltered" => $roomCounts->count(),
             ], 200);
         } catch (Exception $e) {
             return response()->json([
-                "message" => "Booking failed",
+                "type" => "error",
+                "message" => "Lỗi khi tải dữ liệu phòng",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace(),
+                ]
+            ], 500);
+        }
+    }
+
+
+    public function getBookingsToday(Request $request)
+    {
+        $todayStart = Carbon::now()->startOfDay()->timestamp;
+        $todayEnd = Carbon::now()->endOfDay()->timestamp;
+
+        $bookingToday = Booking::select('id', 'room_id', 'check_in_date', 'check_out_date', 'total_price', 'status', 'created_at')
+            ->with('room')
+            ->whereIn('status', [2,3])
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->get();
+
+        $todayPrice = 0;
+        $countDes = 0;
+
+        foreach ($bookingToday as $item) {
+            if ($item->status == 3) {
+                $todayPrice += $item->total_price;
+            }
+            if ($item->status == 5) {
+                $countDes++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $bookingToday,
+            'price' => $todayPrice,
+            'count' => $countDes
+        ]);
+    }
+
+    public function assetsDie(Request $request)
+    {
+        try {
+            $perPage = $request->input('per_page', 10);
+
+            $assets = AssetType::select('id', 'name', 'status', 'image')
+                ->where('status', 2)
+                ->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'data' => $assets,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Failed to get assets",
                 "error" => [
                     "message" => $e->getMessage(),
                     "file" => $e->getFile(),

@@ -40,6 +40,10 @@
                         placeholder="Mã phòng" readonly value="{{ old('roomType_number') }}">
                 </div>
                 <div class="mb-3">
+                    <label for="description" class="form-label">Mô tả</label>
+                    <textarea name="description" class="form-control" id="description" cols="50" rows="10">{{ old('description') }}</textarea>
+                </div>
+                <div class="mb-3">
                     <label for="image" class="form-label">Ảnh Loại Phòng</label>
                     <input type="file" class="form-control" id="image" name="image">
                     <small class="text-muted">Chọn một ảnh. (Hỗ trợ định dạng: JPG, PNG, WEBP)</small>
