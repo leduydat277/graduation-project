@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Models\Admin;
+namespace App\Models\admin;
 
+use App\Models\Token;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;

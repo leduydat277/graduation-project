@@ -39,13 +39,18 @@ class AssetTypeController extends Controller
     {
         $title = 'Thêm loại tài sản';
         $assets = AssetType::select('id')->orderBy('id', 'desc')->first();
-        $assets->id = $assets->id + 1;
+
+        if (!$assets) {
+            $assets = (object) ['id' => 1];
+        } else {
+            $assets->id = $assets->id + 1;
+        }
+
         return view(self::VIEW_PATH . __FUNCTION__, compact('assets', 'title'));
     }
 
     public function store(AssetTypeRequest $request)
-    {   
-        dd($request->all());
+    {
         $data = $request->except('_token');
 
         // Xử lý upload ảnh

@@ -19,8 +19,8 @@ class RoomAsset extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function assetsType()
+    public function assetType()
     {
-        return $this->belongsTo(AssetType::class, 'assets_type_id');
+        return $this->belongsTo(AssetType::class, 'assets_type_id'); // 'assets_type_id' là khóa ngoại
     }
 }

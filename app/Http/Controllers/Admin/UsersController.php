@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\admin\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,7 @@ class UsersController extends RoutingController
     }
 
     public function index(Request $request){
-        $query = User::select("id", "name", "email", "image", "role");
+        $query = User::query();
         $email = $request->input("email");
         if($email){
             $query->where('email', $email);
@@ -108,11 +109,12 @@ class UsersController extends RoutingController
             "cccd" => 1
         ]);
     
-        return redirect()->route('admin.user.addUI')->with('success', 'Thêm tài khoản thành công.');
+        return redirect()->route('user.addUI')->with('success', 'Thêm tài khoản thành công.');
     }
 
     public function editUI($id){
-        $data = User::select("name", "email", "image", "role",  "id")->where("id", $id)->first();
+        $data = User::find($id);
+        
         if (!$data) {
             return redirect()->back() // Quay lại trang trước đó (addUI)
             ->withErrors(["email" => "Không tìm thấy tài khoản"]) // Gửi lỗi về view
@@ -181,11 +183,11 @@ class UsersController extends RoutingController
         }
 
         User::where("id", $id)->update($dataUpdate);
-        return redirect()->route('admin.user.editUI', $id)->with('success', 'Cập nhật tài khoản thành công');
+        return redirect()->route('user.editUI', $id)->with('success', 'Cập nhật tài khoản thành công');
     }
 
     public function delete($id){
         User::where("id", $id)->update(["status_id"=> 2]);
-        return redirect()->route('admin.user.index', $id)->with('success', 'Vô hiệu hóa tài khoản thành công');
+        return redirect()->route('user.index', $id)->with('success', 'Vô hiệu hóa tài khoản thành công');
     }
 }

@@ -91,7 +91,36 @@
                                             <td>{{ number_format($payment->total_price) }} vnđ</td>
                                             <td>{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d-m-Y') }}</td>
-                                            <td>{{ $payment->payment_status_text }}</td>
+                                            <td>
+                                                @switch($payment->payment_status)
+                                                    @case(0)
+                                                        <span class="badge bg-secondary">chưa thanh toán</span>
+                                                    @break
+
+                                                    @case(1)
+                                                        <span class="badge bg-info">đang thanh toán</span>
+                                                    @break
+
+                                                    @case(2)
+                                                        <span class="badge bg-primary">đã thanh toán cọc</span>
+                                                    @break
+
+                                                    @case(3)
+                                                        <span class="badge bg-success">đã thanh toán tổng tiền</span>
+                                                    @break
+
+                                                    @case(4)
+                                                        <span class="badge bg-success">đang sử dụng</span>
+                                                    @break
+
+                                                    @case(5)
+                                                        <span class="badge bg-danger">hủy đơn</span>
+                                                    @break
+
+                                                    @default
+                                                        <span class="badge bg-dark">trạng thái không xác định</span>
+                                                @endswitch
+                                            </td>
                                             <td>
                                                 <a class="btn btn-info" href="{{ route('payments.show', $payment->id) }}"
                                                     title="Xem chi tiết">

@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SearchRoomController;
-use App\Http\Controllers\admin\UsersController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Middleware\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +37,6 @@ use Illuminate\Support\Facades\Auth;
 
 Route::prefix('admin')->middleware(Role::class)->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('users', UserController::class);
     Route::resource('tokens', TokenController::class);
     Route::resource('reviews', ReviewController::class);
     Route::resource('bookings', BookingController::class);
@@ -49,7 +48,6 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('others', OtherController::class);
-    // Route::post('others/{id}', OtherController::class, 'update')->name('others.updatee');
     Route::resource('phiphatsinhs', PhiphatsinhController::class);
     Route::prefix('change-password')->as('change-password.')->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
@@ -60,6 +58,7 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
         ->as('checkin-checkout.')
         ->group(function () {
             Route::get('/', [CheckInCheckOutController::class, 'index'])->name('index');
+            Route::get('/detail/{id}', [CheckInCheckOutController::class, 'detail'])->name('detail');
             Route::post('/checkin/{id}', [CheckInCheckOutController::class, 'checkIn'])->name('checkin');
             Route::post('/checkout/{id}', [CheckInCheckOutController::class, 'checkOut'])->name('checkout');
             Route::post('/cancel-booking', [CheckInCheckOutController::class, 'cancel'])->name('booking.cancel');

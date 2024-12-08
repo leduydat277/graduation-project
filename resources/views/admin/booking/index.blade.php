@@ -26,101 +26,124 @@
 @endsection
 @section('content')
     <div class="row">
+        <div class="col-sm-auto">
+            <div>
+                <a href="{{ route('adminBooking.addUI') }}" class="btn btn-success">
+                    <i class="ri-add-line align-bottom me-1"></i> Đặt phòng
+                </a>
+            </div>                                                                                          
+        </div>
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách đặt phòng</h4>
-                </div>
-
                 <div class="card-body">
-                    <div class="listjs-table" id="userList">
-                        <div class="row g-4 mb-3">
-                            <div class="col-sm-auto">
-                                <div>
-                                    <a href="{{ route('adminBooking.addUI') }}" class="btn btn-success">
-                                        <i class="ri-add-line align-bottom me-1"></i> Đặt phòng
-                                    </a>
-                                    <button class="btn btn-soft-danger" onClick="deleteMultiple()">
-                                        <i class="ri-delete-bin-2-line"></i>
-                                    </button>
-                                </div>                                                                                          
-                            </div>
-                            <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
-                                    <form method="GET" action="{{ route('user.index') }}">
-                                        <div class="input-group search-box ms-2">
-                                            <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm đặt phòng...">
-                                            <!-- Giữ nguyên giá trị sắp xếp khi tìm kiếm -->
-                                            <input type="hidden" name="sort_by">
-                                            <input type="hidden" name="sort_order">
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
+                    <!-- Hiển thị thông báo -->
+                    @if (session('success') || session('error'))
+                        <div class="col">
+                            <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                                role="alert">
+                                {{ session('success') ?? session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         </div>
-
-                        <div class="table-responsive table-card mt-3 mb-1">
-                            <table class="table align-middle table-nowrap" id="userTable">
-                                <thead class="table-light">
+                    @endif
+                    <div class="table-responsive">
+                        <table id="bookingTable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Mã đặt</th>
+                                    <th>Ảnh phòng</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày đến</th>
+                                    <th>Ngày đi</th>
+                                    <th>Phòng</th>
+                                    <th>Tiền cọc</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái đơn</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($bookings as $booking)
                                     <tr>
-                                        <th class="sort" data-sort="id">Mã đơn</th>
-                                        <th class="sort" data-sort="name">Phòng</th>
-                                        <th class="sort" data-sort="name">Khách hàng</th>
-                                        <th class="sort" data-sort="email">Ngày đến</th>
-                                        <th class="sort" data-sort="role">Ngày đi</th>
-                                        <th class="sort" data-sort="role">Tổng giá</th>
-                                        <th class="sort" data-sort="role">Số tiền cọc</th>
-                                        <th class="sort" data-sort="role">Trạng thái
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="list form-check-all">
-                                    @if (session('success'))
-                                        <div class="alert alert-success">
-                                            {{ session('success') }}
-                                        </div>
-                                    @endif
-                                    @foreach ($bookings as $item)
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        value="{{ $item['id'] }}">
-                                                </div>
-                                            </td>
-                                            <td>{{ $item['id'] }}</td>
-                                            <td class="text-wrap" style="max-width: 200px;">{{ $item['room_id'] }}</td>
-                                            <td>{{ $item['user_name'] }}</td>
-                                            <td>{{ $item['check_in_date'] }}</td>
-                                            <td>{{ $item['check_out_date'] }}</td>
-                                            <td>{{ $item['total_price'] }}</td>
-                                            <td>{{ $item['tien_coc'] }}</td>
-                                            <td>{{ $item['status'] }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @if ($bookings->isEmpty())
-                                <div class="noresult">
-                                    <div class="text-center">
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                            colors="primary:#121331,secondary:#08a88a"
-                                            style="width:75px;height:75px"></lord-icon>
-                                        <h5 class="mt-2">Xin lỗi! Không có kết quả</h5>
-                                        <p class="text-muted mb-0">Không tìm thấy đặt phòng nào phù hợp với tìm kiếm của
-                                            bạn.</p>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
+                                        <td>{{ $booking->booking_number_id }}</td>
+                                        <td class="d-flex justify-content-evenly align-content-center">
 
+                                            <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}"
+                                                alt="Room Image" class="img-fluid mb-2 mt-2"
+                                                style="width: 80px; height: 80px">
+
+                                        </td>
+                                        <td>{{ $booking->last_name . ' ' . $booking->first_name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
+                                        <td>{{ $booking->room->title }}</td>
+                                        <td>
+                                            <span
+                                                class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
+                                                đ</span>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge bg-info">{{ number_format($booking->total_price, 0, ',', '.') }}
+                                                đ</span>
+                                        </td>
+                                        <td>
+                                            @switch($booking['status'])
+                                                @case(0)
+                                                    Chưa thanh toán cọc
+                                                @break
+
+                                                @case(1)
+                                                    Đang thanh toán
+                                                @break
+
+                                                @case(2)
+                                                    <span class="badge bg-warning">Đã thanh toán cọc</span>
+                                                @break
+
+                                                @case(3)
+                                                    <span class="badge bg-success">Đã thanh toán tổng tiền đơn</span>
+                                                @break
+
+                                                @case(4)
+                                                    <span class="badge bg-info">Đang sử dụng</span>
+                                                @break
+
+                                                @case(5)
+                                                    <span class="badge bg-danger">Đã hủy</span>
+                                                @break
+
+                                                @case(6)
+                                                    <span class="badge bg-success">Hoàn thành</span>
+                                                @break
+
+                                                @default
+                                                    <span class="badge bg-success">Không xác định</span>
+                                            @endswitch
+                                        </td>
+                                        <td>
+                                            @if ($booking->status != 5)
+                                                <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info"
+                                                    title="Xem chi tiết">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                @if ($booking->status != 3 && $booking->status != 6)
+                                                    <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
+                                                        onclick="confirmCancel({{ $booking->id }})">
+                                                        <i class="fas fa-times-circle"></i>
+                                                    </button>
+                                                @endif
+                                            @endif
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                </div><!-- end card-body -->
-            </div><!-- end card -->
+                </div>
+            </div>
         </div><!-- end col -->
     </div>
 @endsection

@@ -10,13 +10,33 @@ use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Str;
+
 class CheckInCheckOutController extends RoutingController
 {
-    public function index(Request $request)
+
+    public function detail($id)
     {
-        $title = "Danh sách Đơn";
-        $bookings = Booking::whereIn('bookings.status', [2, 4])
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $currentHour = date('H');
+
+        if ($currentHour >= 14 && $currentHour <= 21) {
+            $submitCheckIn = 0;
+        } else {
+            $submitCheckIn = 1;
+        }
+        $booking = Booking::find($id);
+        $room = Room::find($booking->room_id);
+        $phiPhatSinh = PhiPhatSinh::where('booking_id', $id)->first();
+        $payments = Payment::where('booking_id', $id)->get();
+        $title = "Chi tiết đơn";
+        return view('admin.checkin_checkout.detail', compact('booking', 'room', 'phiPhatSinh', 'payments', 'title', 'submitCheckIn'));
+    }
+
+    public function index(Request $request)
+    {$title = "Checkin & Checkout";
+        $bookings = Booking::whereIn('bookings.status', [2,3, 4])
             ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
@@ -26,7 +46,7 @@ class CheckInCheckOutController extends RoutingController
                 'users.email as user_email',
                 'users.phone as user_phone',
                 'room_types.type as room_type',
-                'rooms.id as room_id'
+                'rooms.roomId_number as room_id'
             )
             ->get();
 
@@ -40,8 +60,8 @@ class CheckInCheckOutController extends RoutingController
     {
         $booking = Booking::findOrFail($id);
         $booking->status = 4;
-        $booking->check_in_date = Carbon::now()->timestamp;  
-        $booking->CCCD_booking = $request->cccd; 
+        $booking->check_in_date = Carbon::now()->timestamp;
+        $booking->CCCD_booking = $request->cccd;
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
@@ -78,18 +98,40 @@ class CheckInCheckOutController extends RoutingController
                 $manage_status_room->delete();
             }
         }
-        if ($booking->check_out_date <= $currentTimestamp) {
-            //xóa dương vô cực cũ, xong đặt dương vô cực từ now
-            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)
-                ->andWhere('to', 0);
+        if ($booking->check_out_date <= $currentTimestamp) { // Kiểm tra check-out sớm
+            // Xóa dương vô cực cũ, sau đó đặt dương vô cực từ now
+            $today = Carbon::now()->timestamp;
+            $checkoutNew = $booking->check_out_date;
+            $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
+            foreach ($manage_status_rooms as $manage_status_room) {
+                $manage_status_room->delete();
+            }
+            ManageStatusRoom::create([
+                'booking_id' => $id,
+                'room_id' => $booking->room_id,
+                'from' => $today,
+                'to' => $checkoutNew,
+                'status' => 1,
+            ]);
         }
-        $booking->status = 3;
+
+        $booking->status = 6;
         $booking->check_out_date = $currentTimestamp;
-        $booking->total_price = $request->totalPrice; //update tiền ở booking
+        $totalUpdate = $booking->total_price;
+        if($booking->tien_coc == null){
+            $booking->total_price = $totalUpdate + $request->totalPrice;
+        }
+        else{
+            $cocs = 0;
+            foreach($request->price as $coc){
+                $cocs += $coc;
+            }
+            $booking->total_price = $totalUpdate + $cocs; //update tiền ở booking
+        }
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
         foreach ($manage_status_rooms as $status_room) {
-            $status_room->status = 2;
+            $status_room->status = 1;
             $status_room->save();
         }
 
@@ -106,7 +148,7 @@ class CheckInCheckOutController extends RoutingController
                 'payment_date' => Carbon::now()->timestamp,
                 'payment_method' => 0,
                 'payment_status' => 3,
-                'total_price' => ($request->totalPrice - $request->tiencu),
+                'total_price' => ($request->totalPrice),
             ]
         );
         $payment->save();
