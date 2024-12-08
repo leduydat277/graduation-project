@@ -137,6 +137,11 @@
 
 @section('js')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('check_in_date').setAttribute('min', today);
+            document.getElementById('check_out_date').setAttribute('min', today);
+        });
         // Các phần tử cần lấy từ DOM
         const roomSelect = document.getElementById("room_id");
         const roomType = document.getElementById("room_type");

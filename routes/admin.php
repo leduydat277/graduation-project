@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SearchRoomController;
-use App\Http\Controllers\admin\UsersController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Middleware\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
