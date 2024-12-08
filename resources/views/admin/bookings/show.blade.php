@@ -118,6 +118,9 @@
                                             @case(5)
                                                 <span class="badge bg-danger">Đã hủy</span>
                                             @break
+                                            @case(6)
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                            @break
 
                                             @default
                                                 <span class="badge bg-secondary">Không rõ</span>

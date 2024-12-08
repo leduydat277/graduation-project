@@ -21,23 +21,25 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title mb-4">{{ $title }}</h4>
-                    <div class="col-sm-auto">
-                        <a href="{{ route('room-assets.create') }}" class="btn btn-success">
-                            <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi cho phòng
-                        </a>
-                    </div>
                 </div>
                 <div class="card-body">
                     <div class="listjs-table" id="roomAssetList">
                         <div class="row g-4 mb-3">
                             <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="row g-4 mb-3">
+                                        <div class="col-sm-auto">
+                                            <a href="{{ route('room-assets.create') }}" class="btn btn-success">
+                                                <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi cho phòng
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div class="row g-4 mb-3">
                                         <div class="col-md-6">
                                             <label for="search" class="form-label">Tìm kiếm</label>
                                             <input type="text" id="search" name="search" class="form-control"
                                                 placeholder="Tìm theo tên phòng, mã phòng..."
-                                                value="{{ request('search') }}" onkeyup="applyFilters()">
+                                                value="{{ request('search') }}" onchange="applyFilters()">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="sort" class="form-label">Sắp xếp</label>
@@ -60,7 +62,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -72,6 +73,7 @@
                                         <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
                                         <th>Số lượng tiện nghi</th>
+                                        <th>Xem chi tiết phòng</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -81,6 +83,13 @@
                                             <td>{{ $roomasset['room']['title'] ?? 'Không xác định' }}</td>
                                             <td><a href="{{ route('room-assets.show', $roomasset['room']['id']) }}">{{ $roomasset['asset_count'] ?? 0 }}
                                                     tiện nghi</a></td>
+                                            <td class="text-center">
+                                                <a class="btn btn-info"
+                                                    href="{{ route('rooms.show', $roomasset['room']['id']) }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -122,16 +131,20 @@
         }
     </script>
     <script>
-    function applyFilters() {
-        const search = document.getElementById('search').value;
-        const sort = document.getElementById('sort').value;
+        function applyFilters() {
+            const search = document.getElementById('search').value; // Lấy giá trị tìm kiếm
+            const sort = document.getElementById('sort') ? document.getElementById('sort').value :
+            ''; // Lấy giá trị sắp xếp (nếu có)
 
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('search', search);
-        urlParams.set('sort', sort);
+            // Cập nhật URL với tham số mới
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('search', search);
+            if (sort) {
+                urlParams.set('sort', sort);
+            }
 
-        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
-    }
-</script>
-
+            // Điều hướng đến URL mới
+            window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+        }
+    </script>
 @endsection

@@ -24,10 +24,25 @@
                             <h5 class="card-title mb-0">Danh Sách Hóa Đơn</h5>
                         </div>
                         <div class="card-body">
-                            <div class="form row">
-                                <!-- Form lọc theo ngày -->
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <form method="GET" action="{{ route('payments.index') }}"
+                                    class="d-flex align-items-center mb-3">
+                                    <div class="row g-3 align-items-center">
+                                        <div class="input-group">
+                                            <input type="text" name="search" value="{{ request('search') }}"
+                                                class="form-control" placeholder="Nhập mã đơn hoặc tên khách hàng..."
+                                                aria-label="Tìm kiếm">
+                                            <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                                <i class="ri-search-line"></i> Tìm kiếm
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+
                                 <form method="GET" action="{{ route('payments.index') }}">
-                                    <div class="row g-3 mb-3 align-items-center">
+                                    <div class="row g-3 align-items-center justify-content-end mb-3">
                                         <!-- Input khoảng ngày -->
                                         <div class="col-sm-auto">
                                             <div class="input-group">
@@ -47,12 +62,10 @@
                                                 <option value="">Tất cả trạng thái</option>
                                                 <option value="0"
                                                     {{ request('payment_status') == '0' ? 'selected' : '' }}>Chưa thanh
-                                                    toán
-                                                    cọc</option>
+                                                    toán cọc</option>
                                                 <option value="1"
                                                     {{ request('payment_status') == '1' ? 'selected' : '' }}>Đang thanh
-                                                    toán
-                                                </option>
+                                                    toán</option>
                                                 <option value="2"
                                                     {{ request('payment_status') == '2' ? 'selected' : '' }}>Đã thanh toán
                                                     cọc</option>
@@ -62,12 +75,15 @@
                                             </select>
                                         </div>
 
+                                        <!-- Nút lọc -->
                                         <div class="col-sm-auto">
                                             <button type="submit" class="btn btn-primary">Lọc</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
+
+
                             <!-- Bảng danh sách thanh toán -->
                             <table id="model-datatables" class="table table-bordered nowrap table-striped align-middle"
                                 style="width:100%">
@@ -86,7 +102,7 @@
                                     @foreach ($payments as $payment)
                                         <tr>
                                             <td>{{ $payment->payments_id_number }}</td>
-                                            <td>{{ $payment->booking->last_name . ' ' . $payment->booking->first_name ?? 'N/A' }}
+                                            <td>{{ $payment->booking->first_name . ' ' . $payment->booking->last_name ?? 'N/A' }}
                                             </td>
                                             <td>{{ number_format($payment->total_price) }} vnđ</td>
                                             <td>{{ $payment->payment_method == 1 ? 'Tiền mặt' : 'Chuyển khoản' }}</td>

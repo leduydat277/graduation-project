@@ -111,7 +111,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Mô tả:</strong></div>
-                    <div class="col-md-8">{{ $room->description }}</div>
+                    <div class="col-md-8 truncate-text">{{ $room->description }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Hình Ảnh Phòng:</strong></div>
@@ -126,18 +126,36 @@
                         @endif
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4 d-flex align-items-center">
-                        <strong>Tiện nghi</strong>
-                    </div>
-                    <div class="col-md-8">
-                        <ul class="list-group list-group-flush">
-                            @foreach ($roomAssets as $item)
-                                <li class="list-group-item">{{ $item->assetType->name }}</li>
-                            @endforeach
-                        </ul>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <h5 class="mb-3">Tiện nghi:</h5>
+                        <div class="row">
+                            <!-- Cột bên trái -->
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    @foreach ($roomAssets->take(ceil($roomAssets->count() / 2)) as $item)
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="ri-check-line text-primary me-2"></i> <!-- Icon -->
+                                            <span>{{ $item->assetType->name }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <!-- Cột bên phải -->
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    @foreach ($roomAssets->skip(ceil($roomAssets->count() / 2)) as $item)
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="ri-check-line text-primary me-2"></i> <!-- Icon -->
+                                            <span>{{ $item->assetType->name }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
 
                 <div class="card mt-4">
                     <div class="card-header bg-secondary">
@@ -154,7 +172,8 @@
                                             <small class="text-muted">{{ date('d/m/Y H:i', $review->created_at) }}</small>
                                         </div>
                                         <div>
-                                            <span class="badge bg-warning text-dark">Đánh giá: {{ $review->rating }} ⭐</span>
+                                            <span class="badge bg-warning text-dark">Đánh giá: {{ $review->rating }}
+                                                ⭐</span>
                                         </div>
                                         <p class="mt-2 mb-0">{{ $review->comment }}</p>
                                     </li>
@@ -165,15 +184,15 @@
                         @endif
                     </div>
 
-                <div class="text-center mt-4">
-                    <a href="{{ route('rooms.index') }}" class="btn btn-secondary">Quay lại</a>
-                    <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary">Chỉnh Sửa</a>
+                    <div class="text-center mt-4">
+                        <a href="{{ route('rooms.index') }}" class="btn btn-secondary">Quay lại</a>
+                        <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary">Chỉnh Sửa</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@section('js')
-    <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
-@endsection
+    @section('js')
+        <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
+    @endsection
