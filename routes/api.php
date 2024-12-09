@@ -13,6 +13,8 @@ use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\LoginedController;
+
 // Define your API routes here
 Route::middleware('api')->get('/example', function (Request $request) {
     return response()->json(['message' => 'This is an example API response.']);
@@ -36,6 +38,7 @@ Route::post('/notifications/read', [NotificationsController::class, 'readNotific
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
 
+    Route::get('logined', [LoginedController::class, 'index'])->name('api.logined');
 Route::get('all-payment', [PaymentController::class, 'allPayments'])
     ->name('api.all-payment');
 
@@ -57,3 +60,4 @@ Route::get('privacy', [OtherController::class, 'privacy'])->name('api.privacy');
 Route::get('test', function () {
     return 'API is working!';
 });
+

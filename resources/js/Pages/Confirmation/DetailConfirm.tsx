@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useBookingStore } from "../../../service/stores/booking-store";
+
 import { formatPrice } from "../../../service/hooks/price";
 import { Booking, calculateTotalGuest } from "../../../service/hooks/booking";
 import { format } from "date-fns";
@@ -98,17 +99,17 @@ const InfoBooking = () => {
         await Promise.all(ps);
         console.log('onPress');
         const bookingData = {
-          user_id: 5,
+          user_id: userId,
           check_in_date: checkInDate,
           check_out_date: checkOutDate,
-          first_name: 'John',
-          last_name: 'Doe',
+          first_name: firstName,
+          last_name: lastName,
           payment_type: 2,
-          address: '123 Main St',
+          address: address,
           created_at: Date.now(),
-          phone: '0123456789',
-          email: 'johndoe@example.com',
-          room_id: idRoom || 5
+          phone: phone,
+          email: email,
+          room_id: idRoom
         };
         try {
           const booking = await Booking(bookingData);
@@ -126,17 +127,17 @@ const InfoBooking = () => {
         await Promise.all(ps);
         console.log('onPress');
         const bookingData = {
-          user_id: 5,
-          check_in_date: checkInDate,
-          check_out_date: checkOutDate,
-          first_name: 'John',
-          last_name: 'Doe',
-          address: '123 Main St',
-          payment_type: 1,
-          created_at: Date.now(),
-          phone: '0123456789',
-          email: 'johndoe@example.com',
-          room_id: idRoom || 5
+            user_id: userId,
+            check_in_date: checkInDate,
+            check_out_date: checkOutDate,
+            first_name: firstName,
+            last_name: lastName,
+            payment_type: 1,
+            address: address,
+            created_at: Date.now(),
+            phone: phone,
+            email: email,
+            room_id: idRoom
         };
         try {
           const booking = await Booking(bookingData);
@@ -184,8 +185,8 @@ const InfoBooking = () => {
             <DetailRow label="Tổng số ngày" value={totalDays} />
             <DetailRow label="Tổng giá" value={formatPrice(totalPrice)} />
             <DetailRow label="Tổng số người" value={guest} />
-            <DetailRow label="Tên khách hàng" value="subtitle" />
-            <DetailRow label="Số điện thoại" value="subtitle" />
+            <DetailRow label="Tên khách hàng" value={firstName} />
+            <DetailRow label="Số điện thoại" value={phone} />
             <Stack gap={2}>
             <Button  variant="outline" onClick={depositPayment}>
           Thanh toán cọc (20%)
