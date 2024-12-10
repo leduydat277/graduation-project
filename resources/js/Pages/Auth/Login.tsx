@@ -1,35 +1,65 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
 import Logo from '@/components/Logo/Logo';
 import LoadingButton from '@/components/Button/LoadingButton';
 import TextInput from '@/components/Form/TextInput';
 import FieldGroup from '@/components/Form/FieldGroup';
-import { CheckboxInput } from '@/components/Form/CheckboxInput';
+import { usePromiseFn } from '../../../service/hooks/promise';
+import { logined } from '../../../service/hooks/user';
+import { userStore } from '../../../service/stores/user-store';
 
 export default function LoginPage() {
   const { data, setData, errors, post, processing } = useForm({
-    email: 'johndoe@example.com',
-    password: 'secret',
-    remember: true
+    email: 'example@example.co',
+    password: '1',
+    remember: true,
   });
 
+  const [setUserId, setFirstName, setLastName, setAdress, setEmail, setPhone] = userStore((state) => [
+    state.setUserId,
+    state.setFirstName,
+    state.setLastName,
+    state.setAdress,
+    state.setEmail,
+    state.setPhone,
+  ]);
+
+
+  const { data: user, error, loading } = usePromiseFn(logined, [data.email]);
+
+ 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    post(route('login.store'));
+    post(route('login.store'), {
+      onSuccess: (response) => {
+        console.log('Login successful:', response);
+        setUserId(user.user.id);
+        setEmail(user.user.email);
+        setFirstName(user.user.first_name);
+        setLastName(user.user.name);
+        setAdress(user.user.address);
+       
+        setPhone(user.user.phone);
+      },
+      onError: (errors) => {
+        console.error('Login failed:', errors);
+      },
+    });
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-6"
-    style={{
-      backgroundImage: 'url(https://img.freepik.com/premium-photo/rest-area-office-building-with-orange-walls-yellow-wall-background-3d-render_295714-6200.jpg)',  // Đường dẫn tĩnh từ server
-      backgroundSize: 'cover',  
-      backgroundPosition: 'center',
-    }}
+    <div
+      className="flex items-center justify-center min-h-screen p-6"
+      style={{
+        backgroundImage:
+          'url(https://img.freepik.com/premium-photo/rest-area-office-building-with-orange-walls-yellow-wall-background-3d-render_295714-6200.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       <Head title="Login" />
-
       <div className="w-full max-w-md">
         <Logo
           className="block w-full max-w-xs mx-auto text-white fill-current"
@@ -49,43 +79,26 @@ export default function LoginPage() {
                   type="email"
                   error={errors.email}
                   value={data.email}
-                  onChange={e => setData('email', e.target.value)}
+                  onChange={(e) => setData('email', e.target.value)}
                 />
               </FieldGroup>
 
-              <FieldGroup
-                label="Mật khẩu"
-                name="password"
-                error={errors.password}
-              >
+              <FieldGroup label="Mật khẩu" name="password" error={errors.password}>
                 <TextInput
                   type="password"
                   error={errors.password}
                   value={data.password}
-                  onChange={e => setData('password', e.target.value)}
+                  onChange={(e) => setData('password', e.target.value)}
                 />
               </FieldGroup>
-
-              {/* <FieldGroup>
-                <CheckboxInput
-                  label="Remember Me"
-                  name="remember"
-                  id="remember"
-                  checked={data.remember}
-                  onChange={e => setData('remember', e.target.checked)}
-                />
-              </FieldGroup> */}
             </div>
           </div>
+
           <div className="flex items-center justify-between px-10 py-4 bg-gray-100 border-t border-gray-200">
             <a className="hover:underline" tabIndex={-1} href="#reset-password">
               Quên mật khẩu?
             </a>
-            <LoadingButton
-              type="submit"
-              loading={processing}
-              className="btn-indigo"
-            >
+            <LoadingButton type="submit" loading={processing} className="btn-indigo">
               Đăng nhập
             </LoadingButton>
           </div>

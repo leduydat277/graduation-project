@@ -12,6 +12,20 @@ export const searchRoomsById = async (roomId: number) => {
     }
     return {};
   };
+export const searchRooms = async (data) => {
+  try {
+    const rooms = await sleepRequest(`api/search`, {
+        method: 'POST',
+        data: data
+      });
+      return rooms;
+    } catch (error: any) {
+      console.error('searchRoomsById Error:', error.message);
+      return { error: error.message };
+    }
+    return {};
+  
+}
 
 export const allRooms = async () => {
     try {

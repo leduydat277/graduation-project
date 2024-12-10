@@ -1,5 +1,6 @@
 
 import MainLayout from '@/Layouts/MainLayout';
+
 import { RoomSearchBar } from './../../shared/Room/RoomSearchBar'
 import { BannerImage } from './BannerImage'
 import React from 'react';
@@ -11,10 +12,12 @@ import { RoomList } from '@/shared/Room/RoomList';
 // import { Footer } from '@/components/Footer/Footer';
 import { Introduce } from './Introduce';
 import { ListTypeRoom } from './ListTypeRooms';
+import { Link } from '@inertiajs/react';
 
 function ScreenPage() {
   
 const onPress = async () => {
+  // const
   
 }
   
@@ -35,15 +38,16 @@ const onPress = async () => {
               paddingX: 20,
             }}
               direction="row"
+              flag={false}
             />
+            <Link href="/search-room" style={{ textDecoration: 'none' }}>
             <Button
               variant="contained"
-              color="primary"
-              size="large"
-              sx={{ right: '100px', fontWeight: 'bold', textTransform: 'none', borderRadius: '0.5rem' }}
+              sx={{ right: '100px', textTransform: 'none', borderRadius: 2,mt:4, backgroundColor: grey[400] }} 
               startIcon={<SearchIcon />}>
               Search
             </Button>
+            </Link>
           </Paper>
           <Introduce />
           {/* <BannerImage /> */}

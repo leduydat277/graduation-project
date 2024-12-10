@@ -10,6 +10,7 @@ import { BookingForm } from '@/shared/Form/BookingForm';
 interface BookingLayoutProps {
   title?: string;
   children: React.ReactNode;
+  form?: React.ReactNode
 
 }
 

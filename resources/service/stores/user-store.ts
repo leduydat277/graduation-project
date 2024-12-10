@@ -1,16 +1,13 @@
 import { create } from 'zustand';
-import { addDays, differenceInDays } from "date-fns";
-import { shallow } from 'zustand/shallow'
-import { immer } from 'zustand/middleware/immer'
-import { createWithEqualityFn } from 'zustand/traditional'
+import { shallow } from 'zustand/shallow';
+import { immer } from 'zustand/middleware/immer';
+import { createWithEqualityFn } from 'zustand/traditional';
 import {
   persist,
   subscribeWithSelector,
   devtools,
   createJSONStorage,
-} from 'zustand/middleware'
-
-
+} from 'zustand/middleware';
 
 const initialUser = {
   userId: 0,
@@ -18,23 +15,30 @@ const initialUser = {
   email: '',
   firstName: '',
   lastname: '',
- phone: '',
+  phone: '',
 };
 
-
 export const userStore = createWithEqualityFn(
-    subscribeWithSelector(
+  devtools( 
+    persist( 
+      subscribeWithSelector( 
         immer<any>((set, get) => ({
           ...initialUser,
           resetState: () => set({ ...initialUser }),
-          setUserId: (userId) => set((state) => { state.userId = userId; }),
-          setAddress: (address) => set((state) => { state.address = address; }),
-          setEmail: (email) => set((state) => { state.email = email; }),
-          setFirstName: (firstName) => set((state) => { state.firstName = firstName; }),
-          setLastName: (lastName) => set((state) => { state.lastName = lastName; }),
-          setPhone: (phone) => set((state) => { state.phone = phone; }),
-         
+          setUserId: (userId: number) => set((state) => { state.userId = userId; }),
+          setAddress: (address: string) => set((state) => { state.address = address; }),
+          setEmail: (email: string) => set((state) => { state.email = email; }),
+          setFirstName: (firstName: string) => set((state) => { state.firstName = firstName; }),
+          setLastName: (lastName: string) => set((state) => { state.lastName = lastName; }),
+          setPhone: (phone: string) => set((state) => { state.phone = phone; }),
+          clear: () => set({ ...initialUser }),
         }))
+      ),
+      {
+        name: 'user-store',
+        storage: createJSONStorage(() => localStorage)
+      }
     )
+  ),
+  shallow
 );
-

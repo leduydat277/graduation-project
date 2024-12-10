@@ -7,11 +7,14 @@ use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\RoomTypeController;
 use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Api\LoginedController;
 
 // Define your API routes here
 Route::middleware('api')->get('/example', function (Request $request) {
@@ -24,7 +27,7 @@ Route::middleware('api')->group(function () {
 });
 
 
-Route::get('search_room', [SearchRoomController::class, 'searchRoom'])
+Route::post('search', [SearchRoomController::class, 'searchRoom'])
     ->name('api.search_room');
 
 // Admin api
@@ -41,6 +44,7 @@ Route::post('/notifications/read', [NotificationsController::class, 'readNotific
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
 
+    Route::get('logined', [LoginedController::class, 'index'])->name('api.logined');
 Route::get('all-payment', [PaymentController::class, 'allPayments'])
     ->name('api.all-payment');
 
@@ -62,3 +66,5 @@ Route::get('privacy', [OtherController::class, 'privacy'])->name('api.privacy');
 Route::get('test', function () {
     return 'API is working!';
 });
+
+Route::post('/register', [RegisterController::class, 'register']);

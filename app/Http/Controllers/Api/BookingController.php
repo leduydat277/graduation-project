@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Http\Controllers\Api;
+
 
 use App\Events\NotificationMessage;
 use App\Http\Controllers\Admin\MailController;

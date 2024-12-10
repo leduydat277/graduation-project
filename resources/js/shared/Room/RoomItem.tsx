@@ -12,10 +12,6 @@ export const RoomItem = (props) => {
   const [setPrice] = useBookingStore((state) => [state.setPrice]);
   const [toastOpen, setToastOpen] = useState(false);
 
-  // let imageRoomArray = JSON.parse(image_room);
-
-  // console.log("Sanitized image room:", imageRoomArray);
-
   useEffect(() => {
     setPrice(price);
   }, [price, setPrice]);
@@ -59,7 +55,7 @@ export const RoomItem = (props) => {
           }}
         >
           <CardContent>
-            <CarouselCustom image_room={image_room} />
+            {/* <CarouselCustom image_room={image_room} /> */}
             <Typography variant="h5" component="div" pt={2}>
               {title}
             </Typography>
