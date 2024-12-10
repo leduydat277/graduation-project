@@ -1,38 +1,44 @@
-
 import { Box, Stack, Typography } from '@mui/material';
-
 import { pink } from '@mui/material/colors';
-import { CalendarDays, Users } from 'lucide-react';
+import { Bath, CalendarDays, Users } from 'lucide-react';
 import { DatePickerWithRange } from '@/components/Reservation/DatePicker';
 import { GuestCount } from '../GuestCount';
 import { useBookingStore } from './../../../service/stores/booking-store';
-
+import { SelectTypeRoom } from '../QuantitySelectGuest';
 
 export const RoomSearchBar = (props) => {
-  const {style, direction, position, ...rest} = props
+  const { style, direction, position, flag, ...rest } = props;
+  console.log(flag, 'flag');
   const { typeRoom } = useBookingStore((state) => ({
     typeRoom: state.typeRoom
   }));
 
   return (
     <Stack direction={direction} spacing={4} py={2} sx={style}>
-      <Stack >
+      <Stack>
         <Stack direction="row" alignItems="center" spacing={1} pb={1}>
           <Typography variant="caption">Checkin - Checkout</Typography>
           <CalendarDays />
         </Stack>
-        <DatePickerWithRange type={{ mode: "range", disabled: { before: new Date() } }} />
+        <DatePickerWithRange type={{ mode: 'range', disabled: { before: new Date() } }} />
       </Stack>
-      <Stack>
-        <Stack direction="row" alignItems="center" spacing={1} pb={1}>
-          <Typography variant="caption">Room & Guest</Typography>
-          <Users />
+      {flag === false ? (
+        <Stack>
+          <Stack direction="row" alignItems="center" spacing={1} pb={1}>
+            <Typography variant="caption">Type Room</Typography>
+            <Bath />
+          </Stack>
+          <SelectTypeRoom />
         </Stack>
-        <GuestCount py={2} position={position} />
-      </Stack>
+      ) : (
+        <Stack>
+          <Stack direction="row" alignItems="center" spacing={1} pb={1}>
+            <Typography variant="caption">Room & Guest</Typography>
+            <Users />
+          </Stack>
+          <GuestCount py={2} position={position} />
+        </Stack>
+      )}
     </Stack>
   );
-  
 };
-
-

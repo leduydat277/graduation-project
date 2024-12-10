@@ -185,7 +185,7 @@ const InfoBooking = () => {
             <DetailRow label="Tổng số ngày" value={totalDays} />
             <DetailRow label="Tổng giá" value={formatPrice(totalPrice)} />
             <DetailRow label="Tổng số người" value={guest} />
-            <DetailRow label="Tên khách hàng" value={firstName} />
+            <DetailRow label="Tên khách hàng" value={lastName} />
             <DetailRow label="Số điện thoại" value={phone} />
             <Stack gap={2}>
             <Button  variant="outline" onClick={depositPayment}>

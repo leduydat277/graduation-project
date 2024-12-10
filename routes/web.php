@@ -59,6 +59,9 @@ Route::get('/payment-history', [PaymentHistoryController::class, 'index'])
 Route::get('/rooms', [RoomsController::class, 'index'])
     ->name('rooms');
 
+Route::get('/search-room', [RoomsController::class, 'searchRoom'])
+    ->name('search-room');
+
 Route::get('login', [LoginController::class, 'create'])
     ->name('login');
 // ->middleware('guest');

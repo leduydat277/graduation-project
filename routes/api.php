@@ -21,7 +21,7 @@ Route::middleware('api')->get('/example', function (Request $request) {
 });
 
 
-Route::get('search_room', [SearchRoomController::class, 'searchRoom'])
+Route::post('search', [SearchRoomController::class, 'searchRoom'])
     ->name('api.search_room');
 
 // Admin api

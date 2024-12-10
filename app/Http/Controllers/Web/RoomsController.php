@@ -17,4 +17,11 @@ class RoomsController extends Controller
            
         ]);
     }
+    public function searchRoom(): Response
+    {
+       
+        return Inertia::render('Rooms/RoomsResults', [
+           
+        ]);
+    }
 }

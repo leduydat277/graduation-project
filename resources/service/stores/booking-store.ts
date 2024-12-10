@@ -98,10 +98,11 @@ export const useBookingStore = createWithEqualityFn(
             set(state => {
               state.title = title;
             }),
-            setType: type =>
-              set(state => {
-                state.type = type;
-              }),
+            setTypeRoom: (type) =>
+              set((state) => ({
+                ...state, 
+                type, 
+              })),
               setTapacity: capacity =>
                 set(state => {
                   state.capacity = capacity;

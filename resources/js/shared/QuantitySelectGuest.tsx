@@ -55,14 +55,14 @@ export const QuantitySelectGuest = () => {
 export const SelectTypeRoom = () => {
   const [setTypeRoom] = useBookingStore((state) => [state.setTypeRoom]);
 
-  // const changeRoomType = (value) => {
-  //   console.log(value);
-  //   setTypeRoom(value);
-  // };
+  const changeRoomType = (value) => {
+    console.log(value);
+    setTypeRoom(value);
+  };
 
   return (
     <Stack spacing={1} direction="row" alignItems="center">
-    <Typography sx={{ pr: 4 }}> Type Room: </Typography>
+    {/* <Typography sx={{ pr: 4 }}> Type Room: </Typography> */}
     <Select onValueChange={changeRoomType}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Choose Type Room" />
