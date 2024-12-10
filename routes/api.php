@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\RoomTypeController;
 use App\Http\Controllers\Web\DetailController;
@@ -66,3 +67,4 @@ Route::get('test', function () {
     return 'API is working!';
 });
 
+Route::post('/register', [RegisterController::class, 'register']);

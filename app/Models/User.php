@@ -13,15 +13,18 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    public $table = 'users';
+
     protected $fillable = [
+        'first_name',
+        'last_name',
         'name',
         'email',
-        'CCCD',
+        'cccd',
         'password',
-        'image',
-        'role',
         'phone',
-        'address'
+        'address',
+        'role'
     ];
 
     public function bookings()
