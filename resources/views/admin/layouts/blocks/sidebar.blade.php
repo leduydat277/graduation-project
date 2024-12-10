@@ -40,7 +40,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link" data-key="t-analytics">
+                    <a href="/admin/user" class="nav-link" data-key="t-analytics">
                         <i class="fa-solid fa-user"></i> <!-- Biểu tượng cho danh sách người dùng -->
                         Tài khoản
                     </a>
@@ -49,6 +49,12 @@
                     <a href="{{ route('bookings.index') }}" class="nav-link" data-key="t-analytics">
                         <i class="fa-solid fa-calendar-check"></i> <!-- Biểu tượng cho trang chủ -->
                         Đơn đặt
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('adminBooking.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fa-solid fa-calendar-check"></i> <!-- Biểu tượng cho trang chủ -->
+                        Đặt phòng
                     </a>
                 </li>
                 <li class="nav-item">

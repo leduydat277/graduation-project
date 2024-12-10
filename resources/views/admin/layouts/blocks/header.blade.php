@@ -92,14 +92,14 @@
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{-- <!-- Avatar -->
                     <img class="rounded-circle header-profile-user"
-                        src="{{ Auth::user()->image ?? asset('assets/images/users/default-avatar.jpg') }}"
+                        src="{{ Auth::user()?->image ?? asset('assets/images/users/default-avatar.jpg') }}"
                         alt="User Avatar" style="width: 36px; height: 36px; object-fit: cover;"> --}}
                     <!-- User Info -->
                     <span class="text-start ms-2">
                         <span class="d-block fw-medium user-name-text"
-                            style="color: #212529;">{{ Auth::user()->name ?? 'Guest' }}</span>
+                            style="color: #212529;">{{ Auth::user()?->name ?? 'Guest' }}</span>
                         <span class="d-block fs-12 user-name-sub-text text-muted">
-                            {{ Auth::user()->role === 1 ? 'Admin' : 'User' }}
+                            {{ Auth::user()?->role === 1 ? 'Admin' : 'User' }}
                         </span>
                     </span>
                 </button>

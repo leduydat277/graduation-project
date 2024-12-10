@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\RoomAssetController;
 use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SearchRoomController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Middleware\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,23 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
 
     Route::put('/asset-types/{id}/lock', [AssetTypeController::class, 'lock'])->name('asset-types.lock');
     Route::put('/asset-types/{id}/unlock', [AssetTypeController::class, 'unlock'])->name('asset-types.unlock');
+
+    Route::prefix('admin-booking')->as('adminBooking.')->group(function () {
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/add-ui', [BookingController::class, 'addUI'])->name('addUI');
+        Route::post('/add', [BookingController::class, 'add'])->name('add');
+        Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
+        Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
+        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+    });
+    Route::prefix('user')->as('user.')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])->name('index');
+        Route::get('/add-ui', [UsersController::class, 'addUI'])->name('addUI');
+        Route::post('/add', [UsersController::class, 'add'])->name('add');
+        Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
+        Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
+        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+    });
 });
 
 Route::prefix('admin/searchroom')->controller(SearchRoomController::class)->group(function () {

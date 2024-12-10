@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Models\Admin\Room;
+use App\Models\admin\Room;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use DateTime;
@@ -165,6 +165,30 @@ class RoomController
         $room = Room::find($id);
         return Inertia::render('DetailRoom', [
             'room' => $room
+        ]);
+    }
+
+    public function getRoomBooking()
+    {
+        $rooms = Room::with('roomType')
+            ->get()
+            ->map(function ($room) {
+                return [
+                    'id' => $room->id,
+                    'title' => $room->title,
+                    'room_type' => $room->roomType->type ?? 'Không xác định',
+                    'price' => $room->price,
+                    'max_people' => $room->max_people,
+                    'room_area' => $room->room_area,
+                    'description' => $room->description,
+                    'status' => $room->status,
+                    'image_room' => json_decode($room->image_room),
+                ];
+            });
+    
+        return response()->json([
+            'success' => true,
+            'data' => $rooms,
         ]);
     }
 }
