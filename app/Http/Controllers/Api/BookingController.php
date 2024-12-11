@@ -62,19 +62,19 @@ class BookingController
             $check_in_timestamp = floor($check_in / 1000);
             $check_out_timestamp = floor($check_out / 1000);
 
-            // if ($check_in_timestamp < $today) {
-            //     return response()->json([
-            //         "type" => "error",
-            //         "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
-            //     ], 400);
-            // }
+            if ($check_in_timestamp < $today) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
+                ], 400);
+            }
 
-            // if ($check_out_timestamp <= $check_in_timestamp) {
-            //     return response()->json([
-            //         "type" => "error",
-            //         "message" => 'Ngày trả phòng không được nhỏ hơn hoặc bằng ngày nhận phòng.'
-            //     ], 400);
-            // }
+            if ($check_out_timestamp <= $check_in_timestamp) {
+                return response()->json([
+                    "type" => "error",
+                    "message" => 'Ngày trả phòng không được nhỏ hơn hoặc bằng ngày nhận phòng.'
+                ], 400);
+            }
 
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');

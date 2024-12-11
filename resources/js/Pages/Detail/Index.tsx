@@ -17,13 +17,13 @@ console.log('room:line7', room);
   useEffect(() => {
     if (room) {
 
-      setPrice(room.price); 
-      setSubtitle(room.title); 
+      setPrice(room.price);
+      setSubtitle(room.title);
       setIdRoom(room.id); 
-      setType(room.room_type.type);
+      // setType(room.room_type.type);
       setTapacity(room.max_people);
     }
-  }, [room, setPrice, setSubtitle, setIdRoom]); 
+  }, [room, setPrice, setSubtitle, setIdRoom]);
 
   if (!room) {
     return <div>No room data available</div>;

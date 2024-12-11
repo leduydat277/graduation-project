@@ -46,6 +46,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^18.2.0||^17.0.0",
     "react-router-dom": "^6.28.0",
+    "react-toastify": "^10.0.6",
     "react-use": "^17.4.0",
     "shadcn-ui": "^0.2.3",
     "styled-components": "^6.1.13",
