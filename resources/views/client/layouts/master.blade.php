@@ -155,9 +155,9 @@
     </symbol>
   </svg>
 
-  <div class="preloader">
+  {{-- <div class="preloader">
     <div class="loader"></div>
-  </div>
+  </div> --}}
 
   @include('client.layouts.headers.header')
 

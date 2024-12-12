@@ -49,12 +49,12 @@ CSS STRUCTURE:
 
 5. PAGES STYLE
   5.1 About page
-  5.2 Blog page 
-  5.3 Pricing page 
+  5.2 Blog page
+  5.3 Pricing page
   5.4 reviews page
-  5.5 faqs page 
+  5.5 faqs page
 
-  
+
 /*--------------------------------------------------------------
 /** 1. VARIABLES
 --------------------------------------------------------------*/
@@ -522,7 +522,7 @@ svg.social:hover {
 
 /* Preloader
 ------------------------------------------------------------- */
-.preloader {
+/* .preloader {
   width: 100%;
   height: 100vh;
   margin: 0 auto;
@@ -531,8 +531,8 @@ svg.social:hover {
   left: 0;
   z-index: 111;
   background: #fff;
-}
-
+} */
+/*
 .loader {
     display: block;
     position: relative;
@@ -596,7 +596,7 @@ svg.social:hover {
         -ms-transform: rotate(360deg);
         transform: rotate(360deg);
     }
-}
+} */
 
 /*----------------------------------------------*/
 /* 4 SITE STRUCTURE */
@@ -797,7 +797,7 @@ button.filter-button:hover {
 /*----------------------------------------------*/
 
 /*--------------------------------------------------------------
-5.1 About page 
+5.1 About page
 --------------------------------------------------------------*/
 
 .breadcrumb-item+.breadcrumb-item::before {
@@ -821,7 +821,7 @@ svg.play-icon {
 }
 
 /*--------------------------------------------------------------
-  5.2 Blog page 
+  5.2 Blog page
   --------------------------------------------------------------*/
 .pagination {
   --bs-pagination-color: var(--black-color);
@@ -837,7 +837,7 @@ svg.play-icon {
 
 
 /*--------------------------------------------------------------
- 5.3 bookling page 
+ 5.3 bookling page
   --------------------------------------------------------------*/
   .form-check-input:checked {
     background-color: var(--primary-color);
@@ -868,7 +868,7 @@ iconify-icon.quote {
 
 
 /*--------------------------------------------------------------
-5.5 faqs page 
+5.5 faqs page
 --------------------------------------------------------------*/
 
 /* accordian style override  */
