@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\SuccesssController;
 use App\Http\Controllers\Web\ConfirmationController;
 use App\Http\Controllers\Web\RoomsController;
 use App\Http\Controllers\Web\CheckoutScreenController;
+use App\Http\Controllers\Web\HomeController;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Web\PaymentHistoryController;
 use App\Http\Controllers\Web\UsersController;
@@ -27,118 +28,23 @@ use App\Http\Controllers\Web\UsersController;
 */
 
 include_once "admin.php";
-
-Route::get("/test", function (Request $request) {
-    event(new NotificationMessage('Lê Duy Linh', 'Đơn đặt phòng mới', 'dfjghidsgh'));
-    return response()->json(['status' => 'Notification sent!']);
-});
-
-Route::get('/', [ScreenController::class, 'index'])
-    ->name('screen');
-
-Route::get('/about', [ScreenController::class, 'about'])
-    ->name('about');
-
-Route::get('/policy', [ScreenController::class, 'policy'])
-    ->name('policy');
-//Detail
-
-Route::get('detail/{id}', [DetailController::class, 'detail'])->name('detail');
-
-//Checkout
-Route::get('/success', [SuccesssController::class, 'index'])
-    ->name('success');
-// Confirmation
-Route::get('/confirmation', [ConfirmationController::class, 'index'])
-    ->name('confirmation');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('client.home');
+Route::get('/about', [HomeController::class, 'index'])
+    ->name('client.about');
+Route::get('/services', [HomeController::class, 'index'])
+    ->name('client.services');
+Route::get('/blog', [HomeController::class, 'index'])
+    ->name('client.blog');
+Route::get('/policy', [HomeController::class, 'index'])
+    ->name('client.policy');
+Route::get('/room', [HomeController::class, 'index'])
+    ->name('client.room');
+Route::get('/room-details', [HomeController::class, 'index'])
+    ->name('client.room-details');
+Route::get('/blog-detail', [HomeController::class, 'index'])
+    ->name('client.blog-detail');
+Route::get('/booking', [HomeController::class, 'index'])
+    ->name('client.booking');
 
 
-Route::get('/payment-history', [PaymentHistoryController::class, 'index'])
-    ->name('payment-history');
-
-Route::get('/rooms', [RoomsController::class, 'index'])
-    ->name('rooms');
-
-Route::get('/search-room', [RoomsController::class, 'searchRoom'])
-    ->name('search-room');
-
-Route::get('login', [LoginController::class, 'create'])
-    ->name('login');
-// ->middleware('guest');
-
-Route::post('login', [LoginController::class, 'store'])
-    ->name('login.store');
-// ->middleware('guest');;
-
-Route::delete('logout', [LoginController::class, 'destroy'])
-    ->name('logout');
-
-
-    Route::get('users', [UsersController::class, 'index'])
-    ->name('users');
-    // ->middleware('auth');
-
-Route::get('users/create', [UsersController::class, 'create'])
-    ->name('users.create');
-    // ->middleware('auth');
-
-Route::post('users', [UsersController::class, 'store'])
-    ->name('users.store');
-    // ->middleware('auth');
-
-Route::get('users/{user}/edit', [UsersController::class, 'edit'])
-    ->name('users.edit');
-    // ->middleware('auth');
-
-Route::put('users/{user}', [UsersController::class, 'update'])
-    ->name('users.update');
-    // ->middleware('auth');
-
-Route::delete('users/{user}', [UsersController::class, 'destroy'])
-    ->name('users.destroy');
-    // ->middleware('auth');
-
-Route::put('users/{user}/restore', [UsersController::class, 'restore'])
-    ->name('users.restore');
-    // ->middleware('auth');
-
-
-Route::get('/home', function(){
-    return view('client.index');
-})->name('client.home');
-
-Route::get('/room', function(){
-    return view('client.room');
-})->name('client.room');
-
-Route::get('/blog-detail', function(){
-    return view('client.blog-detail');
-})->name('client.blog-detail');
-
-Route::get('/blog', function(){
-    return view('client.blog');
-})->name('client.blog');
-
-Route::get('/booking', function(){
-    return view('client.booking');
-})->name('client.booking');
-
-Route::get('/policy', function(){
-    return view('client.policy');
-})->name('client.policy');
-
-Route::get('/room-details', function(){
-    return view('client.room-details');
-})->name('client.room-details');
-
-Route::get('/room', function(){
-    return view('client.room');
-})->name('client.room');
-
-Route::get('/services', function(){
-    return view('client.services');
-})->name('client.services');
-
-Route::get('/about', function(){
-    return view('client.about');
-})->name('client.about');
