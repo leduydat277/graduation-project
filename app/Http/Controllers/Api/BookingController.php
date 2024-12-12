@@ -245,7 +245,7 @@ class BookingController
                 ];
             }
 
-            $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr);
+            $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr, route('success'));
 
             return response()->json([
                 "message" => "Booking successful",
