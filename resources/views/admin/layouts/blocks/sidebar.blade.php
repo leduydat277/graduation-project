@@ -117,6 +117,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('vouchers.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        Mã giảm giá
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('others.index') }}" class="nav-link" data-key="t-analytics">
                         <i class="fas fa-th-list"></i>
                         Others

@@ -87,26 +87,30 @@ export const useBookingStore = createWithEqualityFn(
                 state.totalPrice = state.totalDays * price;
               }
             }),
-            
+
+          setDiscountPrice: discountPrice =>
+            set(state => {
+              state.discountPrice = discountPrice;
+            }),
 
           setIdRoom: idRoom =>
             set(state => {
               state.idRoom = idRoom;
-              console.log("id room: ",state.idRoom);
+              console.log('id room: ', state.idRoom);
             }),
           setTitle: title =>
             set(state => {
               state.title = title;
             }),
-            setTypeRoom: (type) =>
-              set((state) => ({
-                ...state, 
-                type, 
-              })),
-              setTapacity: capacity =>
-                set(state => {
-                  state.capacity = capacity;
-                }),
+          setTypeRoom: type =>
+            set(state => ({
+              ...state,
+              type
+            })),
+          setTapacity: capacity =>
+            set(state => {
+              state.capacity = capacity;
+            }),
           setSubtitle: subtitle =>
             set(state => {
               state.subtitle = subtitle;

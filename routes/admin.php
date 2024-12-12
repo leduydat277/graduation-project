@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\PhiphatsinhController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Middleware\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,7 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
     Route::resource('phi-phat-sinh', PhiphatsinhController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('others', OtherController::class);
+    Route::resource('vouchers', VoucherController::class);
     Route::resource('phiphatsinhs', PhiphatsinhController::class);
     Route::prefix('change-password')->as('change-password.')->group(function () {
         Route::get('/', [ChangePasswordController::class, 'index']);
