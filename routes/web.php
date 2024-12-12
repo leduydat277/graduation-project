@@ -1,19 +1,7 @@
 <?php
-
-
-use App\Events\NotificationMessage;
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\ScreenController;
-use App\Http\Controllers\Web\DetailController;
-use App\Http\Controllers\Web\SuccesssController;
-use App\Http\Controllers\Web\ConfirmationController;
-use App\Http\Controllers\Web\RoomsController;
-use App\Http\Controllers\Web\CheckoutScreenController;
 use App\Http\Controllers\Web\HomeController;
-use Illuminate\Support\Facades\Request;
-use App\Http\Controllers\Web\PaymentHistoryController;
-use App\Http\Controllers\Web\UsersController;
+
 
 
 /*
