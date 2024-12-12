@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 
@@ -12,6 +13,7 @@ use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Voucher;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -56,6 +58,8 @@ class BookingController
             $email = $request->input('email');
             $room_id = $request->input('room_id');
             $payment_type = $request->input('payment_type');
+            $voucher = $request->input('voucher_id');
+            $discount_price = $request->input('total_price');
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
@@ -79,6 +83,12 @@ class BookingController
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
             $daysBooked = (int)$checkInDate->diffInDays($checkOutDate) + 1;
+            $discount_value = null;
+            if ($voucher) {
+                $v = Voucher::where('id', $voucher)->first();
+                $discount_value = $v->discount_value;
+            }
+
 
             $validator = Validator::make($request->all(), [
                 'address' => 'required',
@@ -101,7 +111,7 @@ class BookingController
                 $user = User::find($user_id);
 
                 if ($user) {
-                    $user->name = $last_name.' '.$first_name;
+                    $user->name = $last_name . ' ' . $first_name;
                     $user->first_name = $first_name;
                     $user->last_name = $last_name;
                     $user->address = $address;
@@ -127,7 +137,11 @@ class BookingController
             }
 
             $total_price = $room->price * $daysBooked;
-            $depositAmount = $total_price * 0.3;
+            if ($discount_price) {
+                $depositAmount = $discount_price * 0.3;
+            } else {
+                $depositAmount = $total_price * 0.3;
+            }
 
             $bookings = Booking::where('room_id', $room->id)
                 ->where(function ($query) use ($check_in, $check_out) {
@@ -162,7 +176,10 @@ class BookingController
                     "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
-                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
+                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp,
+                    'voucher_id' => $voucher,
+                    'discount_value' => $discount_value,
+                    'discount_price' => $discount_price,
                 ]);
             }
             if ($payment_type == 2) {
@@ -178,21 +195,23 @@ class BookingController
                     "check_in_date" => $check_in_timestamp,
                     "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
-                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp
+                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp,
+                    'voucher_id' => $voucher,
+                    'discount_value' => $discount_value,
+                    'discount_price' => $discount_price,
                 ]);
             }
 
             $paymentsIdNumber = Str::upper(Str::random(5));
 
-            Payment::create([
-                "payments_id_number" => $paymentsIdNumber,
-                "booking_id" => $booking->id,
-                "total_price" => $depositAmount,
-                "payment_method" => 1,
-            ]);
-
             $ipAddr = $request->ip();
             if ($payment_type == 1) {
+                Payment::create([
+                    "payments_id_number" => $paymentsIdNumber,
+                    "booking_id" => $booking->id,
+                    'total_price' => $depositAmount,
+                    "payment_method" => 1,
+                ]);
                 $order = [
                     "code" => $booking->id,
                     "info" => "booking_payment_$booking->id",
@@ -202,6 +221,21 @@ class BookingController
                 ];
             }
             if ($payment_type == 2) {
+                if ($booking->discount_price) {
+                    Payment::create([
+                        "payments_id_number" => $paymentsIdNumber,
+                        "booking_id" => $booking->id,
+                        "total_price" => $booking->discount_price,
+                        "payment_method" => 1,
+                    ]);
+                } else {
+                    Payment::create([
+                        "payments_id_number" => $paymentsIdNumber,
+                        "booking_id" => $booking->id,
+                        "total_price" => $total_price,
+                        "payment_method" => 1,
+                    ]);
+                }
                 $order = [
                     "code" => $booking->id,
                     "info" => "booking_payment_$booking->id",

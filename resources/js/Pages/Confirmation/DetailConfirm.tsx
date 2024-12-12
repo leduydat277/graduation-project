@@ -10,13 +10,12 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { log } from 'console';
 
 export const DetailConfirm = () => (
   <Stack
-    width="85%"
+    width="100%"
     direction="row"
-    height={650}
+    height={900}
     justifyContent="center"
     backgroundColor="#f2f2f2"
     pt={4}
@@ -30,8 +29,13 @@ export const DetailConfirm = () => (
       }
     }}
   >
-    <InfoConfirm />
-    <InfoBooking />
+    <Stack direction="column">
+      <ConfirmInfoUser />
+    </Stack>
+    <Stack direction="column">
+      <InfoConfirm />
+      <InfoBooking />
+    </Stack>
   </Stack>
 );
 
@@ -80,23 +84,7 @@ const InfoBooking = () => {
     state.numberOfChildren,
     state.idRoom
   ]);
-  const [voucherCode, setVoucherCode] = useState('');
-  const discountPrice = useBookingStore(state => state.discountPrice);
-  const setDiscountPrice = useBookingStore(state => state.setDiscountPrice);
-  const [voucherApplied, setVoucherApplied] = useState(false);
-  const [voucherInfo, setVoucherInfo] = useState(null);
-
   const guest = calculateTotalGuest(numberOfGuests, numberOfChildren);
-  const [userId, address, email, firstName, lastName, phone] = userStore(
-    state => [
-      state.userId,
-      state.address,
-      state.email,
-      state.firstName,
-      state.lastName,
-      state.phone
-    ]
-  );
   const ps: any = [];
   const validate = () => {
     if (
@@ -109,130 +97,6 @@ const InfoBooking = () => {
     return false;
   };
   ps.push(validate());
-
-  const payAll = async () => {
-    await Promise.all(ps);
-    console.log('onPress');
-
-    // Nếu có mã giảm giá, sử dụng discountPrice, nếu không thì sử dụng totalPrice
-    const finalPrice = discountPrice > 0 ? discountPrice : totalPrice;
-
-    const bookingData = {
-      user_id: userId,
-      check_in_date: checkInDate,
-      check_out_date: checkOutDate,
-      first_name: firstName,
-      last_name: lastName,
-      payment_type: 2,
-      address: address,
-      created_at: Date.now(),
-      phone: phone,
-      email: email,
-      room_id: idRoom,
-      total_price: finalPrice // Gửi giá trị tổng tiền sau khi áp dụng mã giảm giá nếu có
-    };
-
-    try {
-      const booking = await Booking(bookingData);
-      console.log('Booking successful', booking.paymentUrl);
-      if (booking.paymentUrl) {
-        window.location.href = booking.paymentUrl;
-      }
-    } catch (error) {
-      console.error('Booking failed:', error);
-    }
-  };
-
-  const depositPayment = async () => {
-    await Promise.all(ps);
-    console.log('onPress');
-
-    const finalPrice = discountPrice > 0 ? discountPrice : totalPrice;
-
-    const bookingData = {
-      user_id: userId,
-      check_in_date: checkInDate,
-      check_out_date: checkOutDate,
-      first_name: firstName,
-      last_name: lastName,
-      payment_type: 1,
-      address: address,
-      created_at: Date.now(),
-      phone: phone,
-      email: email,
-      room_id: idRoom,
-      total_price: finalPrice
-    };
-
-    try {
-      const booking = await Booking(bookingData);
-      console.log('Booking successful', booking.paymentUrl);
-      if (booking.paymentUrl) {
-        window.location.href = booking.paymentUrl;
-      }
-    } catch (error) {
-      console.error('Booking failed:', error);
-    }
-  };
-
-  const removeVoucher = () => {
-    setVoucherCode(null);
-    resetDiscount();
-  };
-
-  const resetDiscount = () => {
-    setDiscountPrice(0);
-  };
-
-  const voucher = async () => {
-    console.log('Mã voucher:', voucherCode);
-
-    if (!voucherCode.trim()) {
-      toast.error('Vui lòng nhập mã voucher');
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        '/api/voucher',
-        {
-          voucher: voucherCode
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          }
-        }
-      );
-
-      if (response.data.type === 'success') {
-        toast.success('Áp dụng voucher thành công!');
-        setVoucherInfo(response.data.voucher);
-        setVoucherApplied(true);
-        const newTotalPrice = updateTotalPrice(response.data.voucher);
-        console.log(newTotalPrice);
-        useBookingStore.getState().setDiscountPrice(newTotalPrice);
-      } else if (response.data.type === 'error') {
-        toast.error(`Áp dụng voucher thất bại: ${response.data.message}`);
-      }
-    } catch (error) {
-      console.error('Lỗi khi áp dụng voucher:', error);
-      toast.error('Lỗi không xác định khi áp dụng voucher.');
-    }
-  };
-
-  const updateTotalPrice = voucher => {
-    let newTotalPrice = totalPrice;
-    if (voucher.type === '%') {
-      newTotalPrice = totalPrice * (voucher.discount_value / 100);
-      console.log(newTotalPrice);
-    } else if (voucher.type === 'fixed') {
-      newTotalPrice = totalPrice - voucher.discount_value;
-    }
-
-    return newTotalPrice;
-  };
 
   return (
     <Stack
@@ -265,15 +129,402 @@ const InfoBooking = () => {
         <DateInfo label="Check out" date={checkOutDate} />
       </Stack>
       <DetailRow label="Tổng số ngày" value={totalDays} />
-      <DetailRow
-        label="Tổng giá"
-        value={
-          voucherApplied ? formatPrice(discountPrice) : formatPrice(totalPrice)
-        }
-      />
       <DetailRow label="Tổng số người" value={guest} />
-      <DetailRow label="Tên khách hàng" value={lastName} />
-      <DetailRow label="Số điện thoại" value={phone} />
+    </Stack>
+  );
+};
+
+const InfoConfirm = () => {
+  const [price, subtitle, type] = useBookingStore(state => [
+    state.price,
+    state.subtitle,
+    state.type
+  ]);
+
+  return (
+    <Stack
+      width="100%"
+      gap={1}
+      backgroundColor="#f2f2f2"
+      borderRadius={6}
+      sx={{
+        p: 3,
+        animation: 'fadeIn 0.8s',
+        '@keyframes fadeIn': {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 }
+        }
+      }}
+    >
+      <Typography
+        variant="h3"
+        textAlign="center"
+        pb={2}
+        sx={{ color: '#333', fontWeight: 'bold' }}
+      >
+        Thông tin phòng
+      </Typography>
+      <DetailRow label="Phòng" value={subtitle} />
+      <DetailRow label="Loại phòng" value={type} />
+      <DetailRow label="Giá phòng" value={formatPrice(price)} />
+      <DetailRow label="Thông tin Phòng" value="101" />
+    </Stack>
+  );
+};
+
+const ConfirmInfoUser = () => {
+  const [errors, setErrors] = useState({});
+  const handleInputChange = (e, setError) => {
+    const value = e.target.value;
+    setError('');
+    if (value === '') {
+      setError('Vui lòng nhập thông tin');
+    }
+  };
+  const [
+    checkInDate,
+    checkOutDate,
+    totalDays,
+    totalPrice,
+    numberOfGuests,
+    numberOfChildren,
+    idRoom
+  ] = useBookingStore(state => [
+    state.checkInDate,
+    state.checkOutDate,
+    state.totalDays,
+    state.totalPrice,
+    state.numberOfGuests,
+    state.numberOfChildren,
+    state.idRoom
+  ]);
+  console.log(totalPrice);
+
+  const guest = calculateTotalGuest(numberOfGuests, numberOfChildren);
+  const ps: any = [];
+  const validate = () => {
+    if (
+      checkInDate < checkOutDate &&
+      checkInDate > Date.now() &&
+      checkOutDate > Date.now()
+    ) {
+      return true;
+    }
+    return false;
+  };
+  ps.push(validate());
+
+  const [voucherCode, setVoucherCode] = useState('');
+  const [voucherId, setVoucherId] = useState('');
+  const [discountPrice, setDiscountPrice] = useState(0);
+  const [voucherApplied, setVoucherApplied] = useState(false);
+  const [voucherInfo, setVoucherInfo] = useState(null);
+
+  const [userId, address, email, firstName, lastName, phone] = userStore(
+    state => [
+      state.userId,
+      state.address,
+      state.email,
+      state.firstName,
+      state.lastName,
+      state.phone
+    ]
+  );
+
+  const [setUserId, setAddress, setEmail, setFirstName, setLastName, setPhone] =
+    userStore(state => [
+      state.setUserId,
+      state.setAddress,
+      state.setEmail,
+      state.setFirstName,
+      state.setLastName,
+      state.setPhone
+    ]);
+
+  const updateTotalPrice = voucher => {
+    let newTotalPrice = totalPrice;
+    if (voucher.type === '%') {
+      newTotalPrice = totalPrice * (voucher.discount_value / 100);
+    } else if (voucher.type === 'fixed') {
+      newTotalPrice = totalPrice - voucher.discount_value;
+    }
+    return newTotalPrice;
+  };
+
+  const voucher = async () => {
+    try {
+      const response = await axios.post(
+        '/api/voucher',
+        {
+          voucher: voucherCode
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          }
+        }
+      );
+
+      if (response.data.type === 'success') {
+        toast.success('Áp dụng voucher thành công!');
+        setVoucherInfo(response.data.voucher);
+        setVoucherApplied(true);
+        const newTotalPrice = updateTotalPrice(response.data.voucher);
+        setVoucherId(response.data.voucher.id);
+        setDiscountPrice(newTotalPrice);
+      } else if (response.data.type === 'error') {
+        toast.error(`Áp dụng voucher thất bại: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error('Lỗi khi áp dụng voucher:', error);
+      toast.error('Lỗi không xác định khi áp dụng voucher.');
+    }
+  };
+
+  const removeVoucher = () => {
+    setVoucherCode('');
+    setVoucherInfo(null);
+    setVoucherApplied(false);
+    setDiscountPrice(0);
+  };
+
+  const [errorLastName, setErrorLastName] = useState('');
+  const [errorFirstName, setErrorFirstName] = useState('');
+  const [errorPhone, setErrorPhone] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorAddress, setErrorAddress] = useState('');
+
+  const payAll = async () => {
+    try {
+      const bookingData = {
+        user_id: userId,
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate,
+        first_name: firstName,
+        last_name: lastName,
+        payment_type: 2,
+        address: address,
+        created_at: Date.now(),
+        phone: phone,
+        email: email,
+        room_id: idRoom,
+        total_price: discountPrice > 0 ? discountPrice : totalPrice,
+        voucher_id: voucherId || ''
+      };
+
+      const booking = await Booking(bookingData);
+      if (booking.type === 'error') {
+        if (booking.message.last_name) {
+          // console.log(booking.message.last_name);
+          setErrorLastName(booking.message.last_name);
+        }
+        if (booking.message.first_name) {
+          // console.log(booking.message.first_name);
+          setErrorFirstName(booking.message.first_name);
+        }
+        if (booking.message.email) {
+          // console.log(booking.message.email);
+          setErrorEmail(booking.message.email);
+        }
+        if (booking.message.phone) {
+          // console.log(booking.message.phone);
+          setErrorPhone(booking.message.phone);
+        }
+        if (booking.message.address) {
+          // console.log(booking.message.address);
+          setErrorAddress(booking.message.address);
+        }
+      }
+      if (booking.paymentUrl) {
+        window.location.href = booking.paymentUrl;
+      }
+    } catch (error) {
+      console.error('Booking failed:', error);
+    }
+  };
+
+  const depositPayment = async () => {
+    try {
+      const bookingData = {
+        user_id: userId,
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate,
+        first_name: firstName,
+        last_name: lastName,
+        payment_type: 1,
+        address: address,
+        created_at: Date.now(),
+        phone: phone,
+        email: email,
+        room_id: idRoom,
+        total_price: discountPrice > 0 ? discountPrice : totalPrice,
+        voucher_id: voucherId || ''
+      };
+
+      const booking = await Booking(bookingData);
+      if (booking.type === 'error') {
+        if (booking.message.last_name) {
+          // console.log(booking.message.last_name);
+          setErrorLastName(booking.message.last_name);
+        }
+        if (booking.message.first_name) {
+          // console.log(booking.message.first_name);
+          setErrorFirstName(booking.message.first_name);
+        }
+        if (booking.message.email) {
+          // console.log(booking.message.email);
+          setErrorEmail(booking.message.email);
+        }
+        if (booking.message.phone) {
+          // console.log(booking.message.phone);
+          setErrorPhone(booking.message.phone);
+        }
+        if (booking.message.address) {
+          // console.log(booking.message.address);
+          setErrorAddress(booking.message.address);
+        }
+      }
+      if (booking.paymentUrl) {
+        window.location.href = booking.paymentUrl;
+      }
+    } catch (error) {
+      console.error('Booking failed:', error);
+    }
+  };
+
+  return (
+    <>
+      <Stack direction="column" gap={2} alignItems="flex-start" pt={2}>
+        <Typography
+          variant="h3"
+          textAlign="center"
+          pb={2}
+          sx={{ color: '#333', fontWeight: 'bold' }}
+        >
+          Thông tin khách hàng
+        </Typography>
+
+        <Stack direction="column" gap={2}>
+          <Stack direction="row" justifyContent="space-between">
+            <Stack direction="column">
+              <DetailRow label="Họ"></DetailRow>
+              <input
+                type="text"
+                value={lastName}
+                onChange={e => {
+                  setLastName(e.target.value);
+                  handleInputChange(e, setErrorLastName);
+                }}
+                placeholder="Nhập họ"
+                style={{
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                  flex: 1
+                }}
+              />
+              <Stack>
+                {errorLastName && (
+                  <div style={{ color: 'red' }}>{errorLastName}</div>
+                )}
+              </Stack>
+            </Stack>
+            <Stack direction="column">
+              <DetailRow label="Tên"></DetailRow>
+              <input
+                type="text"
+                value={firstName}
+                onChange={e => {
+                  setFirstName(e.target.value);
+                  handleInputChange(e, setErrorFirstName);
+                }}
+                placeholder="Nhập tên"
+                style={{
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                  flex: 1
+                }}
+              />
+              <Stack>
+                {errorFirstName && (
+                  <div style={{ color: 'red' }}>{errorFirstName}</div>
+                )}
+              </Stack>
+            </Stack>
+          </Stack>
+
+          <Stack direction="column" justifyContent="space-between">
+            <DetailRow label="Số điện thoại"></DetailRow>
+            <input
+              type="text"
+              value={phone}
+              onChange={e => {
+                setPhone(e.target.value);
+                handleInputChange(e, setErrorPhone);
+              }}
+              placeholder="Nhập số điện thoại"
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+                flex: 1
+              }}
+            />
+            <Stack>
+              {errorPhone && <div style={{ color: 'red' }}>{errorPhone}</div>}
+            </Stack>
+          </Stack>
+
+          <Stack direction="column" justifyContent="space-between">
+            <DetailRow label="Email"></DetailRow>
+            <input
+              type="email"
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value);
+                handleInputChange(e, setErrorEmail);
+              }}
+              placeholder="Nhập địa chỉ email"
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+                flex: 1
+              }}
+            />
+            <Stack>
+              {errorEmail && <div style={{ color: 'red' }}>{errorEmail}</div>}
+            </Stack>
+          </Stack>
+
+          <Stack direction="column" justifyContent="space-between">
+            <DetailRow label="Địa chỉ"></DetailRow>
+            <input
+              type="text"
+              value={address}
+              onChange={e => {
+                setAddress(e.target.value);
+                handleInputChange(e, setErrorAddress);
+              }}
+              placeholder="Nhập địa chỉ"
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+                flex: 1
+              }}
+            />
+            <Stack>
+              {errorAddress && (
+                <div style={{ color: 'red' }}>{errorAddress}</div>
+              )}
+            </Stack>
+          </Stack>
+        </Stack>
+      </Stack>
+
       {!voucherApplied ? (
         <Stack direction="row" gap={2} alignItems="center" pt={2}>
           <input
@@ -370,13 +621,7 @@ const InfoBooking = () => {
 
               <Button
                 variant="outline"
-                onClick={() => {
-                  // Reset thông tin voucher và giá trị discountPrice
-                  setVoucherApplied(false);
-                  setVoucherCode(''); // Xóa mã voucher nhập vào
-                  setVoucherInfo(null); // Xóa thông tin voucher
-                  resetDiscount(); // Reset giá trị discountPrice
-                }}
+                onClick={removeVoucher}
                 sx={{ marginTop: '16px' }}
               >
                 Hủy Voucher
@@ -385,54 +630,21 @@ const InfoBooking = () => {
           </Box>
         </Stack>
       )}
-
+      <DetailRow
+        label="Tổng giá"
+        value={
+          voucherApplied ? formatPrice(discountPrice) : formatPrice(totalPrice)
+        }
+      />
       <Stack gap={2}>
         <Button variant="outline" onClick={depositPayment}>
-          Thanh toán cọc (20%)
+          Thanh toán cọc (30%)
         </Button>
         <Button variant="outline" onClick={payAll}>
           Thanh toán tất cả
         </Button>
       </Stack>
-    </Stack>
-  );
-};
-
-const InfoConfirm = () => {
-  const [price, subtitle, type] = useBookingStore(state => [
-    state.price,
-    state.subtitle,
-    state.type
-  ]);
-
-  return (
-    <Stack
-      width="100%"
-      gap={1}
-      backgroundColor="#f2f2f2"
-      borderRadius={6}
-      sx={{
-        p: 3,
-        animation: 'fadeIn 0.8s',
-        '@keyframes fadeIn': {
-          '0%': { opacity: 0 },
-          '100%': { opacity: 1 }
-        }
-      }}
-    >
-      <Typography
-        variant="h3"
-        textAlign="center"
-        pb={2}
-        sx={{ color: '#333', fontWeight: 'bold' }}
-      >
-        Thông tin phòng
-      </Typography>
-      <DetailRow label="Phòng" value={subtitle} />
-      <DetailRow label="Loại phòng" value={type} />
-      <DetailRow label="Giá phòng" value={formatPrice(price)} />
-      <DetailRow label="Thông tin Phòng" value="101" />
-    </Stack>
+    </>
   );
 };
 
