@@ -72,7 +72,7 @@ Route::post('login', [LoginController::class, 'store'])
 
 Route::delete('logout', [LoginController::class, 'destroy'])
     ->name('logout');
- 
+
 
     Route::get('users', [UsersController::class, 'index'])
     ->name('users');
@@ -101,3 +101,44 @@ Route::delete('users/{user}', [UsersController::class, 'destroy'])
 Route::put('users/{user}/restore', [UsersController::class, 'restore'])
     ->name('users.restore');
     // ->middleware('auth');
+
+
+Route::get('/home', function(){
+    return view('client.index');
+})->name('client.home');
+
+Route::get('/room', function(){
+    return view('client.room');
+})->name('client.room');
+
+Route::get('/blog-detail', function(){
+    return view('client.blog-detail');
+})->name('client.blog-detail');
+
+Route::get('/blog', function(){
+    return view('client.blog');
+})->name('client.blog');
+
+Route::get('/booking', function(){
+    return view('client.booking');
+})->name('client.booking');
+
+Route::get('/policy', function(){
+    return view('client.policy');
+})->name('client.policy');
+
+Route::get('/room-details', function(){
+    return view('client.room-details');
+})->name('client.room-details');
+
+Route::get('/room', function(){
+    return view('client.room');
+})->name('client.room');
+
+Route::get('/services', function(){
+    return view('client.services');
+})->name('client.services');
+
+Route::get('/about', function(){
+    return view('client.about');
+})->name('client.about');
