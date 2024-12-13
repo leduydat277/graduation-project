@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,7 +43,53 @@ class BookingController
             'last_name.max' => 'Họ của bạn không được quá 50 kí tự.',
             'email.required' => 'Vui lòng nhập email của bạn.',
             'email.email' => 'Email không đúng định dạng.',
+            'payment_type.required' => 'Vui lòng chọn phương thức thanh toán.'
         ];
+    }
+
+    public function checkDate($id)
+    {
+        try {
+            $check = ManageStatusRoom::where('room_id', $id)->whereIn('status', [0, 2])->get();
+            return response()->json([
+                'type' => 'success',
+                'data' => $check
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Booking failed",
+                "error" => [
+                    "message" => $e->getMessage(),
+                    "file" => $e->getFile(),
+                    "line" => $e->getLine(),
+                    "trace" => $e->getTrace()
+                ]
+            ], 500);
+        }
+    }
+
+    public function confirmInfor(Request $request)
+    {
+        $checkIn = $request->input('checkin');
+        $room_id = $request->input('room_id');
+        $checkout = $request->input('checkout');
+        $adult_quantity = $request->input('adult_quantity');
+        $children_quantity = $request->input('children_quantity');
+
+        $data = [
+            'checkIn' => $checkIn,
+            'room_id' => $room_id,
+            'checkout' => $checkout,
+            'adult_quantity' => $adult_quantity,
+            'children_quantity' => $children_quantity,
+        ];
+
+        $url = route('client.booking', $data);
+
+        return response()->json([
+            'type' => 'success',
+            'url' => $url
+        ]);
     }
 
     public function booking(Request $request)
@@ -60,6 +107,7 @@ class BookingController
             $payment_type = $request->input('payment_type');
             $voucher = $request->input('voucher_id');
             $discount_price = $request->input('total_price');
+            $message = $request->input('message');
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
@@ -70,14 +118,14 @@ class BookingController
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày nhận phòng không được nhỏ hơn ngày hôm nay.'
-                ], 400);
+                ], 201);
             }
 
             if ($check_out_timestamp <= $check_in_timestamp) {
                 return response()->json([
                     "type" => "error",
                     "message" => 'Ngày trả phòng không được nhỏ hơn hoặc bằng ngày nhận phòng.'
-                ], 400);
+                ], 201);
             }
 
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
@@ -98,13 +146,14 @@ class BookingController
                 'email' => 'required|email',
                 'check_in_date' => 'required|integer',
                 'check_out_date' => 'required|integer',
+                'payment_type' => 'required'
             ], $this->messages);
 
             if ($validator->fails()) {
                 return response()->json([
                     "type" => "error",
                     "message" => $validator->errors()
-                ], 400);
+                ], 201);
             }
 
             if ($user_id) {
@@ -126,14 +175,14 @@ class BookingController
                 return response()->json([
                     "type" => "error",
                     "message" => "Phòng không tồn tại."
-                ], 404);
+                ], 201);
             }
 
             if ($room->status == 3 || $room->status == 4) {
                 return response()->json([
                     "type" => "error",
                     "message" => "Hiện tại không được đặt phòng này."
-                ], 406);
+                ], 201);
             }
 
             $total_price = $room->price * $daysBooked;
@@ -157,7 +206,7 @@ class BookingController
                 return response()->json([
                     "type" => "error",
                     "message" => "Phòng đã có người đặt trước đó."
-                ], 406);
+                ], 201);
             }
 
             $bookingNumberId = Str::upper(Str::random(5));
@@ -179,7 +228,8 @@ class BookingController
                     "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp,
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
-                    'discount_price' => $discount_price,
+                    'discount_price' => (int)$discount_price,
+                    'message' => $message
                 ]);
             }
             if ($payment_type == 2) {
@@ -198,7 +248,8 @@ class BookingController
                     "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp,
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
-                    'discount_price' => $discount_price,
+                    'discount_price' => (int)$discount_price,
+                    'message' => $message
                 ]);
             }
 
@@ -221,33 +272,25 @@ class BookingController
                 ];
             }
             if ($payment_type == 2) {
-                if ($booking->discount_price) {
-                    Payment::create([
-                        "payments_id_number" => $paymentsIdNumber,
-                        "booking_id" => $booking->id,
-                        "total_price" => $booking->discount_price,
-                        "payment_method" => 1,
-                    ]);
-                } else {
-                    Payment::create([
-                        "payments_id_number" => $paymentsIdNumber,
-                        "booking_id" => $booking->id,
-                        "total_price" => $total_price,
-                        "payment_method" => 1,
-                    ]);
-                }
+                Payment::create([
+                    "payments_id_number" => $paymentsIdNumber,
+                    "booking_id" => $booking->id,
+                    "total_price" => $booking->discount_price,
+                    "payment_method" => 1,
+                ]);
                 $order = [
                     "code" => $booking->id,
                     "info" => "booking_payment_$booking->id",
                     "type" => "billpayment",
                     "bankCode" => "NCB",
-                    "total" => $total_price * 100,
+                    "total" => $booking->discount_price * 100,
                 ];
             }
 
-            $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr, route('success'));
+            $paymentUrl = $this->paymentController->generatePaymentUrl($order, $ipAddr);
 
             return response()->json([
+                "type" => "success",
                 "message" => "Booking successful",
                 "data" => $booking,
                 "room" => $room,
@@ -383,8 +426,7 @@ class BookingController
             return response()->json([
                 "status" => "success",
                 "message" => "Thanh toán thành công",
-                "booking" => $booking,
-                "redirect_url" => route('success')
+                "booking" => $booking
             ]);
         } catch (Exception $e) {
             return response()->json([
