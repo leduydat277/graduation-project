@@ -3,17 +3,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\RoomDetailController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 include_once "admin.php";
 Route::get('/', [HomeController::class, 'index'])
     ->name('client.home');
@@ -25,7 +14,7 @@ Route::get('/blog', [HomeController::class, 'index'])
     ->name('client.blog');
 Route::get('/policy', [HomeController::class, 'index'])
     ->name('client.policy');
-Route::get('/room', [HomeController::class, 'index'])
+Route::get('/room', [HomeController::class, 'rooms'])
     ->name('client.room');
 
 Route::post('/room-comment', [RoomDetailController::class, 'addComment'])
@@ -35,7 +24,7 @@ Route::get('/room/{id}', [RoomDetailController::class, 'index'])
 
 Route::get('/blog-detail', [HomeController::class, 'index'])
     ->name('client.blog-detail');
-Route::get('/booking', [HomeController::class, 'index'])
+Route::get('/booking', [HomeController::class, 'booking'])
     ->name('client.booking');
 
 

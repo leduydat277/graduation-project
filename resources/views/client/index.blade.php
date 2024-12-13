@@ -8,7 +8,7 @@
     <section id="slider" data-aos="fade-up">
         <div class="container-fluid padding-side">
             <div class="d-flex rounded-5"
-                style="background-image: url(images/slider-image.jpg); background-size: cover; background-repeat: no-repeat; height: 85vh; background-position: center;">
+                style="background-image: url({{ asset('assets/client/images/slider-image.jpg') }} ); background-size: cover; background-repeat: no-repeat; height: 85vh; background-position: center;">
                 <div class="row align-items-center m-auto pt-5 px-4 px-lg-0">
                     <div class="text-start col-md-6 col-lg-5 col-xl-6 offset-lg-1">
                         <h2 class="display-1 fw-normal">Hotel mellow Your Gateway to Serenity.</h2>
@@ -84,11 +84,11 @@
                                 </svg></span>
                         </a>
                     </div>
-                    <img src="images/about-img1.jpg" alt="img" class="img-fluid rounded-4 mt-4">
+                    <img src="{{ asset('assets/client/images/about-img1.jpg') }} " alt="img" class="img-fluid rounded-4 mt-4">
                 </div>
                 <div class="col-lg-6 mt-5 mt-lg-0">
-                    <img src="images/about-img2.jpg" alt="img" class="img-fluid rounded-4">
-                    <img src="images/about-img3.jpg" alt="img" class="img-fluid rounded-4 mt-4">
+                    <img src="{{ asset('assets/client/images/about-img2.jpg') }} " alt="img" class="img-fluid rounded-4">
+                    <img src="{{ asset('assets/client/images/about-img3.jpg') }} " alt="img" class="img-fluid rounded-4 mt-4">
 
                 </div>
             </div>
@@ -101,18 +101,18 @@
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">25K <span
                             class="position-absolute top-50 end-50 translate-middle z-n1 ps-lg-4 pt-lg-4"><img
-                                src="images/pattern1.png" alt="pattern" class="img-fluid"></span></h3>
+                                src="{{ asset('assets/client/images/pattern1.png') }} " alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">Happy Customer</p>
                 </div>
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">160 <span
-                            class="position-absolute top-50 translate-middle z-n1"><img src="images/pattern1.png"
+                            class="position-absolute top-50 translate-middle z-n1"><img src="{{ asset('assets/client/images/pattern1.png') }} "
                                 alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">Total Rooms</p>
                 </div>
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">25 <span
-                            class="position-absolute top-100 pb-5 translate-middle z-n1"><img src="images/pattern1.png"
+                            class="position-absolute top-100 pb-5 translate-middle z-n1"><img src="{{ asset('assets/client/images/pattern1.png') }} "
                                 alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">award wins</p>
                 </div>
@@ -143,7 +143,7 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <div class="room-item position-relative bg-black rounded-4 overflow-hidden">
-                            <img src="images/room1.jpg" alt="img" class="post-image img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/room1.jpg') }} " alt="img" class="post-image img-fluid rounded-4">
                             <div class="product-description position-absolute p-5 text-start">
                                 <h4 class="display-6 fw-normal text-white">Grand deluxe rooms</h4>
                                 <p class="product-paragraph text-white">Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -185,7 +185,7 @@
                     </div>
                     <div class="swiper-slide">
                         <div class="room-item position-relative bg-black rounded-4 overflow-hidden">
-                            <img src="images/room3.jpg" alt="img" class="post-image img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/room3.jpg') }} " alt="img" class="post-image img-fluid rounded-4">
                             <div class="product-description position-absolute p-5 text-start">
                                 <h4 class="display-6 fw-normal text-white">Sweet Family room</h4>
                                 <p class="product-paragraph text-white">Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -227,7 +227,7 @@
                     </div>
                     <div class="swiper-slide">
                         <div class="room-item position-relative bg-black rounded-4 overflow-hidden">
-                            <img src="images/room2.jpg" alt="img" class="post-image img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/room2.jpg') }} " alt="img" class="post-image img-fluid rounded-4">
                             <div class="product-description position-absolute p-5 text-start">
                                 <h4 class="display-6 fw-normal text-white">Perfect Double Room</h4>
                                 <p class="product-paragraph text-white">Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -269,7 +269,7 @@
                     </div>
                     <div class="swiper-slide">
                         <div class="room-item position-relative bg-black rounded-4 overflow-hidden">
-                            <img src="images/room1.jpg" alt="img" class="post-image img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/room1.jpg') }} " alt="img" class="post-image img-fluid rounded-4">
                             <div class="product-description position-absolute p-5 text-start">
                                 <h4 class="display-6 fw-normal text-white">Grand deluxe rooms</h4>
                                 <p class="product-paragraph text-white">Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -311,7 +311,7 @@
                     </div>
                     <div class="swiper-slide">
                         <div class="room-item position-relative bg-black rounded-4 overflow-hidden">
-                            <img src="images/room3.jpg" alt="img" class="post-image img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/room3.jpg') }} " alt="img" class="post-image img-fluid rounded-4">
                             <div class="product-description position-absolute p-5 text-start">
                                 <h4 class="display-6 fw-normal text-white">Sweet Family room</h4>
                                 <p class="product-paragraph text-white">Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -367,13 +367,13 @@
                 <div class="swiper gallery-swiper offset-1 col-10">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <img src="images/item3.jpg" alt="img" class="img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/item3.jpg') }} " alt="img" class="img-fluid rounded-4">
                         </div>
                         <div class="swiper-slide">
-                            <img src="images/item2.jpg" alt="img" class="img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/item2.jpg') }} " alt="img" class="img-fluid rounded-4">
                         </div>
                         <div class="swiper-slide">
-                            <img src="images/item1.jpg" alt="img" class="img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/item1.jpg') }} " alt="img" class="img-fluid rounded-4">
                         </div>
                     </div>
                 </div>
@@ -412,7 +412,7 @@
                             <svg class="color" width="70" height="70">
                                 <use xlink:href="#meditation"></use>
                             </svg>
-                            <img src="images/pattern2.png" alt="img"
+                            <img src="{{ asset('assets/client/images/pattern2.png') }} " alt="img"
                                 class="position-absolute top-100 start-50 translate-middle z-n1 pe-5">
                         </div>
                         <h4 class="display-6 fw-normal my-3">Yoga & Meditation</h4>
@@ -435,7 +435,7 @@
                             <svg class="color" width="70" height="70">
                                 <use xlink:href="#chef-hat"></use>
                             </svg>
-                            <img src="images/pattern2.png" alt="img"
+                            <img src="{{ asset('assets/client/images/pattern2.png') }} " alt="img"
                                 class="position-absolute top-100 start-50 translate-middle z-n1 pe-5">
                         </div>
                         <h4 class="display-6 fw-normal my-3">Dining</h4>
@@ -458,7 +458,7 @@
                             <svg class="color" width="70" height="70">
                                 <use xlink:href="#swimming"></use>
                             </svg>
-                            <img src="images/pattern2.png" alt="img"
+                            <img src="{{ asset('assets/client/images/pattern2.png') }} " alt="img"
                                 class="position-absolute top-100 start-50 translate-middle z-n1 pe-5">
                         </div>
                         <h4 class="display-6 fw-normal my-3">Rooftop Pool</h4>
@@ -481,7 +481,7 @@
                             <svg class="color" width="70" height="70">
                                 <use xlink:href="#dumbbells"></use>
                             </svg>
-                            <img src="images/pattern2.png" alt="img"
+                            <img src="{{ asset('assets/client/images/pattern2.png') }} " alt="img"
                                 class="position-absolute top-100 start-50 translate-middle z-n1 pe-5">
                         </div>
                         <h4 class="display-6 fw-normal my-3">Fitness Center</h4>
@@ -504,7 +504,7 @@
                             <svg class="color" width="70" height="70">
                                 <use xlink:href="#armchair"></use>
                             </svg>
-                            <img src="images/pattern2.png" alt="img"
+                            <img src="{{ asset('assets/client/images/pattern2.png') }} " alt="img"
                                 class="position-absolute top-100 start-50 translate-middle z-n1 pe-5">
                         </div>
                         <h4 class="display-6 fw-normal my-3">Event Spaces</h4>
@@ -527,7 +527,7 @@
                             <svg class="color" width="70" height="70">
                                 <use xlink:href="#wifi"></use>
                             </svg>
-                            <img src="images/pattern2.png" alt="img"
+                            <img src="{{ asset('assets/client/images/pattern2.png') }} " alt="img"
                                 class="position-absolute top-100 start-50 translate-middle z-n1 pe-5">
                         </div>
                         <h4 class="display-6 fw-normal my-3">Free Wi-Fi</h4>
@@ -563,7 +563,7 @@
             <div class="row mt-5">
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="blog-post position-relative overflow-hidden rounded-4">
-                        <img src="images/post3.jpg" class="blog-img img-fluid rounded-4" alt="img">
+                        <img src="{{ asset('assets/client/images/post3.jpg') }} " class="blog-img img-fluid rounded-4" alt="img">
                         <div class="position-absolute bottom-0 p-5">
                             <a href="#"><span
                                     class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Hotels</span></a>
@@ -577,7 +577,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="blog-post position-relative overflow-hidden rounded-4">
-                        <img src="images/post2.jpg" class="blog-img img-fluid rounded-4" alt="img">
+                        <img src="{{ asset('assets/client/images/post2.jpg') }} " class="blog-img img-fluid rounded-4" alt="img">
                         <div class="position-absolute bottom-0 p-5">
                             <a href="#"><span
                                     class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Activites</span></a>
@@ -591,7 +591,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="blog-post position-relative overflow-hidden rounded-4">
-                        <img src="images/post1.jpg" class="blog-img img-fluid rounded-4" alt="img">
+                        <img src="{{ asset('assets/client/images/post1.jpg') }} " class="blog-img img-fluid rounded-4" alt="img">
                         <div class="position-absolute bottom-0 p-5">
                             <a href="#"><span
                                     class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Rooms</span></a>
@@ -606,7 +606,7 @@
                 </div>
                 <div class="col-md-6 col-lg-8 mb-4">
                     <div class="blog-post position-relative overflow-hidden rounded-4">
-                        <img src="images/post5.jpg" class="blog-img img-fluid rounded-4" alt="img">
+                        <img src="{{ asset('assets/client/images/post5.jpg') }} " class="blog-img img-fluid rounded-4" alt="img">
                         <div class="position-absolute bottom-0 p-4">
                             <a href="#"><span
                                     class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Activites</span></a>
@@ -621,7 +621,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="blog-post position-relative overflow-hidden rounded-4">
-                        <img src="images/post4.jpg" class="blog-img img-fluid rounded-4" alt="img">
+                        <img src="{{ asset('assets/client/images/post4.jpg') }} " class="blog-img img-fluid rounded-4" alt="img">
                         <div class="position-absolute bottom-0 p-5">
                             <a href="#"><span
                                     class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Rooms</span></a>

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class RoomDetailController
 {
     public function index($id){
+        $title = "Chi tiết phòng";
         $room = Room::find($id);
 
         $images = json_decode($room->image_room);
@@ -23,10 +24,11 @@ class RoomDetailController
         $comments = Review::where('room_id', $id)
         ->with('user')
         ->get();
-        return view('client.room-details', compact('room', 'images', 'assets_type', 'comments'));
+        return view('client.room-details', compact('room', 'images', 'assets_type', 'comments', 'title'));
     }
 
     public function addComment(Request $request){
+        $title = "Chi tiết phòng";
         $validatedData = $request->validate([
             'comment' => 'required|string|max:500',
             'rating' => 'required|integer|min:1|max:5',
@@ -42,7 +44,7 @@ class RoomDetailController
             'rating' => $validatedData['rating']
         ];
         Review::create($data);
-        return redirect()->back()->with('success', 'Bình luận của bạn đã được gửi.');
+        return redirect()->back()->with('success', 'Bình luận của bạn đã được gửi.', compact('title'));
 
     }
 

@@ -158,9 +158,10 @@
   {{-- <div class="preloader">
     <div class="loader"></div>
   </div> --}}
-
   @include('client.layouts.headers.header')
 
+
+  @yield('banner')
   @yield('content')
 
   @include('client.layouts.footers.footer')
