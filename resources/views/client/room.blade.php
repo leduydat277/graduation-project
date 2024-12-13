@@ -3,25 +3,8 @@
 @section('title')
     Danh sách phòng
 @endsection
-
 @section('content')
-<section id="slider" data-aos="fade-up">
-    <div class="container-fluid padding-side" >
-      <div class="d-flex rounded-5"
-        style="background-image: url(images/slider-image1.jpg); background-size: cover; background-repeat: no-repeat; height: 50vh; background-position: center;">
-          <div class="row align-items-center m-auto">
-            <div class="d-flex flex-wrap flex-column justify-content-center align-items-center">
-              <h2 class="display-1 fw-normal">Rooms</h2>
-              <nav class="breadcrumb">
-                <a class="breadcrumb-item" href="index.html">Home</a>
-                <span class="breadcrumb-item active" aria-current="page">Rooms</span>
-              </nav>
-            </div>
-          </div>
-      </div>
-    </div>
-  </section>
-
+@include('client.layouts.banner.banner')
   <div class="post-wrap padding-small">
     <div class="container-fluid padding-side">
       <div class="row">
@@ -29,7 +12,7 @@
           <div class="row g-lg-5">
             <div class="col-md-6 col-xl-4 mb-4">
               <div class="room-item rounded-4 ">
-                <img src="images/room1.jpg" alt="img" class="img-fluid rounded-4">
+                <img src="{{ asset('assets/client/images/room1.jpg') }} " alt="img" class="img-fluid rounded-4">
               </div>
               <div class="room-content">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
@@ -69,7 +52,7 @@
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
               <div class="room-item rounded-4 ">
-                <img src="images/room2.jpg" alt="img" class="img-fluid rounded-4">
+                <img src="{{ asset('assets/client/images/room2.jpg') }} " alt="img" class="img-fluid rounded-4">
               </div>
               <div class="room-content">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
@@ -109,7 +92,7 @@
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
               <div class="room-item rounded-4 ">
-                <img src="images/room3.jpg" alt="img" class="img-fluid rounded-4">
+                <img src="{{ asset('assets/client/images/room3.jpg') }} " alt="img" class="img-fluid rounded-4">
               </div>
               <div class="room-content">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
@@ -149,7 +132,7 @@
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
               <div class="room-item rounded-4 ">
-                <img src="images/room1.jpg" alt="img" class="img-fluid rounded-4">
+                <img src="{{ asset('assets/client/images/room1.jpg') }} " alt="img" class="img-fluid rounded-4">
               </div>
               <div class="room-content">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
@@ -189,7 +172,7 @@
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
               <div class="room-item rounded-4 ">
-                <img src="images/room2.jpg" alt="img" class="img-fluid rounded-4">
+                <img src="{{ asset('assets/client/images/room2.jpg') }} " alt="img" class="img-fluid rounded-4">
               </div>
               <div class="room-content">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
@@ -229,7 +212,7 @@
             </div>
             <div class="col-md-6 col-xl-4 mb-4">
               <div class="room-item rounded-4 ">
-                <img src="images/room3.jpg" alt="img" class="img-fluid rounded-4">
+                <img src="{{ asset('assets/client/images/room3.jpg') }} " alt="img" class="img-fluid rounded-4">
               </div>
               <div class="room-content">
                 <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
