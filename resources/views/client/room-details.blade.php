@@ -165,9 +165,9 @@
             </main>
             <aside class="col-lg-3 mt-5">
                 <div class=" ">
-                    <form id="form" class="form-group flex-wrap p-4 border rounded-4">
+                    <form id="bookingForm" class="form-group flex-wrap p-4 border rounded-4">
                         <h2 class=" fs-2 text-black my-3 mb-5">Đặt Phòng</h2>
-
+                            <input type="hidden" name="room_id" value="{{ $room->id }}">
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
                                 <div class="input-group date" id="datepicker">
