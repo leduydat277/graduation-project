@@ -27,8 +27,12 @@ Route::get('/policy', [HomeController::class, 'index'])
     ->name('client.policy');
 Route::get('/room', [HomeController::class, 'index'])
     ->name('client.room');
+
+Route::post('/room-comment', [RoomDetailController::class, 'addComment'])
+    ->name('client.room-postComment');
 Route::get('/room/{id}', [RoomDetailController::class, 'index'])
     ->name('client.room-details');
+
 Route::get('/blog-detail', [HomeController::class, 'index'])
     ->name('client.blog-detail');
 Route::get('/booking', [HomeController::class, 'index'])

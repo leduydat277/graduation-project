@@ -4,6 +4,20 @@
 Chi tiết phòng
 @endsection
 @section('content')
+@if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 <section id="slider" data-aos="fade-up">
     <div class="container-fluid padding-side">
         <div class="d-flex rounded-5"
@@ -127,10 +141,10 @@ Chi tiết phòng
                                 @if(Auth::check())
                                 <div class="comment-respond mt-5">
                                     <h3 class="display-6 fw-normal mb-5">Để lại bình luận</h3>
-                                    <form method="post" class="form-group">
-                                        @csrf <!-- Bảo mật CSRF -->
+                                    <form method="post" class="form-group" action="{{route('client.room-postComment')}}">
+                                        @csrf 
                                         <div class="row">
-                                            <!-- Rating bằng sao -->
+                                            <input type="hidden" name="id" value="{{$room->id}}">
                                             <div class="col-lg-12 mb-3">
                                                 <label class="form-label">Đánh giá của bạn:</label>
                                                 <div class="rating">
@@ -143,7 +157,6 @@ Chi tiết phòng
                                                 </div>
                                             </div>
 
-                                            <!-- Bình luận -->
                                             <div class="col-lg-12 mb-3">
                                                 <textarea class="form-control bg-transparent ps-3 pt-3" id="comment" name="comment"
                                                     placeholder="Viết bình luận của bạn *"></textarea>
