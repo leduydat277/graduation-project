@@ -41,8 +41,6 @@
                                     href="#" role="button" aria-expanded="false">Pages</a>
                                 <ul class="dropdown-menu dropdown-menu-end animate slide mt-3 border-0 shadow">
                                     <li><a href="{{ route('client.room') }}" class="dropdown-item ">Phòng</a></li>
-                                    <li><a href="{{ route('client.room-details') }}" class="dropdown-item">Chi tiết
-                                            phòng</a></li>
                                     <li><a href="{{ route('client.blog-detail') }}" class="dropdown-item ">Chi tiết bài
                                             viế</a></li>
                                     <li><a href="{{ route('client.booking') }}" class="dropdown-item ">Đặt phòng</a>

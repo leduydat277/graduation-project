@@ -1,8 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\HomeController;
-
-
+use App\Http\Controllers\Web\RoomDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +27,7 @@ Route::get('/policy', [HomeController::class, 'index'])
     ->name('client.policy');
 Route::get('/room', [HomeController::class, 'index'])
     ->name('client.room');
-Route::get('/room-details', [HomeController::class, 'index'])
+Route::get('/room/{id}', [RoomDetailController::class, 'index'])
     ->name('client.room-details');
 Route::get('/blog-detail', [HomeController::class, 'index'])
     ->name('client.blog-detail');
