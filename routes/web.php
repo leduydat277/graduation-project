@@ -6,7 +6,7 @@ use App\Http\Controllers\Web\RoomDetailController;
 include_once "admin.php";
 Route::get('/', [HomeController::class, 'index'])
     ->name('client.home');
-Route::get('/about', [HomeController::class, 'index'])
+Route::get('/about', [HomeController::class, 'about'])
     ->name('client.about');
 Route::get('/services', [HomeController::class, 'index'])
     ->name('client.services');

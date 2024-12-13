@@ -13,7 +13,7 @@
                 <div class="row d-flex align-items-center">
                     <div class="col-lg-6">
                         <div class="image-holder">
-                            <img src="images/item1.jpg" alt="about-us" class="img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/item1.jpg') }} " alt="about-us" class="img-fluid rounded-4">
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -37,7 +37,7 @@
                 <div class="row flex-row-reverse align-items-center">
                     <div class="col-lg-6">
                         <div class="image-holder text-right">
-                            <img src="images/item3.jpg" alt="about-us" class="img-fluid rounded-4">
+                            <img src="{{ asset('assets/client/images/item3.jpg') }} " alt="about-us" class="img-fluid rounded-4">
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -64,25 +64,25 @@
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">25K <span
                             class="position-absolute top-50 end-50 translate-middle z-n1 ps-lg-4 pt-lg-4"><img
-                                src="images/pattern1.png" alt="pattern" class="img-fluid"></span></h3>
+                                src="{{ asset('assets/client/images/pattern1.png') }} " alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">Happy Customer</p>
                 </div>
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">160 <span
-                            class="position-absolute top-50 translate-middle z-n1"><img src="images/pattern1.png"
+                            class="position-absolute top-50 translate-middle z-n1"><img src="{{ asset('assets/client/images/pattern1.png') }} "
                                 alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">Total Rooms</p>
                 </div>
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">25 <span
-                            class="position-absolute top-100 pb-5 translate-middle z-n1"><img src="images/pattern1.png"
+                            class="position-absolute top-100 pb-5 translate-middle z-n1"><img src="{{ asset('assets/client/images/pattern1.png') }} "
                                 alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">award wins</p>
                 </div>
                 <div class="col-md-3 text-center mb-4 mb-lg-0">
                     <h3 class="display-1 fw-normal text-primary position-relative">200 <span
                             class="position-absolute top-50 end-50 pb-lg-4 pe-lg-2 translate-middle z-n1"><img
-                                src="images/pattern1.png" alt="pattern" class="img-fluid"></span></h3>
+                                src="{{ asset('assets/client/images/pattern1.png') }} " alt="pattern" class="img-fluid"></span></h3>
                     <p class="text-capitalize">Total Members</p>
                 </div>
             </div>
@@ -93,7 +93,7 @@
         <div class="container-fluid padding-side">
             <h3 class="display-3 fw-normal text-center">View our Hotel</h3>
             <div class="imageblock me-4 position-relative mt-5">
-                <img class="img-fluid" src="images/video.jpg" alt="img">
+                <img class="img-fluid" src="{{ asset('assets/client/images/video.jpg') }} " alt="img">
                 <a type="button" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/W_tIumKa8VY"
                     data-bs-target="#myModal" class="play-btn position-absolute top-50 start-50 translate-middle">
                     <svg class="play-icon" width="70" height="70">

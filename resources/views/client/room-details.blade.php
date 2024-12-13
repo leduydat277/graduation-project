@@ -95,7 +95,7 @@ Chi tiết phòng
                             <div class="row">
                                 <div class="comments-wrap">
                                     <h3 class="display-6 fw-normal mb-5">
-                                        <span class="count"></span> Bình luận
+                                        <span class="count"></span> Đánh giá
                                     </h3>
                                     <div class="comment-list">
                                         @foreach ($comments as $comment)
@@ -120,39 +120,7 @@ Chi tiết phòng
                                         </article>
                                         @endforeach
                                     </div>
-                                    <hr>
                                 </div>
-                                @if(Auth::check())
-                                <div class="comment-respond mt-5">
-                                    <h3 class="display-6 fw-normal mb-5">Để lại bình luận</h3>
-                                    <form method="post" class="form-group" action="{{route('client.room-postComment')}}">
-                                        @csrf 
-                                        <div class="row">
-                                            <input type="hidden" name="id" value="{{$room->id}}">
-                                            <div class="col-lg-12 mb-3">
-                                                <label class="form-label">Đánh giá của bạn:</label>
-                                                <div class="rating">
-                                                    @for ($i = 5; $i >= 1; $i--)
-                                                    <input type="radio" id="star{{$i}}" name="rating" value="{{$i}}" />
-                                                    <label for="star{{$i}}" title="{{$i}} sao">
-                                                        <i class="fas fa-star"></i>
-                                                    </label>
-                                                    @endfor
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12 mb-3">
-                                                <textarea class="form-control bg-transparent ps-3 pt-3" id="comment" name="comment"
-                                                    placeholder="Viết bình luận của bạn *"></textarea>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-arrow btn-primary mt-3" type="submit">
-                                            <span>Gửi<svg width="18" height="18">
-                                                    <use xlink:href="#arrow-right"></use>
-                                                </svg></span></button>
-                                    </form>
-                                </div>
-                                @endif
                             </div>
                         </div>
                     </section>
