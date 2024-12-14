@@ -53,7 +53,7 @@
                 });
             } catch (error) {
                 console.error('Lỗi:', error);
-                alert('Không thể tải dữ liệu.');
+                
             }
         }
         document.addEventListener('DOMContentLoaded', fetchAssetType);

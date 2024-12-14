@@ -46,12 +46,13 @@ class UsersController extends RoutingController
         });
         return view(self::VIEW_PATH . __FUNCTION__, compact('data'));
     }
-    public function getId($id){
+    public function getUser(){
+        $user = Auth::user();
+        dd($user);
         $data = User::select("name", "email", "image", "role")->first();
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
-        return response()->json($data);
     }
 
     public function addUI(){

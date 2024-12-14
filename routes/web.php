@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AuthenticationController;
 
 use App\Http\Controllers\Web\ReviewController;
@@ -43,6 +44,7 @@ Route::prefix("authentication")->name("authentication.")->group(function() {
     Route::post('/register', [AuthenticationController::class, 'register'])->name('postRegister');
 
 });
+Route::get("/account", [UsersController::class, "getUser"])->name("account");
 
 
 Route::get('/detail-booking/{bookingNumberId}', [HomeController::class, 'booking_detail'])
@@ -51,3 +53,4 @@ Route::get('/cancelBooking', [BookingCancelledController::class, 'index'])
     ->name('cancelBooking.index');
 Route::post('/cancelBooking/store', [BookingCancelledController::class, 'store'])
     ->name('cancelBooking.store');
+
