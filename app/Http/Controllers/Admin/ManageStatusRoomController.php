@@ -34,25 +34,23 @@ class ManageStatusRoomController extends Controller
         $from = $to = null;
         try {
             if (!empty($from_date)) {
-                $from = (new DateTime($from_date))->setTime(14, 0, 0)->getTimestamp();
+                $from = (new DateTime($from_date))->setTime(0, 0, 0)->getTimestamp();
             }
             if (!empty($to_date)) {
-                $to = (new DateTime($to_date))->setTime(12, 0, 0)->getTimestamp();
+                $to = (new DateTime($to_date))->setTime(23, 59, 59)->getTimestamp();
             }
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Ngày không hợp lệ']);
         }
 
-        // Tìm kiếm phòng theo `id` hoặc `title`
+        // Tìm kiếm phòng theo `id`, `title`, hoặc `room_code`
         $room_ids = [];
         if (!empty($search)) {
-            if (is_numeric($search)) {
-                // Nếu `search` là số, tìm kiếm theo `id`
-                $room_ids = Room::where('id', $search)->pluck('id')->toArray();
-            } else {
-                // Nếu `search` không phải số, tìm kiếm theo `title`
-                $room_ids = Room::where('title', 'like', '%' . $search . '%')->pluck('id')->toArray();
-            }
+            $room_ids = Room::where('id', $search)
+                ->orWhere('title', 'like', '%' . $search . '%')
+                ->orWhere('roomId_number', 'like', '%' . $search . '%')
+                ->pluck('id')
+                ->toArray();
 
             if (empty($room_ids)) {
                 return redirect()->back()->withErrors(['error' => 'Không tìm thấy phòng nào']);
@@ -70,23 +68,23 @@ class ManageStatusRoomController extends Controller
             $query->whereIn('room_id', $room_ids);
         }
 
-        $arr_room_manages = $query->get();
+        // Loại bỏ các bản ghi có `to` = 0
+        $query->where('to', '>', 0);
 
-        // Lọc dữ liệu theo thời gian
-        $results = $arr_room_manages->filter(function ($room) use ($from, $to) {
-            if ($from !== null && $to !== null) {
-                return $room->from >= $from && $room->to <= $to;
-            }
-            return true; // Nếu không có thời gian, lấy tất cả
-        })->values()->toArray();
+        // Lọc theo khoảng thời gian nằm hoàn toàn trong khoảng đã chọn
+        if ($from !== null && $to !== null) {
+            $query->where('from', '>=', $from)
+                ->where('to', '<=', $to);
+        } elseif ($from !== null) {
+            $query->where('from', '>=', $from);
+        } elseif ($to !== null) {
+            $query->where('to', '<=', $to);
+        }
+
+        // dd($query->toSql(), $query->getBindings()); // Debug query nếu cần
 
         // Phân trang kết quả
-        $perPage = 10;
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $currentResults = array_slice($results, ($currentPage - 1) * $perPage, $perPage);
-        $statusRooms = new LengthAwarePaginator($currentResults, count($results), $perPage, $currentPage, [
-            'path' => LengthAwarePaginator::resolveCurrentPath()
-        ]);
+        $statusRooms = $query->paginate(10);
 
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }

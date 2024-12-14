@@ -233,7 +233,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <a href="{{route('client.room-details') }}">
+                                    <a href="/room/${room.id}" class="btn btn-arrow mt-3">
                                         <p class="text-decoration-underline text-white m-0 mt-2">Xem ngay</p>
                                     </a>
                                 </div>
