@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\Room;
 use DateTime;
+use Illuminate\Http\Client\Request as ClientRequest;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -29,9 +33,14 @@ class HomeController
         $title = "Về chúng tôi";
         return view('client.about', compact('title'));
     }
-    public function booking(Request $request)
+    public function booking(HttpRequest $request)
     {
         $title = "Đặt phòng";
+
+        if (!$request->has(['checkIn', 'room_id', 'checkout', 'adult_quantity', 'children_quantity'])) {
+            return redirect()->back()->with('error', 'Bạn cần cung cấp đủ thông tin để đặt phòng.');
+        }
+
         $checkIn = $_GET['checkIn'];
         $room_id = $_GET['room_id'];
         $checkout = $_GET['checkout'];
@@ -45,7 +54,7 @@ class HomeController
         $checkoutDate = new DateTime($checkout);
 
         $totalDays = $checkInDate->diff($checkoutDate)->days;
-        $totalDays = $totalDays+1;
+        $totalDays = $totalDays + 1;
         $room = Room::where('id', $room_id)->first();
         return view('client.booking', compact(['title', 'checkIn', 'checkout', 'adult_quantity', 'children_quantity', 'room', 'totalDays']));
     }
@@ -53,5 +62,14 @@ class HomeController
     {
         $title = "Đánh giá & bình luận";
         return view('client.review', compact('title'));
+    }
+
+    public function booking_detail($bookingNumberId){
+        $title = "Chi tiết đặt phòng";
+        $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
+        $payment = Payment::where('booking_id', $booking->id)->first();
+        $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
+        ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
+        return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays'));
     }
 }
