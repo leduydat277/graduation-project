@@ -69,7 +69,7 @@
                         </a>
                     </div>
                     <div class="col-md-6 col-lg-5 col-xl-4 mt-5 mt-md-0">
-                        <form id="form" action="" class="form-group flex-wrap bg-white p-5 rounded-4 ms-md-5">
+                        <form id="form" action="/room" class="form-group flex-wrap bg-white p-5 rounded-4 ms-md-5">
                             <h3 class="display-5">Đặt Phòng</h3>
                             <div class="col-lg-12 my-4">
                                 <label class="form-label text-uppercase">Ngày nhận phòng</label>
@@ -81,6 +81,8 @@
                                         </svg>
                                     </a>
                                 </div>
+                                <div class="error-message  p-2 rounded-3" id="arrival-error"
+                                    style="color: black; font-style: italic; font-size: smaller;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label class="form-label text-uppercase">Ngày trả phòng</label>
@@ -92,11 +94,15 @@
                                         </svg>
                                     </a>
                                 </div>
+                                <div class="error-message  p-2 rounded-3" id="departure-error"
+                                    style="color: black; font-style: italic; font-size: smaller;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label class="form-label text-uppercase">Số khách</label>
-                                <input type="number" value="1" name="quantity"
-                                    class="form-control text-black-50 ps-3">
+                                <input type="number" value="1" name="quantity" class="form-control text-black-50 ps-3"
+                                    min="1">
+                                <div class="error-message p-2 rounded-3" id="quantity-error"
+                                    style="color: black; font-style: italic; font-size: smaller;"></div>
                             </div>
                             <div class="d-grid">
                                 <button href="#" class="btn btn-arrow btn-primary mt-3">
@@ -317,5 +323,60 @@
 
         // Gọi hàm sau khi DOM đã tải xong
         document.addEventListener('DOMContentLoaded', fetchImages);
+    </script>
+    <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const arrivalDate = document.querySelector('input[name="select-arrival-date_value"]').value;
+            const departureDate = document.querySelector('input[name="select-departure-date_value"]').value;
+            const quantity = document.querySelector('input[name="quantity"]').value;
+
+            console.log(arrivalDate, departureDate, quantity);
+
+            clearErrors();
+
+            let isValid = true;
+
+            const today = new Date().toISOString().split('T')[0];
+
+            if (arrivalDate < today) {
+                isValid = false;
+                document.getElementById('arrival-error').textContent = 'Quý khách vui lòng chọn ngày trong hiện tại hoặc tương lai';
+            }
+
+            if (departureDate < today) {
+                isValid = false;
+                document.getElementById('departure-error').textContent = 'Quý khách vui lòng chọn ngày trong hiện tại hoặc tương lai';
+            }
+
+            if (quantity <= 0) {
+                isValid = false;
+                document.getElementById('quantity-error').textContent =
+                    'Quý khách vui lòng nhập lớn số khách lớn hơn 0';
+            }
+
+            if (new Date(departureDate) <= new Date(arrivalDate)) {
+                isValid = false;
+                document.getElementById('departure-error').textContent =
+                    'Quý khách vui lòng nhập ngày trả phòng lớn hơn ngày nhận phòng ít nhất 1 ngày';
+            }
+
+            const arrivalDateTime = new Date(arrivalDate + 'T13:45:00');
+            if (new Date() > arrivalDateTime) {
+                isValid = false;
+                document.getElementById('arrival-error').textContent =
+                    'Vì khung giờ check-in, check-out của khách sạn. Quý khách hãy chọn ngày mai là ngày nhận phòng (đọc thêm trong điều khoản)';
+            }
+
+            if (isValid) {
+                this.submit();
+            }
+        });
+
+        function clearErrors() {
+            document.getElementById('arrival-error').textContent = '';
+            document.getElementById('departure-error').textContent = '';
+            document.getElementById('quantity-error').textContent = '';
+        }
     </script>
 @endsection

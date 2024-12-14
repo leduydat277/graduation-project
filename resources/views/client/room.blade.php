@@ -21,7 +21,7 @@
                     <label for="filter-price" class="form-label">Giới hạn tiền (VNĐ/₫)</label>
                     <input type="text" id="filter-price" class="form-control" placeholder="Giới hạn tiền (₫)">
                 </div>
-                <div class="col-md-4 mb-3 d-flex align-items-end">
+                <div class="col-md-2 mb-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">Lọc</button>
                 </div>
             </div>
