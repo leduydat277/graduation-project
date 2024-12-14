@@ -260,7 +260,6 @@
 
                         discountAmountElement.text(`${discountValue.toLocaleString('vi-VN')} VND`);
                         finalPriceElement.text(`${newTotalPrice.toLocaleString('vi-VN')} VND`);
-                        $('#voucherForm').remove();
                         $('#voucherInfo').show();
                         $('#voucherName').text(response.voucher.name);
                         $('#voucherType').text(response.voucher.type);
@@ -293,18 +292,6 @@
 
         $('#cancelVoucher').on('click', function(e) {
             e.preventDefault();
-            $('.voucherForm').html(`                            <form id="voucherForm" class="d-flex align-items-center">
-                                <div class="form-input col-lg-9 mb-0 me-3">
-                                    <label for="voucher" class="label-style fw-medium form-label">Mã giảm giá</label>
-                                    <input type="text" name="voucher" id="voucher"
-                                        placeholder="Nếu có mã giảm giá hãy nhập vào đây" class="form-control ps-3">
-                                </div>
-                                <input type="hidden" name="price" value="{{ $room->price * $totalDays }}">
-                                <button type="submit" name="submit" class="btn btn-arrow btn-primary"
-                                    style="margin-top: 25px">
-                                    <span>Nhập mã</span>
-                                </button>
-                            </form>`);
             $('#voucherInfo').hide();
             $('#voucherName').text('N/A');
             $('#voucherType').text('N/A');

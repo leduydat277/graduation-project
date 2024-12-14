@@ -95,78 +95,83 @@
                             </div>
                         </article>
 
-                    <section id="post-comment">
-                        <div class="container">
-                            <div class="row">
-                                <div class="comments-wrap">
-                                    <h3 class="display-6 fw-normal mb-5">
-                                        <span class="count"></span> Bình luận
-                                    </h3>
-                                    <div class="comment-list">
-                                        @foreach ($comments as $comment)
-                                        <article class="comment-item pb-3 row">
-                                            <div class="col-md-10">
-                                                <div class="author-post mb-4">
-                                                    <div class="comment-meta text-uppercase d-flex gap-3 text-black">
-                                                        <div class="author-name fw-semibold">{{ $comment->user->name }}</div>
-                                                        <span class="meta-rating">
-                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                @if ($i <=$comment->rating)
-                                                                ★
-                                                                @else
-                                                                ☆
-                                                                @endif
-                                                                @endfor
-                                                        </span>
+                        <section id="post-comment">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="comments-wrap">
+                                        <h3 class="display-6 fw-normal mb-5">
+                                            <span class="count"></span> Bình luận
+                                        </h3>
+                                        <div class="comment-list">
+                                            @foreach ($comments as $comment)
+                                                <article class="comment-item pb-3 row">
+                                                    <div class="col-md-10">
+                                                        <div class="author-post mb-4">
+                                                            <div
+                                                                class="comment-meta text-uppercase d-flex gap-3 text-black">
+                                                                <div class="author-name fw-semibold">
+                                                                    {{ $comment->user->name }}</div>
+                                                                <span class="meta-rating">
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        @if ($i <= $comment->rating)
+                                                                            ★
+                                                                        @else
+                                                                            ☆
+                                                                        @endif
+                                                                    @endfor
+                                                                </span>
+                                                            </div>
+                                                            <p>{{ $comment->comment }}</p>
+                                                        </div>
                                                     </div>
-                                                    <p>{{ $comment->comment}}</p>
-                                                </div>
-                                            </div>
-                                        </article>
-                                        @endforeach
-                                    </div>
-                                    <hr>
-                                </div>
-                                @if(Auth::check())
-                                <div class="comment-respond mt-5">
-                                    <h3 class="display-6 fw-normal mb-5">Để lại bình luận</h3>
-                                    <form method="post" class="form-group" action="{{route('client.room-postComment')}}">
-                                        @csrf
-                                        <div class="row">
-                                            <input type="hidden" name="id" value="{{$room->id}}">
-                                            <div class="col-lg-12 mb-3">
-                                                <label class="form-label">Đánh giá của bạn:</label>
-                                                <div class="rating">
-                                                    @for ($i = 5; $i >= 1; $i--)
-                                                    <input type="radio" id="star{{$i}}" name="rating" value="{{$i}}" />
-                                                    <label for="star{{$i}}" title="{{$i}} sao">
-                                                        <i class="fas fa-star"></i>
-                                                    </label>
-                                                    @endfor
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12 mb-3">
-                                                <textarea class="form-control bg-transparent ps-3 pt-3" id="comment" name="comment"
-                                                    placeholder="Viết bình luận của bạn *"></textarea>
-                                            </div>
+                                                </article>
+                                            @endforeach
                                         </div>
-                                        <button class="btn btn-arrow btn-primary mt-3" type="submit">
-                                            <span>Gửi<svg width="18" height="18">
-                                                    <use xlink:href="#arrow-right"></use>
-                                                </svg></span></button>
-                                    </form>
+                                        <hr>
+                                    </div>
+                                    @if (Auth::check())
+                                        <div class="comment-respond mt-5">
+                                            <h3 class="display-6 fw-normal mb-5">Để lại bình luận</h3>
+                                            <form method="post" class="form-group"
+                                                action="{{ route('client.room-postComment') }}">
+                                                @csrf
+                                                <div class="row">
+                                                    <input type="hidden" name="id" value="{{ $room->id }}">
+                                                    <div class="col-lg-12 mb-3">
+                                                        <label class="form-label">Đánh giá của bạn:</label>
+                                                        <div class="rating">
+                                                            @for ($i = 5; $i >= 1; $i--)
+                                                                <input type="radio" id="star{{ $i }}"
+                                                                    name="rating" value="{{ $i }}" />
+                                                                <label for="star{{ $i }}"
+                                                                    title="{{ $i }} sao">
+                                                                    <i class="fas fa-star"></i>
+                                                                </label>
+                                                            @endfor
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12 mb-3">
+                                                        <textarea class="form-control bg-transparent ps-3 pt-3" id="comment" name="comment"
+                                                            placeholder="Viết bình luận của bạn *"></textarea>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-arrow btn-primary mt-3" type="submit">
+                                                    <span>Gửi<svg width="18" height="18">
+                                                            <use xlink:href="#arrow-right"></use>
+                                                        </svg></span></button>
+                                            </form>
+                                        </div>
+                                    @endif
                                 </div>
-                                @endif
                             </div>
-                        </div>
-                    </section>
-                </div>
-            </main>
-            <aside class="col-lg-3 mt-5">
-                <div class=" ">
-                    <form id="bookingForm" class="form-group flex-wrap p-4 border rounded-4">
-                        <h2 class=" fs-2 text-black my-3 mb-5">Đặt Phòng</h2>
+                        </section>
+                    </div>
+                </main>
+                <aside class="col-lg-3 mt-5">
+                    <div class=" ">
+                        <form id="bookingForm" class="form-group flex-wrap p-4 border rounded-4">
+                            <h2 class=" fs-2 text-black my-3 mb-5">Đặt Phòng</h2>
                             <input type="hidden" name="room_id" value="{{ $room->id }}">
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
@@ -278,11 +283,21 @@
                 children_quantity: $('#children-quantity').val()
             };
 
-            console.log(formData);
-
             // Giới hạn số lượng người lớn và trẻ em
             const maxAdults = {{ $room->max_people }};
             const maxChildren = 2;
+
+            if (!formData.checkin) {
+                alert("Ngày check-in không được để trống.");
+                $('#checkin').focus();
+                return false;
+            }
+
+            if (!formData.checkout) {
+                alert("Ngày check-out không được để trống.");
+                $('#checkout').focus();
+                return false;
+            }
 
             if (formData.adult_quantity > maxAdults) {
                 alert("Số lượng người lớn không được vượt quá " + maxAdults);

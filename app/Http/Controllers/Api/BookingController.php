@@ -367,6 +367,15 @@ class BookingController
             if ($booking->tien_coc !== NULL) {
                 $booking->status = 2;
             }
+
+            if ($booking->voucher_id) {
+                $voucher = Voucher::find($booking->voucher_id);
+
+                if ($voucher) {
+                    $voucher->quantity = $voucher->quantity - 1;
+                    $voucher->save();
+                }
+            }
             $booking->save();
 
             $currentTimestamp = time();
