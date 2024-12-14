@@ -29,7 +29,7 @@ Route::middleware('api')->group(function () {
 });
 
 
-Route::post('search', [SearchRoomController::class, 'searchRoom'])
+Route::get('search', [SearchRoomController::class, 'searchRoom'])
     ->name('api.search_room');
 
 // Admin api
