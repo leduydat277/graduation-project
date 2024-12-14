@@ -9,7 +9,7 @@ class Review extends Model
 {
     // Tên bảng trong CSDL (tùy chọn)
     protected $table = 'reviews';
-
+    public $timestamps = false;
     // Các trường có thể được gán giá trị hàng loạt
     protected $fillable = [
         'user_id',
