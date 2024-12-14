@@ -83,7 +83,9 @@ class BookingController  extends Controller
         }
         // dd($query->toSql() , $query->getBindings());
         // Lấy danh sách đặt phòng
-        $bookings = $query->whereNot('status', [0,1])->get(); // Phân trang, mỗi trang 10 bản ghi
+        $bookings = $query->whereNotIn('status', [0, 1]) // Loại trừ các trạng thái 0 và 1
+            ->orderBy('id', 'desc') // Sắp xếp theo id giảm dần
+            ->paginate(10); // Phân trang, mỗi trang 10 bản ghi
 
         return view("$this->urlViews.index", compact('bookings'));
     }
@@ -197,7 +199,7 @@ class BookingController  extends Controller
             return redirect()->back()->with('error', 'Không thể hủy đơn đặt phòng này');
         }
 
-        
+
         $currentTimestamp = Carbon::now()->addDay()->setTime(14, 0)->timestamp;
         if ($booking->check_in_date < $currentTimestamp) {
             // $today = Carbon::now()->timestamp;
