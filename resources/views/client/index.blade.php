@@ -94,11 +94,6 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label class="form-label text-uppercase">Số lượng phòng</label>
-                                <input type="number" value="1" name="quantity"
-                                    class="form-control text-black-50 ps-3">
-                            </div>
-                            <div class="col-lg-12 my-4">
                                 <label class="form-label text-uppercase">Số khách</label>
                                 <input type="number" value="1" name="quantity"
                                     class="form-control text-black-50 ps-3">

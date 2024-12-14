@@ -30,3 +30,4 @@ Route::get('/blog-detail', [HomeController::class, 'index'])
     ->name('client.blog-detail');
 Route::get('/booking', [HomeController::class, 'booking'])
     ->name('client.booking');
+
