@@ -54,7 +54,6 @@
             object-fit: cover;
             border-radius: 15px;
         }
-
     </style>
     <section id="slider" data-aos="fade-up">
         <div class="container-fluid padding-side">
@@ -70,8 +69,8 @@
                         </a>
                     </div>
                     <div class="col-md-6 col-lg-5 col-xl-4 mt-5 mt-md-0">
-                        <form id="form" class="form-group flex-wrap bg-white p-5 rounded-4 ms-md-5">
-                            <h3 class="display-5">Kiểm tra tình trạng phòng</h3>
+                        <form id="form" action="" class="form-group flex-wrap bg-white p-5 rounded-4 ms-md-5">
+                            <h3 class="display-5">Đặt Phòng</h3>
                             <div class="col-lg-12 my-4">
                                 <label class="form-label text-uppercase">Ngày nhận phòng</label>
                                 <div class="date position-relative bg-transparent" id="select-arrival-date">
@@ -106,7 +105,7 @@
                             </div>
                             <div class="d-grid">
                                 <button href="#" class="btn btn-arrow btn-primary mt-3">
-                                    <span>Kiểm tra tình trạng<svg width="18" height="18">
+                                    <span>Tìm kiếm phòng<svg width="18" height="18">
                                             <use xlink:href="#arrow-right"></use>
                                         </svg></span>
                                 </button>
@@ -129,7 +128,7 @@
                             tâm thành phố nhộn nhịp, khách sạn của chúng tôi mang đến một nơi nghỉ dưỡng yên bình cho cả
                             khách du lịch và doanh nhân. Với các tiện nghi hiện đại và không gian ấm áp, chúng tôi cam kết
                             mang đến trải nghiệm tuyệt vời nhất cho bạn.</p>
-                        <a href="{{route('client.about')}}" class="btn btn-arrow btn-primary mt-3">
+                        <a href="{{ route('client.about') }}" class="btn btn-arrow btn-primary mt-3">
                             <span>Đọc thêm về chúng tôi <svg width="18" height="18">
                                     <use xlink:href="#arrow-right"></use>
                                 </svg></span>
@@ -233,7 +232,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <a href="{{route('client.room-details') }}">
+                                    <a href="">
                                         <p class="text-decoration-underline text-white m-0 mt-2">Xem ngay</p>
                                     </a>
                                 </div>
@@ -272,7 +271,7 @@
                             </div>
                             <h4 class="display-6 fw-normal my-3">${assetType.name}</h4>
                             <p>${assetType.description}</p>
-                            <a href="{{ route('client.services' )}}" class="btn btn-arrow">
+                            <a href="{{ route('client.services') }}" class="btn btn-arrow">
                                 <span class="text-decoration-underline">Xem thêm<svg width="18" height="18">
                                         <use xlink:href="#arrow-right"></use>
                                     </svg></span>

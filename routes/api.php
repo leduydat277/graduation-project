@@ -59,8 +59,8 @@ Route::post('filter-payment', [PaymentController::class, 'filterPayments'])
 Route::get('donepayment', [BookingController::class, 'vnpay'])
     ->name('api.donepayment');
 
-Route::get('detail/{id}', [DetailController::class, 'detail'])
-    ->name('api.detail');
+// Route::get('detail/{id}', [DetailController::class, 'detail'])
+//     ->name('api.detail');
 
 Route::get('all-rooms', [RoomController::class, 'index'])->name('api.rooms');
 Route::get('all-room-types', [RoomTypeController::class, 'index'])->name('api.room-types');

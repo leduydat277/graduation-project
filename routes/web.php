@@ -27,4 +27,3 @@ Route::get('/blog-detail', [HomeController::class, 'index'])
 Route::get('/booking', [HomeController::class, 'booking'])
     ->name('client.booking');
 
-
