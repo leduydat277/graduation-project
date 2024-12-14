@@ -6,10 +6,10 @@
       var Body = $('body');
       Body.addClass('preloader-site');
     });
-    $(window).on('load', function () {
-      $('.preloader').fadeOut();
-      $('body').removeClass('preloader-site');
-    });
+    // $(window).on('load', function () {
+    //   $('.preloader').fadeOut();
+    //   $('body').removeClass('preloader-site');
+    // });
   }
 
   // init Chocolat light box

@@ -3,7 +3,7 @@
         <div class="container-fluid padding-side">
             <div class="d-flex justify-content-between align-items-center w-100">
                 <a class="navbar-brand" href="{{ route('client.home') }}">
-                    <img src="images/main-logo.png" class="logo img-fluid">
+                    <p class="logo img-fluid">SleepHotel</p>
                 </a>
                 <button class="navbar-toggler border-0 d-flex d-lg-none order-3 p-2 shadow-none" type="button"
                     data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar"
@@ -41,8 +41,6 @@
                                     href="#" role="button" aria-expanded="false">Pages</a>
                                 <ul class="dropdown-menu dropdown-menu-end animate slide mt-3 border-0 shadow">
                                     <li><a href="{{ route('client.room') }}" class="dropdown-item ">Phòng</a></li>
-                                    <li><a href="{{ route('client.room-details') }}" class="dropdown-item">Chi tiết
-                                            phòng</a></li>
                                     <li><a href="{{ route('client.blog-detail') }}" class="dropdown-item ">Chi tiết bài
                                             viế</a></li>
                                     <li><a href="{{ route('client.booking') }}" class="dropdown-item ">Đặt phòng</a>

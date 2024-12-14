@@ -155,12 +155,13 @@
     </symbol>
   </svg>
 
-  <div class="preloader">
+  {{-- <div class="preloader">
     <div class="loader"></div>
-  </div>
-
+  </div> --}}
   @include('client.layouts.headers.header')
 
+
+  @yield('banner')
   @yield('content')
 
   @include('client.layouts.footers.footer')

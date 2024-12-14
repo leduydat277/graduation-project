@@ -1,27 +1,24 @@
 @extends('client.layouts.master')
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 @section('title')
     Chi tiết phòng
 @endsection
-
 @section('content')
-    <section id="slider" data-aos="fade-up">
-        <div class="container-fluid padding-side">
-            <div class="d-flex rounded-5"
-                style="background-image: url(images/slider-image1.jpg); background-size: cover; background-repeat: no-repeat; height: 50vh; background-position: center;">
-                <div class="row align-items-center m-auto">
-                    <div class="d-flex flex-wrap flex-column justify-content-center align-items-center">
-                        <h2 class="display-1 fw-normal">Room-Details</h2>
-                        <nav class="breadcrumb">
-                            <a class="breadcrumb-item" href="index.html">Home</a>
-                            <span class="breadcrumb-item active" aria-current="page">Room-Details</span>
-                        </nav>
-                    </div>
-                </div>
-            </div>
+    @include('client.layouts.banner.banner')
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
-    </section>
-
+    @endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="post-wrap my-5">
         <div class="container-fluid padding-side">
             <div class="row g-lg-5">
@@ -31,25 +28,14 @@
 
                             <div class="row flex-column">
                                 <div class="col-md-12">
-                                    <!-- product-large-slider -->
                                     <div class="swiper product-large-slider">
                                         <div class="swiper-wrapper">
-
-                                            <div class="swiper-slide">
-                                                <img src="images/item1.jpg" alt="product-large" class="img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item2.jpg" alt="product-large" class="img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item3.jpg" alt="product-large" class="img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item1.jpg" alt="product-large" class="img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item2.jpg" alt="product-large" class="img-fluid">
-                                            </div>
+                                            @foreach ($images as $image)
+                                                <div class="swiper-slide">
+                                                    <img src="{{ asset('storage/' . $image) }}" alt="product-large"
+                                                        width="985px" height="580px" class="img-fluid img-product">
+                                                </div>
+                                            @endforeach
 
                                         </div>
                                     </div>
@@ -59,22 +45,13 @@
                                     <!-- product-thumbnail-slider -->
                                     <div thumbsSlider="" class="swiper product-thumbnail-slider">
                                         <div class="swiper-wrapper">
-
-                                            <div class="swiper-slide">
-                                                <img src="images/item1.jpg" alt="image" class="thumb-image img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item2.jpg" alt="image" class="thumb-image img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item3.jpg" alt="image" class="thumb-image img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item1.jpg" alt="image" class="thumb-image img-fluid">
-                                            </div>
-                                            <div class="swiper-slide">
-                                                <img src="images/item2.jpg" alt="image" class="thumb-image img-fluid">
-                                            </div>
+                                            @foreach ($images as $image)
+                                                <div class="swiper-slide">
+                                                    <img src="{{ asset('storage/' . $image) }}" alt="image"
+                                                        width="240" height="140" class="thumb-image img-fluid"
+                                                        style="object-fit: cover;">
+                                                </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                     <!-- / product-thumbnail-slider -->
@@ -85,123 +62,34 @@
                             <div class="post-content py-5">
 
                                 <div class="d-flex justify-content-between align-items-center my-3">
-                                    <h4 class="display-6 fw-normal">Grand deluxe rooms</h4>
-                                    <p class="m-0"><span class="text-primary fs-2">$269</span>/night</p>
+                                    <h4 class="display-6 fw-normal">{{ $room->title }}</h4>
+                                    <p class="m-0"><span
+                                            class="text-primary fs-2">{{ number_format($room->price, 0, ',', '.') }}
+                                            VNĐ</span>/đêm</p>
                                 </div>
-                                <hr>
-                                <div class="overview my-5">
-                                    <h4 class="display-6 fw-normal mb-3">Room Overview</h4>
-                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-                                        <div class="col d-flex align-items-start">
-                                            <iconify-icon icon="fluent:bed-24-regular"
-                                                class="property-icon border border-primary text-primary fs-4 p-3"></iconify-icon>
-                                            <div class="ms-4">
-                                                <h5 class="fw-bold">Bed</h5>
-                                                <p>2</p>
-                                            </div>
-                                        </div>
-                                        <div class="col d-flex align-items-start">
-                                            <iconify-icon icon="material-symbols:shower-outline"
-                                                class="property-iconborder border border-primary text-primary fs-4 p-3"></iconify-icon>
-                                            <div class="ms-4">
-                                                <h5 class="fw-bold">Bath</h5>
-                                                <p>2</p>
-                                            </div>
-                                        </div>
-                                        <div class="col d-flex align-items-start">
-                                            <iconify-icon icon="fluent:person-16-regular"
-                                                class="property-iconborder border border-primary text-primary fs-4 p-3"></iconify-icon>
-                                            <div class="ms-4">
-                                                <h5 class="fw-bold">Person</h5>
-                                                <p>4</p>
-                                            </div>
-                                        </div>
-                                        <div class="col d-flex align-items-start">
-                                            <iconify-icon icon="bi:wifi"
-                                                class="property-iconborder border border-primary text-primary fs-4 p-3"></iconify-icon>
-                                            <div class="ms-4">
-                                                <h5 class="fw-bold">WiFi</h5>
-                                                <p>Free</p>
-                                            </div>
-                                        </div>
-                                        <div class="col d-flex align-items-start">
-                                            <iconify-icon icon="material-symbols:ac-unit"
-                                                class="property-iconborder border border-primary text-primary fs-4 p-3"></iconify-icon>
-                                            <div class="ms-4">
-                                                <h5 class="fw-bold">Air Conditioner</h5>
-                                                <p>Yes</p>
-                                            </div>
-                                        </div>
-                                        <div class="col d-flex align-items-start">
-                                            <iconify-icon icon="fluent:tv-24-regular"
-                                                class="property-iconborder border border-primary text-primary fs-4 p-3"></iconify-icon>
-                                            <div class="ms-4">
-                                                <h5 class="fw-bold">TV Cable</h5>
-                                                <p>Yes</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="price my-5">
-                                    <h4 class="display-6 fw-normal mb-3">Price Details</h4>
-                                    <p> <span class="fw-bold">Per Night :</span> $299</p>
-                                    <p> <span class="fw-bold">Service Charge :</span> $80 </p>
-                                    <p> <span class="fw-bold">Cleaning Fee :</span> $50</p>
-                                </div>
+                                <p class="mb-xxl-5"><span>{{ $room->max_people }} Người</span>/Phòng</p>
                                 <hr>
                                 <div class="details my-5">
-                                    <h4 class="display-6 fw-normal mb-3">Room Details</h4>
-                                    <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eveniet minima
-                                        dignissimos, voluptates quasi nam laboriosam? Esse aut, velit a ullam numquam
-                                        excepturi quidem porro sunt eaque, aperiam cupiditate, iure dignissimos?
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, aut explicabo
-                                        sunt nesciunt saepe consequatur hic voluptates facilis beatae veniam ut totam
-                                        cum? Atque cupiditate corrupti, consequuntur pariatur dolorum laborum.
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem assumenda,
-                                        perspiciatis velit est possimus sapiente consequatur dolorem! Alias a eos quae?
-                                        Modi eos quo reiciendis, aliquam sequi dicta laborum esse.
+                                    <h4 class="display-6 fw-normal mb-3">Mô tả phòng</h4>
+                                    <p> {{ $room->description }}
                                     </p>
 
                                 </div>
                                 <hr>
                                 <div class="feature my-5">
-                                    <h4 class="display-6 fw-normal mb-3">Features & Amenities</h4>
+                                    <h4 class="display-6 fw-normal mb-3">Tiện nghi phòng</h4>
                                     <div class="d-md-flex">
-                                        <ul class="ms-4 me-5">
-                                            <li>Air Conditioning </li>
-                                            <li>Barbeque </li>
-                                            <li>Dryer </li>
-                                            <li>Gym </li>
-                                            <li>Lawn </li>
-                                            <li>Microwave </li>
-                                        </ul>
-                                        <ul class="ms-4">
-                                            <li>Outdoor Shower </li>
-                                            <li>Refrigerator </li>
-                                            <li>Swimming Pool </li>
-                                            <li>TV Cable </li>
-                                            <li>Washer </li>
-                                            <li>WiFi </li>
+                                        <ul class="ms-4 me-5" id="asset-list">
+                                            @foreach ($assets_type as $index => $asset)
+                                                <li class="asset-item {{ $index >= 5 ? 'd-none' : '' }}">
+                                                    {{ $asset->name }}
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
-
-                                </div>
-                                <hr>
-                                <div class="address my-5">
-                                    <h4 class="display-6 fw-normal mb-3">Location</h4>
-                                    <div class="d-flex">
-                                        <div class="me-5">
-                                            <p> <span class="fw-bold">Address :</span> 10425 Tabor St</p>
-                                            <p> <span class="fw-bold">City :</span> Los Angeles</p>
-                                            <p> <span class="fw-bold">State/county :</span> California</p>
-                                        </div>
-                                        <div class="ms-5">
-                                            <p> <span class="fw-bold">Zip/Postal Code :</span> 90034</p>
-                                            <p> <span class="fw-bold">Area :</span> Brookside</p>
-                                            <p> <span class="fw-bold">Country :</span> United States</p>
-                                        </div>
-                                    </div>
+                                    @if (count($assets_type) > 5)
+                                        <button id="toggle-btn" class="btn btn-primary mt-3">Xem thêm</button>
+                                    @endif
                                 </div>
                                 <hr>
                             </div>
@@ -212,114 +100,69 @@
                                 <div class="row">
                                     <div class="comments-wrap">
                                         <h3 class="display-6 fw-normal mb-5">
-                                            <span class="count">3</span> Comments
+                                            <span class="count"></span> Bình luận
                                         </h3>
                                         <div class="comment-list">
-                                            <article class="comment-item pb-3 row">
-                                                <div class="col-md-2">
-                                                    <img src="images/commentor-item1.jpg" alt="default"
-                                                        class="commentor-image img-fluid rounded-circle">
-                                                </div>
-                                                <div class="col-md-10">
-                                                    <div class="author-post mb-4">
-                                                        <div class="comment-meta text-uppercase d-flex gap-3 text-black">
-                                                            <div class="author-name fw-semibold">Lufy carlson</div>
-                                                            <span class="meta-date">Jul 10</span>
-                                                        </div>
-                                                        <p>Tristique tempis condimentum diam done ullancomroer sit element
-                                                            henddg sit he
-                                                            consequert.Tristique tempis condimentum diam done ullancomroer
-                                                            sit element henddg sit he
-                                                            consequert.</p>
-                                                        <div class="comments-reply border-animation">
-                                                            <a href="#">
-                                                                <i class="icon icon-mail-reply"></i>Reply </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                            <article class="comment-item pb-3 row child-comments">
-                                                <div class="col-md-2">
-                                                    <img src="images/commentor-item2.jpg" alt="default"
-                                                        class="commentor-image img-fluid rounded-circle">
-                                                </div>
-                                                <div class="col-md-10">
-                                                    <div class="author-post mb-4">
-                                                        <div class="comment-meta text-uppercase d-flex gap-3 text-black ">
-                                                            <div class="author-name fw-semibold">Lora leigh</div>
-                                                            <span class="meta-date">Jul 10</span>
-                                                        </div>
-                                                        <p>Tristique tempis condimentum diam done ullancomroer sit element
-                                                            henddg sit he
-                                                            consequert.Tristique tempis condimentum diam done ullancomroer
-                                                            sit element henddg sit he
-                                                            consequert.</p>
-                                                        <div class="comments-reply border-animation">
-                                                            <a href="#">
-                                                                <i class="icon icon-mail-reply"></i>Reply </a>
+                                            @foreach ($comments as $comment)
+                                                <article class="comment-item pb-3 row">
+                                                    <div class="col-md-10">
+                                                        <div class="author-post mb-4">
+                                                            <div
+                                                                class="comment-meta text-uppercase d-flex gap-3 text-black">
+                                                                <div class="author-name fw-semibold">
+                                                                    {{ $comment->user->name }}</div>
+                                                                <span class="meta-rating">
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        @if ($i <= $comment->rating)
+                                                                            ★
+                                                                        @else
+                                                                            ☆
+                                                                        @endif
+                                                                    @endfor
+                                                                </span>
+                                                            </div>
+                                                            <p>{{ $comment->comment }}</p>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </article>
-                                            <article class="comment-item pb-3 row">
-                                                <div class="col-md-2">
-                                                    <img src="images/commentor-item3.jpg" alt="default"
-                                                        class="commentor-image img-fluid rounded-circle">
-                                                </div>
-                                                <div class="col-md-10">
-                                                    <div class="author-post mb-4">
-                                                        <div class="comment-meta text-uppercase d-flex gap-3 text-black ">
-                                                            <div class="author-name fw-semibold">Natalie dormer</div>
-                                                            <span class="meta-date">Jul 10</span>
-                                                        </div>
-                                                        <p>Tristique tempis condimentum diam done ullancomroer sit element
-                                                            henddg sit he
-                                                            consequert.Tristique tempis condimentum diam done ullancomroer
-                                                            sit element henddg sit he
-                                                            consequert.</p>
-                                                        <div class="comments-reply border-animation">
-                                                            <a href="#">
-                                                                <i class="icon icon-mail-reply"></i>Reply </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </article>
+                                                </article>
+                                            @endforeach
                                         </div>
+                                        <hr>
                                     </div>
-                                    <div class="comment-respond mt-5">
-                                        <h3 class="display-6 fw-normal mb-5">Leave a Comment</h3>
-                                        <p>Your email address will not be published. Required fields are marked *</p>
-                                        <form method="post" class="form-group ">
-                                            <div class="row">
-                                                <div class="col-lg-12 mb-3">
-                                                    <textarea class="form-control bg-transparent ps-3 pt-3" id="comment" name="comment"
-                                                        placeholder="Write your comment here *"></textarea>
+                                    @if (Auth::check())
+                                        <div class="comment-respond mt-5">
+                                            <h3 class="display-6 fw-normal mb-5">Để lại bình luận</h3>
+                                            <form method="post" class="form-group"
+                                                action="{{ route('client.room-postComment') }}">
+                                                @csrf
+                                                <div class="row">
+                                                    <input type="hidden" name="id" value="{{ $room->id }}">
+                                                    <div class="col-lg-12 mb-3">
+                                                        <label class="form-label">Đánh giá của bạn:</label>
+                                                        <div class="rating">
+                                                            @for ($i = 5; $i >= 1; $i--)
+                                                                <input type="radio" id="star{{ $i }}"
+                                                                    name="rating" value="{{ $i }}" />
+                                                                <label for="star{{ $i }}"
+                                                                    title="{{ $i }} sao">
+                                                                    <i class="fas fa-star"></i>
+                                                                </label>
+                                                            @endfor
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12 mb-3">
+                                                        <textarea class="form-control bg-transparent ps-3 pt-3" id="comment" name="comment"
+                                                            placeholder="Viết bình luận của bạn *"></textarea>
+                                                    </div>
                                                 </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <input class="form-control bg-transparent ps-3" type="text"
-                                                        name="author" id="author"
-                                                        placeholder="Write your full name here *">
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <input class="form-control bg-transparent ps-3" type="email"
-                                                        name="email" id="email"
-                                                        placeholder="Write your e-mail address *">
-                                                </div>
-                                                <div class="col-lg-12">
-                                                    <label class="d-flex align-items-center">
-                                                        <input type="checkbox" class="checked-box me-2">
-                                                        <span class="label-body">Save my name, email, and website in this
-                                                            browser for the next
-                                                            time.</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <button class="btn btn-arrow btn-primary mt-3" type="submit">
-                                                <span>Submit<svg width="18" height="18">
-                                                        <use xlink:href="#arrow-right"></use>
-                                                    </svg></span></button>
-                                        </form>
-                                    </div>
+                                                <button class="btn btn-arrow btn-primary mt-3" type="submit">
+                                                    <span>Gửi<svg width="18" height="18">
+                                                            <use xlink:href="#arrow-right"></use>
+                                                        </svg></span></button>
+                                            </form>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </section>
@@ -327,45 +170,37 @@
                 </main>
                 <aside class="col-lg-3 mt-5">
                     <div class=" ">
-                        <form id="form" class="form-group flex-wrap p-4 border rounded-4">
-                            <h2 class=" fs-2 text-black my-3 mb-5">Reserve Now</h2>
-
+                        <form id="bookingForm" class="form-group flex-wrap p-4 border rounded-4">
+                            <h2 class=" fs-2 text-black my-3 mb-5">Đặt Phòng</h2>
+                            <input type="hidden" name="room_id" value="{{ $room->id }}">
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Check-In</label>
+                                <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="start" name="appointment" min="2023-01-01"
-                                        max="2023-12-31" class="form-control ps-3 me-3">
+                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3">
                                 </div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Check-Out</label>
+                                <label for="exampleInputEmail1" class="form-label text-black">Ngày trả</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="start" name="appointment" min="2023-01-01"
-                                        max="2023-12-31" class="form-control ps-3 me-3">
+                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3">
                                 </div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Room</label>
-                                <input type="number" value="1" name="quantity" class="form-control ps-3">
+                                <label for="exampleInputEmail1" class="form-label text-black">Người lớn</label>
+                                <input type="number" id="adult-quantity" value="1" name="quantity"
+                                    class="form-control ps-3">
+                                <div id="error-message" style="color: red; display: none;">Số lượng người lớn không được
+                                    vượt quá số lượng cho phép của phòng.</div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Adult</label>
-                                <input type="number" value="1" name="quantity" class="form-control ps-3">
-                            </div>
-                            <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Children</label>
-                                <input type="number" value="0" name="quantity" class="form-control ps-3">
-                            </div>
-                            <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Your
-                                    Message</label>
-                                <textarea placeholder="Write Your Message Here" class="form-control ps-3" rows="8"></textarea>
+                                <label for="exampleInputEmail1" class="form-label text-black">Trẻ em</label>
+                                <input type="number" id="children-quantity" value="0" name="quantity"
+                                    class="form-control ps-3">
+                                <div id="error-message-children" style="color: red; display: none;">Số lượng trẻ em không
+                                    được vượt quá số lượng cho phép của phòng.</div>
                             </div>
                             <div class="d-grid mb-3">
-                                <button class="btn btn-arrow btn-primary"> <span>Check Availabitily<svg width="18"
-                                            height="18">
-                                            <use xlink:href="#arrow-right"></use>
-                                        </svg></span></button>
+                                <button type="submit" class="btn btn-arrow btn-primary">Đặt ngay</button>
                             </div>
                         </form>
                     </div>
@@ -373,4 +208,291 @@
             </div>
         </div>
     </div>
+    <style>
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+        }
+
+        .rating input[type="radio"] {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .rating input[type="radio"]:checked~label,
+        .rating label:hover,
+        .rating label:hover~label {
+            color: #ffc107;
+        }
+
+        .thumb-image {
+            width: 240px;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .img-product {
+            width: 985px;
+            height: 580px;
+            object-fit: cover;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggle-btn');
+            const assetItems = document.querySelectorAll('.asset-item');
+            let isExpanded = false;
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    if (isExpanded) {
+                        assetItems.forEach((item, index) => {
+                            if (index >= 5) {
+                                item.classList.add('d-none');
+                            }
+                        });
+                        toggleBtn.textContent = 'Xem thêm';
+                    } else {
+                        assetItems.forEach(item => item.classList.remove('d-none'));
+                        toggleBtn.textContent = 'Ẩn bớt';
+                    }
+                    isExpanded = !isExpanded;
+                });
+            }
+        });
+    </script>
+
+    <script type="module">
+        $('#bookingForm').on('submit', function(e) {
+            e.preventDefault();
+
+            // Lấy dữ liệu từ form
+            var formData = {
+                _token: $('input[name="_token"]').val(),
+                room_id: $('input[name="room_id"]').val(),
+                checkin: $('#checkin').val(),
+                checkout: $('#checkout').val(),
+                adult_quantity: $('#adult-quantity').val(),
+                children_quantity: $('#children-quantity').val()
+            };
+
+            // Giới hạn số lượng người lớn và trẻ em
+            const maxAdults = {{ $room->max_people }};
+            const maxChildren = 2;
+
+            if (!formData.checkin) {
+                alert("Ngày check-in không được để trống.");
+                $('#checkin').focus();
+                return false;
+            }
+
+            if (!formData.checkout) {
+                alert("Ngày check-out không được để trống.");
+                $('#checkout').focus();
+                return false;
+            }
+
+            if (formData.adult_quantity > maxAdults) {
+                alert("Số lượng người lớn không được vượt quá " + maxAdults);
+                return;
+            }
+
+            if (formData.children_quantity > maxChildren) {
+                alert("Số lượng trẻ em không được vượt quá " + maxChildren);
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('api.confirmInfor') }}",
+                method: "POST",
+                data: formData,
+                success: function(response) {
+                    if (response.type === 'success') {
+                        window.location.href = response
+                            .url;
+                    } else {
+                        alert('Đã xảy ra lỗi khi gửi thông tin.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("Đã xảy ra lỗi trong quá trình gửi yêu cầu.");
+                }
+            });
+        });
+
+        $.ajax({
+            url: `{{ route('api.checkDate', $room->id) }}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.type === 'success') {
+                    const data = response.data;
+                    const blockedDates = [];
+
+                    if (data.length === 0) {
+                        console.log("Phòng này hiện không có ngày đặt nào!");
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const fromDate = new Date(item.from * 1000);
+                        let toDate = '';
+
+                        if (item.to === 0) {
+                            toDate = 'Trống đến hết năm';
+                        } else {
+                            toDate = new Date(item.to * 1000);
+                        }
+
+                        const formattedFromDate = fromDate.toISOString().split('T')[0];
+                        let formattedToDate = '';
+                        if (toDate === 'Trống đến hết năm') {
+                            formattedToDate = toDate;
+                        } else {
+                            formattedToDate = toDate.toISOString().split('T')[0];
+                        }
+
+                        let currentDate = new Date(fromDate);
+                        while (currentDate <= toDate) {
+                            blockedDates.push(currentDate.toISOString().split('T')[0]);
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+
+                        console.log(
+                            `Từ ngày: ${formattedFromDate} - Đến ngày: ${formattedToDate === 'Trống đến hết năm' ? formattedToDate : formattedToDate} - Trạng thái: ${item.status === 1 ? 'Trống' : 'Đã đặt'}`
+                        );
+                    });
+
+                    const checkinInput = document.getElementById("checkin");
+                    const checkoutInput = document.getElementById("checkout");
+
+                    function isDateBlocked(date) {
+                        return blockedDates.includes(date);
+                    }
+
+                    const today = new Date().toISOString().split("T")[0];
+                    checkinInput.setAttribute("min", today);
+                    checkoutInput.setAttribute("min", today);
+
+                    checkinInput.addEventListener("change", function() {
+                        const checkinDate = new Date(checkinInput.value);
+                        const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
+
+                        if (isDateBlocked(formattedCheckinDate)) {
+                            alert("Ngày check-in này đã bị đặt.");
+                            checkinInput.value = "";
+                        }
+                    });
+
+                    checkoutInput.addEventListener("change", function() {
+                        const checkoutDate = new Date(checkoutInput.value);
+                        const formattedCheckoutDate = checkoutDate.toISOString().split('T')[0];
+
+                        if (isDateBlocked(formattedCheckoutDate)) {
+                            alert("Ngày check-out này đã bị đặt.");
+                            checkoutInput.value = "";
+                        }
+                    });
+
+                } else {
+                    console.log("Không có dữ liệu ngày đặt!");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error checking booking dates:", xhr, status, error);
+                console.log("Đã xảy ra lỗi khi kiểm tra ngày đặt!");
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const checkinInput = document.getElementById("checkin");
+            const checkoutInput = document.getElementById("checkout");
+
+            const today = new Date().toISOString().split("T")[0];
+            checkinInput.setAttribute("min", today);
+            checkoutInput.setAttribute("min", today);
+
+            checkinInput.addEventListener("change", function() {
+                const checkinDate = new Date(checkinInput.value);
+
+                const minCheckoutDate = new Date(checkinDate);
+                minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
+
+                checkoutInput.value = "";
+                checkoutInput.setAttribute("min", minCheckoutDate.toISOString().split("T")[0]);
+            });
+
+            checkoutInput.addEventListener("change", function() {
+                const checkinDate = new Date(checkinInput.value);
+                const checkoutDate = new Date(checkoutInput.value);
+
+                if (checkoutDate <= checkinDate) {
+                    alert("Ngày đi phải lớn hơn ngày đến ít nhất 1 ngày!");
+                    checkoutInput.value = "";
+                }
+            });
+        });
+
+        const maxGuests = {{ $room->max_people }};
+
+        const adultInput = document.getElementById('adult-quantity');
+        const errorMessage = document.getElementById('error-message');
+
+        adultInput.addEventListener('input', function() {
+            const adultQuantity = parseInt(adultInput.value, 10);
+
+            if (adultQuantity > maxGuests) {
+                errorMessage.style.display = 'block';
+                adultInput.setCustomValidity("Số lượng người lớn không được vượt quá " + maxGuests +
+                    " người.");
+            } else {
+                errorMessage.style.display = 'none';
+                adultInput.setCustomValidity("");
+            }
+        });
+
+        document.getElementById('form').addEventListener('submit', function(e) {
+            const adultQuantity = parseInt(adultInput.value, 10);
+
+            if (adultQuantity > maxGuests) {
+                e.preventDefault();
+                alert("Số lượng người lớn không được vượt quá " + maxGuests + " người.");
+            }
+        });
+
+        const maxChildren = 2;
+
+        const childrenInput = document.getElementById('children-quantity');
+        const errorMessageChildren = document.getElementById('error-message-children');
+
+        childrenInput.addEventListener('input', function() {
+            const childrenQuantity = parseInt(childrenInput.value, 10);
+
+            if (childrenQuantity > maxChildren) {
+                errorMessageChildren.style.display = 'block';
+                childrenInput.setCustomValidity("Số lượng trẻ em không được vượt quá " + maxChildren +
+                    " trẻ em.");
+            } else {
+                errorMessageChildren.style.display = 'none';
+                childrenInput.setCustomValidity("");
+            }
+        });
+
+        document.getElementById('form').addEventListener('submit', function(e) {
+            const childrenQuantity = parseInt(childrenInput.value, 10);
+
+            if (childrenQuantity > maxChildren) {
+                e.preventDefault();
+                alert("Số lượng trẻ em không được vượt quá " + maxChildren + " trẻ em.");
+            }
+        });
+    </script>
 @endsection
