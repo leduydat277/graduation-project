@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\HomeController;
 
@@ -34,5 +36,13 @@ Route::get('/blog-detail', [HomeController::class, 'index'])
     ->name('client.blog-detail');
 Route::get('/booking', [HomeController::class, 'index'])
     ->name('client.booking');
+Route::prefix("authentication")->name("authentication.")->group(function() {
+    Route::get('/login', [AuthenticationController::class, 'loginUI'])->name('loginUI');
+    Route::post('/login', [AuthenticationController::class, 'postLogin'])->name('postLogin');
+
+    Route::get('/register', [AuthenticationController::class, 'registerUI'])->name('registerUI');
+    Route::post('/register', [AuthenticationController::class, 'register'])->name('postRegister');
+
+});
 
 
