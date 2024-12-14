@@ -43,6 +43,13 @@ Route::get('/notifications', [NotificationsController::class, 'showNotifications
 Route::post('/notifications/delete', [NotificationsController::class, 'deleteNotifications']);
 Route::post('/notifications/read', [NotificationsController::class, 'readNotifications']);
 
+
+Route::get('checkDate{id}', [BookingController::class, 'checkDate'])
+    ->name('api.checkDate');
+
+Route::post('confirm', [BookingController::class, 'confirmInfor'])
+    ->name('api.confirmInfor');
+
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
 

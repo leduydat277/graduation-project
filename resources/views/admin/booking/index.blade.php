@@ -128,7 +128,7 @@
                                                     title="Xem chi tiết">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                @if ($booking->status != 3 && $booking->status != 6)
+                                                @if ($booking->status != 2 && $booking->status != 6 && $booking->status != 3)
                                                     <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
                                                         onclick="confirmCancel({{ $booking->id }})">
                                                         <i class="fas fa-times-circle"></i>
@@ -141,6 +141,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="d-flex justify-content-end">
+                            {{ $bookings->appends(request()->input())->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,7 +32,7 @@
                             <input type="text" name="search" id="search" class="form-control"
                                 placeholder="Nhập tên phòng..." value="{{ request('search') }}">
                         </div>
-
+                
                         <!-- Chọn trạng thái phòng -->
                         <div class="col-md-3">
                             <label for="status" class="form-label">Trạng thái phòng</label>
@@ -40,28 +40,28 @@
                                 <option value="">Tất cả trạng thái</option>
                                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Đã cọc</option>
                                 <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Sẵn sàng</option>
-                                <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Đang sử dụng
-                                </option>
+                                <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Đang sử dụng</option>
                             </select>
                         </div>
-
+                
                         <!-- Ngày bắt đầu -->
                         <div class="col-md-3">
                             <label for="from_date" class="form-label">Ngày đến (From)</label>
                             <input type="date" name="from_date" id="from_date" class="form-control"
-                                placeholder="Chọn ngày bắt đầu" value="{{ request('from_date') }}">
+                                value="{{ request('from_date') }}" placeholder="dd-mm-yyyy">
                         </div>
-
+                
                         <!-- Ngày kết thúc -->
                         <div class="col-md-3">
                             <label for="to_date" class="form-label">Ngày đi (To)</label>
                             <input type="date" name="to_date" id="to_date" class="form-control"
-                                placeholder="Chọn ngày kết thúc" value="{{ request('to_date') }}">
+                                value="{{ request('to_date') }}" placeholder="dd-mm-yyyy">
                         </div>
-
+                
                         <!-- Nút Lọc -->
                         <div class="col-md-3 mt-4">
                             <button type="submit" class="btn btn-primary w-50">Lọc</button>
+                            <a href="{{ route('manage-status-rooms.index')}}" class="btn btn-secondary">Xoá bộ lọc</a>
                         </div>
                     </form>
 
