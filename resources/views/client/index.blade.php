@@ -272,7 +272,7 @@
                             </div>
                             <h4 class="display-6 fw-normal my-3">${assetType.name}</h4>
                             <p>${assetType.description}</p>
-                            <a href="{{ route('client.services' )}}" class="btn btn-arrow">
+                            <a href="/services/${assetType.id}" class="btn btn-arrow">
                                 <span class="text-decoration-underline">Xem thêm<svg width="18" height="18">
                                         <use xlink:href="#arrow-right"></use>
                                     </svg></span>
