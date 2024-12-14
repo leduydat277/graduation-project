@@ -53,6 +53,9 @@ Route::post('confirm', [BookingController::class, 'confirmInfor'])
 Route::post('booking', [BookingController::class, 'booking'])
     ->name('api.booking');
 
+Route::get('redirectDetailBooking', [BookingController::class, 'redirectDetailBooking'])
+    ->name('api.redirectDetailBooking');
+
 Route::post('voucher', [VoucherController::class, 'checkVoucher'])
     ->name('api.voucher');
 
