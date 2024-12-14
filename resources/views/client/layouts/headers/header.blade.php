@@ -3,7 +3,7 @@
         <div class="container-fluid padding-side">
             <div class="d-flex justify-content-between align-items-center w-100">
                 <a class="navbar-brand" href="{{ route('client.home') }}">
-                    <p class="logo img-fluid">Sleep</p>
+                    <p class="logo img-fluid">SleepHotel</p>
                 </a>
                 <button class="navbar-toggler border-0 d-flex d-lg-none order-3 p-2 shadow-none" type="button"
                     data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar"

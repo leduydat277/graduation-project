@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Voucher extends Model
 {
     public $timestamps = false;
-    use SoftDeletes;
     public $table = 'vouchers';
 
     protected $fillable = [

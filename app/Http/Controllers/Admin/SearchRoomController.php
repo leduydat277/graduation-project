@@ -6,6 +6,7 @@ use App\Models\Admin\ManageStatusRoom;
 use App\Models\Admin\Room;
 use Carbon\Carbon;
 use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -25,11 +26,13 @@ class SearchRoomController extends Controller
     {
         
         $room_type_id = $_GET['room_type_id'] ?? null;
-        $input_people = $_GET['input_people'] ?? null;
-        $from = $_GET['from'] ?? null;
-        $to = $_GET['to'] ?? null;
-    
-       
+        $input_people = $_GET['quantity'] ?? null;
+        // $from = $_GET['from'] ?? null;
+        // $to = $_GET['to'] ?? null;
+
+        $from = $_GET['select-arrival-date'] ?? null;
+        $to = $_GET['select-departure-date_value'] ?? null;
+        
         if ($from && $to) {
             try {
                 $fromDate = new DateTime($from);
@@ -43,7 +46,6 @@ class SearchRoomController extends Controller
                     ], 400);
                 }
     
-             
                 $fromTimestamp = $fromDate->setTime(14, 0, 0)->getTimestamp();
                 $toTimestamp = $toDate->setTime(12, 0, 0)->getTimestamp();
             } catch (Exception $e) {
@@ -53,7 +55,7 @@ class SearchRoomController extends Controller
                 ], 400);
             }
         } else {
-           
+        
             $fromTimestamp = Carbon::now()->timestamp; 
             $toTimestamp = $fromTimestamp + 86400; 
         }
@@ -104,7 +106,6 @@ class SearchRoomController extends Controller
             ], 404);
         }
     
-       
         $roomIds = array_column($arr_room_manages, 'room_id');
         $results_rooms = Room::whereIn('id', $roomIds)
             ->with('roomType')
