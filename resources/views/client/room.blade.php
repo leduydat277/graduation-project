@@ -170,7 +170,7 @@
                 paginatedRooms.forEach(room => {
                     const roomItem = `
                 <div class="col-md-6 col-xl-4 mb-4">
-                     <a href="${room.details_url}"><div class="room-item rounded-4">
+                    <a href="${room.details_url}"><div class="room-item rounded-4">
                         <img src="http://127.0.0.1:8000/storage/${JSON.parse(room.image_room)[0]}" style="width: 100%;  height: 400px; object-fit: cover;" alt="img" class="img-fluid rounded-4">
                     </div></a>
                     <div class="room-content">
