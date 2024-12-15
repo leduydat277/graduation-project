@@ -20,7 +20,7 @@ Route::get('/services/{id}', [SeviceController::class, 'show'])
     ->name('client.services-detail');
 Route::get('/blog', [HomeController::class, 'index'])
     ->name('client.blog');
-Route::get('/policy', [HomeController::class, 'index'])
+Route::get('/policy', [HomeController::class, 'policy'])
     ->name('client.policy');
 Route::get('/room', [HomeController::class, 'rooms'])
     ->name('client.room');

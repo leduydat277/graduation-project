@@ -68,6 +68,11 @@ class HomeController
         $title = "Đánh giá & bình luận";
         return view('client.review', compact('title'));
     }
+    public function policy()
+    {
+        $title = "Điều khoản";
+        return view('client.policy', compact('title'));
+    }
 
     public function booking_detail($bookingNumberId){
         $title = "Chi tiết đặt phòng";
