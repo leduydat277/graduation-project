@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // Mô tả (có thể để trống)
             $table->string('image')->nullable(); // Hình ảnh (có thể để trống)
             $table->unsignedBigInteger('price'); // Giá (với 2 chữ số thập phân)
+            $table->unsignedInteger('status')->default(0); // Trạng thái 0 chưa thanh toán, 1 đã thanh toán
             $table->unsignedInteger('created_at')->default(time()); // Trường created_at kiểu unsignedInteger
             $table->unsignedInteger('updated_at')->default(time()); // Trường updated_at kiểu unsignedInteger
         });

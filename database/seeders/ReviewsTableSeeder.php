@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Review;
 use App\Models\Room;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
@@ -15,20 +16,19 @@ class ReviewsTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Giả lập 10 bản ghi review
-        for ($i = 0; $i < 10; $i++) {
-            // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
-            $user_id = User::inRandomOrder()->first()->id;
-            $room_id = Room::inRandomOrder()->first()->id;
+        // Lấy tất cả ID của users và rooms đã fake trước đó
+        $userIds = DB::table('users')->pluck('id')->toArray();
+        $roomIds = DB::table('rooms')->pluck('id')->toArray();
 
-            Review::create([
-                'user_id' => $user_id, // Lấy user_id ngẫu nhiên
-                'room_id' => $room_id, // Lấy room_id ngẫu nhiên
-                'rating' => $faker->numberBetween(1, 5), // Đánh giá ngẫu nhiên từ 1 đến 5
-                'comment' => $faker->optional()->sentence, // Nhận xét ngẫu nhiên, có thể để trống
-                'created_at' => time(), // Sử dụng thời gian Unix timestamp
-                'updated_at' => time(), // Sử dụng thời gian Unix timestamp
+        for ($i = 0; $i < 50; $i++) {
+            DB::table('reviews')->insert([
+                'user_id' => $faker->randomElement($userIds), // Chọn ID người dùng ngẫu nhiên từ bảng users
+                'room_id' => $faker->randomElement($roomIds), // Chọn ID phòng ngẫu nhiên từ bảng rooms
+                'rating' => $faker->numberBetween(1, 5), // Giả lập đánh giá từ 1 đến 5 sao
+                'comment' => $faker->optional()->sentence(10), // Bình luận ngẫu nhiên, có thể NULL
+                'created_at' => Carbon::now()->timestamp, // Thời gian hiện tại dưới dạng Unix timestamp
             ]);
         }
+
     }
 }

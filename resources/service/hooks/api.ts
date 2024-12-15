@@ -1,6 +1,6 @@
 import axios from 'axios'
-
-const SLEEP_HOTTEL_API_BASE = process.env.SLEEP_HOTEL_API_BASE
+  
+export const SLEEP_HOTTEL_API_BASE = 'http://127.0.0.1:8000'
 
 export async function apiRequest<T = any>(
   url: string,
@@ -31,23 +31,23 @@ export async function apiRequest<T = any>(
     }
   }
 }
-export async function healthieRequest<T = any>(url: string, data): Promise<T> {
+export async function sleepRequest<T = any>(url: string, data): Promise<T> {
+ 
   try {
     const response = await axios.request({
       url: SLEEP_HOTTEL_API_BASE + '/' + url,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json; charset=utf-8',
-        Authorization: getAuthorizationHeader(),
       },
       method: 'GET',
       ...data,
     })
-    console.log('response.data: ', url, data, response.data)
+    console.log('response.data: ', response.data,)
     return response.data
   } catch (error: any) {
     console.log(
-      'healthieRequest: ',
+      'sleepRequest: ',
       SLEEP_HOTTEL_API_BASE,
       url,
       data,

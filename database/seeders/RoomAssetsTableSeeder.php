@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AssetsType;
 use App\Models\Room;
 use App\Models\RoomAsset;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
@@ -15,24 +16,17 @@ class RoomAssetsTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Giả lập 10 bản ghi cho bảng roomassets
-        for ($i = 0; $i < 10; $i++) {
-            // Lấy ngẫu nhiên assets_type_id từ bảng assets_types
-            $assets_type_id = AssetsType::inRandomOrder()->first()->id;
+        // Lấy tất cả ID của rooms và asset_types đã fake trước đó
+        $roomIds = DB::table('rooms')->pluck('id')->toArray();
+        $assetTypeIds = DB::table('assets_types')->pluck('id')->toArray();
 
-            // Lấy ngẫu nhiên room_id từ bảng rooms
-            $room_id = Room::inRandomOrder()->first()->id;
-
-            // Trạng thái ngẫu nhiên (0: đang sử dụng, 1: tạm dừng sử dụng)
-            $status = $faker->randomElement([0, 1]);
-
-            // Tạo bản ghi vào bảng roomassets
-            RoomAsset::create([
-                'assets_type_id' => $assets_type_id, // assets_type_id ngẫu nhiên
-                'room_id' => $room_id, // room_id ngẫu nhiên
-                'status' => $status, // Trạng thái ngẫu nhiên
-                'created_at' => time(), // Thời gian tạo
-                'updated_at' => time(), // Thời gian cập nhật
+        for ($i = 0; $i < 50; $i++) {
+            DB::table('roomassets')->insert([
+                'assets_type_id' => $faker->randomElement($assetTypeIds), // Chọn ID loại tài sản ngẫu nhiên từ bảng assets_types
+                'room_id' => $faker->randomElement($roomIds), // Chọn ID phòng ngẫu nhiên từ bảng rooms
+                'status' => $faker->randomElement([0, 1]), // Trạng thái: 0 - đang sử dụng, 1 - tạm dừng sử dụng
+                'created_at' => Carbon::now()->timestamp, // Thời gian hiện tại dưới dạng Unix timestamp
+                'updated_at' => Carbon::now()->timestamp, // Thời gian hiện tại dưới dạng Unix timestamp
             ]);
         }
     }

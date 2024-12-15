@@ -22,23 +22,24 @@ class Room extends Model
         'status'
     ];
 
-    public function bookings()
+    public function roomType()
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsTo(RoomType::class, 'room_type_id');
     }
 
+
+    // Room.php
     public function manageStatusRooms()
     {
-        return $this->hasMany(ManageStatusRoom::class);
+        return $this->hasMany(ManageStatusRoom::class, 'room_id');
     }
 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'room_id');
+    }
     public function roomAssets()
     {
         return $this->hasMany(RoomAsset::class);
-    }
-
-    public function roomType()
-    {
-        return $this->belongsTo(RoomType::class);
     }
 }

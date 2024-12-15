@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 @section('title')
     Đặt phòng
 @endsection
@@ -35,7 +35,7 @@
                 </div>
             @endif
             <div class="row">
-                <form action="{{ route('admin.booking.add') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('adminBooking.add') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="room_type" class="form-label">Loại phòng</label>
@@ -137,6 +137,11 @@
 
 @section('js')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('check_in_date').setAttribute('min', today);
+            document.getElementById('check_out_date').setAttribute('min', today);
+        });
         // Các phần tử cần lấy từ DOM
         const roomSelect = document.getElementById("room_id");
         const roomType = document.getElementById("room_type");
@@ -170,7 +175,7 @@
                     roomSelect.innerHTML = '<option selected disabled>Chọn phòng</option>';
 
                     // Đổ dữ liệu vào select
-                    data.forEach(room => {
+                    data.data.forEach(room => {
                         const option = document.createElement("option");
                         option.value = room.id;
                         option.textContent =

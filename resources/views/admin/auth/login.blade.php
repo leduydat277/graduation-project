@@ -1,73 +1,182 @@
-@extends('layouts.app')
+<!doctype html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
+    data-sidebar-image="none" data-preloader="disable">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<head>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    <meta charset="utf-8" />
+    <title>Đăng nhập trang quản trị Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+    <!-- Layout config Js -->
+    <script src="{{ asset('assets/admin/assets/js/layout.js') }}"></script>
+    <!-- Bootstrap Css -->
+    <link href="{{ asset('assets/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- custom Css-->
+    <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        html,
+        body {
+            overflow-y: hidden;
+            /* Tắt cuộn dọc */
+        }
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+        .auth-one-bg {
+            height: 115vh;
+            background-image: url(../assets/admin/assets/images/anh.jpg) !important;
+            background-position: center;
+            background-size: cover;
+            opacity: 0.9 !important;
+            overflow: hidden;
+            filter: brightness(1.2);
+            /* filter: none !important;      */
+        }
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+        .auth-one-bg .bg-overlay {
+            background: none !important;
+            opacity: 1 !important;
+        }
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+        .welcome-text {
+            font-size: 1.65rem;
+            /* Kích thước chữ (15px tương đương 1rem = 16px) */
+            font-weight: 500;
+            /* Độ đậm vừa phải (medium) */
+            color: #333;
+            /* Màu chữ (dễ nhìn, không quá sáng hoặc tối) */
+            text-align: center;
+            /* Căn giữa chữ */
+            margin-top: 1.5rem;
+            /* Khoảng cách phía trên (24px) */
+            line-height: 1.6;
+            /* Tăng khoảng cách giữa các dòng cho dễ đọc */
+            font-family: 'Arial', sans-serif;
+            /* Font chữ gọn gàng */
+            text-transform: capitalize;
+            /* Viết hoa chữ cái đầu tiên */
+        }
+    </style>
+</head>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+<body>
+    <div class="auth-page-wrapper pt-5">
+        <!-- auth page bg -->
+        <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
+            <div class="bg-overlay"></div>
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div class="shape">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 1440 120">
+                    <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+                </svg>
             </div>
         </div>
+
+        <!-- auth page content -->
+        <div class="auth-page-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center mt-sm-5 mb-4 text-white">
+                            <p class="welcome-text text-white">Chào mừng bạn đến với quản trị SleepHotel</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card mt-4">
+
+                            <div class="card-body p-4">
+                                <div class="text-center mt-2">
+                                    <h5 class="text-primary">Chào mừng trở lại</h5>
+                                    <p class="text-muted">Đăng nhập để tiếp tục đến SleepHotel.</p>
+                                </div>
+                                <div class="p-2 mt-4">
+                                    <form action="{{ route('admin.login.submit') }}" method="POST">
+                                        @csrf <!-- CSRF token để bảo mật form -->
+
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email:</label>
+                                            <input type="email" name="email" class="form-control" id="email"
+                                                placeholder="Nhập email của bạn" value="{{ old('email') }}">
+                                            @error('email')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label" for="password">Mật khẩu:</label>
+                                            <div class="position-relative auth-pass-inputgroup mb-3">
+                                                <input type="password" name="password"
+                                                    class="form-control pe-5 password-input"
+                                                    placeholder="Nhập mật khẩu của bạn" id="password">
+                                                <button
+                                                    class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                                    type="button" id="password-addon">
+                                                    <i class="ri-eye-fill align-middle"></i>
+                                                </button>
+                                            </div>
+                                            @error('password')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                        <div class="mt-4">
+                                            <button class="btn btn-success w-100" type="submit">Đăng nhập</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- end card body -->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </div>
+        <!-- end auth page content -->
+
+        <!-- footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p class="mb-0 text-white">&copy;
+                                <script>
+                                    document.write(new Date().getFullYear())
+                                </script>SleepHotel<i class="mdi mdi-heart text-danger"></i>
+                                Chất lượng phục vụ hàng đầu.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->
     </div>
-</div>
-@endsection
+
+    <!-- JAVASCRIPT -->
+    <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/libs/feather-icons/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/js/plugins.js') }}"></script>
+
+    <!-- password-addon init -->
+    <script src="{{ asset('assets/admin/assets/js/pages/password-addon.init.js') }}"></script>
+</body>
+
+</html>
