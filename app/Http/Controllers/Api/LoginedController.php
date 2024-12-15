@@ -5,28 +5,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
-class LoginedController {
-   
-    public function index(Request $request)
+class LoginedController
 {
-    $email = $request->input('email');
 
-    if (!$email) {
+    public function index(Request $request)
+    {
+        $email = $request->input('email');
+
+        if (!$email) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Email is required',
+            ], 400);
+        }
+
+        $user = User::where('email', $email)->firstOrFail();
+
         return response()->json([
-            'type' => 'error',
-            'message' => 'Email is required',
-        ], 400);
+            'type' => 'success',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile' => $user->profile,
+            ],
+        ], 200);
     }
-
-    $user = User::where('email', $email)->firstOrFail();
-
-    return response()->json([
-        'type' => 'success',
-        'user' => [
-            'name' => $user->name,
-            'email' => $user->email,
-            'profile' => $user->profile,
-        ],
-    ], 200);
-}
 }

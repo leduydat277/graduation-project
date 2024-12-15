@@ -51,15 +51,71 @@
                     </div>
                 </div>
                 <div class="search d-lg-block d-none">
-                    <form class=" position-relative">
-                        <input type="text" class="form-control bg-secondary border-0 rounded-5 px-4 py-2"
-                            placeholder="Search...">
-                        <a href="#" class="position-absolute top-50 end-0 translate-middle-y p-1 me-3">
-                            <svg class="" width="20" height="20">
-                                <use xlink:href="#search"></use>
-                            </svg>
-                        </a>
-                    </form>
+                    <style>
+                        .btn {
+                            padding: 8px 16px;
+                            border-radius: 5px;
+                            font-weight: 500;
+                        }
+
+                        .register-btn {
+                            background: linear-gradient(to right, #FFE5CC, #FFE5CC);
+                            color: #fff;
+                            border: none;
+                        }
+
+                        .register-btn:hover {
+                            background: linear-gradient(to right, #FFE5CC, #FFE5CC);
+                            color: #fff;
+                        }
+
+                        .login-btn {
+                            border: 2px solid #FFE5CC;
+                            color: #7a2929;
+                            background: transparent;
+                        }
+
+                        .login-btn:hover {
+                            background: #FFE5CC;
+                            color: #fff;
+                        }
+
+                        .search {
+                            margin-top: 10px;
+                        }
+                    </style>
+                    <div class="d-flex justify-content-end align-items-center">
+                        @if (Auth::check())
+                            <!-- Khi người dùng đã đăng nhập -->
+                            <div class="dropdown">
+                                <button class="btn d-flex align-items-center" type="button" id="userDropdown"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <!-- Hình ảnh tài khoản -->
+                                    <img src="{{ Auth::user()->image ? Storage::url(Auth::user()->image) : asset('images/default-avatar.png') }}"
+                                        alt="avatar" class="rounded-circle me-2"
+                                        style="width: 40px; height: 40px; object-fit: cover;">
+                                    <!-- Tên tài khoản -->
+                                    <span>{{ Auth::user()->name }}</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{{ route('client.logout') }}">Đăng
+                                            xuất</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        @else
+                            <!-- Khi người dùng chưa đăng nhập -->
+                            <a href="{{ route('client.login') }}" class="btn btn-outline-primary me-2 login-btn">Đăng
+                                nhập</a>
+                            <a href="{{ route('client.register') }}" class="btn btn-primary register-btn">Đăng ký</a>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         </div>
