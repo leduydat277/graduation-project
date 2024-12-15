@@ -7,8 +7,10 @@ use App\Http\Controllers\Web\ReviewController;
 use App\Http\Controllers\BookingCancelledController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\PaymentsController;
 use App\Http\Controllers\Web\RoomDetailController;
 use App\Http\Controllers\Web\SeviceController;
+use App\Http\Controllers\Web\UsersController as WebUsersController;
 
 include_once "admin.php";
 Route::get('/', [HomeController::class, 'index'])
@@ -44,8 +46,12 @@ Route::prefix("authentication")->name("authentication.")->group(function() {
     Route::post('/register', [AuthenticationController::class, 'register'])->name('postRegister');
 
 });
-Route::get("/account", [UsersController::class, "getUser"])->name("account");
-
+Route::get("/account", [WebUsersController::class, "getUser"])->name("account");
+Route::put("/account/{id}", [WebUsersController::class, "updateProficeUser"])->name("updateProficeUser");
+Route::get("/confirm-password", [WebUsersController::class, "updatePasswordUserUI"])->name("updatePasswordUserUI");
+Route::post("/account/password/{id}", [WebUsersController::class, "updatePasswordUser"])->name("updatePassword");
+Route::get("/payment-history", [PaymentsController::class, "paymentHistory"])->name("paymentHistory");
+Route::get("/payment-history-detail/{id}", [PaymentsController::class, "paymentHistoryDetail"])->name("paymentHistoryDetail");
 
 Route::get('/detail-booking/{bookingNumberId}', [HomeController::class, 'booking_detail'])
     ->name('client.detail_booking');
