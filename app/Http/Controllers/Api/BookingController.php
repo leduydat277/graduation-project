@@ -108,6 +108,8 @@ class BookingController
             $voucher = $request->input('voucher_id');
             $discount_price = $request->input('total_price');
             $message = $request->input('message');
+            $adult = $request->input('adults_quantity');
+            $child = $request->input('children_quantity');
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
@@ -229,7 +231,9 @@ class BookingController
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
                     'discount_price' => (int)$discount_price,
-                    'message' => $message
+                    'message' => $message,
+                    'adult' => $adult,
+                    'children' => $child
                 ]);
             }
             if ($payment_type == 2) {
@@ -249,7 +253,9 @@ class BookingController
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
                     'discount_price' => (int)$discount_price,
-                    'message' => $message
+                    'message' => $message,
+                    'adult' => $adult,
+                    'children' => $child
                 ]);
             }
 
@@ -327,7 +333,11 @@ class BookingController
                 "vnp_SecureHash" => "required",
             ], $this->messages);
 
-            $id = $request->input('vnp_TxnRef');
+            $vnp_OrderInfo = $_GET['vnp_OrderInfo'];
+
+            $parts = explode("_", $vnp_OrderInfo);
+
+            $id = end($parts);
 
             if ($validator->fails()) {
                 Booking::where('id', $id)->delete();
@@ -432,11 +442,7 @@ class BookingController
             ]);
 
             event(new NotificationMessage($message, $title, $formattedDate));
-            return response()->json([
-                "status" => "success",
-                "message" => "Thanh toán thành công",
-                "booking" => $booking
-            ]);
+            return redirect()->route('client.detail_booking', $booking->booking_number_id);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",
@@ -448,5 +454,17 @@ class BookingController
                 ]
             ], 500);
         }
+    }
+
+    public function redirectDetailBooking()
+    {
+        $vnp_OrderInfo = $_GET['vnp_OrderInfo'];
+
+        $parts = explode("_", $vnp_OrderInfo);
+
+        $id = end($parts);
+
+        $booking = Booking::where('id', $id)->first();
+        return redirect()->route('client.detail_booking', $booking->booking_number_id);
     }
 }

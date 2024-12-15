@@ -96,13 +96,15 @@
                                                 <div class="d-flex flex-column align-items-start">
                                                     <span class="price-amount amount ps-5">
                                                         <bdi>
-                                                            <span class="price-currency-symbol">{{ $adult_quantity }} người
+                                                            <span id="adult" data-quantity="{{ $adult_quantity }}"
+                                                                class="price-currency-symbol">{{ $adult_quantity }} người
                                                                 lớn</span>
                                                         </bdi>
                                                     </span>
                                                     <span class="price-amount amount mt-2 ps-5">
                                                         <bdi>
-                                                            <span class="price-currency-symbol">{{ $children_quantity }} trẻ
+                                                            <span id="children" data-quantity="{{ $children_quantity }}"
+                                                                class="price-currency-symbol">{{ $children_quantity }} trẻ
                                                                 em</span>
                                                         </bdi>
                                                     </span>
@@ -334,6 +336,12 @@
 
             var checkInDate = new Date(formattedCheckInDate).getTime();
             var checkOutDate = new Date(formattedCheckOutDate).getTime();
+
+            var adultQuantity = document.getElementById('adult').getAttribute('data-quantity');
+            console.log(adultQuantity);
+
+            var childrenQuantity = document.getElementById('children').getAttribute('data-quantity');
+
             var formData = {
                 user_id: 1,
                 check_in_date: checkInDate,
@@ -348,7 +356,9 @@
                 payment_type: $('input[name="payment_type"]:checked').val(),
                 voucher_id: voucher_id,
                 total_price: $('#finalPrice').text().replace('VND', '').trim().replace(/\./g, ''),
-                message: $('#message').val()
+                message: $('#message').val(),
+                children_quantity: childrenQuantity,
+                adults_quantity: adultQuantity,
             };
 
             console.log(formData);
