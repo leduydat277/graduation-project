@@ -59,15 +59,26 @@
                         </div>
 
                         <!-- Success & Error Alerts -->
-                        <div id="successMessage" class="alert alert-success d-none"></div>
-                        <div id="errorMessage" class="alert alert-danger d-none"></div>
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
 
                         <!-- Email Input -->
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">Email:</label>
                             <input type="email" id="email" name="email" class="form-control"
-                                placeholder="Nhập địa chỉ email của bạn" />
-                            <span class="text-danger" id="emailError"></span>
+                                placeholder="Nhập địa chỉ email của bạn" value="{{ old('email') }}" />
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <!-- Submit Button -->
@@ -84,46 +95,4 @@
             </div>
         </div>
     </section>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#forgotPasswordForm').on('submit', function(e) {
-                e.preventDefault(); // Ngăn form gửi mặc định
-
-                // Reset thông báo lỗi và thành công
-                $('#emailError').text('');
-                $('#successMessage').addClass('d-none').text('');
-                $('#errorMessage').addClass('d-none').text('');
-
-                // Thu thập dữ liệu từ form
-                let formData = $(this).serialize();
-
-                // Gửi dữ liệu qua Ajax
-                $.ajax({
-                    url: "{{ route('client.sendMailForgotPassword') }}",
-                    type: "POST",
-                    data: formData,
-                    success: function(response) {
-                        // Hiển thị thông báo thành công
-                        $('#successMessage').removeClass('d-none').text('Yêu cầu đã được gửi thành công. Vui lòng kiểm tra email của bạn.');
-                        $('#forgotPasswordForm')[0].reset(); // Reset form
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            console.log(errors);
-                            
-                            if (errors.email) {
-                                $('#emailError').text("Không tìm thấy email này trong hệ thống."); // Hiển thị lỗi email
-                            }
-                        } else {
-                            $('#errorMessage').removeClass('d-none').text('Đã xảy ra lỗi, vui lòng thử lại.');
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 @endsection
