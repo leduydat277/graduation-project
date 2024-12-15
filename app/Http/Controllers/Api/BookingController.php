@@ -95,6 +95,10 @@ class BookingController
     public function booking(Request $request)
     {
         try {
+            if (Auth::check()) {
+                return redirect()->route('client.login');
+            }
+
             $user_id = $request->user_id;
             $check_in = $request->input('check_in_date');
             $check_out = $request->input('check_out_date');

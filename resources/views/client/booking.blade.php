@@ -3,9 +3,63 @@
 @section('title')
     Đặt phòng
 @endsection
+@section('css')
+    <style>
+        .subtotal th {
+            display: block;
+            /* Đặt tiêu đề trên một dòng riêng */
+            margin-bottom: 8px;
+            /* Thêm khoảng cách dưới tiêu đề */
+            font-size: 16px;
+            /* Kích thước chữ cho tiêu đề */
+        }
 
+        .subtotal .price-amount {
+            display: block;
+            /* Đặt toàn bộ phần giá trên một dòng riêng */
+            margin-left: 0;
+            /* Đảm bảo giá căn thẳng lề trái */
+            font-size: 14px;
+            /* Kích thước chữ cho giá */
+            color: #555;
+            /* Màu chữ giá (tuỳ chỉnh theo thiết kế) */
+        }
+
+        .price-currency-symbol img {
+            display: block;
+            /* Đặt ảnh trên một dòng riêng */
+            margin-bottom: 8px;
+            /* Thêm khoảng cách dưới ảnh */
+        }
+
+        .price-currency-symbol {
+            display: block;
+            /* Đặt giá trên một dòng riêng */
+            margin-top: 4px;
+            /* Khoảng cách giữa ảnh và giá */
+        }
+
+
+    </style>
+@endsection
 @section('content')
-    @include('client.layouts.banner.banner')
+    <section id="slider" data-aos="fade-up">
+        <div class="container-fluid padding-side">
+            <div class="d-flex rounded-5"
+                style="background-image: url({{ asset('assets/client/images/slider-image1.jpg') }} ); background-size: cover; background-repeat: no-repeat; height: 50vh; background-position: center;">
+                <div class="row align-items-center m-auto">
+                    <div class="d-flex flex-wrap flex-column justify-content-center align-items-center">
+                        <h2 class="display-1 fw-normal">Đặt phòng</h2>
+                        <nav class="breadcrumb">
+                            <a class="breadcrumb-item" href="{{ route('client.home') }}">Trang chủ</a>
+                            <span class="active" aria-current="page"> /<span class="text-decoration-underline">Đặt
+                                    phòng</span></span>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="checkout-wrap padding-small">
         <div class="container-fluid padding-side">
             <div class="display-header d-flex justify-content-between pb-3">
@@ -20,31 +74,33 @@
                                 <div class="form-input col-lg-6 mb-3">
                                     <label for="name" class="label-style fw-medium form-label">Họ</label>
                                     <input type="text" name="last_name" id="last_name" placeholder="Nhập họ của bạn"
-                                        class="form-control ps-3 me-3">
+                                        class="form-control ps-3 me-3" value="{{ Auth::user()->last_name }}">
                                 </div>
                                 <div class="form-input col-lg-6 mb-3">
                                     <label for="name" class="label-style fw-medium form-label">Tên</label>
                                     <input type="text" name="first_name" id="first_name" placeholder="Nhập tên của bạn"
-                                        class="form-control ps-3 me-3">
+                                        class="form-control ps-3 me-3" value="{{ Auth::user()->first_name }}">
                                 </div>
                             </div>
                             <div class="form-input col-lg-12 mb-3">
                                 <label for="name" class="label-style fw-medium form-label">Địa chỉ email</label>
 
                                 <input type="text" name="email" id="email"
-                                    placeholder="Nhập địa chỉ email của bạn." class="form-control ps-3">
+                                    placeholder="Nhập địa chỉ email của bạn." class="form-control ps-3"
+                                    value="{{ Auth::user()->email }}" disabled>
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label for="name" class="label-style fw-medium form-label">Số điện thoại</label>
 
                                 <input type="text" name="phone" id="phone"
-                                    placeholder="Nhập số điện thoại của bạn." class="form-control ps-3">
+                                    placeholder="Nhập số điện thoại của bạn." class="form-control ps-3"
+                                    value="{{ Auth::user()->phone }}">
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label for="name" class="label-style fw-medium form-label">Địa chỉ</label>
 
                                 <input type="text" name="address" id="address" placeholder="Nhập địa chỉ của bạn."
-                                    class="form-control ps-3">
+                                    class="form-control ps-3" value="{{ Auth::user()->address }}">
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label for="name" class="label-style fw-medium form-label">Ghi chú</label>
@@ -61,12 +117,15 @@
                                     <tbody>
                                         <tr class="subtotal border-top pt-2 pb-2 text-uppercase">
                                             <th>{{ $room->title }}</th>
-                                            <td data-title="Subtotal">
+                                            <td class="price-currency-symbol">Giá một đêm: {{ number_format($room->price, 0, ',', '.') }} VND</td>
+                                            <td data-title="Image">
                                                 <span class="price-amount amount ps-5">
                                                     <bdi>
-                                                        <span class="price-currency-symbol"><img
-                                                                src="{{ asset('storage/' . $room->thumbnail_image) }}"
-                                                                alt="" width="100px"></span></bdi>
+                                                        <span class="price-currency-symbol">
+                                                            <img src="{{ asset('storage/' . $room->thumbnail_image) }}"
+                                                                alt="" width="100px">
+                                                        </span>
+                                                    </bdi>
                                                 </span>
                                             </td>
                                         </tr>
@@ -343,7 +402,7 @@
             var childrenQuantity = document.getElementById('children').getAttribute('data-quantity');
 
             var formData = {
-                user_id: 1,
+                user_id: {{ Auth::user()->id }},
                 check_in_date: checkInDate,
                 check_out_date: checkOutDate,
                 first_name: $('#first_name').val(),

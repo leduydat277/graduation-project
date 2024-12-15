@@ -129,7 +129,7 @@
                                         </div>
                                         <hr>
                                     </div>
-                                    @if (Auth::check())
+                                    {{-- @if (Auth::check())
                                         <div class="comment-respond mt-5">
                                             <h3 class="display-6 fw-normal mb-5">Để lại bình luận</h3>
                                             <form method="post" class="form-group"
@@ -162,7 +162,7 @@
                                                         </svg></span></button>
                                             </form>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         </section>
@@ -178,25 +178,28 @@
                                 <div class="input-group date" id="datepicker">
                                     <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3">
                                 </div>
+                                <div id="error-message-checkin" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày trả</label>
                                 <div class="input-group date" id="datepicker">
                                     <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3">
                                 </div>
+                                <div id="error-message-checkout" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Người lớn</label>
                                 <input type="number" id="adult-quantity" value="1" name="quantity"
                                     class="form-control ps-3">
-                                <div id="error-message" style="color: red; display: none;">Số lượng người lớn không được
+                                <div id="error-message" style="color: black; display: none;">Số lượng người lớn không được
                                     vượt quá số lượng cho phép của phòng.</div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Trẻ em</label>
                                 <input type="number" id="children-quantity" value="0" name="quantity"
                                     class="form-control ps-3">
-                                <div id="error-message-children" style="color: red; display: none;">Số lượng trẻ em không
+                                <div id="error-message-children" style="color: black; display: none;">Số lượng trẻ em
+                                    không
                                     được vượt quá số lượng cho phép của phòng.</div>
                             </div>
                             <div class="d-grid mb-3">
@@ -267,6 +270,38 @@
                 });
             }
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const adultInput = document.getElementById("adult-quantity");
+            const childrenInput = document.getElementById("children-quantity");
+
+            adultInput.value = 1;
+            childrenInput.value = 0;
+
+            adultInput.addEventListener("input", function() {
+                if (adultInput.value < 1) {
+                    adultInput.value = 1;
+                }
+            });
+
+            childrenInput.addEventListener("input", function() {
+                if (childrenInput.value < 0) {
+                    childrenInput.value = 0;
+                }
+            });
+
+            adultInput.addEventListener("change", function() {
+                if (adultInput.value < 1) {
+                    adultInput.value = 1;
+                }
+            });
+
+            childrenInput.addEventListener("change", function() {
+                if (childrenInput.value < 0) {
+                    childrenInput.value = 0;
+                }
+            });
+        });
     </script>
 
     <script type="module">
@@ -286,26 +321,43 @@
             // Giới hạn số lượng người lớn và trẻ em
             const maxAdults = {{ $room->max_people }};
             const maxChildren = 2;
+            const checkinValidate = document.getElementById('checkin');
+            const checkoutValidate = document.getElementById('checkout');
+            const errorCheckin = document.getElementById('error-message-checkin');
+            const errorCheckout = document.getElementById('error-message-checkout');
+            const adultInput = document.getElementById('adult-quantity');
+            const errorMessage = document.getElementById('error-message');
+            const childrenInput = document.getElementById('children-quantity');
+            const errorMessageChildren = document.getElementById('error-message-children');
+
+            // if (adultQuantity > maxGuests) {
+            //     errorCheckin.style.display = 'block';
+            // } else {
+            //     errorMessage.style.display = 'none';
+            //     adultInput.setCustomValidity("");
+            // }
 
             if (!formData.checkin) {
-                alert("Ngày check-in không được để trống.");
+                errorCheckin.style.display = 'block';
+                errorCheckin.textContent = "Vui lòng chọn ngày đến";
                 $('#checkin').focus();
                 return false;
             }
 
             if (!formData.checkout) {
-                alert("Ngày check-out không được để trống.");
+                errorCheckout.style.display = 'block';
+                errorCheckin.textContent = "Vui lòng chọn ngày đi"
                 $('#checkout').focus();
                 return false;
             }
 
             if (formData.adult_quantity > maxAdults) {
-                alert("Số lượng người lớn không được vượt quá " + maxAdults);
+                errorMessage.style.display = 'block';
                 return;
             }
 
             if (formData.children_quantity > maxChildren) {
-                alert("Số lượng trẻ em không được vượt quá " + maxChildren);
+                errorMessageChildren.style.display = 'block';
                 return;
             }
 
@@ -382,13 +434,22 @@
                     checkinInput.setAttribute("min", today);
                     checkoutInput.setAttribute("min", today);
 
+                    const checkinValidate = document.getElementById('checkin');
+                    const checkoutValidate = document.getElementById('checkout');
+                    const errorCheckin = document.getElementById('error-message-checkin');
+                    const errorCheckout = document.getElementById('error-message-checkout');
+
                     checkinInput.addEventListener("change", function() {
                         const checkinDate = new Date(checkinInput.value);
                         const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
 
                         if (isDateBlocked(formattedCheckinDate)) {
-                            alert("Ngày check-in này đã bị đặt.");
+                            errorCheckin.style.display = 'block';
                             checkinInput.value = "";
+                            errorCheckin.textContent = "Ngày này đã có người đặt rồi";
+                            $('#checkin').focus();
+                        } else {
+                            errorCheckin.style.display = 'none';
                         }
                     });
 
@@ -397,8 +458,11 @@
                         const formattedCheckoutDate = checkoutDate.toISOString().split('T')[0];
 
                         if (isDateBlocked(formattedCheckoutDate)) {
-                            alert("Ngày check-out này đã bị đặt.");
+                            errorCheckout.style.display = 'block';
                             checkoutInput.value = "";
+                            errorCheckout.textContent = "Ngày này đã có người đặt rồi";
+                        } else {
+                            errorCheckout.style.display = 'none';
                         }
                     });
 
@@ -459,15 +523,6 @@
             }
         });
 
-        document.getElementById('form').addEventListener('submit', function(e) {
-            const adultQuantity = parseInt(adultInput.value, 10);
-
-            if (adultQuantity > maxGuests) {
-                e.preventDefault();
-                alert("Số lượng người lớn không được vượt quá " + maxGuests + " người.");
-            }
-        });
-
         const maxChildren = 2;
 
         const childrenInput = document.getElementById('children-quantity');
@@ -483,6 +538,15 @@
             } else {
                 errorMessageChildren.style.display = 'none';
                 childrenInput.setCustomValidity("");
+            }
+        });
+
+        document.getElementById('form').addEventListener('submit', function(e) {
+            const adultQuantity = parseInt(adultInput.value, 10);
+
+            if (adultQuantity > maxGuests) {
+                e.preventDefault();
+                alert("Số lượng người lớn không được vượt quá " + maxGuests + " người.");
             }
         });
 
