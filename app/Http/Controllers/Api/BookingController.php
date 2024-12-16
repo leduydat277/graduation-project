@@ -446,7 +446,6 @@ class BookingController
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
 
-            event(new NotificationMessage($message, $title, $formattedDate));
             return redirect()->route('client.detail_booking', $booking->booking_number_id);
         } catch (Exception $e) {
             return response()->json([

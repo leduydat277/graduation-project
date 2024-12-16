@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as RoutingController;
+use App\Models\admin\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,15 +19,21 @@ class UsersController extends RoutingController
     {
         $this->messages = [
             'name.required' => 'Tên không được để trống.',
+            'phone.required' => 'Số điện thoại không được để trống.',
+            'address.required' => 'Địa chỉ không được để trống.',
             'role.required' => 'Chức vụ không được để trống.',
             'status_id.required' => 'Chức vụ không được để trống.',
             'email.required' => 'Email không được để trống.',
             'email.email' => 'Email không hợp lệ.',
+            'password_old.required' => 'Mật khẩu cũ không được để trống.',
+            'password_old.min' => 'Mật khẩu cũ phải có ít nhất :min ký tự.',
             'password.required' => 'Mật khẩu không được để trống.',
             'password.min' => 'Mật khẩu phải có ít nhất :min ký tự.',
+            'confirm_password_new.required' => 'Mật khẩu mới không được để trống.',
+            'confirm_password_new.min' => 'Mật khẩu mới phải có ít nhất :min ký tự.',
             'image.mimes' => 'Vui lòng chọn file có đuôi jpeg,jpg,png.',
         ];
-    }
+    }    
 
     public function index(Request $request){
         $query = User::query();
@@ -45,13 +52,6 @@ class UsersController extends RoutingController
             ];
         });
         return view(self::VIEW_PATH . __FUNCTION__, compact('data'));
-    }
-    public function getId($id){
-        $data = User::select("name", "email", "image", "role")->first();
-        if ($data->isEmpty()) {
-            return response()->json(['message' => 'Không có dữ liệu'], 404);
-        }
-        return response()->json($data);
     }
 
     public function addUI(){

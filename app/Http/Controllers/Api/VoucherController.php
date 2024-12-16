@@ -19,21 +19,21 @@ class VoucherController
             return response()->json([
                 'type' => 'error',
                 'message' => 'Voucher không tồn tại'
-            ], 400);
+            ], 201);
         }
 
         if ($voucher->status === 0) {
             return response()->json([
                 'type' => 'error',
                 'message' => 'Voucher đã dừng hoạt động'
-            ], 400);
+            ], 201);
         }
 
         if ($voucher->quantity <= 0) {
             return response()->json([
                 'type' => 'error',
                 'message' => 'Voucher đã hết'
-            ], 400);
+            ], 201);
         }
 
         $today = now()->timestamp;
@@ -42,21 +42,21 @@ class VoucherController
             return response()->json([
                 'type' => 'error',
                 'message' => 'Voucher chưa đến thời gian sử dụng.'
-            ], 400);
+            ], 201);
         }
 
         if ($today > $voucher->end_date) {
             return response()->json([
                 'type' => 'error',
                 'message' => 'Voucher đã hết hạn sử dụng.'
-            ], 400);
+            ], 201);
         }
 
         if($voucher->min_booking_amount > $price){
             return response()->json([
                 'type' => 'error',
                 'message' => 'Tổng tiền của bạn không đủ điều kiện để dùng voucher này.'
-            ], 400);
+            ], 201);
         }
 
         return response()->json([

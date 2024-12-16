@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
     <link href="{{ asset('assets/admin/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
         type="text/css" />
+
     <link href="{{ asset('assets/admin/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/admin/assets/js/layout.js') }}"></script>
     <link href="{{ asset('assets/admin/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
@@ -113,6 +114,7 @@
                                         </td>
                                         <td>
                                             {{ date('d/m/Y H:i', $statusRoom['from']) }} -
+
                                             @if (!$statusRoom['to'])
                                                 <span
                                                     style="background-color: #ccffcc; color: #333; padding: 2px 5px; border-radius: 3px;">không
@@ -148,7 +150,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     @endsection
 
     @section('js')

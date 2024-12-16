@@ -34,7 +34,6 @@ class LoginAdminController
     
         // Thử đăng nhập với 'remember' option
         $credentials = $request->only('email', 'password');
-    
         if (Auth::attempt($credentials)) {
             // Kiểm tra role để đảm bảo là admin
             $user = Auth::user();
