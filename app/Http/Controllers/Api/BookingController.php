@@ -43,7 +43,8 @@ class BookingController
             'last_name.max' => 'Họ của bạn không được quá 50 kí tự.',
             'email.required' => 'Vui lòng nhập email của bạn.',
             'email.email' => 'Email không đúng định dạng.',
-            'payment_type.required' => 'Vui lòng chọn phương thức thanh toán.'
+            'payment_type.required' => 'Vui lòng chọn phương thức thanh toán.',
+            'address.max' => 'Địa chỉ của bạn không được quá 255 kí tự.'
         ];
     }
 
@@ -145,7 +146,7 @@ class BookingController
 
 
             $validator = Validator::make($request->all(), [
-                'address' => 'required',
+                'address' => ['required', 'max:255'],
                 'phone' => 'required|regex:/^[0-9]{10}$/',
                 'first_name' => ['required', 'max:50'],
                 'last_name' => ['required', 'max:50'],
