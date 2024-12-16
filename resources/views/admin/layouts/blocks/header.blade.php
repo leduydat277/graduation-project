@@ -21,10 +21,10 @@
                     </span>
                 </a>
             </div>
-            <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
+            {{-- <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
                 <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
                     id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                    aria-haspopup="true" aria-expanded="false">
+                    aria-haspopup="true" aria-expanded="false" onclick="">
                     <i class='bx bx-bell fs-22'></i>
                     <span
                         class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger"><span
@@ -52,41 +52,10 @@
                     </div>
 
                     <div class="tab-content position-relative" id="notificationItemsTabContent">
-                        {{-- <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab" role="tabpanel">
-                            <div data-simplebar style="max-height: 300px;" class="pe-2">
-                                <div class="text-reset notification-item d-block dropdown-item position-relative">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3 flex-shrink-0">
-                                            <span class="avatar-title bg-info-subtle text-info rounded-circle fs-16">
-                                                <i class="bx bx-badge-check"></i>
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <a href="#!" class="stretched-link">
-                                                <h6 class="mt-0 mb-2 lh-base">Your <b>Elite</b> author Graphic
-                                                    Optimization <span class="text-secondary">reward</span> is
-                                                    ready!
-                                                </h6>
-                                            </a>
-                                            <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
-                                                <span><i class="mdi mdi-clock-outline"></i> Just 30 sec ago</span>
-                                            </p>
-                                        </div>
-                                        <div class="px-2 fs-15">
-                                            <div class="form-check notification-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="all-notification-check01">
-                                                <label class="form-check-label" for="all-notification-check01"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>
-            <div id="notification-container"></div>
+            <div id="notification-container"></div> --}}
             <div class="dropdown ms-sm-3 header-item topbar-user">
                 <button type="button" class="btn d-flex align-items-center" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -6,14 +6,15 @@ use App\Models\Booking;
 use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class NotificationsController
 {
     public function showNotifications()
     {
-        $notifications = Notification::where('user_id', 1)
-            ->orderBy('created_at', 'desc')
+        $notifications = Notification::orderBy('created_at', 'desc')
             ->get();
+        Log::error($notifications);
 
         $data = $notifications->map(function ($notification) {
             $messageData = json_decode($notification->message);

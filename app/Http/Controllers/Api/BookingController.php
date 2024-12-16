@@ -440,7 +440,7 @@ class BookingController
             ];
 
             Notification::create([
-                "user_id" => $request->user()->id,
+                "user_id" => $booking->user_id,
                 "title" => $title,
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
