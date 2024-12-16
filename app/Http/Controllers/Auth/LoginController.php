@@ -25,8 +25,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // Validate dữ liệu đầu vào
-        $validator = \Validator::make($request->all(), [
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ], [
@@ -34,26 +33,17 @@ class LoginController extends Controller
             'email.email' => 'Email không hợp lệ.',
             'password.required' => 'Mật khẩu không được để trống.',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Lấy thông tin từ request
         $credentials = $request->only('email', 'password');
 
-        // Kiểm tra thông tin đăng nhập
         if (Auth::attempt($credentials, $request->has('remember'))) {
-
             $user = Auth::user();
-
-            // Gửi thông báo qua email
             Mail::to($user->email)->send(new LoginNotificationMail($user));
-            return response()->json(['success' => 'Đăng nhập thành công!']);
+
+            return redirect()->route('client.home')->with('success', 'Đăng nhập thành công! Kiểm tra email của bạn.');
         }
 
         // Đăng nhập thất bại
-        return response()->json(['errors' => ['email' => 'Email hoặc mật khẩu không đúng.']], 422);
+        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
     }
 
 
@@ -67,18 +57,15 @@ class LoginController extends Controller
 
     public function register(Request $request)
     {
-        // Validate dữ liệu đầu vào
-        $validator = \Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|numeric|digits_between:10,15',
-            'cccd' => 'nullable|string|max:50', // Cho phép null nếu không bắt buộc
-            'address' => 'nullable|string|max:255', // Cho phép null nếu không bắt buộc
+            'cccd' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:255',
             'password' => 'required|string|min:6|confirmed',
         ], [
-            'name.required' => 'Họ và tên không được để trống.',
             'last_name.required' => 'Họ không được để trống.',
             'first_name.required' => 'Tên không được để trống.',
             'email.required' => 'Email không được để trống.',
@@ -94,84 +81,59 @@ class LoginController extends Controller
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        User::create([
+            'name' => "{$validatedData['last_name']} {$validatedData['first_name']}",
+            'last_name' => $validatedData['last_name'],
+            'first_name' => $validatedData['first_name'],
+            'email' => $validatedData['email'],
+            'phone' => $validatedData['phone'],
+            'cccd' => $validatedData['cccd'] ?? null,
+            'address' => $validatedData['address'] ?? null,
+            'role' => 0,
+            'password' => bcrypt($validatedData['password']),
+        ]);
 
-        // Tạo user mới
-        $user = new User();
-        $user->name = $request->name; // Họ và tên đầy đủ
-        $user->last_name = $request->last_name; // Họ
-        $user->first_name = $request->first_name; // Tên
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->cccd = $request->cccd ?? null; // Gán giá trị null nếu không có
-        $user->address = $request->address ?? null; // Gán giá trị null nếu không có
-        $user->role = 0; // Mặc định là `user` nếu không nhập
-        $user->password = bcrypt($request->password); // Hash mật khẩu
-        $user->save();
-
-        // Đăng nhập tự động sau khi đăng ký
-        Auth::login($user);
-
-        return response()->json(['success' => 'Đăng ký tài khoản thành công!']);
+        return redirect()->route('client.login')->with('success', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
     }
-    // hiển thị quên mật khẩu
+
+
     public function forgotPassword()
     {
         return view('client.auth.forgotpassword');
     }
 
-    // Gửi email quên mật khẩu
     public function sendMailForgotPassword(Request $request)
     {
-        // Validate dữ liệu đầu vào
-        $validator = \Validator::make($request->all(), [
-            'email' => 'required|email',
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
         ], [
             'email.required' => 'Email không được để trống.',
             'email.email' => 'Email không hợp lệ.',
+            'email.exists' => 'Email không tồn tại trong hệ thống.',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Tìm user theo email
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
-            return response()->json(['errors' => ['email' => 'Không tìm thấy email này trong hệ thống.']], 422);
-        }
-
-        // Tạo token reset password
         $token = Str::random(64);
 
-        // Xóa token cũ (nếu có) cho user này
         DB::table('tokens')->where('user_id', $user->id)->delete();
 
-        // Lưu token mới vào bảng `tokens`
         DB::table('tokens')->insert([
             'user_id' => $user->id,
-            'value' => $token, // Token sẽ lưu trong cột `value`
-            'expiry_time' => now()->addMinutes(5)->format('Y-m-d H:i:s'), // Chuyển sang định dạng DATETIME
-            // 'created_at' => now()->format('Y-m-d H:i:s'), // Chuyển sang định dạng DATETIME
-            // 'updated_at' => now()->format('Y-m-d H:i:s'), // Chuyển sang định dạng DATETIME
+            'value' => $token,
+            'expiry_time' => now()->addMinutes(5),
         ]);
 
-
-        // Gửi email reset password
         Mail::to($user->email)->queue(new ResetPasswordMail($token));
 
-
-        return response()->json(['success' => 'Gửi email đặt lại mật khẩu thành công!']);
+        return redirect()->route('client.forgotPassword')->with('success', 'Email khôi phục mật khẩu đã được gửi. Vui lòng kiểm tra email của bạn.');
     }
+
 
     public function resetPasswordView(Request $request)
     {
         $token = $request->get('token');
         $tokenData = DB::table('tokens')->where('value', $token)->first();
-        // dd($token, $tokenData);
 
         if (!$tokenData || $tokenData->expiry_time < now()) {
             return abort(404, 'Token không hợp lệ hoặc đã hết hạn.');
@@ -180,13 +142,10 @@ class LoginController extends Controller
         return view('client.Auth.reset-password', ['token' => $token]);
     }
 
-
-
-
     public function resetPassword(Request $request)
     {
-        // Validate dữ liệu
-        $validator = \Validator::make($request->all(), [
+        // Validate dữ liệu đầu vào
+        $validatedData = $request->validate([
             'token' => 'required',
             'password' => 'required|min:6|confirmed',
         ], [
@@ -195,34 +154,30 @@ class LoginController extends Controller
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
         // Kiểm tra token
-        $tokenData = DB::table('tokens')->where('value', $request->token)->first();
+        $tokenData = DB::table('tokens')->where('value', $validatedData['token'])->first();
 
         if (!$tokenData || $tokenData->expiry_time < now()) {
-            return response()->json(['errors' => ['token' => 'Token không hợp lệ hoặc đã hết hạn.']], 422);
+            return redirect()->back()->withErrors(['token' => 'Token không hợp lệ hoặc đã hết hạn.']);
         }
 
-        // Cập nhật mật khẩu người dùng
+        // Lấy thông tin người dùng
         $user = User::find($tokenData->user_id);
         if (!$user) {
-            return response()->json(['errors' => ['user' => 'Không tìm thấy người dùng.']], 404);
+            return redirect()->back()->withErrors(['user' => 'Không tìm thấy người dùng.']);
         }
 
-        $user->password = bcrypt($request->password);
+        // Cập nhật mật khẩu
+        $user->password = bcrypt($validatedData['password']);
         $user->save();
 
         // Xóa token sau khi sử dụng
-        DB::table('tokens')->where('value', $request->token)->delete();
+        DB::table('tokens')->where('value', $validatedData['token'])->delete();
 
-        return response()->json(['success' => 'Đặt lại mật khẩu thành công!']);
+        // Chuyển hướng đến trang đăng nhập với thông báo thành công
+        return redirect()->route('client.login')->with('success', 'Mật khẩu đã được đặt lại thành công!');
     }
 
-
-    // Đăng xuất
     public function logout()
     {
         Auth::logout();

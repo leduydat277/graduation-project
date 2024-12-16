@@ -441,7 +441,15 @@
 
                     checkinInput.addEventListener("change", function() {
                         const checkinDate = new Date(checkinInput.value);
+                        const checkoutDate = new Date(checkoutInput.value);
                         const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
+
+                        if (isNaN(checkinDate)) {
+                            errorCheckin.style.display = 'block';
+                            errorCheckin.textContent = "Vui lòng chọn ngày nhận phòng hợp lệ.";
+                            checkinInput.value = "";
+                            return;
+                        }
 
                         if (isDateBlocked(formattedCheckinDate)) {
                             errorCheckin.style.display = 'block';
@@ -454,8 +462,16 @@
                     });
 
                     checkoutInput.addEventListener("change", function() {
+                        const checkinDate = new Date(checkinInput.value);
                         const checkoutDate = new Date(checkoutInput.value);
-                        const formattedCheckoutDate = checkoutDate.toISOString().split('T')[0];
+                        const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
+
+                        if (isNaN(checkoutDate)) {
+                            errorCheckout.style.display = 'block';
+                            errorCheckout.textContent = "Vui lòng chọn ngày trả phòng hợp lệ.";
+                            checkoutInput.value = "";
+                            return;
+                        }
 
                         if (isDateBlocked(formattedCheckoutDate)) {
                             errorCheckout.style.display = 'block';
@@ -479,8 +495,16 @@
         document.addEventListener("DOMContentLoaded", function() {
             const checkinInput = document.getElementById("checkin");
             const checkoutInput = document.getElementById("checkout");
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
 
-            const today = new Date().toISOString().split("T")[0];
+            if (hour > 13 || (hour === 13 && minute >= 45)) {
+                now.setDate(now.getDate() + 1);
+            }
+
+            const today = now.toISOString().split("T")[0];
+
             checkinInput.setAttribute("min", today);
             checkoutInput.setAttribute("min", today);
 

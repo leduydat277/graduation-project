@@ -12,7 +12,10 @@
     <meta content="Themesbrand" name="author" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -35,7 +38,48 @@
     </script>
     <!-- App favicon -->
     @yield('css')
+    <style>
+        <style>
 
+        /* Popup container */
+        .notification-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+            /* Hidden by default */
+            z-index: 9999;
+        }
+
+        /* Close button */
+        .notification-popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .notification-popup .close-btn:hover {
+            color: #000;
+        }
+
+        #notificationItemsTabContent {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+    </style>
 </head>
 
 <body>
@@ -84,6 +128,8 @@
     <!-- JAVASCRIPT -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
+    <script src="{{ asset('assets/admin/assets/js/notification.js') }}"></script>
     @yield('js')
 </body>
 
