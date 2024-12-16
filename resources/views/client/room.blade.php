@@ -118,6 +118,8 @@
                     success: function(response) {
                         if (response.status === "success" && Array.isArray(response.data)) {
                             allRooms = response.data;
+                            console.log(response);
+
                             renderRooms(allRooms, currentPage, roomsPerPage);
                             renderPagination(allRooms.length, roomsPerPage);
                         } else {
