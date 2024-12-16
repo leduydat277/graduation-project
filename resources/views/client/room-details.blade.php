@@ -479,8 +479,16 @@
         document.addEventListener("DOMContentLoaded", function() {
             const checkinInput = document.getElementById("checkin");
             const checkoutInput = document.getElementById("checkout");
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
 
-            const today = new Date().toISOString().split("T")[0];
+            if (hour > 13 || (hour === 13 && minute >= 45)) {
+                now.setDate(now.getDate() + 1);
+            }
+
+            const today = now.toISOString().split("T")[0];
+
             checkinInput.setAttribute("min", today);
             checkoutInput.setAttribute("min", today);
 
