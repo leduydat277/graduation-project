@@ -50,7 +50,7 @@ class CheckInCheckOutController extends RoutingController
             )
             ->get();
 
-        $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();  //lấy những phí phất sinh chưa thanh toán
+        $phiphatsinhs = PhiPhatSinh::where('status', 0)->get(); 
 
         return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
     }
@@ -92,14 +92,13 @@ class CheckInCheckOutController extends RoutingController
         }
         $currentTimestamp = Carbon::now()->timestamp;
         $booking = Booking::findOrFail($id);
-        if ($booking->check_out_date == $currentTimestamp) { // nếu checkout đúng ngày thì xóa
+        if ($booking->check_out_date == $currentTimestamp) { 
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
             foreach ($manage_status_rooms as $manage_status_room) {
                 $manage_status_room->delete();
             }
         }
-        if ($booking->check_out_date <= $currentTimestamp) { // Kiểm tra check-out sớm
-            // Xóa dương vô cực cũ, sau đó đặt dương vô cực từ now
+        if ($booking->check_out_date <= $currentTimestamp) {
             $today = Carbon::now()->timestamp;
             $checkoutNew = $booking->check_out_date;
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
@@ -126,7 +125,7 @@ class CheckInCheckOutController extends RoutingController
             foreach($request->price as $coc){
                 $cocs += $coc;
             }
-            $booking->total_price = $totalUpdate + $cocs; //update tiền ở booking
+            $booking->total_price = $totalUpdate + $cocs;
         }
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();

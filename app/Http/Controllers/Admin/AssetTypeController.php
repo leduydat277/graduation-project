@@ -53,7 +53,6 @@ class AssetTypeController extends Controller
     {
         $data = $request->except('_token');
 
-        // Xử lý upload ảnh
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('assets_types', 'public');
         }
@@ -75,7 +74,6 @@ class AssetTypeController extends Controller
         $assetType = AssetType::findOrFail($id);
         $data = $request->except('_token', '_method');
 
-        // Xử lý upload ảnh
         if ($request->hasFile('image')) {
             if ($assetType->image) {
                 Storage::disk('public')->delete($assetType->image);

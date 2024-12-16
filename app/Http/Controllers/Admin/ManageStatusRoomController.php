@@ -19,18 +19,15 @@ class ManageStatusRoomController extends Controller
     {
         $title = 'Quản lý trạng thái phòng';
 
-        // Lấy dữ liệu đầu vào
         $status = $request->input('status');
         $from_date = $request->input('from_date');
         $to_date = $request->input('to_date');
         $search = $request->input('search');
 
-        // Xác thực các trường cơ bản
         if (!is_null($status) && !is_numeric($status)) {
             return redirect()->back()->withErrors(['error' => 'Trạng thái không hợp lệ']);
         }
 
-        // Chuyển đổi `from_date` và `to_date` thành timestamp
         $from = $to = null;
         try {
             if (!empty($from_date)) {
@@ -43,7 +40,6 @@ class ManageStatusRoomController extends Controller
             return redirect()->back()->withErrors(['error' => 'Ngày không hợp lệ']);
         }
 
-        // Tìm kiếm phòng theo `id`, `title`, hoặc `room_code`
         $room_ids = [];
         if (!empty($search)) {
             $room_ids = Room::where('id', $search)
@@ -57,7 +53,6 @@ class ManageStatusRoomController extends Controller
             }
         }
 
-        // Xây dựng query cho `ManageStatusRoom`
         $query = ManageStatusRoom::query()->with(['room.roomType', 'booking']);
 
         if ($status !== null) {
@@ -68,10 +63,6 @@ class ManageStatusRoomController extends Controller
             $query->whereIn('room_id', $room_ids);
         }
 
-        // Loại bỏ các bản ghi có `to` = 0
-        // $query->where('to', '>', 0);
-
-        // Lọc theo khoảng thời gian nằm hoàn toàn trong khoảng đã chọn
         if ($from !== null && $to !== null) {
             $query->where('from', '>=', $from)
                 ->where('to', '<=', $to);
@@ -81,9 +72,6 @@ class ManageStatusRoomController extends Controller
             $query->where('to', '<=', $to);
         }
 
-        // dd($query->toSql(), $query->getBindings()); // Debug query nếu cần
-
-        // Phân trang kết quả
         $statusRooms = $query->orderBy('id', 'desc')->paginate(10);
 
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));

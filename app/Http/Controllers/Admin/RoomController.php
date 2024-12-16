@@ -9,6 +9,7 @@ use App\Models\Admin\Review;
 use App\Models\Admin\Room;
 use App\Models\Admin\RoomAsset;
 use App\Models\Admin\RoomType;
+use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -75,10 +76,8 @@ class RoomController extends Controller
 
     public function store(RoomRequest $request)
     {
-
         $imagePaths = [];
 
-        // Xử lý upload nhiều ảnh
         if ($request->hasFile('image_room')) {
             foreach ($request->file('image_room') as $image) {
                 $path = $image->store('upload/rooms', 'public');
@@ -86,8 +85,8 @@ class RoomController extends Controller
             }
         }
 
-        // Xử lý upload ảnh thumbnail
         $thumbnailPath = null;
+
         if ($request->hasFile('thumbnail_image')) {
             $thumbnailPath = $request->file('thumbnail_image')->store('upload/room_thumbnails', 'public');
         }
@@ -106,13 +105,10 @@ class RoomController extends Controller
         ]);
 
         $currentTime = Carbon::now();
-
-        // Kiểm tra nếu thời gian hiện tại chưa đến 14h, nếu đúng thì lấy từ 14h hôm nay, nếu không thì lấy từ 14h ngày mai
         $from = $currentTime->hour < 14
             ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)->timestamp
             : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0)->timestamp;
 
-        // Tạo bản ghi quản lý trạng thái phòng
         ManageStatusRoom::create([
             'room_id' => $room->id,
             'status' => 1,
@@ -126,13 +122,13 @@ class RoomController extends Controller
 
 
     public function show($id)
-    {   
+    {
 
         $title = 'Chi tiết phòng';
         $room = Room::findOrFail($id);
         $roomAssets = RoomAsset::with('assetType')->where('room_id', $id)->get();
         $reviews = Review::where('room_id', $id)->get();
-        
+
         return view(self::VIEW_PATH . __FUNCTION__, compact('room', 'title', 'roomAssets', 'reviews'));
     }
 
@@ -151,40 +147,29 @@ class RoomController extends Controller
 
     public function update(UpdateRoomRequest $request, Room $room)
     {
-        // Xử lý ảnh phòng (image_room)
-        $imagePaths = json_decode($room->image_room, true) ?? []; // Lấy ảnh hiện tại nếu có, nếu không thì là mảng rỗng
+        $imagePaths = json_decode($room->image_room, true) ?? [];
 
         if ($request->hasFile('image_room')) {
-            // Xóa ảnh cũ khỏi thư mục (nếu cần thiết)
             foreach ($imagePaths as $oldImage) {
                 Storage::disk('public')->delete($oldImage);
             }
-
-            // Lưu ảnh mới
             $imagePaths = [];
             foreach ($request->file('image_room') as $image) {
-                $path = $image->store('upload/rooms', 'public'); // Không cần thêm time() vì Laravel sẽ tự động thêm timestamp vào tên file
+                $path = $image->store('upload/rooms', 'public');
                 $imagePaths[] = $path;
             }
         }
 
-        // Nếu không có file ảnh mới, giữ nguyên ảnh cũ
         $imageRoomData = !empty($imagePaths) ? json_encode($imagePaths) : $room->image_room;
-
-        // Xử lý ảnh thu nhỏ (thumbnail_image)
-        $thumbnailImagePath = $room->thumbnail_image; // Giữ ảnh thu nhỏ hiện tại nếu không có ảnh mới
+        $thumbnailImagePath = $room->thumbnail_image;
 
         if ($request->hasFile('thumbnail_image')) {
-            // Xóa ảnh thu nhỏ cũ nếu có
             if ($room->thumbnail_image) {
                 Storage::disk('public')->delete($room->thumbnail_image);
             }
-
-            // Lưu ảnh thu nhỏ mới
             $thumbnailImagePath = $request->file('thumbnail_image')->store('upload/rooms/thumbnails', 'public');
         }
 
-        // Cập nhật dữ liệu phòng
         $room->update([
             'title' => $request->input('title'),
             'roomId_number' => $request->input('roomId_number'),
@@ -193,9 +178,9 @@ class RoomController extends Controller
             'price' => $request->input('price'),
             'room_area' => $request->input('room_area'),
             'max_people' => $request->input('max_people'),
-            'image_room' => $imageRoomData, // Sử dụng ảnh cũ nếu không có ảnh mới
-            'thumbnail_image' => $thumbnailImagePath, // Cập nhật hoặc giữ nguyên ảnh thu nhỏ
-            'status' => $request->input('status'), // Giữ nguyên trạng thái nếu không thay đổi
+            'image_room' => $imageRoomData,
+            'thumbnail_image' => $thumbnailImagePath,
+            'status' => $request->input('status'),
         ]);
 
         return redirect()->route('rooms.show', $room->id)->with('success', 'Phòng đã được cập nhật thành công.');
@@ -210,22 +195,36 @@ class RoomController extends Controller
      * @param \App\Models\Admin\Room $room
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function lock(Room $room)
+    public function lock($roomId)
     {
-        if ($room->status === 0 || $room->status === 3) { // Chỉ khóa khi phòng ở trạng thái sẵn sàng
-            $room->update(['status' => 4]); // Đặt trạng thái phòng là "đã bị khóa"
-
-            return redirect()->route('rooms.index')->with('success', 'Phòng đã được khóa thành công.');
-        } else {
-            return redirect()->route('rooms.index')->with('error', 'Chỉ có thể khóa phòng khi trạng thái là "Sẵn sàng".');
+        $room = Room::find($roomId);
+        if (!$room) {
+            return redirect()->back()->withErrors(['error' => 'Phòng không tồn tại.']);
         }
+
+        $now = time();
+        $uncompletedBookings = Booking::where('room_id', $roomId)
+        ->where(function ($query) use ($now) {
+            $query->whereIn('status', [2, 3, 4])
+                  ->where('check_out_date', '>=', $now);
+        })
+        ->exists();
+
+        if ($uncompletedBookings) {
+            return redirect()->back()->with(['error' => 'Phòng đang có đơn đặt chưa hoàn thành hoặc sắp tới, không thể khóa.']);
+        }
+
+        $room->status = 4;
+        $room->save();
+
+        return redirect()->back()->with('success', 'Phòng đã được khóa thành công.');
     }
+
 
     public function unlock(Room $room)
     {
-        if ($room->status === 4) { // Chỉ mở khóa khi phòng đang bị khóa
-            $room->update(['status' => 0]); // Đặt trạng thái phòng là "sẵn sàng"
-
+        if ($room->status === 4) {
+            $room->update(['status' => 0]);
             return redirect()->route('rooms.index')->with('success', 'Phòng đã được mở khóa thành công.');
         } else {
             return redirect()->route('rooms.index')->with('error', 'Chỉ có thể mở khóa phòng khi trạng thái là "đã bị khóa".');

@@ -39,8 +39,8 @@ class BookingController  extends Controller
     public function index(Request $request)
     {
         $query = Booking::with('room', 'user');
-
-        // Tìm kiếm theo ID đơn, tên user, hoặc CCCD
+      
+        // Tìm ki   ếm theo ID đơn, tên user, hoặc CCCD
         if ($request->has('search') && !empty($request->input('search'))) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -62,30 +62,25 @@ class BookingController  extends Controller
             $dateRange = explode(' to ', $request->input('date_range'));
 
             if (count($dateRange) === 2) {
-                // Lấy cả ngày và giờ (nếu có) từ input
-                $startDateTime = trim($dateRange[0]); // Ngày bắt đầu
-                $endDateTime = trim($dateRange[1]);   // Ngày kết thúc
-
-                // Chuyển đổi sang timestamp (giây từ epoch)
-                $startDate = strtotime($startDateTime); // Giờ bắt đầu từ input, dạng 1733234400
-                $endDate = strtotime($endDateTime);     // Giờ kết thúc từ input, dạng 1733234400
+                $startDateTime = trim($dateRange[0]);
+                $endDateTime = trim($dateRange[1]);
+                $startDate = strtotime($startDateTime);
+                $endDate = strtotime($endDateTime);
                 // In ra để kiểm tra
-
                 $query->where(function ($subQuery) use ($startDate, $endDate) {
-                    $subQuery->whereBetween('check_in_date', [$startDate, $endDate]) // Check-in nằm trong khoảng
-                        ->orWhereBetween('check_out_date', [$startDate, $endDate]) // Check-out nằm trong khoảng
-                        ->orWhere(function ($query) use ($startDate, $endDate) { // Bao trùm toàn bộ khoảng
+                    $subQuery->whereBetween('check_in_date', [$startDate, $endDate]) 
+                        ->orWhereBetween('check_out_date', [$startDate, $endDate]) 
+                        ->orWhere(function ($query) use ($startDate, $endDate) { 
                             $query->where('check_in_date', '<=', $startDate)
                                 ->where('check_out_date', '>=', $endDate);
                         });
                 });
             }
         }
-        // dd($query->toSql() , $query->getBindings());
-        // Lấy danh sách đặt phòng
-        $bookings = $query->whereNotIn('status', [0, 1]) // Loại trừ các trạng thái 0 và 1
-            ->orderBy('id', 'desc') // Sắp xếp theo id giảm dần
-            ->paginate(10); // Phân trang, mỗi trang 10 bản ghi
+
+        $bookings = $query->whereNotIn('status', [0, 1]) 
+            ->orderBy('id', 'desc') 
+            ->paginate(10); 
 
         return view("$this->urlViews.index", compact('bookings'));
     }
@@ -104,12 +99,11 @@ class BookingController  extends Controller
         ], $this->messages);
 
         if ($validator->fails()) {
-            return redirect()->back() // Quay lại trang trước đó (addUI)
-                ->withErrors($validator) // Gửi lỗi về view
-                ->withInput(); // Giữ lại dữ liệu người dùng đã nhập
+            return redirect()->back() 
+                ->withErrors($validator) 
+                ->withInput(); 
         }
 
-        // Thực hiện các bước xử lý còn lại nếu validate thành công    
         $name = $request->input("name");
         $email = $request->input("email");
         $password = $request->input("email");
@@ -122,17 +116,15 @@ class BookingController  extends Controller
         $check_in_timestamp = strtotime($check_in_date);
         $check_out_timestamp = strtotime($check_out_date);
 
-        // Kiểm tra nếu strtotime trả về false (không hợp lệ)
+
         if ($check_in_timestamp === false || $check_out_timestamp === false) {
-            // Xử lý lỗi ngày tháng không hợp lệ ở đây
             return redirect()->back()->withErrors("Ngày đến hoặc ngày đi không hợp lệ.");
         }
 
-        // Tính toán tổng số ngày
-        $days = ($check_out_timestamp - $check_in_timestamp) / 86400; // Chuyển đổi từ giây sang ngày
+        $days = ($check_out_timestamp - $check_in_timestamp) / 86400; 
 
         if ($days <= 0) {
-            // Kiểm tra nếu số ngày không hợp lệ
+
             return redirect()->back()->withErrors("Ngày đi phải sau ngày đến.");
         }
 
@@ -169,8 +161,6 @@ class BookingController  extends Controller
             "check_in_date" => $check_in_timestamp,
             "check_out_date" => $check_out_timestamp,
             "booking_number_id" => $bookingNumberId
-            // "created_at" => $this->dateNow,
-            // "updated_at" => $this->dateNow,
         ]);
 
         return redirect()->route('adminBooking.addUI')->with('success', 'Đặt phòng thành công.');
@@ -182,16 +172,6 @@ class BookingController  extends Controller
         return view('admin.booking.create', compact("dataRoomType"));
     }
 
-    // viết cho tôi hàm hủy đặt phòng
-    // các trạng thái
-    // 0: Chưa thanh toán cọc
-    // 1: Đang thanh toán cọc
-    // 2: Đã thanh toán cọc
-    // 3: Đã thanh toán toàn bộ
-    // 4: Đang sử dụng
-    // 5: huy đặt phòng
-    // nếu trạng thái  === 2,3,4 thì không thể hủy
-
     public function cancel($id)
     {
         $booking = Booking::findOrFail($id);
@@ -202,7 +182,6 @@ class BookingController  extends Controller
 
         $currentTimestamp = Carbon::now()->addDay()->setTime(14, 0)->timestamp;
         if ($booking->check_in_date < $currentTimestamp) {
-            // $today = Carbon::now()->timestamp;
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
             foreach ($manage_status_rooms as $manage_status_room) {
                 $manage_status_room->delete();
