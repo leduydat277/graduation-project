@@ -191,4 +191,58 @@ class RoomController
             'data' => $rooms,
         ]);
     }
+
+    public function getRoomBookings(Request $request)
+    {
+        $query = Room::select(
+            "rooms.id",
+            "rooms.title",
+            "rooms.price",
+            "rooms.max_people",
+            "bookings.check_in_date",
+            "bookings.check_out_date"
+        )
+            ->leftJoin("bookings", "bookings.room_id", "=", "rooms.id")
+            ->groupBy(
+                "rooms.id",
+                "rooms.title",
+                "rooms.price",
+                "rooms.max_people",
+                "bookings.check_in_date",
+                "bookings.check_out_date"
+            );
+
+        if ($request->input("room_type_id")) {
+            $query->where("rooms.room_type_id", $request->input("room_type_id"));
+        }
+        if ($request->input("max_people")) {
+            $query->where("rooms.max_people", "<=", $request->input("max_people"));
+        }
+
+        $checkInDate = $request->input("check_in_date");
+        $checkOutDate = $request->input("check_out_date");
+
+        if ($checkInDate && $checkOutDate) {
+            // Chuyển đổi ngày tháng sang timestamp
+            $checkInTimestamp = strtotime($checkInDate);
+            $checkOutTimestamp = strtotime($checkOutDate);
+
+            $query->whereNotExists(function ($subQuery) use ($checkInTimestamp, $checkOutTimestamp) {
+                $subQuery->select("bookings.room_id")
+                    ->from("bookings")
+                    ->whereColumn("bookings.room_id", "=", "rooms.id")
+                    ->where(function ($dateQuery) use ($checkInTimestamp, $checkOutTimestamp) {
+                        $dateQuery->whereBetween("bookings.check_in_date", [$checkInTimestamp, $checkOutTimestamp])
+                            ->orWhereBetween("bookings.check_out_date", [$checkInTimestamp, $checkOutTimestamp])
+                            ->orWhere(function ($overlapQuery) use ($checkInTimestamp, $checkOutTimestamp) {
+                                $overlapQuery->where("bookings.check_in_date", "<=", $checkInTimestamp)
+                                    ->where("bookings.check_out_date", ">=", $checkOutTimestamp);
+                            });
+                    });
+            });
+        }
+
+        $data = $query->get();
+        return response()->json($data);
+    }
 }

@@ -96,8 +96,13 @@
                         @enderror
                     </div>
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="{{ route('user.index') }}" class="btn btn-secondary me-2">
+                            <i class="ri-arrow-go-back-line align-bottom"></i> Quay lại
+                        </a>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Thêm</button>
+                        </div>
                     </div>
                 </form>
 

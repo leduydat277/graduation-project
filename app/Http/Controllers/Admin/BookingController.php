@@ -21,19 +21,24 @@ class BookingController  extends Controller
     {
         $this->dateNow = Carbon::now()->timestamp;
         $this->messages = [
-            "name.required" => "Tên khách hàng không được để trống",
-            "name.string" => "Tên phải là chuỗi",
-            "name.max" => "Tên quá dài",
-            "email.required" => "Email không được để trống",
-            "email.string" => "Email phải là chuỗi",
-            "email.email" => "Email không đúng định dạng",
-            "check_in_date.required" => "Ngày đến không được để trống",
-            "check_out_date.required" => "Ngày đi không được để trống",
-            "max_people.required" => "Số lượng người tối đa không được để trống",
-            "room_id.required" => "Phòng không được để trống",
-            "room_type.required" => "Loại phòng không được để trống",
-            "CCCD.required" => "CCCD không được để trống"
+            "total_price.required" => "Tổng giá là bắt buộc.",
+            "name.required" => "Tên khách hàng là bắt buộc.",
+            "name.string" => "Tên khách hàng phải là chuỗi ký tự.",
+            "name.max" => "Tên khách hàng không được vượt quá 255 ký tự.",
+            "email.required" => "Email là bắt buộc.",
+            "email.string" => "Email phải là chuỗi ký tự.",
+            "email.email" => "Email không đúng định dạng, vui lòng nhập đúng email.",
+            "check_in_date.required" => "Ngày đến là bắt buộc.",
+            "check_out_date.required" => "Ngày đi là bắt buộc.",
+            "max_people.required" => "Số lượng người tối đa là bắt buộc.",
+            "room_id.required" => "Phòng không được để trống, vui lòng chọn phòng.",
+            "room_type.required" => "Loại phòng là bắt buộc.",
+            "CCCD.required" => "Số CCCD là bắt buộc.",
+            "CCCD.max" => "Số CCCD tối đa 12 số.",
+            "check_in_date.after" => "Ngày đến phải trước ngày đi.",
+            "check_out_date.after" => "Ngày đi phải sau ngày đến.",
         ];
+        
         $this->urlViews = 'admin.booking.';
     }
     public function index(Request $request)
@@ -95,14 +100,16 @@ class BookingController  extends Controller
         $validator = Validator::make($request->all(), [
             "name" => "required|string|max:255",
             "email" => "required|string|email",
-            "check_in_date" => "required",
-            "check_out_date" => "required",
-            'max_people' => 'required',
-            'room_id' => 'required',
-            'room_type' => 'required',
-            'CCCD' => 'required',
+            "check_in_date" => "required|date",
+            "check_out_date" => "required|date|after:check_in_date",
+            'max_people' => 'required|integer|min:1',
+            'room_id' => 'required|integer',
+            'room_type' => 'required|string',
+            'CCCD' => 'required|string',
+            'total_price' => 'required|string',
         ], $this->messages);
-
+        
+        // dd($request->total_price);
         if ($validator->fails()) {
             return redirect()->back() // Quay lại trang trước đó (addUI)
                 ->withErrors($validator) // Gửi lỗi về view
@@ -121,22 +128,10 @@ class BookingController  extends Controller
 
         $check_in_timestamp = strtotime($check_in_date);
         $check_out_timestamp = strtotime($check_out_date);
-
-        // Kiểm tra nếu strtotime trả về false (không hợp lệ)
-        if ($check_in_timestamp === false || $check_out_timestamp === false) {
-            // Xử lý lỗi ngày tháng không hợp lệ ở đây
-            return redirect()->back()->withErrors("Ngày đến hoặc ngày đi không hợp lệ.");
-        }
-
         // Tính toán tổng số ngày
         $days = ($check_out_timestamp - $check_in_timestamp) / 86400; // Chuyển đổi từ giây sang ngày
-
-        if ($days <= 0) {
-            // Kiểm tra nếu số ngày không hợp lệ
-            return redirect()->back()->withErrors("Ngày đi phải sau ngày đến.");
-        }
-
-        $total_price = Room::find($room_id)->price * $days;
+        $roomData = Room::find($room_id);
+        $total_price = $roomData->price * $days;
 
         $dataUsers = User::where("email", $email)->first();
         if ($dataUsers) {
