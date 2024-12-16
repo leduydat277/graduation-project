@@ -22,7 +22,7 @@
                                 <div class="accordion-header rounded-4 border-0" id="heading-one">
                                     <button class="accordion-button rounded-4" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapse-one" aria-expanded="true" aria-controls="collapse-one">
-                                        <h3 class="accordion-title fs-5 fw-bold m-0">How to Book the time?</h3>
+                                        <h3 class="accordion-title fs-5 fw-bold m-0">{{$title}}</h3>
                                     </button>
                                 </div>
                                 <div id="collapse-one" class="accordion-collapse collapse show"
