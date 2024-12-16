@@ -118,6 +118,8 @@
                     success: function(response) {
                         if (response.status === "success" && Array.isArray(response.data)) {
                             allRooms = response.data;
+                            console.log(response);
+
                             renderRooms(allRooms, currentPage, roomsPerPage);
                             renderPagination(allRooms.length, roomsPerPage);
                         } else {
@@ -168,17 +170,18 @@
                 const paginatedRooms = rooms.slice(startIndex, startIndex + perPage);
 
                 paginatedRooms.forEach(room => {
+                    let url_detail = 'http://127.0.0.1:8000/room/' + room.id + '?' + '{{ http_build_query(request()->query()) }}'; 
                     const roomItem = `
                 <div class="col-md-6 col-xl-4 mb-4">
-                    <a href="${room.details_url}"><div class="room-item rounded-4">
+                   <a href="${url_detail}"><div class="room-item rounded-4">
                         <img src="http://127.0.0.1:8000/storage/${JSON.parse(room.image_room)[0]}" style="width: 100%;  height: 400px; object-fit: cover;" alt="img" class="img-fluid rounded-4">
                     </div></a>
                     <div class="room-content">
                         <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-                            <h4 class="display-6 fw-normal"><a href="${room.details_url}">${room.title}</a></h4>
+                            <h4 class="display-6 fw-normal"><a href="${url_detail}">${room.title}</a></h4>
                         </div>
                         <p class="product-paragraph">${room.description}</p>
-                        <table>
+                        <table> 
                             <tbody>
                                 <tr>
                                     <td class="pe-2">Loại phòng: </td>
@@ -198,7 +201,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="${room.details_url}">
+                        <a href="${url_detail}">
                             <p class="text-decoration-underline mt-3">Chi tiết</p>
                         </a>
                     </div>

@@ -61,9 +61,7 @@
                         <label for="role" class="form-label">Chức vụ</label>
                         <select class="form-select" name="role" id="role">
                             <option value="1" {{ old('role', $data->role) == 1 ? 'selected' : '' }}>Admin</option>
-                            <option value="3" {{ old('role', $data->role) == 3 ? 'selected' : '' }}>Quản lý</option>
-                            <option value="2" {{ old('role', $data->role) == 2 ? 'selected' : '' }}>Lễ tân</option>
-                            <option value="4" {{ old('role', $data->role) == 4 ? 'selected' : '' }}>Khách hàng
+                            <option value="0" {{ old('role', $data->role) == 4 ? 'selected' : '' }}>Khách hàng
                             </option>
                         </select>
                         @error('role')

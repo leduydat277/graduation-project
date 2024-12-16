@@ -246,7 +246,7 @@
                 });
             } catch (error) {
                 console.error('Lỗi:', error);
-                alert('Không thể tải dữ liệu.');
+                
             }
         }
 
@@ -282,7 +282,7 @@
                 });
             } catch (error) {
                 console.error('Lỗi:', error);
-                alert('Không thể tải dữ liệu.');
+                
             }
         }
         document.addEventListener('DOMContentLoaded', fetchAssetType);
@@ -312,7 +312,7 @@
 
             } catch (error) {
                 console.error('Lỗi:', error);
-                alert('Không thể tải dữ liệu.');
+                
             }
         }
 

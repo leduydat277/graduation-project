@@ -24,9 +24,14 @@ class HomeController
         $title = "Phòng";
         return view('client.room', compact('title'));
     }
+    public function blog()
+    {
+        $title = "Bài Viết";
+        return view('client.blog', compact('title'));
+    }
     public function contact()
     {
-        $title = "Liên hệ";
+        $title = "Liên Hệ";
         return view('client.contact', compact('title'));
     }
     public function about()
