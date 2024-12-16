@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Log;
 
 class ManageStatusRoomController extends Controller
 {
-    const VIEW_PATH =  'admin.managestatus.';
 
+    const VIEW_PATH =  'admin.managestatus.';
     public function index(Request $request)
     {
         $title = 'Quản lý trạng thái phòng';

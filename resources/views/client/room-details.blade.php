@@ -176,14 +176,14 @@
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3">
+                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3" value="{{$_GET['select-arrival-date_value']}}">
                                 </div>
                                 <div id="error-message-checkin" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày trả</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3">
+                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3"  value="{{$_GET['select-departure-date_value']}}">
                                 </div>
                                 <div id="error-message-checkout" style="color: black; display: none;"></div>
                             </div>
@@ -404,90 +404,84 @@
                             toDate = new Date(item.to * 1000);
                         }
 
+                        const formattedFromDate = fromDate.toISOString().split('T')[0];
+                        let formattedToDate = '';
+                        if (toDate === 'Trống đến hết năm') {
+                            formattedToDate = toDate;
+                        } else {
+                            formattedToDate = toDate.toISOString().split('T')[0];
+                        }
+
                         let currentDate = new Date(fromDate);
                         while (currentDate <= toDate) {
                             blockedDates.push(currentDate.toISOString().split('T')[0]);
                             currentDate.setDate(currentDate.getDate() + 1);
                         }
+
+                        console.log(
+                            `Từ ngày: ${formattedFromDate} - Đến ngày: ${formattedToDate === 'Trống đến hết năm' ? formattedToDate : formattedToDate} - Trạng thái: ${item.status === 1 ? 'Trống' : 'Đã đặt'}`
+                        );
                     });
 
                     const checkinInput = document.getElementById("checkin");
                     const checkoutInput = document.getElementById("checkout");
+
+                    function isDateBlocked(date) {
+                        return blockedDates.includes(date);
+                    }
+
+                    const today = new Date().toISOString().split("T")[0];
+                    checkinInput.setAttribute("min", today);
+                    checkoutInput.setAttribute("min", today);
+
+                    const checkinValidate = document.getElementById('checkin');
+                    const checkoutValidate = document.getElementById('checkout');
                     const errorCheckin = document.getElementById('error-message-checkin');
                     const errorCheckout = document.getElementById('error-message-checkout');
 
-                    const today = new Date();
-                    const todayFormatted = today.toISOString().split("T")[0];
-                    checkinInput.setAttribute("min", todayFormatted);
-
                     checkinInput.addEventListener("change", function() {
                         const checkinDate = new Date(checkinInput.value);
+                        const checkoutDate = new Date(checkoutInput.value);
                         const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
 
-                        if (isNaN(checkinDate) || checkinDate < today) {
+                        if (isNaN(checkinDate)) {
                             errorCheckin.style.display = 'block';
-                            errorCheckin.textContent =
-                                "Do các ngày trước đã có đơn đặt nên không đặt được ngày nữa.";
+                            errorCheckin.textContent = "Vui lòng chọn ngày nhận phòng hợp lệ.";
                             checkinInput.value = "";
                             return;
                         }
 
                         if (isDateBlocked(formattedCheckinDate)) {
                             errorCheckin.style.display = 'block';
-                            errorCheckin.textContent = "Ngày này đã có người đặt rồi.";
                             checkinInput.value = "";
-                            return;
+                            errorCheckin.textContent = "Ngày này đã có người đặt rồi";
+                            $('#checkin').focus();
+                        } else {
+                            errorCheckin.style.display = 'none';
                         }
-
-                        errorCheckin.style.display = 'none';
-
-                        // Tự động đặt giới hạn cho ngày checkout
-                        const nextDay = new Date(checkinDate);
-                        nextDay.setDate(nextDay.getDate() + 1);
-                        const maxCheckoutDate = new Date(checkinDate);
-                        maxCheckoutDate.setDate(maxCheckoutDate.getDate() + 1);
-
-                        checkoutInput.setAttribute("min", nextDay.toISOString().split("T")[0]);
-                        checkoutInput.setAttribute("max", maxCheckoutDate.toISOString().split("T")[0]);
-                        checkoutInput.value = "";
-                        errorCheckout.style.display = 'none';
                     });
 
                     checkoutInput.addEventListener("change", function() {
                         const checkinDate = new Date(checkinInput.value);
                         const checkoutDate = new Date(checkoutInput.value);
+                        const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
 
-                        if (isNaN(checkinDate)) {
-                            errorCheckin.style.display = 'block';
-                            errorCheckin.textContent = "Vui lòng chọn ngày nhận phòng trước.";
-                            checkoutInput.value = "";
-                            return;
-                        }
-
-                        if (isNaN(checkoutDate) || checkoutDate <= checkinDate) {
+                        if (isNaN(checkoutDate)) {
                             errorCheckout.style.display = 'block';
-                            errorCheckout.textContent = "Ngày trả phòng phải sau ngày nhận phòng.";
+                            errorCheckout.textContent = "Vui lòng chọn ngày trả phòng hợp lệ.";
                             checkoutInput.value = "";
                             return;
                         }
 
-                        const maxCheckoutDate = new Date(checkinDate);
-                        maxCheckoutDate.setDate(maxCheckoutDate.getDate() + 1);
-
-                        if (checkoutDate > maxCheckoutDate) {
+                        if (isDateBlocked(formattedCheckoutDate)) {
                             errorCheckout.style.display = 'block';
-                            errorCheckout.textContent =
-                                "Ngày trả phòng không được vượt quá 1 ngày sau ngày nhận phòng.";
                             checkoutInput.value = "";
-                            return;
+                            errorCheckout.textContent = "Ngày này đã có người đặt rồi";
+                        } else {
+                            errorCheckout.style.display = 'none';
                         }
-
-                        errorCheckout.style.display = 'none';
                     });
 
-                    function isDateBlocked(date) {
-                        return blockedDates.includes(date);
-                    }
                 } else {
                     console.log("Không có dữ liệu ngày đặt!");
                 }
@@ -497,7 +491,6 @@
                 console.log("Đã xảy ra lỗi khi kiểm tra ngày đặt!");
             }
         });
-
 
         document.addEventListener("DOMContentLoaded", function() {
             const checkinInput = document.getElementById("checkin");
