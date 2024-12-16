@@ -94,6 +94,20 @@
         <!-- Booking Table -->
         <div class="card">
             <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="date_range" class="form-label"></label>
+                    <form method="GET" action="{{ route('bookings.index') }}" class="d-flex align-items-center mb-3">
+                        <div class="row g-3 align-items-center">
+                            <div class="input-group">
+                                <input type="text" name="search" value="{{ request('search') }}" class="form-control"
+                                    placeholder="Nhập mã đơn hoặc tên khách hàng..." aria-label="Tìm kiếm">
+                                <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                    <i class="ri-search-line"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <!-- Hiển thị thông báo -->
                 @if (session('success') || session('error'))
                     <div class="col">
@@ -127,19 +141,22 @@
                                     <td class="d-flex justify-content-evenly align-content-center">
 
                                         <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}"
-                                            alt="Room Image" class="img-fluid mb-2 mt-2" style="width: 80px; height: 80px">
+                                            alt="Room Image" class="img-fluid mb-2 mt-2"
+                                            style="width: 80px; height: 80px">
 
                                     </td>
-                                    <td>{{ $booking->last_name . ' ' . $booking->first_name }}</td>
+                                    <td>{{ $booking->user->name }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ $booking->room->title }}</td>
                                     <td>
-                                        <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
+                                        <span
+                                            class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">{{ number_format($booking->total_price, 0, ',', '.') }}
+                                        <span
+                                            class="badge bg-info">{{ number_format($booking->total_price, 0, ',', '.') }}
                                             đ</span>
                                     </td>
                                     <td>
@@ -376,22 +393,6 @@
                         form.submit(); // Gửi form nếu đặt phòng xác nhận xóa
                     }
                 });
-            });
-        });
-    </script>
-    <!-- jQuery, DataTables, Daterangepicker -->
-
-    <script>
-        $('#bookingTable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
-            }
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Khởi tạo flatpickr với chế độ chọn khoảng thời gian
-            flatpickr('#date-range-input', {
-                mode: 'range',
-                dateFormat: 'Y-m-d',
             });
         });
     </script>

@@ -17,42 +17,38 @@ class RoomTypeController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh sách loại phòng';
+        $search = $request->input('search', ''); 
+        $sort = $request->input('sort', 'roomType_number_asc');
 
-        // Lấy dữ liệu từ request
-        $search = $request->input('search', ''); // Dữ liệu từ form tìm kiếm
-        $sort = $request->input('sort', 'roomType_number_asc'); // Dữ liệu từ form filter (sắp xếp)
 
-        // Phân tách `sort` thành cột và thứ tự
         [$sortBy, $sortOrder] = explode('_', $sort);
 
-        // Xác định các cột hợp lệ
+
         $validColumns = ['roomType_number', 'type', 'rooms_count'];
         $validOrders = ['asc', 'desc'];
 
-        // Kiểm tra tính hợp lệ của sortBy và sortOrder
         if (!in_array($sortBy, $validColumns) || !in_array($sortOrder, $validOrders)) {
             $sortBy = 'roomType_number';
             $sortOrder = 'asc';
         }
 
-        // Truy vấn dữ liệu
         $roomTypes = RoomType::query()
-            ->withCount('rooms') // Đếm số lượng phòng liên kết
+            ->withCount('rooms') 
             ->when($search, function ($query, $search) {
                 return $query->where('type', 'LIKE', '%' . $search . '%')
-                    ->orWhere('roomType_number', 'LIKE', '%' . $search . '%'); // Tìm kiếm theo mã hoặc tên loại phòng
+                    ->orWhere('roomType_number', 'LIKE', '%' . $search . '%'); 
             })
-            ->orderBy($sortBy, $sortOrder) // Sắp xếp theo filter
+            ->orderBy($sortBy, $sortOrder) 
             ->paginate(10)
-            ->appends(['search' => $search, 'sort' => $sort]); // Giữ lại query string khi phân trang
+            ->appends(['search' => $search, 'sort' => $sort]); 
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('roomTypes', 'search', 'sort', 'title'));
     }
 
     public function showroom($id)
     {
-        $roomType = RoomType::with('rooms')->findOrFail($id); // Lấy loại phòng cùng danh sách phòng
-        $rooms = $roomType->rooms; // Lấy danh sách phòng
+        $roomType = RoomType::with('rooms')->findOrFail($id); 
+        $rooms = $roomType->rooms;
         $title = "Danh sách phòng thuộc loại: " . $roomType->type;
 
         return view(self::VIEW_PATH . __FUNCTION__, compact('roomType', 'rooms', 'title'));
@@ -76,7 +72,7 @@ class RoomTypeController extends Controller
         // Xử lý upload ảnh
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads/room_types', 'public'); // Lưu vào thư mục public/uploads/room_types
+            $imagePath = $request->file('image')->store('uploads/room_types', 'public'); 
         }
 
         RoomType::create([
@@ -108,10 +104,8 @@ class RoomTypeController extends Controller
             return redirect()->route('room-types.index')->with('error', 'Tên loại phòng đã tồn tại.');
         }
 
-        // Xử lý upload ảnh
-        $imagePath = $roomType->image; // Giữ ảnh cũ nếu không upload ảnh mới
+        $imagePath = $roomType->image; 
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
             if ($roomType->image) {
                 Storage::disk('public')->delete($roomType->image);
             }

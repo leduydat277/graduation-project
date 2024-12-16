@@ -37,7 +37,6 @@ class RegisterController
         ];
 
         try {
-            // Xác thực dữ liệu đầu vào
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
@@ -52,7 +51,6 @@ class RegisterController
                 'address' => 'nullable|string|max:255',
             ], $messages);
 
-            // Nếu validate không thành công
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -60,7 +58,6 @@ class RegisterController
                 ], 422);
             }
 
-            // Tạo người dùng mới
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -70,7 +67,7 @@ class RegisterController
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'role' => 0, // Mặc định là user
+                'role' => 0, 
             ]);
 
             return response()->json([

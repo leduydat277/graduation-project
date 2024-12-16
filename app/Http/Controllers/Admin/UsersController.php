@@ -69,12 +69,11 @@ class UsersController extends RoutingController
         ], $this->messages);
         
         if ($validator->fails()) {
-            return redirect()->back() // Quay lại trang trước đó (addUI)
-                ->withErrors($validator) // Gửi lỗi về view
-                ->withInput(); // Giữ lại dữ liệu người dùng đã nhập
+            return redirect()->back() 
+                ->withErrors($validator) 
+                ->withInput(); 
         }
-    
-        // Thực hiện các bước xử lý còn lại nếu validate thành công
+
         $password = $request->input("password");
         $name = $request->input("name");
         $email = $request->input("email");
@@ -116,9 +115,9 @@ class UsersController extends RoutingController
         $data = User::find($id);
         
         if (!$data) {
-            return redirect()->back() // Quay lại trang trước đó (addUI)
-            ->withErrors(["email" => "Không tìm thấy tài khoản"]) // Gửi lỗi về view
-            ->withInput(); // Giữ lại dữ liệu người dùng đã nhập
+            return redirect()->back() 
+            ->withErrors(["email" => "Không tìm thấy tài khoản"])
+            ->withInput();
         }
         $data["image"] = asset('storage/' .$data["image"]);
         return view(self::VIEW_PATH."edit", compact("data"));
@@ -133,9 +132,9 @@ class UsersController extends RoutingController
             'image' => 'image|mimes:jpeg,jpg,png'
         ], $this->messages);
         if ($validator->fails()) {
-            return redirect()->back() // Quay lại trang trước đó (addUI)
-                ->withErrors($validator) // Gửi lỗi về view
-                ->withInput(); // Giữ lại dữ liệu người dùng đã nhập
+            return redirect()->back()
+                ->withErrors($validator) 
+                ->withInput(); 
         }
         $password = request("password");
         $name = request("name");
@@ -147,14 +146,13 @@ class UsersController extends RoutingController
         $dataUsers = User::where("email", $email)->where("id", "!=", $id)->first();
         $dataUsersOld = User::where("id", "=", $id)->first();
         if ($dataUsers) {
-            return redirect()->back() // Quay lại trang trước đó (addUI)
-            ->withErrors(["email" => "Email đã được sử dụng."]) // Gửi lỗi về view
-            ->withInput(); // Giữ lại dữ liệu người dùng đã nhập
+            return redirect()->back()
+            ->withErrors(["email" => "Email đã được sử dụng."]) 
+            ->withInput();
         }
-        // duyệt qua từng file và lưu trữ
+
         if ($request->hasFile('image')) {
             $files = $request->file('image');
-            // Validate each file
             if (!$files->isValid()) {
                 return redirect()->back()
                     ->withErrors(["image" => "File không hợp lệ, vui lòng thử lại"])
@@ -164,8 +162,6 @@ class UsersController extends RoutingController
             if (Storage::disk('public')->exists($dataUsersOld->image)) {
                 Storage::disk("public")->delete($dataUsersOld->image);
             }
-
-            // Store the file with a unique name
             $image = $files->store('uploads', 'public');
         }else{
             $image = $dataUsersOld->image;

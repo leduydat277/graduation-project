@@ -27,9 +27,6 @@ class SearchRoomController extends Controller
         
         $room_type_id = $_GET['room_type_id'] ?? null;
         $input_people = $_GET['quantity'] ?? null;
-        // $from = $_GET['from'] ?? null;
-        // $to = $_GET['to'] ?? null;
-
         $from = $_GET['select-arrival-date'] ?? null;
         $to = $_GET['select-departure-date_value'] ?? null;
         
@@ -137,7 +134,6 @@ class SearchRoomController extends Controller
      */
     public function apiSearchRoom(Request $request)
     {
-        // Validate các tham số đầu vào
         $validated = $request->validate([
             'room_type_id' => 'nullable|integer',
             'room_id' => 'nullable|integer',
@@ -151,8 +147,6 @@ class SearchRoomController extends Controller
         $input_people = $validated['input_people'];
         $from = new DateTime($validated['from']);
         $to = new DateTime($validated['to']);
-
-        // Chuyển đổi giờ check-in và check-out
         $from = $from->setTime(14, 0, 0)->getTimestamp();
         $to = $to->setTime(12, 0, 0)->getTimestamp();
 
@@ -182,9 +176,7 @@ class SearchRoomController extends Controller
             ], 200);
         }
 
-        // Lấy các phòng có trạng thái sẵn sàng
         $arr_rooms = Room::where('room_type_id', $room_type_id)
-            // ->where('status', 0)
             ->where('max_people', '>=', $input_people)
             ->select('id')
             ->get()
@@ -194,7 +186,6 @@ class SearchRoomController extends Controller
             return response()->json(['error' => 'Không có phòng nào thỏa mãn điều kiện.'], 404);
         }
 
-        // Lấy thời gian quản lý phòng từ "manage_status_room"
         $arr_room_manages = [];
         foreach ($arr_rooms as $room) {
             $records_manage = ManageStatusRoom::where('room_id', $room['id'])
@@ -207,22 +198,18 @@ class SearchRoomController extends Controller
             }
         }
 
-        // Kiểm tra thời gian đặt của người dùng với danh sách phòng lấy được
         $results = [];
         foreach ($arr_room_manages as $room) {
-            // Kiểm tra điều kiện phòng có `to` = 0 và `from` trước ngày người dùng đặt
             if ($room['from'] <= $from && $room['to'] == 0) {
                 $results[] = $room['room_id'];
                 continue;
             }
 
-            // Kiểm tra điều kiện người dùng đặt nằm trong khoảng thời gian có sẵn của phòng
             if ($room['from'] <= $from && $to <= $room['to']) {
                 $results[] = $room['room_id'];
             }
         }
 
-        // Lấy thông tin phòng thỏa mãn điều kiện, bao gồm cả kiểu phòng (room_type)
         if (empty($results)) {
             return response()->json([
                 'status' => 'error',
