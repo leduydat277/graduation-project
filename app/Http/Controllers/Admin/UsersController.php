@@ -35,6 +35,25 @@ class UsersController extends RoutingController
         ];
     }    
 
+    public function index(Request $request){
+        $query = User::query();
+        $email = $request->input("email");
+        if($email){
+            $query->where('email', $email);
+        }
+        $data = $query->get();
+        $data = $data->map(function ($item) {
+            return [
+                "id" => $item->id,
+                "name" => $item->name,
+                "email" => $item->email,
+                "image" => asset('storage/' .$item->image),
+                "role" => $item->role,
+            ];
+        });
+        return view(self::VIEW_PATH . __FUNCTION__, compact('data'));
+    }
+
     public function addUI(){
         return view(self::VIEW_PATH."create");
     }

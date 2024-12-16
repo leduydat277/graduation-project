@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationMessage;
 use App\Models\Booking;
 use App\Models\BookingCancelled;
 use App\Models\ManageStatusRoom;
+use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\Reson;
 use Carbon\Carbon;
@@ -43,12 +45,19 @@ class BookingCancelledController
         $booking = Booking::where('id', $bookingId)->first();
 
         if (!$booking) {
-            return response()->json(['error' => 'Booking not found'], 404);
+            return response()->json(['error' => 'Booking not found'], 201);
+        }
+
+        if ($booking->status == 5) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Phòng này đã được hủy rồi'
+            ]);
         }
 
         $reson = Reson::where('id', $request->input('reason_id'))->first();
         if (!$reson) {
-            return response()->json(['error' => 'Reason not found'], 404);
+            return response()->json(['error' => 'Reason not found'], 201);
         }
 
         $createdAt = Carbon::createFromTimestamp($booking->created_at);
@@ -64,20 +73,10 @@ class BookingCancelledController
             $refundAmount = '0';
         }
 
-        $manager_status = ManageStatusRoom::where('room_id', $booking->room_id)
-            ->whereIn('status', [0, 1])
-            ->orderByDesc('id')
-            ->take(3)
-            ->get();
-
-        foreach ($manager_status as $status) {
-            $status->delete();
-        }
+        ManageStatusRoom::where('booking_id', $bookingId)->delete();
 
         $booking->status = 5;
         $booking->save();
-
-        Payment::where('booking_id', $bookingId)->delete();
 
         if ($refundAmount = '100' || $refundAmount = '50') {
             BookingCancelled::create([
@@ -98,7 +97,33 @@ class BookingCancelledController
             ]);
         }
 
-        return redirect()->route('client.home');
+        $title = "Yêu cầu hoàn tiền mới";
+        $message = "Khách hàng " . $booking->last_name . ' ' . $booking->first_name . " đã yêu cầu hoàn tiền.";
+
+        $timestamp = $booking->created_at;
+
+        $date = Carbon::createFromTimestamp($timestamp);
+
+        $formattedDate = $date->format('H:i d-m-Y');
+
+        $messageData = [
+            "date" => $formattedDate,
+            "message" => $message,
+            "booking_id" => $booking->id
+        ];
+
+        Notification::create([
+            "user_id" => $booking->user_id,
+            "title" => $title,
+            "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
+        ]);
+
+        event(new NotificationMessage($message, $title, $formattedDate));
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Bạn đã hủy thành công'
+        ], 200);
     }
 
 

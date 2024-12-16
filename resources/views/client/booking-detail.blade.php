@@ -107,7 +107,9 @@
                                 </tbody>
                             </table>
                             <!-- Nút Hủy Đơn -->
-                            <button id="cancelOrderBtn" class="btn btn-danger mt-3">Hủy đơn hàng</button>
+                            @if ($booking->status != 5)
+                                <button id="cancelOrderBtn" class="btn btn-danger mt-3">Hủy đơn hàng</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -168,12 +170,14 @@
                             });
                             $('#cancelReasonModal').modal('hide');
                             window.location.reload();
-                        }else{
+                        } else {
                             var errors = response.message;
                             toastr.error(errors, 'Lỗi', {
                                 positionClass: 'toast-top-right',
                                 timeOut: 5000,
                             });
+                            $('#cancelReasonModal').modal('hide');
+                            window.location.reload();
                         }
                     },
                     error: function(xhr) {

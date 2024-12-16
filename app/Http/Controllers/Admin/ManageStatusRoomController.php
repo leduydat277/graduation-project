@@ -69,7 +69,7 @@ class ManageStatusRoomController extends Controller
         }
 
         // Loại bỏ các bản ghi có `to` = 0
-        $query->where('to', '>', 0);
+        // $query->where('to', '>', 0);
 
         // Lọc theo khoảng thời gian nằm hoàn toàn trong khoảng đã chọn
         if ($from !== null && $to !== null) {
@@ -84,7 +84,7 @@ class ManageStatusRoomController extends Controller
         // dd($query->toSql(), $query->getBindings()); // Debug query nếu cần
 
         // Phân trang kết quả
-        $statusRooms = $query->paginate(10);
+        $statusRooms = $query->orderBy('id', 'desc')->paginate(10);
 
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }

@@ -66,7 +66,7 @@
     <script>
         $(document).ready(function() {
             let currentPage = 1;
-            let roomsPerPage = 6; // Số lượng phòng trên mỗi trang
+            let roomsPerPage = 9; // Số lượng phòng trên mỗi trang
             let allRooms = []; // Dữ liệu phòng đã lấy từ API
 
             const queryParams = new URLSearchParams(window.location.search);
@@ -118,6 +118,8 @@
                     success: function(response) {
                         if (response.status === "success" && Array.isArray(response.data)) {
                             allRooms = response.data;
+                            console.log(response);
+
                             renderRooms(allRooms, currentPage, roomsPerPage);
                             renderPagination(allRooms.length, roomsPerPage);
                         } else {

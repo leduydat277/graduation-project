@@ -43,7 +43,8 @@ class BookingController
             'last_name.max' => 'Họ của bạn không được quá 50 kí tự.',
             'email.required' => 'Vui lòng nhập email của bạn.',
             'email.email' => 'Email không đúng định dạng.',
-            'payment_type.required' => 'Vui lòng chọn phương thức thanh toán.'
+            'payment_type.required' => 'Vui lòng chọn phương thức thanh toán.',
+            'address.max' => 'Địa chỉ của bạn không được quá 255 kí tự.'
         ];
     }
 
@@ -95,6 +96,10 @@ class BookingController
     public function booking(Request $request)
     {
         try {
+            if (Auth::check()) {
+                return redirect()->route('client.login');
+            }
+
             $user_id = $request->user_id;
             $check_in = $request->input('check_in_date');
             $check_out = $request->input('check_out_date');
@@ -141,7 +146,7 @@ class BookingController
 
 
             $validator = Validator::make($request->all(), [
-                'address' => 'required',
+                'address' => ['required', 'max:255'],
                 'phone' => 'required|regex:/^[0-9]{10}$/',
                 'first_name' => ['required', 'max:50'],
                 'last_name' => ['required', 'max:50'],
@@ -436,12 +441,11 @@ class BookingController
             ];
 
             Notification::create([
-                "user_id" => 1,
+                "user_id" => $booking->user_id,
                 "title" => $title,
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
 
-            event(new NotificationMessage($message, $title, $formattedDate));
             return redirect()->route('client.detail_booking', $booking->booking_number_id);
         } catch (Exception $e) {
             return response()->json([

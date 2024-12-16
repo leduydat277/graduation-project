@@ -8,6 +8,7 @@ use App\Models\Room;
 use DateTime;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -23,9 +24,14 @@ class HomeController
         $title = "Phòng";
         return view('client.room', compact('title'));
     }
+    public function blog()
+    {
+        $title = "Bài Viết";
+        return view('client.blog', compact('title'));
+    }
     public function contact()
     {
-        $title = "Liên hệ";
+        $title = "Liên Hệ";
         return view('client.contact', compact('title'));
     }
     public function about()
@@ -36,6 +42,10 @@ class HomeController
     public function booking(HttpRequest $request)
     {
         $title = "Đặt phòng";
+
+        if(!Auth::check()){
+            return redirect()->route('client.login');
+        }
 
         if (!$request->has(['checkIn', 'room_id', 'checkout', 'adult_quantity', 'children_quantity'])) {
             return redirect()->back()->with('error', 'Bạn cần cung cấp đủ thông tin để đặt phòng.');
@@ -62,6 +72,11 @@ class HomeController
     {
         $title = "Đánh giá & bình luận";
         return view('client.review', compact('title'));
+    }
+    public function policy()
+    {
+        $title = "Điều khoản";
+        return view('client.policy', compact('title'));
     }
 
     public function booking_detail($bookingNumberId){

@@ -1,6 +1,6 @@
 @extends('admin.layouts.admin')
 @section('title')
-    {{ $title }}
+{{ $title }}
 @endsection
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -36,7 +36,7 @@
 </div>
 @endif
 <div class="container">
-    <h1>Danh sách Voucher</h1>
+    <h1>Danh sách Voucher</h1> <br>
     <a href="{{ route('vouchers.create') }}" class="btn btn-success mb-3">Thêm mới</a>
     <form method="GET" action="{{ route('vouchers.index') }}" class="mb-4">
         <div class="row">
@@ -77,7 +77,6 @@
                 <th>ID</th>
                 <th>Tên</th>
                 <th>Mã</th>
-                <th>Loại</th>
                 <th>Giá trị giảm</th>
                 <th>Ngày bắt đầu</th>
                 <th>Ngày kết thúc</th>
@@ -92,11 +91,16 @@
                 <td>{{ $voucher->id }}</td>
                 <td>{{ $voucher->name }}</td>
                 <td>{{ $voucher->code_voucher }}</td>
-                <td>{{ $voucher->type }}</td>
-                <td>{{ $voucher->discount_value }}</td>
+                <td>
+                    @if ($voucher->type == 'fixed')
+                    {{ number_format($voucher->discount_value, 0, ',', '.') }} VND
+                    @else
+                    {{ $voucher->discount_value }} %
+                    @endif
+                </td>
                 <td>{{ \Carbon\Carbon::parse($voucher->start_date)->format('d/m/Y') }}</td>
                 <td>{{ \Carbon\Carbon::parse($voucher->end_date)->format('d/m/Y') }}</td>
-                <td>{{ $voucher->min_booking_amount }}</td>
+                <td>{{ number_format($voucher->min_booking_amount, 0, ',', '.') }} VND</td>
                 <td>{{ $voucher->status ? 'Còn hiệu lực' : 'Hết hạn' }}</td>
                 <td>
                     <a href="{{ route('vouchers.edit', $voucher->id) }}" class="btn btn-sm btn-primary">Sửa</a>

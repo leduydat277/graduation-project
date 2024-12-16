@@ -36,6 +36,9 @@
                             <li class="nav-item px-3">
                                 <a class="nav-link p-0" href="{{ route('client.policy') }}">Điều khoản</a>
                             </li>
+                            <li class="nav-item px-3">
+                                <a class="nav-link p-0" href="{{ route('client.contact') }}">Liên hệ</a>
+                            </li>
                             <li class="nav-item px-3 dropdown">
                                 <a class="nav-link p-0 dropdown-toggle text-center " data-bs-toggle="dropdown"
                                     href="#" role="button" aria-expanded="false">Pages</a>
