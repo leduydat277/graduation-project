@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\RoomTypeController;
-use App\Http\Controllers\Web\DetailController;
+// use App\Http\Controllers\Web\DetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
