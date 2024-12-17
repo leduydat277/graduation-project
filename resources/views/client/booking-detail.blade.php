@@ -40,8 +40,7 @@
                                     <strong>Ngày đi:
                                         {{ \Carbon\Carbon::createFromTimestamp($booking->check_out_date)->format('d-m-Y') }}</strong>
                                 </li>
-                                <li class="list-group-item"><strong>Số lượng người lớn: {{ $booking->adult }}</strong></li>
-                                <li class="list-group-item"><strong>Số lượng trẻ em: {{ $booking->children }}</strong></li>
+                                <li class="list-group-item"><strong>Số lượng người: {{ $booking->adult }}</strong></li>
                                 <li class="list-group-item">
                                     <strong>Tổng số ngày:
                                         {{ $totalDays }}

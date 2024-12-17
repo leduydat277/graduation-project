@@ -48,7 +48,7 @@ class HomeController
             return redirect()->route('client.login');
         }
 
-        if (!$request->has(['checkIn', 'room_id', 'checkout', 'adult_quantity', 'children_quantity'])) {
+        if (!$request->has(['checkIn', 'room_id', 'checkout', 'adult_quantity'])) {
             return redirect()->back()->with('error', 'Bạn cần cung cấp đủ thông tin để đặt phòng.');
         }
 
@@ -56,7 +56,6 @@ class HomeController
         $room_id = $_GET['room_id'];
         $checkout = $_GET['checkout'];
         $adult_quantity = $_GET['adult_quantity'];
-        $children_quantity = $_GET['children_quantity'];
 
         $checkIn = date("d-m-Y", strtotime($checkIn));
         $checkout = date("d-m-Y", strtotime($checkout));
@@ -67,7 +66,7 @@ class HomeController
         $totalDays = $checkInDate->diff($checkoutDate)->days;
         $totalDays = $totalDays + 1;
         $room = Room::where('id', $room_id)->first();
-        return view('client.booking', compact(['title', 'checkIn', 'checkout', 'adult_quantity', 'children_quantity', 'room', 'totalDays']));
+        return view('client.booking', compact(['title', 'checkIn', 'checkout', 'adult_quantity', 'room', 'totalDays']));
     }
     public function review()
     {

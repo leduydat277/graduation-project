@@ -176,31 +176,25 @@
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3" value="{{isset($_GET['select-arrival-date_value']) ? $_GET['select-arrival-date_value'] : ''}}">
+                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3"
+                                        value="{{ isset($_GET['select-arrival-date_value']) ? $_GET['select-arrival-date_value'] : '' }}">
                                 </div>
                                 <div id="error-message-checkin" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày trả</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3"  value="{{isset($_GET['select-departure-date_value']) ? $_GET['select-departure-date_value'] : ''}}">
+                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3"
+                                        value="{{ isset($_GET['select-departure-date_value']) ? $_GET['select-departure-date_value'] : '' }}">
                                 </div>
                                 <div id="error-message-checkout" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Người lớn</label>
+                                <label for="exampleInputEmail1" class="form-label text-black">Số lượng người</label>
                                 <input type="number" id="adult-quantity" value="1" name="quantity"
                                     class="form-control ps-3">
-                                <div id="error-message" style="color: black; display: none;">Số lượng người lớn không được
+                                <div id="error-message" style="color: black; display: none;">Số lượng người không được
                                     vượt quá số lượng cho phép của phòng.</div>
-                            </div>
-                            <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Trẻ em</label>
-                                <input type="number" id="children-quantity" value="0" name="quantity"
-                                    class="form-control ps-3">
-                                <div id="error-message-children" style="color: black; display: none;">Số lượng trẻ em
-                                    không
-                                    được vượt quá số lượng cho phép của phòng.</div>
                             </div>
                             <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-arrow btn-primary">Đặt ngay</button>
@@ -248,6 +242,45 @@
         }
     </style>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const checkinInput = document.getElementById("checkin");
+            const checkoutInput = document.getElementById("checkout");
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+
+
+            if (hour > 13 || (hour === 13 && minute >= 45)) {
+                now.setDate(now.getDate() + 1);
+            }
+
+            const today = now.toISOString().split("T")[0];
+
+            checkinInput.setAttribute("min", today);
+            checkoutInput.setAttribute("min", today);
+
+            checkinInput.addEventListener("change", function() {
+                const checkinDate = new Date(checkinInput.value);
+
+                const minCheckoutDate = new Date(checkinDate);
+
+                minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
+
+                checkoutInput.value = "";
+                checkoutInput.setAttribute("min", minCheckoutDate.toISOString().split("T")[0]);
+            });
+
+            checkoutInput.addEventListener("change", function() {
+                const checkinDate = new Date(checkinInput.value);
+                const checkoutDate = new Date(checkoutInput.value);
+
+                if (checkoutDate <= checkinDate) {
+                    alert("Ngày đi phải lớn hơn ngày đến ít nhất 1 ngày!");
+                    checkoutInput.value = "";
+                }
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const toggleBtn = document.getElementById('toggle-btn');
             const assetItems = document.querySelectorAll('.asset-item');
@@ -308,14 +341,12 @@
         $('#bookingForm').on('submit', function(e) {
             e.preventDefault();
 
-            // Lấy dữ liệu từ form
             var formData = {
                 _token: $('input[name="_token"]').val(),
                 room_id: $('input[name="room_id"]').val(),
                 checkin: $('#checkin').val(),
                 checkout: $('#checkout').val(),
                 adult_quantity: $('#adult-quantity').val(),
-                children_quantity: $('#children-quantity').val()
             };
 
             // Giới hạn số lượng người lớn và trẻ em
@@ -353,11 +384,6 @@
 
             if (formData.adult_quantity > maxAdults) {
                 errorMessage.style.display = 'block';
-                return;
-            }
-
-            if (formData.children_quantity > maxChildren) {
-                errorMessageChildren.style.display = 'block';
                 return;
             }
 
@@ -430,7 +456,17 @@
                         return blockedDates.includes(date);
                     }
 
-                    const today = new Date().toISOString().split("T")[0];
+                    const now = new Date();
+                    const hour = now.getHours();
+                    const minute = now.getMinutes();
+
+
+                    if (hour > 13 || (hour === 13 && minute >= 45)) {
+                        now.setDate(now.getDate() + 1);
+                    }
+
+                    const today = now.toISOString().split("T")[0];
+
                     checkinInput.setAttribute("min", today);
                     checkoutInput.setAttribute("min", today);
 
@@ -490,43 +526,6 @@
                 console.error("Error checking booking dates:", xhr, status, error);
                 console.log("Đã xảy ra lỗi khi kiểm tra ngày đặt!");
             }
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const checkinInput = document.getElementById("checkin");
-            const checkoutInput = document.getElementById("checkout");
-            const now = new Date();
-            const hour = now.getHours();
-            const minute = now.getMinutes();
-
-            if (hour > 13 || (hour === 13 && minute >= 45)) {
-                now.setDate(now.getDate() + 1);
-            }
-
-            const today = now.toISOString().split("T")[0];
-
-            checkinInput.setAttribute("min", today);
-            checkoutInput.setAttribute("min", today);
-
-            checkinInput.addEventListener("change", function() {
-                const checkinDate = new Date(checkinInput.value);
-
-                const minCheckoutDate = new Date(checkinDate);
-                minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
-
-                checkoutInput.value = "";
-                checkoutInput.setAttribute("min", minCheckoutDate.toISOString().split("T")[0]);
-            });
-
-            checkoutInput.addEventListener("change", function() {
-                const checkinDate = new Date(checkinInput.value);
-                const checkoutDate = new Date(checkoutInput.value);
-
-                if (checkoutDate <= checkinDate) {
-                    alert("Ngày đi phải lớn hơn ngày đến ít nhất 1 ngày!");
-                    checkoutInput.value = "";
-                }
-            });
         });
 
         const maxGuests = {{ $room->max_people }};
