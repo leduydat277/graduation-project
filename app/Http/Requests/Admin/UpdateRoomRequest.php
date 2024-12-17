@@ -20,8 +20,8 @@ class UpdateRoomRequest extends FormRequest
             'title' => 'required|string|max:255',
             'room_type' => 'required|exists:room_types,id',
             'max_people' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'room_area' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:100000',
+            'room_area' => 'required|numeric|min:10',
             'description' => 'nullable|string',
             'image_room' => 'array', // Bắt buộc phải có mảng ảnh
             'image_room.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate từng file ảnh
@@ -40,10 +40,10 @@ class UpdateRoomRequest extends FormRequest
             'max_people.min' => 'Số người tối đa phải lớn hơn hoặc bằng 1.',
             'price.required' => 'Giá là bắt buộc.',
             'price.numeric' => 'Giá phải là số.',
-            'price.min' => 'Giá phải lớn hơn hoặc bằng 0.',
+            'price.min' => 'Giá phải lớn hơn hoặc bằng 100,000đ.',
             'room_area.required' => 'Diện tích là bắt buộc.',
             'room_area.numeric' => 'Diện tích phải là số.',
-            'room_area.min' => 'Diện tích phải lớn hơn hoặc bằng 0.',
+            'room_area.min' => 'Diện tích phải lớn hơn hoặc bằng 10m².',
             'description.string' => 'Mô tả phải là chuỗi.',
             'image_room.array' => 'Ảnh phải được gửi dưới dạng mảng.',
             'image_room.*.image' => 'Mỗi file phải là một hình ảnh.',

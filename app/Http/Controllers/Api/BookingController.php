@@ -75,14 +75,12 @@ class BookingController
         $room_id = $request->input('room_id');
         $checkout = $request->input('checkout');
         $adult_quantity = $request->input('adult_quantity');
-        $children_quantity = $request->input('children_quantity');
 
         $data = [
             'checkIn' => $checkIn,
             'room_id' => $room_id,
             'checkout' => $checkout,
             'adult_quantity' => $adult_quantity,
-            'children_quantity' => $children_quantity,
         ];
 
         $url = route('client.booking', $data);
@@ -114,7 +112,6 @@ class BookingController
             $discount_price = $request->input('total_price');
             $message = $request->input('message');
             $adult = $request->input('adults_quantity');
-            $child = $request->input('children_quantity');
 
             $today = Carbon::now('Asia/Ho_Chi_Minh')->startOfDay()->timestamp;
 
@@ -238,7 +235,6 @@ class BookingController
                     'discount_price' => (int)$discount_price,
                     'message' => $message,
                     'adult' => $adult,
-                    'children' => $child
                 ]);
             }
             if ($payment_type == 2) {
@@ -260,7 +256,6 @@ class BookingController
                     'discount_price' => (int)$discount_price,
                     'message' => $message,
                     'adult' => $adult,
-                    'children' => $child
                 ]);
             }
 

@@ -41,24 +41,7 @@
                 <h2 class="text-center">{{ $title }}</h2>
                 <form action="{{ route('rooms.update', $room->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT') <!-- Sử dụng PUT cho form chỉnh sửa -->
-
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Trạng Thái Phòng</label>
-                        <select class="form-control"  name="status" 
-                            {{ in_array($room->status, [1, 2]) ? 'disabled' : '' }}>
-                            <option value="0" {{ $room->status == 0 ? 'selected' : '' }}>Sẵn sàng</option>
-                            <option value="1" {{ $room->status == 1 ? 'selected' : '' }}>Đã cọc</option>
-                            <option value="2" {{ $room->status == 2 ? 'selected' : '' }}>Đang sử dụng</option>
-                            <option value="3" {{ $room->status == 3 ? 'selected' : '' }}>Hỏng</option>
-                        </select>
-                        @if (in_array($room->status, [1, 2]))
-                            <small class="text-muted">Phòng đang sử dụng hoặc đã được đặt cọc, không thể thay đổi trạng thái.</small>
-                        @endif
-                        @error('status')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    @method('PUT')
 
                     <div class="mb-3">
                         <label for="title" class="form-label">Tên Phòng</label>

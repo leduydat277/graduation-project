@@ -45,18 +45,14 @@ class PaymentController
      */
     public function generatePaymentUrl($order, $ipAddr, $customReturnUrl = null)
     {
-        // Order and payment information
         $vnp_TxnRef = $order["code"];
         $vnp_OrderInfo = $order["info"];
         $vnp_OrderType = $order["type"];
         $vnp_Amount = $order["total"];
         $vnp_Locale = 'vn';
         $vnp_BankCode = $order["bankCode"];
-
-        // Choose the return URL: custom or default
         $vnp_ReturnUrl = $customReturnUrl ?? $this->vnp_DefaultReturnUrl;
 
-        // Input data to send to VNPay server
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $this->vnp_TmnCode,
@@ -68,7 +64,7 @@ class PaymentController
             "vnp_Locale" => $vnp_Locale,
             "vnp_OrderInfo" => $vnp_OrderInfo,
             "vnp_OrderType" => $vnp_OrderType,
-            "vnp_ReturnUrl" => $vnp_ReturnUrl, // Use the chosen return URL
+            "vnp_ReturnUrl" => $vnp_ReturnUrl,
             "vnp_TxnRef" => $vnp_TxnRef,
         );
 

@@ -37,12 +37,11 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $user = Auth::user();
-            Mail::to($user->email)->send(new LoginNotificationMail($user));
+            // Mail::to($user->email)->send(new LoginNotificationMail($user));
 
             return redirect()->route('client.home')->with('success', 'Đăng nhập thành công! Kiểm tra email của bạn.');
         }
-
-        // Đăng nhập thất bại
+        
         return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
     }
 
@@ -144,7 +143,6 @@ class LoginController extends Controller
 
     public function resetPassword(Request $request)
     {
-        // Validate dữ liệu đầu vào
         $validatedData = $request->validate([
             'token' => 'required',
             'password' => 'required|min:6|confirmed',
@@ -154,27 +152,22 @@ class LoginController extends Controller
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
         ]);
 
-        // Kiểm tra token
         $tokenData = DB::table('tokens')->where('value', $validatedData['token'])->first();
 
         if (!$tokenData || $tokenData->expiry_time < now()) {
             return redirect()->back()->withErrors(['token' => 'Token không hợp lệ hoặc đã hết hạn.']);
         }
 
-        // Lấy thông tin người dùng
         $user = User::find($tokenData->user_id);
         if (!$user) {
             return redirect()->back()->withErrors(['user' => 'Không tìm thấy người dùng.']);
         }
 
-        // Cập nhật mật khẩu
         $user->password = bcrypt($validatedData['password']);
         $user->save();
 
-        // Xóa token sau khi sử dụng
         DB::table('tokens')->where('value', $validatedData['token'])->delete();
 
-        // Chuyển hướng đến trang đăng nhập với thông báo thành công
         return redirect()->route('client.login')->with('success', 'Mật khẩu đã được đặt lại thành công!');
     }
 

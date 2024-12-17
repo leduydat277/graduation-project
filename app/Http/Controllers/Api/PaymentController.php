@@ -9,7 +9,6 @@ class PaymentController
 {
     public function allPayments()
     {
-        // $user = Auth::user();
         $user = 10;
         $payments = Payment::with([
             'booking' => function ($query) {
@@ -87,7 +86,6 @@ class PaymentController
                 "message" => "Vui lòng nhập theo định dạng d-M-Y",
             ]);
         }
-        // $user = Auth::user();
         $user = 10; 
         $payments = Payment::with([
             'booking' => function ($query) {

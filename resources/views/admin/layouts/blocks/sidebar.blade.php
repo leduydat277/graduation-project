@@ -52,12 +52,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('adminBooking.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-calendar-check"></i> <!-- Biểu tượng cho trang chủ -->
-                        Đặt phòng
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-analytics">
                         <i class="fa-solid fa-file-invoice-dollar"></i> <!-- Biểu tượng cho trang chủ -->
                         Hóa đơn
@@ -118,7 +112,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('vouchers.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-money-bill-wave"></i>
+                    <i class="fa-solid fa-ticket"></i>
                         Mã giảm giá
                     </a>
                 </li>
