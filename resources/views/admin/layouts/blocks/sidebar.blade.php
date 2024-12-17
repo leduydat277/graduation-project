@@ -112,7 +112,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('vouchers.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-money-bill-wave"></i>
+                    <i class="fa-solid fa-ticket"></i>
                         Mã giảm giá
                     </a>
                 </li>
