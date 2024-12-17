@@ -57,10 +57,6 @@
             </div>
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col-md-4"><strong>ID:</strong></div>
-                    <div class="col-md-8">{{ $room->id }}</div>
-                </div>
-                <div class="row mb-3">
                     <div class="col-md-4"><strong>Tên Phòng:</strong></div>
                     <div class="col-md-8">{{ $room->title }}</div>
                 </div>
