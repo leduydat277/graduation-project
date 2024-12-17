@@ -176,14 +176,14 @@
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3" value="{{$_GET['select-arrival-date_value']}}">
+                                    <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3" value="{{isset($_GET['select-arrival-date_value']) ? $_GET['select-arrival-date_value'] : ''}}">
                                 </div>
                                 <div id="error-message-checkin" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Ngày trả</label>
                                 <div class="input-group date" id="datepicker">
-                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3"  value="{{$_GET['select-departure-date_value']}}">
+                                    <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3"  value="{{isset($_GET['select-departure-date_value']) ? $_GET['select-departure-date_value'] : ''}}">
                                 </div>
                                 <div id="error-message-checkout" style="color: black; display: none;"></div>
                             </div>
