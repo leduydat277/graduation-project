@@ -99,7 +99,7 @@
 
                     <div class="mb-3">
                         <label for="total_price" class="form-label">Tổng giá</label>
-                        <input type="text" class="form-control" id="total_price" name="total_price" disabled value="{{ old('total_price') }}">
+                        <input type="text" class="form-control" id="total_price" name="total_price" readonly value="{{ old('total_price') }}">
                         @error('total_price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

@@ -104,7 +104,6 @@ class BookingController  extends Controller
             'total_price' => 'required|string',
         ], $this->messages);
         
-        // dd($request->total_price);
         if ($validator->fails()) {
             return redirect()->back() 
                 ->withErrors($validator) 
@@ -115,7 +114,7 @@ class BookingController  extends Controller
         $email = $request->input("email");
         $password = $request->input("email");
         $check_in_date = $request->input("check_in_date");
-        $check_out_date = $request->input("check_out_date");
+        $check_out_date = $request->input("check_out_date");    
         $max_people = $request->input("max_people");
         $room_id = $request->input("room_id");
         $CCCD = $request->input("CCCD");
@@ -125,15 +124,19 @@ class BookingController  extends Controller
         // Tính toán tổng số ngày
         $days = ($check_out_timestamp - $check_in_timestamp) / 86400; // Chuyển đổi từ giây sang ngày
         $roomData = Room::find($room_id);
-        $total_price = $roomData->price * $days;
+        $total_price = $roomData->price * $days * $max_people;
 
         $dataUsers = User::where("email", $email)->first();
-        if ($dataUsers) {
+        if ($dataUsers->status === 0) {
+            return redirect()->back() 
+            ->withErrors(["email" => "Email này đã bị khóa vui lòng thử email khác."]) // Gửi lỗi về view
+            ->withInput(); // Giữ lại dữ liệu người dùng đã nhập
+        } elseif($dataUsers){
             $dataUsers->update([
                 "name" => $name,
                 "cccd" => $CCCD,
             ]);
-        } else {
+        }else {
             $dataUsers = User::create(
                 [
                     "name" => $name,

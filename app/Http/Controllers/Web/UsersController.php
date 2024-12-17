@@ -35,7 +35,7 @@ class UsersController extends Controller
     public function getUser()
     {
         $usersDefault = Auth::user();
-        $data =  User::where("id", "=", $usersDefault->id)->first();
+        $data =  User::find($usersDefault->id);
         $data->image = asset('storage/' . $data->image);
         return view("client.profile", compact("data"));
     }
