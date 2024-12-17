@@ -29,9 +29,10 @@ class HomeController
         $title = "Bài Viết";
         return view('client.blog', compact('title'));
     }
+
     public function contact()
     {
-        $title = "Liên Hệ";
+        $title = "Liên hệ";
         return view('client.contact', compact('title'));
     }
     public function about()
@@ -43,7 +44,7 @@ class HomeController
     {
         $title = "Đặt phòng";
 
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('client.login');
         }
 
@@ -79,12 +80,13 @@ class HomeController
         return view('client.policy', compact('title'));
     }
 
-    public function booking_detail($bookingNumberId){
+    public function booking_detail($bookingNumberId)
+    {
         $title = "Chi tiết đặt phòng";
         $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
         $payment = Payment::where('booking_id', $booking->id)->first();
         $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
-        ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
+            ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
         return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays'));
     }
 }

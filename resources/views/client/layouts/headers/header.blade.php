@@ -21,14 +21,16 @@
                     <div class="offcanvas-body align-items-center justify-content-center">
                         <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                             <li class="nav-item px-3">
-                                <a class="nav-link active p-0" aria-current="page"
-                                    href="{{ route('client.home') }}">Trang chủ</a>
+                                <a class="nav-link {{ request()->routeIs('client.home') ? 'active' : '' }} p-0"
+                                    aria-current="page" href="{{ route('client.home') }}">Trang chủ</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link p-0" href="{{ route('client.about') }}">Về chúng tôi</a>
+                                <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
+                                    href="{{ route('client.about') }}">Về chúng tôi</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link p-0" href="{{ route('client.services') }}">Tiện nghi</a>
+                                <a class="nav-link {{ request()->routeIs('client.services') ? 'active' : '' }} p-0"
+                                    href="{{ route('client.services') }}">Tiện nghi</a>
                             </li>
                             <li class="nav-item px-3">
                                 <a class="nav-link p-0" href="{{ route('client.blog') }}">Bài viết</a>
@@ -40,17 +42,19 @@
                                 <a class="nav-link p-0" href="{{ route('client.contact') }}">Liên hệ</a>
                             </li>
                             <li class="nav-item px-3 dropdown">
-                                <a class="nav-link p-0 dropdown-toggle text-center " data-bs-toggle="dropdown"
-                                    href="#" role="button" aria-expanded="false">Pages</a>
+                                <a class="nav-link dropdown-toggle {{ request()->is('client/room*') ? 'active' : '' }} p-0"
+                                    data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Phòng</a>
                                 <ul class="dropdown-menu dropdown-menu-end animate slide mt-3 border-0 shadow">
-                                    <li><a href="{{ route('client.room') }}" class="dropdown-item ">Phòng</a></li>
-                                    <li><a href="{{ route('client.blog-detail') }}" class="dropdown-item ">Chi tiết bài
-                                            viế</a></li>
-                                    <li><a href="{{ route('client.booking') }}" class="dropdown-item ">Đặt phòng</a>
-                                    </li>
+                                    <li><a href="{{ route('client.room') }}"
+                                            class="dropdown-item {{ request()->routeIs('client.room') ? 'active' : '' }}">Các loại phòng</a></li>
+                                    <li><a href="{{ route('client.blog-detail') }}"
+                                            class="dropdown-item {{ request()->routeIs('client.blog-detail') ? 'active' : '' }}">Chi tiết bài viết</a></li>
+                                    <li><a href="{{ route('client.booking') }}"
+                                            class="dropdown-item {{ request()->routeIs('client.booking') ? 'active' : '' }}">Đặt phòng</a></li>
                                 </ul>
                             </li>
                         </ul>
+
                     </div>
                 </div>
                 @if (Auth::user())
