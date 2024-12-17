@@ -35,13 +35,21 @@ class LoginController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials, $request->has('remember'))) {
-            $user = Auth::user();
-            // Mail::to($user->email)->send(new LoginNotificationMail($user));
+
+        if (Auth::attempt($credentials)) {
+            // nếu trạng thái tài khoản là 1 thì không cho đăng nhập
+            if (Auth::user()->status == 0) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.'])->withInput();
+            }
+            if (Auth::user()->role == 1) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Tài khoản này không được cấp quyền truy trang này'])->withInput();
+            }
 
             return redirect()->route('client.home')->with('success', 'Đăng nhập thành công! Kiểm tra email của bạn.');
         }
-        
+
         return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
     }
 
@@ -61,7 +69,7 @@ class LoginController extends Controller
             'first_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|numeric|digits_between:10,15',
-            'cccd' => 'nullable|string|max:50',
+            'cccd' => 'required|numeric',
             'address' => 'nullable|string|max:255',
             'password' => 'required|string|min:6|confirmed',
         ], [
@@ -73,14 +81,16 @@ class LoginController extends Controller
             'phone.required' => 'Số điện thoại không được để trống.',
             'phone.numeric' => 'Số điện thoại phải là số.',
             'phone.digits_between' => 'Số điện thoại phải có từ 10 đến 15 chữ số.',
-            'cccd.max' => 'Số CCCD không được vượt quá 50 ký tự.',
+            'cccd.required' => 'Số CCCD không để trống.',
+            // 'cccd.max' => 'Số CCCD không được vượt quá 50 ký tự.',
+            'cccd.numeric' => 'Số CCCD phải là số .',
             'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
             'password.required' => 'Mật khẩu không được để trống.',
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => "{$validatedData['last_name']} {$validatedData['first_name']}",
             'last_name' => $validatedData['last_name'],
             'first_name' => $validatedData['first_name'],
@@ -91,6 +101,8 @@ class LoginController extends Controller
             'role' => 0,
             'password' => bcrypt($validatedData['password']),
         ]);
+
+        Mail::to($user->email)->queue(new LoginNotificationMail($user));
 
         return redirect()->route('client.login')->with('success', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
     }

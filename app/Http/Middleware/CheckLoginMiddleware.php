@@ -29,6 +29,12 @@ class CheckLoginMiddleware
                     return redirect()->route('client.login')->with('error', 'Bạn cần đăng nhập để truy cập.');
                 }
                 break;
+            // nếu là tài khoản admin thì không có quyền truy cập vào user
+            case 'admin-only':
+                if (Auth::check() && Auth::user()->role == 1) {
+                    return redirect()->route('admin.dashboard')->with('error', 'Bạn không có quyền truy cập.');
+                }
+                break;
         }
 
         return $next($request);

@@ -77,11 +77,11 @@ class BookingController  extends Controller
                 });
             }
         }
-
+        
         $bookings = $query->whereNotIn('status', [0, 1]) 
             ->orderBy('id', 'desc') 
             ->paginate(10); 
-
+        dd($bookings);
         return view("$this->urlViews.index", compact('bookings'));
     }
 
