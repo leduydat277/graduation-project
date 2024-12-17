@@ -22,6 +22,8 @@ Route::get('/blog', [HomeController::class, 'blog'])
     ->name('client.blog');
 Route::get('/policy', [HomeController::class, 'policy'])
     ->name('client.policy');
+Route::get('/contact', [HomeController::class, 'contact'])
+    ->name('client.contact');
 Route::get('/room', [HomeController::class, 'rooms'])
     ->name('client.room');
 
