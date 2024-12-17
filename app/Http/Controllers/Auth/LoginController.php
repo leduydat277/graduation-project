@@ -37,7 +37,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $user = Auth::user();
-            Mail::to($user->email)->send(new LoginNotificationMail($user));
+            // Mail::to($user->email)->send(new LoginNotificationMail($user));
 
             return redirect()->route('client.home')->with('success', 'Đăng nhập thành công! Kiểm tra email của bạn.');
         }
