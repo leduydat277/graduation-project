@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 @section('title')
     Đặt phòng
 @endsection
@@ -35,7 +35,7 @@
                 </div>
             @endif
             <div class="row">
-                <form action="{{ route('admin.booking.add') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('adminBooking.add') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="room_type" class="form-label">Loại phòng</label>
@@ -79,7 +79,7 @@
                         <label for="max_people" class="form-label">Số lượng người</label>
                         <input type="number" class="form-control" id="max_people" name="max_people"
                             value="{{ old('max_people') }}" placeholder="Số lượng người">
-                        <span class="text-danger">
+                        <span class="text-danger" id="err_max_people">
                             @error('max_people')
                                 {{ $message }}
                             @enderror
@@ -93,6 +93,14 @@
                             <!-- Thêm logic đổ dữ liệu vào đây nếu cần -->
                         </select>
                         @error('room_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="total_price" class="form-label">Tổng giá</label>
+                        <input type="text" class="form-control" id="total_price" name="total_price" readonly value="{{ old('total_price') }}">
+                        @error('total_price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -142,6 +150,7 @@
         const roomType = document.getElementById("room_type");
         const checkInDate = document.getElementById("check_in_date");
         const checkOutDate = document.getElementById("check_out_date");
+        const err_check_out_date = document.getElementById("err_check_out_date");
         const maxPeople = document.getElementById("max_people");
 
         function fetchRooms() {
@@ -150,13 +159,15 @@
             const valueCheckOutDate = checkOutDate.value;
             const valueMaxPeople = maxPeople.value;
 
-            // Kiểm tra các giá trị đầu vào
-            if (!valueRoomType || !valueCheckInDate || !valueCheckOutDate || !valueMaxPeople) {
-                return; // Không gọi API nếu thiếu thông tin
+            // Kiểm tra ngày
+            err_check_out_date.innerHTML = "";
+            if (new Date(valueCheckInDate) >= new Date(valueCheckOutDate)) {
+                err_check_out_date.innerHTML = "Ngày nhận phòng phải nhỏ hơn ngày trả phòng.";
+                return; // Ngừng thực hiện nếu ngày không hợp lệ
             }
 
             // Tạo URL với các tham số truy vấn
-            const url = new URL("/api/rooms/booking", window.location.origin);
+            const url = new URL("/api/rooms/bookings", window.location.origin);
             url.searchParams.append("room_type_id", valueRoomType);
             url.searchParams.append("check_in_date", valueCheckInDate);
             url.searchParams.append("check_out_date", valueCheckOutDate);
@@ -168,15 +179,18 @@
                 .then(data => {
                     // Xóa các tùy chọn hiện có
                     roomSelect.innerHTML = '<option selected disabled>Chọn phòng</option>';
-
-                    // Đổ dữ liệu vào select
+                    // Tính toán tổng giá
+                    let totalPrice = 0;
                     data.forEach(room => {
                         const option = document.createElement("option");
                         option.value = room.id;
+                        const price = room.price;
+                        const priceFormat = price.toLocaleString();
                         option.textContent =
-                            `${room.title} - Giá: ${room.price} - Tối đa: ${room.max_people} người`;
+                            `${room.title} - Giá: ${priceFormat} - Tối đa: ${room.max_people} người`;
                         roomSelect.appendChild(option);
                     });
+
                 })
                 .catch(err => {
                     console.error("Lỗi khi lấy danh sách phòng:", err);
@@ -188,7 +202,34 @@
         checkInDate.addEventListener("change", fetchRooms);
         checkOutDate.addEventListener("change", fetchRooms);
         maxPeople.addEventListener("input", fetchRooms);
+        roomSelect.addEventListener("change", (e) => {
+            const selectedOption = e.target.selectedOptions[0]; // Lấy option đã chọn
+            const text = selectedOption.textContent; // Lấy nội dung văn bản của option
+            const match = text.match(/Giá:\s?([\d,]+)/);
+            const price = parseInt(match[1].replace(/,/g, ''));
+            const valueCheckInDate = checkInDate.value;
+            const valueCheckOutDate = checkOutDate.value;
+            const valueMaxPeople = parseInt(maxPeople.value);
+            const matchMaxPeople = text.match(/Tối đa:\s?(\d+)/);
+            const maxPeopleDefault = parseInt(matchMaxPeople[1]);
+
+            const err_max_people = document.getElementById('err_max_people');
+            err_max_people.innerHTML = "";
+            if(valueMaxPeople > maxPeopleDefault){
+                err_max_people.innerHTML = "Số lượng người quá lớn";
+            }
+
+            // Tính số ngày lưu trú
+            const checkIn = new Date(valueCheckInDate);
+            const checkOut = new Date(valueCheckOutDate);
+            const days = (checkOut - checkIn) / (1000 * 3600 * 24); // Tính số ngày
+            const totalPriceForRoom = price * days * valueMaxPeople;
+            // Cập nhật giá tổng vào trường total_price
+            const totalPriceInput = document.getElementById("total_price");
+            totalPriceInput.value = totalPriceForRoom.toLocaleString(); // Hiển thị dưới dạng tiền tệ
+        });
     </script>
+
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/libs/node-waves/waves.min.js') }}"></script>

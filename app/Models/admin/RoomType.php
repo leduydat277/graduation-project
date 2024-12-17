@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\admin;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,8 @@ class RoomType extends Model
 
     protected $fillable = [
         'type',
+        'roomType_number',
+        'description'
     ];
 
     public $timestamps = false;

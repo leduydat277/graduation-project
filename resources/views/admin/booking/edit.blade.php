@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 @section('title')
     Sửa tài khoản
 @endsection
@@ -35,7 +35,7 @@
                 </div>
             @endif
             <div class="row">
-                <form action="{{ route('admin.user.edit', $data->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('user.edit', $data->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 

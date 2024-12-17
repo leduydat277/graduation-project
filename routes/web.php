@@ -1,173 +1,68 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\TokenController;
-use App\Http\Controllers\Admin\ReviewController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\RoomTypeController;
-use App\Http\Controllers\Admin\ManageStatusRoomController;
-use App\Http\Controllers\Admin\AssetTypeController;
-use App\Http\Controllers\Admin\ChangePasswordController;
-use App\Http\Controllers\Admin\RoomAssetController;
-use App\Http\Controllers\Admin\PhiphatsinhController;
-use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\PaymentControllers;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthenticationController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\Web\ReviewController;
+use App\Http\Controllers\BookingCancelledController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\PaymentsController;
+use App\Http\Controllers\Web\RoomDetailController;
+use App\Http\Controllers\Web\SeviceController;
+use App\Http\Controllers\Web\UsersController as WebUsersController;
+use App\Http\Middleware\CheckLoginMiddleware;
 
-/**
- * TODO route riêng tương ứng với tên feature muốn xử lý,
- * Ví dụ: chức năng gửi mail => routes\admin_feature\Send_Mail.php
- */
-foreach (glob(base_path('routes/admin_feature/*.php')) as $file) {
-    include_once $file;
-}
+include_once "admin.php";
+Route::get('/', [HomeController::class, 'index'])
+    ->name('client.home');
+Route::get('/about', [HomeController::class, 'about'])
+    ->name('client.about');
+Route::get('/services', [SeviceController::class, 'services'])
+    ->name('client.services');
+Route::get('/services/{id}', [SeviceController::class, 'show'])
+    ->name('client.services-detail');
+Route::get('/blog', [HomeController::class, 'blog'])
+    ->name('client.blog');
+Route::get('/policy', [HomeController::class, 'policy'])
+    ->name('client.policy');
+Route::get('/contact', [HomeController::class, 'contact'])
+    ->name('client.contact');
+Route::get('/room', [HomeController::class, 'rooms'])
+    ->name('client.room');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('users', UserController::class);
-    Route::resource('tokens', TokenController::class);
-    Route::resource('reviews', ReviewController::class);
-    Route::resource('bookings', BookingController::class);
-    Route::resource('rooms', RoomController::class);
-    Route::resource('room-types', RoomTypeController::class);
-    Route::resource('manage-status-rooms', ManageStatusRoomController::class);
-    Route::resource('asset-types', AssetTypeController::class);
-    Route::resource('room-assets', RoomAssetController::class);
-    Route::resource('phi-phat-sinh', PhiphatsinhController::class);
-    // Route::resource('payments', PaymentControllers::class);
-    Route::get('/payments', [PaymentControllers::class, 'bookings'])->name('bookings');
-    Route::prefix('user')->as('user.')->group(function () {
-        Route::get('/', [UsersController::class, 'index'])->name('index');
-        Route::get('/add-ui', [UsersController::class, 'addUI'])->name('addUI');
-        Route::post('/add', [UsersController::class, 'add'])->name('add');
-        Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
-        Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
-        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
-    });
-    Route::prefix('booking')->as('booking.')->group(function () {
-        Route::get('/', [BookingController::class, 'index'])->name('index');
-        Route::get('/add-ui', [BookingController::class, 'addUI'])->name('addUI');
-        Route::post('/add', [BookingController::class, 'add'])->name('add');
-        Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
-        Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
-        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
-    });
+Route::post('/room-comment/{id}', [ReviewController::class, 'addComment'])
+    ->name('client.room-postComment');
+Route::get('review/{id}', [ReviewController::class, 'review'])
+    ->name('client.review');
+Route::get('/room/{id}', [RoomDetailController::class, 'index'])
+    ->name('client.room-details');
+Route::get('/blog-detail', [HomeController::class, 'index'])
+    ->name('client.blog-detail');
+Route::get('/booking', [HomeController::class, 'booking'])
+    ->name('client.booking');
+Route::prefix('auth')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('client.login')->middleware(CheckLoginMiddleware::class . ':guest-only');
+    Route::post('/login', [LoginController::class, 'login'])->name('client.loginRequest');
+    Route::get('/register', [LoginController::class, 'showRegisterForm'])->name('client.register')->middleware(CheckLoginMiddleware::class . ':guest-only');
+    Route::post('/register', [LoginController::class, 'register'])->name('client.registerRequest');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('client.logout');
+    Route::get('/forgot-password', [LoginController::class, 'forgotPassword'])->name('client.forgotPassword')->middleware(CheckLoginMiddleware::class . ':guest-only');
+    Route::post('/forgot-password', [LoginController::class, 'sendMailForgotPassword'])->name('client.sendMailForgotPassword')->middleware(CheckLoginMiddleware::class . ':guest-only');
+    Route::get('/reset-password', [LoginController::class, 'resetPasswordView'])->name('client.resetPasswordView')->middleware(CheckLoginMiddleware::class . ':guest-only');
+    Route::post('/reset-password', [LoginController::class, 'resetPassword'])->name('client.resetPassword');
 });
+Route::get("/account", [WebUsersController::class, "getUser"])->name("account");
+Route::put("/account/{id}", [WebUsersController::class, "updateProficeUser"])->name("updateProficeUser");
+Route::get("/confirm-password", [WebUsersController::class, "updatePasswordUserUI"])->name("updatePasswordUserUI");
+Route::post("/account/password/{id}", [WebUsersController::class, "updatePasswordUser"])->name("updatePassword");
+Route::get("/payment-history", [PaymentsController::class, "paymentHistory"])->name("paymentHistory");
+Route::get("/payment-history-detail/{id}", [PaymentsController::class, "paymentHistoryDetail"])->name("paymentHistoryDetail");
 
-//Route test cắt giao diện admin
-Route::get("/test", function () {
-    return view('admin.index');
-});
-
-Route::get('/test1', function () {
-    $abc = (new DateTime())->setTimestamp(1893506400)->format('Y-m-d');
-    return $abc;
-});
-// Auth
-
-// Route::get('login', [LoginController::class, 'create'])
-//     ->name('login');
-
-
-
-// Route::get('login', [LoginController::class, 'create'])
-//     ->name('login');
-
-
-// Route::post('login', [LoginController::class, 'store'])
-//     ->name('login.store');
-
-
-Route::get('/', [ScreenController::class, 'index'])
-    ->name('screen');
-//Detail
-Route::get('/detail', [DetailController::class, 'index'])
-    ->name('detail');
-// // Users
-
-// Route::delete('logout', [LoginController::class, 'destroy'])
-//     ->name('logout');
-
-// // // Screen
-
-
-// Route::get('/', [ScreenController::class, 'index'])
-//     ->name('screen');
-
-// // // Users
-
-// Route::get('users', [UsersController::class, 'index'])
-//     ->name('users');
-//     ->middleware('auth');
-
-// Route::get('users/create', [UsersController::class, 'create'])
-//     ->name('users.create')
-//     ->middleware('auth');
-
-// Route::post('users', [UsersController::class, 'store'])
-//     ->name('users.store')
-//     ->middleware('auth');
-
-// Route::get('users/{user}/edit', [UsersController::class, 'edit'])
-//     ->name('users.edit')
-//     ->middleware('auth');
-
-// Route::put('users/{user}', [UsersController::class, 'update'])
-//     ->name('users.update')
-//     ->middleware('auth');
-
-// Route::delete('users/{user}', [UsersController::class, 'destroy'])
-//     ->name('users.destroy')
-//     ->middleware('auth');
-
-// Route::put('users/{user}/restore', [UsersController::class, 'restore'])
-//     ->name('users.restore')
-//     ->middleware('auth');
-
-// //Payments
-
-// Route::get('payment/', [AdminPaymentController::class, 'index'])->name('index');
-// Route::get('payment/{id}/show', [AdminPaymentController::class, 'show'])->name('payment.show');
-
-// // Reports
-
-// Route::get('reports', [ReportsController::class, 'index'])
-//     ->name('reports')
-//     ->middleware('auth');
-
-// // Images
-
-// Route::get('/img/{path}', [ImagesController::class, 'show'])
-//     ->where('path', '.*')
-//     ->name('image');
-
-// //Booking
-// Route::prefix('booking')
-//     ->as('booking.')
-//     ->group(function () {
-//         Route::get('/', [BookingController::class, 'index'])->name('index');
-//         Route::get('/list', [BookingController::class, 'list'])->name('list');
-//         Route::get('/detail/{id}', [BookingController::class, 'detail'])->name('detail');
-//     });
-
-// //Payment
-// Route::prefix('payment')
-    // ->as('payment.')
-    // ->group(function () {
-    //     Route::get('/', [AdminPaymentController::class, 'index'])->name('index');
-    //     Route::get('/{id}/show', [AdminPaymentController::class, 'show'])->name('show');
-    // });
+Route::get('/detail-booking/{bookingNumberId}', [HomeController::class, 'booking_detail'])
+    ->name('client.detail_booking');
+Route::get('/cancelBooking', [BookingCancelledController::class, 'index'])
+    ->name('cancelBooking.index');
+Route::post('/cancelBooking/store', [BookingCancelledController::class, 'store'])
+    ->name('cancelBooking.store');

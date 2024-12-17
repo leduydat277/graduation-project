@@ -12,16 +12,22 @@ class UsersTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Giả lập 10 bản ghi user
-        for ($i = 0; $i < 10; $i++) {
+        // Giả lập 50 bản ghi user
+        for ($i = 0; $i < 50; $i++) {
             User::create([
-                'name' => $faker->name, // Tạo tên ngẫu nhiên
-                'email' => $faker->unique()->safeEmail, // Tạo email duy nhất
-                'cccd' => $faker->numerify('###########'), // Tạo số CCCD ngẫu nhiên
-                'password' => bcrypt('password'), // Mã hóa mật khẩu
-                'image' => $faker->imageUrl(200, 200, 'people'), // Tạo URL hình ảnh ngẫu nhiên
-                'phone' => $faker->phoneNumber, // Tạo số điện thoại ngẫu nhiên
-                'role' => $faker->randomElement([0, 1]), // Chọn ngẫu nhiên 0 hoặc 1 cho role (user hoặc admin)
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'cccd' => $faker->numerify('###########'),
+                'password' => bcrypt('password'),
+                'image' => $faker->optional()->imageUrl(200, 200, 'people'),
+                'phone' => $faker->optional()->phoneNumber,
+                'address' => $faker->optional()->address,
+                'role' => $faker->randomElement([0, 1]),
+                'created_at' => $faker->dateTimeThisYear()->getTimestamp(),
+                'updated_at' => $faker->dateTimeThisYear()->getTimestamp(),
+                'first_name' => $faker->firstName,
+                'last_name' => $faker->lastName,
+                'deleted_at' => $faker->optional(0.2)->dateTime(), // 20% khả năng bị xóa
             ]);
         }
     }

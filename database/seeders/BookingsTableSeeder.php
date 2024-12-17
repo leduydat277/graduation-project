@@ -2,45 +2,55 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Models\Booking;
+use App\Models\Room;
+use App\Models\User;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
+
 class BookingsTableSeeder extends Seeder
 {
     public function run()
     {
         $faker = Faker::create();
 
-        // Giả lập 10 bản ghi booking
-        for ($i = 0; $i < 10; $i++) {
-            // Lấy ngẫu nhiên user_id và room_id từ bảng users và rooms
-            // $user_id = User::inRandomOrder()->first()->id;
-            // $room_id = Room::inRandomOrder()->first()->id;
+        // Lấy danh sách ID của rooms và users
+        $roomIds = Room::pluck('id')->toArray();
+        $userIds = User::pluck('id')->toArray();
 
-            // Lấy thời gian ngẫu nhiên cho check_in_date và check_out_date
-            $check_in_date = $faker->dateTimeThisYear()->getTimestamp();
-            $check_out_date = $faker->dateTimeThisYear()->getTimestamp();
+        for ($i = 0; $i < 50; $i++) {
+            $bookingId = DB::table('bookings')->insertGetId([
+                'room_id' => $roomId = $faker->randomElement($roomIds),
+                'user_id' => $faker->optional()->randomElement($userIds), // ID user ngẫu nhiên từ danh sách users, có thể là NULL
+                'code_check_in' => $faker->unique()->word, // Mã check-in ngẫu nhiên
+                'check_in_date' => $checkIn = Carbon::now()->addDays($faker->numberBetween(1, 10))->timestamp, // Thời gian check-in ngẫu nhiên trong 10 ngày tới
+                'check_out_date' => $checkOut = Carbon::now()->addDays($faker->numberBetween(11, 20))->timestamp, // Thời gian check-out sau check-in
+                'total_price' => $faker->numberBetween(500000, 2000000), // Tổng giá phòng ngẫu nhiên
+                'tien_coc' => $faker->numberBetween(100000, 500000), // Tiền cọc ngẫu nhiên
+                'status' => $faker->randomElement([0, 1, 2, 3, 4, 5]), // Trạng thái phòng
+                'created_at' => Carbon::now()->timestamp, // Thời gian tạo
+                'updated_at' => Carbon::now()->timestamp, // Thời gian cập nhật
+                'first_name' => $faker->firstName, // Tên người dùng
+                'last_name' => $faker->lastName, // Họ người dùng
+                'email' => $faker->safeEmail, // Email người dùng
+                'phone' => $faker->phoneNumber, // Số điện thoại
+                'address' => $faker->address, // Địa chỉ
+                'CCCD_booking' => $faker->numerify('###########'), // Số CCCD ngẫu nhiên
+            ]);
 
-            // Đảm bảo check_out_date luôn lớn hơn check_in_date
-            if ($check_in_date > $check_out_date) {
-                $check_out_date = $check_in_date + 86400; // Thêm 1 ngày (86400 giây)
-            }
-
-            // Tính tổng giá (giả sử mỗi đêm phòng có giá ngẫu nhiên)
-            $total_price = ($check_out_date - $check_in_date) / 86400 * $faker->numberBetween(1000, 3000);
-            $tien_coc = $total_price * 0.3; // Tiền cọc là 30% của tổng giá
-
-            Booking::create([
-                'user_id' => 1, // Lấy user_id ngẫu nhiên
-                'room_id' => 1, // Lấy room_id ngẫu nhiên
-                'code_check_in' => strtoupper($faker->unique()->bothify('???-####')), // Mã check-in ngẫu nhiên
-                'check_in_date' => $check_in_date, // Ngày check-in (Unix timestamp)
-                'check_out_date' => $check_out_date, // Ngày check-out (Unix timestamp)
-                'total_price' => $total_price, // Tổng giá tính từ thời gian thuê
-                'tien_coc' => $tien_coc, // Tiền cọc
-                'status' => $faker->numberBetween(0, 4), // Trạng thái ngẫu nhiên từ 0 đến 4
-                'created_at' => (int)time(), // Sử dụng thời gian Unix timestamp
-                'updated_at' => (int)time(), // Sử dụng thời gian Unix timestamp
+            DB::table('payments')->insert([
+                'booking_id' => $bookingId,
+                'payment_date' => Carbon::now()->timestamp,
+                'total_price' => $faker->optional()->numberBetween(100000, 10000000),
+                'payment_method' => $faker->randomElement([0, 1]),
+                'payment_status' => $faker->numberBetween(0, 3),
+                'vnp_BankCode' => $faker->optional()->word,
+                'vnp_TransactionNo' => $faker->optional()->uuid,
+                'updated_at' => Carbon::now()->timestamp,
             ]);
         }
     }

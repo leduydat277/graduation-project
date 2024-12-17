@@ -1,5 +1,7 @@
 @extends('admin.layouts.admin')
-{{ $title }} -Admin
+@section('title')
+    {{ $title }}
+@endsection
 @section('css')
     <!-- App favicon và các css cần thiết -->
     <link rel="shortcut icon" href="{{ asset('assets/admin/assets/images/favicon.ico') }}">
@@ -36,7 +38,7 @@
                         <div class="col-md-3">
                             <label for="status" class="form-label">Trạng thái phòng</label>
                             <select name="status" class="form-select">
-                                <option value="">Chọn trạng thái</option>
+                                <option value="">Tất cả trạng thái</option>
                                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Đã cọc</option>
                                 <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Sẵn sàng</option>
                                 <option value="2" {{ request('status') === '2' ? 'selected' : '' }}>Đang sử dụng
@@ -48,55 +50,67 @@
                         <div class="col-md-3">
                             <label for="from_date" class="form-label">Ngày đến (From)</label>
                             <input type="date" name="from_date" id="from_date" class="form-control"
-                                placeholder="Chọn ngày bắt đầu" value="{{ request('from_date') }}">
+                                value="{{ request('from_date') }}" placeholder="dd-mm-yyyy">
                         </div>
 
                         <!-- Ngày kết thúc -->
                         <div class="col-md-3">
                             <label for="to_date" class="form-label">Ngày đi (To)</label>
-                                placeholder="Chọn ngày kết thúc" value="{{ request('to_date') }}">
+                            <input type="date" name="to_date" id="to_date" class="form-control"
+                                value="{{ request('to_date') }}" placeholder="dd-mm-yyyy">
                         </div>
 
                         <!-- Nút Lọc -->
                         <div class="col-md-3 mt-4">
                             <button type="submit" class="btn btn-primary w-50">Lọc</button>
+                            <a href="{{ route('manage-status-rooms.index') }}" class="btn btn-secondary">Xoá bộ lọc</a>
                         </div>
                     </form>
 
                     <!-- Bảng danh sách trạng thái phòng -->
                     <div class="table-responsive">
                         <table class="table align-middle table-nowrap">
-                            <thead class="table-light">
+                            <thead>
                                 <tr>
-                                    <th>ID Phòng</th>
+                                    <th>Mã phòng</th>
                                     <th>Tên Phòng</th>
                                     <th>Loại Trạng Thái</th>
                                     <th>Khoảng Thời Gian</th>
-                                    <th>Chi Tiết Booking (nếu có)</th>
+                                    <th>Chi Tiết đơn hàng(nếu có)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($statusRooms as $statusRoom)
                                     <tr>
-                                        <td>{{ $statusRoom['room']['id'] ?? 'Không xác định' }}</td>
+                                        <td>{{ $statusRoom['room']['roomId_number'] ?? 'Không xác định' }}</td>
                                         <td>{{ $statusRoom['room']['title'] ?? 'Không xác định' }}</td>
                                         <td>
                                             @switch($statusRoom['status'])
                                                 @case(0)
-                                                    Đã cọc
+                                                    <span
+                                                        style="background-color: #6c757d; color: #fff; padding: 2px 5px; border-radius: 3px;">Đã
+                                                        cọc</span>
                                                 @break
 
                                                 @case(1)
-                                                    Sẵn sàng
+                                                    <span
+                                                        style="background-color: #28a745; color: #fff; padding: 2px 5px; border-radius: 3px;">Sẵn
+                                                        sàng</span>
                                                 @break
 
                                                 @case(2)
-                                                    Đang sử dụng
+                                                    <span
+                                                        style="background-color: #17a2b8; color: #fff; padding: 2px 5px; border-radius: 3px;">Đang
+                                                        sử dụng</span>
                                                 @break
 
                                                 @default
-                                                    Không xác định
+                                                    <span
+                                                        style="background-color: #dc3545; color: #333; padding: 2px 5px; border-radius: 3px;">Không
+                                                        xác định
+                                                    </span>
                                             @endswitch
+
                                         </td>
                                         <td>
                                             {{ date('d/m/Y H:i', $statusRoom['from']) }} -
@@ -111,10 +125,12 @@
                                         </td>
                                         <td>
                                             @if (!empty($statusRoom['booking']))
-                                                <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}">Xem
-                                                    Booking</a>
+                                                <a href="{{ route('bookings.show', $statusRoom['booking']['id']) }}"
+                                                    class="btn btn-info" title="Xem Booking">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </a>
                                             @else
-                                                Không có
+                                                --
                                             @endif
                                         </td>
                                     </tr>
@@ -136,3 +152,27 @@
             </div>
     @endsection
 
+    @section('js')
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Toastr CSS & JS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $("form").on("submit", function(e) {
+                    const fromDate = new Date($("#from_date").val());
+                    const toDate = new Date($("#to_date").val());
+
+                    // Kiểm tra nếu ngày đến lớn hơn ngày đi
+                    if ($("#from_date").val() && $("#to_date").val() && fromDate > toDate) {
+                        e.preventDefault(); // Ngăn form submit
+                        toastr.error("Lỗi: Ngày đến không được lớn hơn ngày đi.", "Thông báo");
+                        $("#from_date").focus();
+                    }
+                });
+            });
+        </script>
+    @endsection

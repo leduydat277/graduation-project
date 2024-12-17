@@ -11,8 +11,8 @@ class Booking extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'room_id', 'user_id', 'code_check_in', 'check_in_date',
-        'check_out_date', 'total_price', 'tien_coc', 'status'
+        'booking_number_id','room_id', 'user_id', 'code_check_in', 'check_in_date',
+        'check_out_date', 'total_price', 'tien_coc', 'status', 'created_at', 'CCCD_booking', 'voucher_id', 'discount_value', 'discount_price', 'message', 'adult', 'children'
     ];
 
     public function room()

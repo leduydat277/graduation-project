@@ -12,6 +12,26 @@
     <link href="{{ asset('assets/admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 36px !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            margin-top: 4px;
+            margin-left: 6px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            margin-top: 4px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -21,7 +41,7 @@
                 <h2 class="text-center">{{ $title }}</h2>
                 <form action="{{ route('rooms.update', $room->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT') <!-- Sử dụng PUT cho form chỉnh sửa -->
+                    @method('PUT')
 
                     <div class="mb-3">
                         <label for="title" class="form-label">Tên Phòng</label>
@@ -37,7 +57,7 @@
                         <select class="form-control" id="room_type" name="room_type">
                             <option value="">Chọn loại phòng</option>
                             @foreach ($roomTypes as $type)
-                                <option value="{{ $type->id }}"
+                                <option value="{{ $type->id }}" dt-value="{{ $type->roomType_number }}"
                                     {{ $room->room_type_id == $type->id ? 'selected' : '' }}>
                                     {{ $type->type }}</option>
                             @endforeach
@@ -45,6 +65,12 @@
                         @error('room_type')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Mã Phòng</label>
+                        <input type="text" class="form-control" id="roomId_number" name="roomId_number"
+                            placeholder="Mã phòng" readonly value="{{ $room->roomId_number }}">
                     </div>
 
                     <div class="mb-3">
@@ -57,8 +83,8 @@
 
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá Mỗi Đêm</label>
-                        <input type="number" class="form-control" id="price" name="price"
-                            placeholder="Nhập giá mỗi đêm" value="{{ old('price', $room->price) }}">
+                        <input type="text" class="form-control" id="price" name="price"
+                            placeholder="Nhập giá mỗi đêm" value="{{ $room->price }}">
                         @error('price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -82,52 +108,47 @@
                         @enderror
                     </div>
 
-                    <!-- Hiển thị ảnh hiện tại và thêm ảnh mới -->
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header d-flex align-items-center justify-content-between bg-primary">
-                                <h4 class="card-title mb-0 text-white">Gallery</h4>
+                    <div class="mb-3">
+                        <label for="thumbnail_image" class="form-label">Ảnh Thu Nhỏ</label>
+                        <input type="file" class="form-control" id="thumbnail_image" name="thumbnail_image">
+                        <small class="text-muted">Chọn một ảnh đại diện (Hỗ trợ JPG, PNG, WEBP).</small>
+                        @error('thumbnail_image')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        @if ($room->thumbnail_image)
+                            <div class="mt-3">
+                                <p>Ảnh Thu Nhỏ Hiện Tại:</p>
+                                <img src="{{ asset('storage/' . $room->thumbnail_image) }}" alt="Thumbnail Image"
+                                    class="img-thumbnail" style="max-width: 150px; height: auto;">
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <!-- Khối hiển thị ảnh hiện tại -->
-                                    <div class="col-md-12 mb-4">
-                                        <div class="card border-light shadow-sm p-3">
-                                            <h5 class="text-center">Ảnh Hiện Tại</h5>
-                                            <div class="d-flex flex-wrap justify-content-center">
-                                                @if (!empty($room->image_room))
-                                                    @foreach (json_decode($room->image_room, true) as $key => $image)
-                                                        <div class="position-relative m-2" id="gallery_existing_{{ $key }}">
-                                                            <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
-                                                                class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
-                                                        </div>
-                                                    @endforeach
-                                                @else
-                                                    <p class="text-center">Không có ảnh nào.</p>
-                                                @endif
-                                            </div>
+                        @endif
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image_room" class="form-label">Hình Ảnh Phòng</label>
+                        <input type="file" class="form-control" id="image_room" name="image_room[]" multiple>
+                        <small class="text-muted">Giữ Ctrl để chọn nhiều ảnh (Hỗ trợ JPG, PNG, WEBP).</small>
+                        @error('image_room')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <div class="mt-3">
+                            <p>Ảnh Hiện Tại:</p>
+                            @if (!empty($room->image_room))
+                                <div class="d-flex flex-wrap">
+                                    @foreach (json_decode($room->image_room, true) as $key => $image)
+                                        <div class="position-relative m-2" id="gallery_existing_{{ $key }}">
+                                            <img src="{{ asset('storage/' . $image) }}" alt="Room Image"
+                                                class="img-thumbnail"
+                                                style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
                                         </div>
-                                    </div>
-                    
-                                    <!-- Khối thêm ảnh mới -->
-                                    <div class="col-md-12">
-                                        <div class="card border-light shadow-sm p-3">
-                                            <h5 class="text-center">Thêm Ảnh Mới</h5>
-                                            <div id="new-image-uploads">
-                                                <div class="d-flex align-items-center mb-3">
-                                                    <input type="file" class="form-control" name="image_room[]" multiple>
-                                                    <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeImageInput(this)">Xóa</button>
-                                                </div>
-                                            </div>
-                                            <div class="text-center">
-                                                <button type="button" class="btn btn-primary btn-sm" onclick="addNewImageInput()">+ Thêm ảnh</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
-                            </div>
+                            @else
+                                <p class="text-muted">Không có ảnh nào.</p>
+                            @endif
                         </div>
                     </div>
+
 
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary">Cập Nhật Phòng</button>
@@ -140,27 +161,47 @@
 @endsection
 
 @section('js')
+    <!-- CSS Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- JS Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script>
-        function addNewImageInput() {
-            let html = `
-                <div class="d-flex align-items-center mb-3">
-                    <input type="file" class="form-control" name="image_room[]" multiple>
-                    <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeImageInput(this)">Xóa</button>
-                </div>
-            `;
-            document.getElementById('new-image-uploads').insertAdjacentHTML('beforeend', html);
+        $(document).ready(function() {
+            $('#room_type').select2();
+        });
+    </script>
+    <script>
+        function removeVietnameseTones(str) {
+            return str
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Xóa dấu
+                .replace(/đ/g, 'd') // Chuyển đ -> d
+                .replace(/Đ/g, 'D'); // Chuyển Đ -> D
         }
-    
-        function removeImageGallery(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa ảnh này?')) {
-                document.getElementById(id).remove();
-            }
-        }
-    
-        function removeImageInput(element) {
-            element.parentNode.remove();
-        }
+
+        $(document).ready(function() {
+            $('#room_type').on('select2:select', function(e) {
+                const selectedOption = e.params.data.element; // Lấy option được chọn
+                const roomName = $(selectedOption).attr('dt-value'); // Lấy giá trị dt-value
+                console.log(roomName);
+
+                if (roomName) {
+                    const normalizedRoomName = removeVietnameseTones(roomName);
+
+                    const roomCode = normalizedRoomName
+                        .toUpperCase()
+                        .replace(/\s+/g, '_')
+                        .replace(/[^A-Z0-9_]/g, '');
+
+                    $('#roomId_number').val(roomCode + '_{{ $roomId }}');
+                } else {
+                    $('#roomId_number').val('');
+                }
+            });
+        });
     </script>
 @endsection

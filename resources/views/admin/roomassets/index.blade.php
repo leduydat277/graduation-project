@@ -20,97 +20,81 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Danh sách tiện nghi phòng</h4>
+                    <h4 class="card-title mb-4">{{ $title }}</h4>
                 </div>
-
                 <div class="card-body">
                     <div class="listjs-table" id="roomAssetList">
                         <div class="row g-4 mb-3">
-                            <div class="col-sm-auto">
-                                <div>
-                                    <a href="{{ route('room-assets.create') }}" class="btn btn-success">
-                                        <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi phòng
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- Hiển thị thông báo thành công -->
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-
-                            <!-- Hiển thị thông báo lỗi -->
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ session('error') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
                             <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
-                                    <form method="GET" action="{{ route('room-assets.index') }}">
-                                        <div class="input-group search-box ms-2">
-                                            <input type="text" name="search" value="{{ $search ?? '' }}"
-                                                class="form-control" placeholder="Tìm kiếm tiện nghi...">
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i>
-                                            </button>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="row g-4 mb-3">
+                                        <div class="col-sm-auto">
+                                            <a href="{{ route('room-assets.create') }}" class="btn btn-success">
+                                                <i class="ri-add-line align-bottom me-1"></i> Thêm tiện nghi cho phòng
+                                            </a>
                                         </div>
-                                    </form>
+                                    </div>
+                                    <div class="row g-4 mb-3">
+                                        <div class="col-md-6">
+                                            <label for="search" class="form-label">Tìm kiếm</label>
+                                            <input type="text" id="search" name="search" class="form-control"
+                                                placeholder="Tìm theo tên phòng, mã phòng..."
+                                                value="{{ request('search') }}" onchange="applyFilters()">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="sort" class="form-label">Sắp xếp</label>
+                                            <select id="sort" name="sort" class="form-select"
+                                                onchange="applyFilters()">
+                                                <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sắp
+                                                    xếp theo...</option>
+                                                <option value="room_name_asc"
+                                                    {{ request('sort') == 'room_name_asc' ? 'selected' : '' }}>Tên Phòng:
+                                                    A-Z</option>
+                                                <option value="room_name_desc"
+                                                    {{ request('sort') == 'room_name_desc' ? 'selected' : '' }}>Tên Phòng:
+                                                    Z-A</option>
+                                                <option value="asset_count_asc"
+                                                    {{ request('sort') == 'asset_count_asc' ? 'selected' : '' }}>Số tiện
+                                                    nghi: Tăng dần</option>
+                                                <option value="asset_count_desc"
+                                                    {{ request('sort') == 'asset_count_desc' ? 'selected' : '' }}>Số tiện
+                                                    nghi: Giảm dần</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="table-responsive table-card mt-3 mb-1">
                             <table class="table align-middle table-nowrap" id="roomAssetTable">
-                                <thead class="table-light">
+                                <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Mã phòng</th>
                                         <th>Tên Phòng</th>
-                                        <th>Loại Tiện Nghi</th>
-                                        <th>Trạng Thái</th>
-                                        <th>Hành động</th>
+                                        <th>Số lượng tiện nghi</th>
+                                        <th>Xem chi tiết phòng</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($roomassets as $roomasset)
                                         <tr>
-                                            <td>{{ $roomasset->id }}</td>
-                                            <td>{{ $roomasset->room->title ?? 'Không xác định' }}</td>
-                                            <td>{{ $roomasset->assetType->name ?? 'Không xác định' }}</td>
-                                            <td>
-                                                @switch($roomasset->status)
-                                                    @case(0)
-                                                        Đang sử dụng
-                                                    @break
-
-                                                    @case(1)
-                                                        Tạm dừng sử dụng
-                                                    @break
-
-                                                    @default
-                                                        Không xác định
-                                                @endswitch
+                                            <td>{{ $roomasset->room->roomId_number ?? 'Không xác định' }}</td>
+                                            <td>{{ $roomasset['room']['title'] ?? 'Không xác định' }}</td>
+                                            <td><a href="{{ route('room-assets.show', $roomasset['room']['id']) }}">{{ $roomasset['asset_count'] ?? 0 }}
+                                                    tiện nghi</a></td>
+                                            <td class="text-center">
+                                                <a class="btn btn-info"
+                                                    href="{{ route('rooms.show', $roomasset['room']['id']) }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
                                             </td>
-                                            <td>
-                                                <a href="{{ route('room-assets.edit', $roomasset->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
-                                                <form action="{{ route('room-assets.destroy', $roomasset->id) }}"
-                                                    method="POST" class="delete-form"
-                                                    data-room-asset="{{ $roomasset->id }}" style="display:inline-block;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn">Xóa</button>
-                                                </form>
-                                            </td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+
                             @if ($roomassets->isEmpty())
                                 <div class="noresult">
                                     <div class="text-center">
@@ -139,27 +123,28 @@
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                var form = this.closest('.delete-form');
-                var roomAssetId = form.getAttribute('data-room-asset');
+        function handleSortChange() {
+            const sort = document.getElementById('sort').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sort', sort);
+            window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+        }
+    </script>
+    <script>
+        function applyFilters() {
+            const search = document.getElementById('search').value; // Lấy giá trị tìm kiếm
+            const sort = document.getElementById('sort') ? document.getElementById('sort').value :
+            ''; // Lấy giá trị sắp xếp (nếu có)
 
-                Swal.fire({
-                    title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Bạn sẽ không thể khôi phục lại dữ liệu của tiện nghi phòng này (ID: " +
-                        roomAssetId + ")!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Có, xóa nó!',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
+            // Cập nhật URL với tham số mới
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('search', search);
+            if (sort) {
+                urlParams.set('sort', sort);
+            }
+
+            // Điều hướng đến URL mới
+            window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
+        }
     </script>
 @endsection

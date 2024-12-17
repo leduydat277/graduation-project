@@ -15,25 +15,11 @@ class RoomTypesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Danh sách các loại phòng để fake
-        $roomTypes = [
-            'Single Room',
-            'Double Room',
-            'Suite Room',
-            'Family Room',
-            'Penthouse',
-            'Deluxe Room',
-            'Standard Room',
-            'Executive Room',
-            'Junior Suite',
-            'Presidential Suite',
-        ];
-
-        foreach ($roomTypes as $type) {
-            RoomType::create([
-                'type' => $type,
-                'created_at' => 1730964385,
-                'updated_at' => 1730964385,
+        for ($i = 0; $i < 50; $i++) {
+            DB::table('room_types')->insert([
+                'type' => $faker->word . ' Room', // Tạo tên loại phòng ngẫu nhiên
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }
