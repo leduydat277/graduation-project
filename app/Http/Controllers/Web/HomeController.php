@@ -64,7 +64,6 @@ class HomeController
         $checkoutDate = new DateTime($checkout);
 
         $totalDays = $checkInDate->diff($checkoutDate)->days;
-        $totalDays = $totalDays + 1;
         $room = Room::where('id', $room_id)->first();
         return view('client.booking', compact(['title', 'checkIn', 'checkout', 'adult_quantity', 'room', 'totalDays']));
     }

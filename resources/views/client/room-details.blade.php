@@ -191,8 +191,8 @@
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Số lượng người</label>
-                                <input type="number" id="adult-quantity" value="1" name="quantity"
-                                    class="form-control ps-3">
+                                <input type="number" id="adult-quantity" name="quantity"
+                                    class="form-control ps-3" value="{{ $_GET['quantity'] ?? 1 }}">
                                 <div id="error-message" style="color: black; display: none;">Số lượng người không được
                                     vượt quá số lượng cho phép của phòng.</div>
                             </div>
@@ -308,7 +308,6 @@
             const adultInput = document.getElementById("adult-quantity");
             const childrenInput = document.getElementById("children-quantity");
 
-            adultInput.value = 1;
             childrenInput.value = 0;
 
             adultInput.addEventListener("input", function() {
