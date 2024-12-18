@@ -85,7 +85,7 @@
                                             <td>{{ $review->room->title ?? 'Không xác định' }}</td>
                                             <td>{{ $review->rating }}</td>
                                             <td>{{ $review->comment }}</td>
-                                            <td>{{ $review->created_at->format('Y-m-d') }}</td>
+                                            <td>{{  date('Y-m-d', $review->created_at) }}</td>
                                             <td>
                                                 <a href="{{ route('rooms.show', $review->room_id) }}" class="btn btn-info" title="Chi tiết phòng">
                                                     <i class="fas fa-info-circle"></i>

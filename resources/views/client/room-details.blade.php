@@ -236,7 +236,6 @@
         }
 
         .img-product {
-            width: 985px;
             height: 580px;
             object-fit: cover;
         }
