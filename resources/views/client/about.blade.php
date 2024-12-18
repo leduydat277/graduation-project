@@ -7,7 +7,7 @@ Về chúng tôi
 @section('content')
 @include('client.layouts.banner.banner')
 
-<section id="about-us" class="padding-medium">
+<section id="about-us" class="padding-medium" >
     <div class="vertical-element">
         <div class="container-fluid padding-side">
             <div class="row d-flex align-items-center">
@@ -108,38 +108,7 @@ Về chúng tôi
     </div>
 </section>
 
-<section id="info" class="bg-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 text-center mb-4 mb-lg-0">
-                <h3 class="display-1 fw-bold text-primary position-relative">25K <span
-                        class="position-absolute top-50 end-50 translate-middle z-n1 ps-lg-4 pt-lg-4"><img
-                            src="{{ asset('assets/client/images/pattern1.png') }}" alt="pattern" class="img-fluid"></span></h3>
-                <p class="text-uppercase text-secondary">Khách hàng hài lòng</p>
-            </div>
-            <div class="col-md-3 text-center mb-4 mb-lg-0">
-                <h3 class="display-1 fw-bold text-primary position-relative">160 <span
-                        class="position-absolute top-50 translate-middle z-n1"><img src="{{ asset('assets/client/images/pattern1.png') }}"
-                            alt="pattern" class="img-fluid"></span></h3>
-                <p class="text-uppercase text-secondary">Tổng số phòng</p>
-            </div>
-            <div class="col-md-3 text-center mb-4 mb-lg-0">
-                <h3 class="display-1 fw-bold text-primary position-relative">25 <span
-                        class="position-absolute top-100 pb-5 translate-middle z-n1"><img src="{{ asset('assets/client/images/pattern1.png') }}"
-                            alt="pattern" class="img-fluid"></span></h3>
-                <p class="text-uppercase text-secondary">Giải thưởng</p>
-            </div>
-            <div class="col-md-3 text-center mb-4 mb-lg-0">
-                <h3 class="display-1 fw-bold text-primary position-relative">200 <span
-                        class="position-absolute top-50 end-50 pb-lg-4 pe-lg-2 translate-middle z-n1"><img
-                            src="{{ asset('assets/client/images/pattern1.png') }}" alt="pattern" class="img-fluid"></span></h3>
-                <p class="text-uppercase text-secondary">Thành viên</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="vid" class="padding-medium">
+<section id="vid" class="padding-medium" style="padding-top: 0px">
     <div class="container-fluid padding-side">
         <h3 class="display-3 fw-bold text-center text-primary">Khám phá khách sạn của chúng tôi</h3>
         <div class="imageblock me-4 position-relative mt-5">

@@ -119,8 +119,6 @@ class RoomController extends Controller
         return redirect()->route('rooms.index')->with('success', 'Phòng đã được thêm thành công.');
     }
 
-
-
     public function show($id)
     {
 

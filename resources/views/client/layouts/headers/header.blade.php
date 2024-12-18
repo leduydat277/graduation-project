@@ -38,21 +38,6 @@
                             <li class="nav-item px-3">
                                 <a class="nav-link p-0" href="{{ route('client.policy') }}">Điều khoản</a>
                             </li>
-                            <li class="nav-item px-3">
-                                <a class="nav-link p-0" href="{{ route('client.contact') }}">Liên hệ</a>
-                            </li>
-                            <li class="nav-item px-3 dropdown">
-                                <a class="nav-link dropdown-toggle {{ request()->is('client/room*') ? 'active' : '' }} p-0"
-                                    data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Phòng</a>
-                                <ul class="dropdown-menu dropdown-menu-end animate slide mt-3 border-0 shadow">
-                                    <li><a href="{{ route('client.room') }}"
-                                            class="dropdown-item {{ request()->routeIs('client.room') ? 'active' : '' }}">Các loại phòng</a></li>
-                                    <li><a href="{{ route('client.blog-detail') }}"
-                                            class="dropdown-item {{ request()->routeIs('client.blog-detail') ? 'active' : '' }}">Chi tiết bài viết</a></li>
-                                    <li><a href="{{ route('client.booking') }}"
-                                            class="dropdown-item {{ request()->routeIs('client.booking') ? 'active' : '' }}">Đặt phòng</a></li>
-                                </ul>
-                            </li>
                         </ul>
 
                     </div>
@@ -84,7 +69,7 @@
 
                         .login-btn:hover {
                             background: #FFE5CC;
-                            color: #fff;
+                            color: black;
                         }
 
                         .search {
@@ -98,11 +83,13 @@
                                 <button class="btn d-flex align-items-center" type="button" id="userDropdown"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <!-- Hình ảnh tài khoản -->
-                                    <img src="{{ Auth::user()->image ? Storage::url(Auth::user()->image) : asset('images/default-avatar.png') }}"
-                                        alt="avatar" class="rounded-circle me-2"
-                                        style="width: 40px; height: 40px; object-fit: cover;">
+                                    @if (Auth::user()->image && Storage::url(Auth::user()->image))
+                                    <img src="{{ Auth::user()->image ? Storage::url(Auth::user()->image): asset('images/default-avatar.png') }}"
+                                    alt="avatar" class="rounded-circle me-2"
+                                    style="width: 40px; height: 40px; object-fit: cover;">
+                                    @endif
                                     <!-- Tên tài khoản -->
-                                    <span>{{ Auth::user()->name }}</span>
+                                    <span>Hi, {{ Auth::user()->name }}</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li>
@@ -124,7 +111,7 @@
                             <!-- Khi người dùng chưa đăng nhập -->
                             <a href="{{ route('client.login') }}" class="btn btn-outline-primary me-2 login-btn">Đăng
                                 nhập</a>
-                            <a href="{{ route('client.register') }}" class="btn btn-primary register-btn">Đăng ký</a>
+                            <a href="{{ route('client.register') }}" class="btn btn-outline-primary me-2 login-btn">Đăng ký</a>
                         @endif
                     </div>
                 </div>

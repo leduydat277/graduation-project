@@ -22,8 +22,10 @@ class PaymentsController extends Controller
             2 => "Đã thanh toán cọc",
             3 => "Đã thanh toán tổng tiền đơn"
         ];
+
         return view("client.paymentHistory", compact("dataPayment", "dataStatus"));
     }
+
     public function paymentHistoryDetail(Request $request, $id)
     {
         $usersDefault = Auth::user();

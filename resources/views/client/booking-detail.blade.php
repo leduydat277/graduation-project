@@ -114,7 +114,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-lg-12 text-center">
-                        <a href="#" class="btn btn-primary">Quay lại trang chủ</a>
+                        <a href="{{ route('client.home') }}" class="btn btn-primary">Quay lại trang chủ</a>
                     </div>
                 </div>
             </div>

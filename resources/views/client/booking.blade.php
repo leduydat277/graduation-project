@@ -135,7 +135,7 @@
                                                 <span class="price-amount amount ps-5">
                                                     <bdi>
                                                         <span id="check_in_date"
-                                                            class="price-currency-symbol">{{ $checkIn }}</bdi>
+                                                            class="price-currency-symbol">{{ $checkIn }} </bdi>(14:00)
                                                 </span>
                                             </td>
                                         </tr>
@@ -145,7 +145,7 @@
                                                 <span class="price-amount amount ps-5">
                                                     <bdi>
                                                         <span id="check_out_date"
-                                                            class="price-currency-symbol">{{ $checkout }}</bdi>
+                                                            class="price-currency-symbol">{{ $checkout }}</bdi>(12:00)
                                                 </span>
                                             </td>
                                         </tr>

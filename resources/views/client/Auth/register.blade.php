@@ -80,28 +80,6 @@
                             @enderror
                         </div>
 
-                        <!-- Số CCCD -->
-                        <div class="mb-3">
-                            <label for="cccd" class="form-label fw-semibold">Số CCCD: <span
-                                    class="text-danger">*</span></label>
-                            <input type="number" id="cccd" name="cccd" class="form-control"
-                                value="{{ old('cccd') }}" placeholder="Nhập số CCCD">
-                            @error('cccd')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Số điện thoại -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label fw-semibold">Số điện thoại: <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" id="phone" name="phone" class="form-control"
-                                value="{{ old('phone') }}" placeholder="Nhập số điện thoại">
-                            @error('phone')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
                         <!-- Mật khẩu -->
                         <div class="mb-3">
                             <label for="password" class="form-label fw-semibold">Mật khẩu: <span
