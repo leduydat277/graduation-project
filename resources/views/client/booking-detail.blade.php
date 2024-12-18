@@ -119,7 +119,7 @@
                 <div class="row mt-4">
                     <div class="col-lg-12 text-center">
                         <a href="{{ route('client.home') }}" class="btn btn-primary">Trang chủ</a>
-                        <a href="{{ route('client.home') }}" class="btn btn-primary">Lịch sử thanh toán</a>
+                        <a href="{{ route('paymentHistory') }}" class="btn btn-primary">Danh sách lịch sử thanh toán</a>
                     </div>
                 </div>
             </div>

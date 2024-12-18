@@ -43,7 +43,6 @@ class BookingCancelledController
         $today = Carbon::now();
 
         $booking = Booking::where('id', $bookingId)->first();
-
         if (!$booking) {
             return response()->json(['error' => 'Booking not found'], 201);
         }
