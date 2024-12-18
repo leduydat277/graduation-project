@@ -32,7 +32,7 @@
                                     <tr>
                                         <th scope="row" class="text-center">{{ $index + 1 }}</th>
                                         <td>
-                                            <a class="text-info" style="text-decoration: underline" href="{{ route('paymentHistoryDetail', $item->id) }}">
+                                            <a class="text-info" style="text-decoration: underline" href="{{ route('client.detail_booking', ['bookingNumberId'=>$item->booking->booking_number_id]) }}">
                                                 {{ $item->payments_id_number }} 
                                             </a>
                                         </td>

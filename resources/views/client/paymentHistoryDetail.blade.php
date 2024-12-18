@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="d-flex justify-content-center" style="padding-bottom: 400px; padding-top: 50px">
-        <div style="width: 1330px">
+        <div style="width: 100%" class="mx-5">
             <!-- Pills content -->
             <div class="tab-content">
                 <h2 style="padding-bottom: 20px">Chi tiết lịch sử thanh toán</h2>
@@ -22,6 +22,7 @@
                                 <th scope="col">Số tiền cọc</th>
                                 <th scope="col">Mã phòng</th>
                                 <th scope="col">Trạng thái</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,6 +35,14 @@
                                 <td>{{ number_format($dataBooking->tien_coc) }}</td>
                                 <td>{{ $dataBooking->room->roomId_number }}</td>
                                 <td>{{ $dataStatus[$dataBooking->status] }}</td>
+                                <td>
+                                    @if ($dataBooking->status == 2 || $dataBooking->status == 3)
+                                        <!-- Nút hủy phòng -->
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
+                                            Hủy phòng
+                                        </button>
+                                    @endif
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -42,4 +51,11 @@
             <!-- Pills content -->
         </div>
     </div>
+
+
+    
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+@endpush

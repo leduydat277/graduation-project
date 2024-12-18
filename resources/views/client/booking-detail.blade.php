@@ -34,11 +34,15 @@
                                 <li class="list-group-item"><strong>Phòng: {{ $booking->room->title }}</strong></li>
                                 <li class="list-group-item">
                                     <strong>Ngày đến:
-                                        {{ \Carbon\Carbon::createFromTimestamp($booking->check_in_date)->format('d-m-Y') }}</strong>
+                                        {{ \Carbon\Carbon::createFromTimestamp($booking->check_in_date)->format('d-m-Y') }}
+                                         (14:00)
+                                    </strong>
                                 </li>
                                 <li class="list-group-item">
                                     <strong>Ngày đi:
-                                        {{ \Carbon\Carbon::createFromTimestamp($booking->check_out_date)->format('d-m-Y') }}</strong>
+                                        {{ \Carbon\Carbon::createFromTimestamp($booking->check_out_date)->format('d-m-Y') }}
+                                        (12:00)
+                                    </strong>
                                 </li>
                                 <li class="list-group-item"><strong>Số lượng người: {{ $booking->adult }}</strong></li>
                                 <li class="list-group-item">
@@ -114,7 +118,8 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-lg-12 text-center">
-                        <a href="{{ route('client.home') }}" class="btn btn-primary">Quay lại trang chủ</a>
+                        <a href="{{ route('client.home') }}" class="btn btn-primary">Trang chủ</a>
+                        <a href="{{ route('client.home') }}" class="btn btn-primary">Lịch sử thanh toán</a>
                     </div>
                 </div>
             </div>
