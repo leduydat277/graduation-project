@@ -26,9 +26,11 @@ class UsersController extends Controller
             'password_old.required' => 'Mật khẩu cũ không được để trống.',
             'password_old.min' => 'Mật khẩu cũ phải có ít nhất :min ký tự.',
             'password.required' => 'Mật khẩu không được để trống.',
+            'password.different' => 'Mật khẩu cũ không trùng khớp.',
             'password.min' => 'Mật khẩu phải có ít nhất :min ký tự.',
             'confirm_password_new.required' => 'Mật khẩu mới không được để trống.',
             'confirm_password_new.min' => 'Mật khẩu mới phải có ít nhất :min ký tự.',
+            'confirm_password_new.same' => 'Mật khẩu xác nhận mới và mật khẩu phải khớp.',
             'image.mimes' => 'Vui lòng chọn file có đuôi jpeg,jpg,png.',
         ];
     }
@@ -76,8 +78,7 @@ class UsersController extends Controller
                     ->withErrors(["image" => "File không hợp lệ, vui lòng thử lại"])
                     ->withInput();
             }
-
-            if (Storage::disk('public')->exists($dataUsersOld->image)) {
+            if ($dataUsersOld->image && Storage::disk('public')->exists($dataUsersOld->image)) {
                 Storage::disk("public")->delete($dataUsersOld->image);
             }
 
@@ -141,7 +142,7 @@ class UsersController extends Controller
         // Cập nhật mật khẩu mới
         $user->password = bcrypt($passwordNew);
         $user->save();
-
-        return redirect()->route('updatePasswordUserUI')->with('success', 'Cập nhật mật khẩu thành công.');
+        Auth::logout();
+        return redirect()->route('updatePasswordUserUI')->with('success', 'Cập nhật mật khẩu thành công vui lòng đăng nhập lại để sử dụng dịch vụ.');
     }
 }

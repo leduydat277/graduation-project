@@ -25,7 +25,7 @@
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
-    <div class="w-100 d-flex justify-content-center align-items-center">
+    <div class="w-100 d-flex justify-content-center align-items-center my-3">
         <div class="col-10">
             <h2 class="text-center">Đặt phòng</h2>
             @if (session('success'))
@@ -99,7 +99,8 @@
 
                     <div class="mb-3">
                         <label for="total_price" class="form-label">Tổng giá</label>
-                        <input type="text" class="form-control" id="total_price" name="total_price" readonly value="{{ old('total_price') }}">
+                        <input type="text" class="form-control" id="total_price" name="total_price" readonly
+                            value="{{ old('total_price') }}">
                         @error('total_price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -132,8 +133,13 @@
                         @enderror
                     </div>
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="{{ route('adminBooking.index') }}" class="btn btn-secondary me-2">
+                            <i class="ri-arrow-go-back-line align-bottom"></i> Quay lại
+                        </a>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Thêm</button>
+                        </div>
                     </div>
                 </form>
 
@@ -144,19 +150,41 @@
 @endsection
 
 @section('js')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script>
+        // Khởi tạo flatpickr cho check_in_date với giờ giới hạn từ 12:00 đến 21:00
+        const checkInDate = flatpickr('#check_in_date', {
+            enableTime: true, // Bật chế độ chọn giờ
+            dateFormat: 'd-m-Y H:i', // Định dạng ngày và giờ
+            time_24hr: true, // Sử dụng định dạng 24 giờ
+            minTime: '12:00', // Giới hạn giờ bắt đầu
+            maxTime: '21:00', // Giới hạn giờ kết thúc
+        });
+
+        // Khởi tạo flatpickr cho check_out_date với giá trị mặc định 12:00
+        const checkOutDate = flatpickr('#check_out_date', {
+            enableTime: true, // Bật chế độ chọn giờ
+            dateFormat: 'd-m-Y H:i', // Định dạng ngày và giờ
+            time_24hr: true, // Sử dụng định dạng 24 giờ
+            defaultHour: 12, // Giờ mặc định là 12
+            defaultMinute: 0, // Phút mặc định là 00
+        });
+
+
+
         // Các phần tử cần lấy từ DOM
         const roomSelect = document.getElementById("room_id");
         const roomType = document.getElementById("room_type");
-        const checkInDate = document.getElementById("check_in_date");
-        const checkOutDate = document.getElementById("check_out_date");
         const err_check_out_date = document.getElementById("err_check_out_date");
         const maxPeople = document.getElementById("max_people");
 
         function fetchRooms() {
             const valueRoomType = roomType.value;
-            const valueCheckInDate = checkInDate.value;
-            const valueCheckOutDate = checkOutDate.value;
+            const valueCheckInDate = checkInDate.input.value;
+            const valueCheckOutDate = checkOutDate.input.value;
             const valueMaxPeople = maxPeople.value;
 
             // Kiểm tra ngày
@@ -199,31 +227,44 @@
 
         // Gọi hàm fetchRooms khi người dùng thay đổi các trường đầu vào
         roomType.addEventListener("change", fetchRooms);
-        checkInDate.addEventListener("change", fetchRooms);
-        checkOutDate.addEventListener("change", fetchRooms);
+        checkInDate.config.onChange.push(fetchRooms);
+        checkOutDate.config.onChange.push(fetchRooms);
         maxPeople.addEventListener("input", fetchRooms);
         roomSelect.addEventListener("change", (e) => {
             const selectedOption = e.target.selectedOptions[0]; // Lấy option đã chọn
             const text = selectedOption.textContent; // Lấy nội dung văn bản của option
             const match = text.match(/Giá:\s?([\d,]+)/);
             const price = parseInt(match[1].replace(/,/g, ''));
-            const valueCheckInDate = checkInDate.value;
-            const valueCheckOutDate = checkOutDate.value;
-            const valueMaxPeople = parseInt(maxPeople.value);
+            const valueCheckInDate = checkInDate.input.value; // Giá trị check-in từ Flatpickr
+            const valueCheckOutDate = checkOutDate.input.value; // Giá trị check-out từ Flatpickr
+            const valueMaxPeople = parseInt(maxPeople.value); // Số người dùng nhập
             const matchMaxPeople = text.match(/Tối đa:\s?(\d+)/);
             const maxPeopleDefault = parseInt(matchMaxPeople[1]);
 
             const err_max_people = document.getElementById('err_max_people');
             err_max_people.innerHTML = "";
-            if(valueMaxPeople > maxPeopleDefault){
+            if (valueMaxPeople > maxPeopleDefault) {
                 err_max_people.innerHTML = "Số lượng người quá lớn";
             }
 
+            // Chuyển đổi giá trị ngày giờ từ dd-MM-yyyy HH:mm sang đối tượng Date
+            const parseDateTime = (dateTimeStr) => {
+                const [datePart, timePart] = dateTimeStr.split(" ");
+                const [day, month, year] = datePart.split("-").map(Number);
+                const [hours, minutes] = timePart.split(":").map(Number);
+                return new Date(year, month - 1, day, hours, minutes);
+            };
+
+            const checkIn = parseDateTime(valueCheckInDate);
+            const checkOut = parseDateTime(valueCheckOutDate);
+
             // Tính số ngày lưu trú
-            const checkIn = new Date(valueCheckInDate);
-            const checkOut = new Date(valueCheckOutDate);
-            const days = (checkOut - checkIn) / (1000 * 3600 * 24); // Tính số ngày
+            const diffInMs = checkOut - checkIn;
+            const days = diffInMs / (1000 * 3600 * 24); // Tính số ngày từ khoảng thời gian
+
+            // Tính giá tổng
             const totalPriceForRoom = price * days * valueMaxPeople;
+
             // Cập nhật giá tổng vào trường total_price
             const totalPriceInput = document.getElementById("total_price");
             totalPriceInput.value = totalPriceForRoom.toLocaleString(); // Hiển thị dưới dạng tiền tệ

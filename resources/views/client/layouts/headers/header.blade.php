@@ -84,7 +84,7 @@
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <!-- Hình ảnh tài khoản -->
                                     @if (Auth::user()->image && Storage::url(Auth::user()->image))
-                                    <img src="{{ Auth::user()->image ? Storage::url(Auth::user()->image): asset('images/default-avatar.png') }}"
+                                    <img src="{{ Auth::user()->image ? asset('storage/' .Auth::user()->image): asset('images/default-avatar.png') }}"
                                     alt="avatar" class="rounded-circle me-2"
                                     style="width: 40px; height: 40px; object-fit: cover;">
                                     @endif

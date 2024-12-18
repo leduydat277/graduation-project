@@ -155,7 +155,7 @@ class BookingController  extends Controller
             "room_id" => $room_id,
             "user_id" => $dataUsers->id,
             "total_price" => $total_price,
-            "status" => 0,
+            "status" => 4,
             "tien_coc" => 0,
             "check_in_date" => $check_in_timestamp,
             "check_out_date" => $check_out_timestamp,
