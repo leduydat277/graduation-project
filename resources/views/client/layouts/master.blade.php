@@ -164,6 +164,8 @@
   @yield('banner')
   @yield('content')
 
+  @stack('scripts')
+
   @include('client.layouts.footers.footer')
 
   @include('client.layouts.footers.js')

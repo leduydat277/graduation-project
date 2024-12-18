@@ -61,9 +61,9 @@
                 style="background-image: url({{ asset('assets/client/images/slider-image.jpg') }}); background-size: cover; background-repeat: no-repeat; height: 85vh; background-position: center;">
                 <div class="row align-items-center m-auto pt-5 px-4 px-lg-0">
                     <div class="text-start col-md-6 col-lg-5 col-xl-6 offset-lg-1">
-                        <h2 class="display-1 fw-normal">Khách sạn SleepHotel - Cánh cổng đến sự bình yên.</h2>
-                        <a href="{{ route('client.room') }}" class="btn btn-arrow btn-primary mt-3">
-                            <span>Khám phá phòng <svg width="18" height="18">
+                        <h2 class="display-1 fw-normal">SleepHotel - Cánh cổng đến sự bình yên.</h2>
+                        <a href="{{ route('client.about') }}" class="btn btn-arrow btn-primary mt-3">
+                            <span>Khám phá SleepHotel <svg width="18" height="18">
                                     <use xlink:href="#arrow-right"></use>
                                 </svg></span>
                         </a>
@@ -72,7 +72,7 @@
                         <form id="form" action="/room" class="form-group flex-wrap bg-white p-5 rounded-4 ms-md-5">
                             <h3 class="display-5">Đặt Phòng</h3>
                             <div class="col-lg-12 my-4">
-                                <label class="form-label text-uppercase">Ngày nhận phòng</label>
+                                <label class="form-label text-uppercase">Ngày đến</label>
                                 <div class="date position-relative bg-transparent" id="select-arrival-date">
                                     <a href="#" class="position-absolute top-50 end-0 translate-middle-y pe-2 ">
 
@@ -85,7 +85,7 @@
                                     style="color: black; font-style: italic; font-size: smaller;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label class="form-label text-uppercase">Ngày trả phòng</label>
+                                <label class="form-label text-uppercase">Ngày đi</label>
                                 <div class="date position-relative bg-transparent" id="select-departure-date">
                                     <a href="#" class="position-absolute top-50 end-0 translate-middle-y pe-2 ">
 
@@ -118,13 +118,13 @@
         </div>
     </section>
 
-    <section id="about-us" class="padding-large">
+    <section id="about-us" class="padding-large" style="padding-top: 100px">
         <div class="container-fluid padding-side" data-aos="fade-up">
-            <h3 class="display-3 text-center fw-normal col-lg-4 offset-lg-4">SleepHotel: Cánh cổng đến sự bình yên</h3>
+            <h3 class="display-3 text-center fw-normal w-100">Chào mừng đến với SleepHotel</h3>
             <div class="row align-items-start mt-3 mt-lg-5">
                 <div class="col-lg-6">
                     <div class="p-5">
-                        <p>Chào mừng đến với Khách sạn SleepHotel, nơi sự thoải mái hòa quyện với sự yên tĩnh. Nằm ngay
+                        <p style="font-size: 18px">Chào mừng đến với Khách sạn SleepHotel, nơi sự thoải mái hòa quyện với sự yên tĩnh. Nằm ngay
                             trung
                             tâm thành phố nhộn nhịp, khách sạn của chúng tôi mang đến một nơi nghỉ dưỡng yên bình cho cả
                             khách du lịch và doanh nhân. Với các tiện nghi hiện đại và không gian ấm áp, chúng tôi cam kết
@@ -148,17 +148,12 @@
         </div>
     </section>
 
-    <section id="room" class="padding-medium">
+    <section id="room" class="padding-medium" style="padding-top: 100px">
         <div class="container-fluid padding-side" data-aos="fade-up">
             <div class="d-flex flex-wrap align-items-center justify-content-between">
                 <div>
                     <h3 class="display-3 fw-normal text-center">Khám phá các phòng của chúng tôi</h3>
                 </div>
-                <a href="{{ route('client.room') }}" class="btn btn-arrow btn-primary mt-3">
-                    <span>Khám phá phòng<svg width="18" height="18">
-                            <use xlink:href="#arrow-right"></use>
-                        </svg></span>
-                </a>
             </div>
 
             <div class="swiper room-swiper mt-5">

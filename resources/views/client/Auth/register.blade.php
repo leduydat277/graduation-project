@@ -30,7 +30,7 @@
             color: #555;
         }
     </style>
-    <section class="vh-110" style="margin-top: 70px">
+    <section class="vh-110" style="margin-bottom: 70px ; margin-top: 70px">
         <div class="container-fluid h-custom">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-9 col-lg-6 col-xl-5">
@@ -46,25 +46,27 @@
                         </div>
 
                         <!-- Họ -->
-                        <div class="mb-3">
-                            <label for="last_name" class="form-label fw-semibold">Họ: <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" id="last_name" name="last_name" class="form-control"
-                                value="{{ old('last_name') }}">
-                            @error('last_name')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label fw-semibold">Họ: <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" id="last_name" name="last_name" class="form-control"
+                                    value="{{ old('last_name') }}" placeholder="Họ của bạn">
+                                @error('last_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
 
-                        <!-- Tên -->
-                        <div class="mb-3">
-                            <label for="first_name" class="form-label fw-semibold">Tên: <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" id="first_name" name="first_name" class="form-control"
-                                value="{{ old('first_name') }}">
-                            @error('first_name')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            <!-- Tên -->
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label fw-semibold">Tên: <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" id="first_name" name="first_name" class="form-control"
+                                    value="{{ old('first_name') }}" placeholder="Tên của bạn">
+                                @error('first_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
 
                         <!-- Email -->
@@ -72,30 +74,8 @@
                             <label for="email" class="form-label fw-semibold">Email: <span
                                     class="text-danger">*</span></label>
                             <input type="email" id="email" name="email" class="form-control"
-                                value="{{ old('email') }}">
+                                value="{{ old('email') }}" placeholder="Nhập địa chỉ email">
                             @error('email')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Số CCCD -->
-                        <div class="mb-3">
-                            <label for="cccd" class="form-label fw-semibold">Số CCCD: <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" id="cccd" name="cccd" class="form-control"
-                                value="{{ old('cccd') }}">
-                            @error('cccd')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Số điện thoại -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label fw-semibold">Số điện thoại: <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" id="phone" name="phone" class="form-control"
-                                value="{{ old('phone') }}">
-                            @error('phone')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -104,7 +84,8 @@
                         <div class="mb-3">
                             <label for="password" class="form-label fw-semibold">Mật khẩu: <span
                                     class="text-danger">*</span></label>
-                            <input type="password" id="password" name="password" class="form-control">
+                            <input type="password" id="password" name="password" class="form-control"
+                                placeholder="Nhập mật khẩu">
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -115,7 +96,7 @@
                             <label for="password_confirmation" class="form-label fw-semibold">Xác nhận mật khẩu: <span
                                     class="text-danger">*</span></label>
                             <input type="password" id="password_confirmation" name="password_confirmation"
-                                class="form-control">
+                                class="form-control" placeholder="Nhập lại mật khẩu">
                         </div>
 
                         <!-- Nút Submit -->

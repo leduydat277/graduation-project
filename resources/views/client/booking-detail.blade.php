@@ -40,8 +40,7 @@
                                     <strong>Ngày đi:
                                         {{ \Carbon\Carbon::createFromTimestamp($booking->check_out_date)->format('d-m-Y') }}</strong>
                                 </li>
-                                <li class="list-group-item"><strong>Số lượng người lớn: {{ $booking->adult }}</strong></li>
-                                <li class="list-group-item"><strong>Số lượng trẻ em: {{ $booking->children }}</strong></li>
+                                <li class="list-group-item"><strong>Số lượng người: {{ $booking->adult }}</strong></li>
                                 <li class="list-group-item">
                                     <strong>Tổng số ngày:
                                         {{ $totalDays }}
@@ -115,7 +114,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-lg-12 text-center">
-                        <a href="#" class="btn btn-primary">Quay lại trang chủ</a>
+                        <a href="{{ route('client.home') }}" class="btn btn-primary">Quay lại trang chủ</a>
                     </div>
                 </div>
             </div>

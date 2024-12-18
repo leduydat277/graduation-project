@@ -29,9 +29,10 @@ class HomeController
         $title = "Bài Viết";
         return view('client.blog', compact('title'));
     }
+
     public function contact()
     {
-        $title = "Liên Hệ";
+        $title = "Liên hệ";
         return view('client.contact', compact('title'));
     }
     public function about()
@@ -43,11 +44,11 @@ class HomeController
     {
         $title = "Đặt phòng";
 
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('client.login');
         }
 
-        if (!$request->has(['checkIn', 'room_id', 'checkout', 'adult_quantity', 'children_quantity'])) {
+        if (!$request->has(['checkIn', 'room_id', 'checkout', 'adult_quantity'])) {
             return redirect()->back()->with('error', 'Bạn cần cung cấp đủ thông tin để đặt phòng.');
         }
 
@@ -55,7 +56,6 @@ class HomeController
         $room_id = $_GET['room_id'];
         $checkout = $_GET['checkout'];
         $adult_quantity = $_GET['adult_quantity'];
-        $children_quantity = $_GET['children_quantity'];
 
         $checkIn = date("d-m-Y", strtotime($checkIn));
         $checkout = date("d-m-Y", strtotime($checkout));
@@ -64,9 +64,8 @@ class HomeController
         $checkoutDate = new DateTime($checkout);
 
         $totalDays = $checkInDate->diff($checkoutDate)->days;
-        $totalDays = $totalDays + 1;
         $room = Room::where('id', $room_id)->first();
-        return view('client.booking', compact(['title', 'checkIn', 'checkout', 'adult_quantity', 'children_quantity', 'room', 'totalDays']));
+        return view('client.booking', compact(['title', 'checkIn', 'checkout', 'adult_quantity', 'room', 'totalDays']));
     }
     public function review()
     {
@@ -79,12 +78,13 @@ class HomeController
         return view('client.policy', compact('title'));
     }
 
-    public function booking_detail($bookingNumberId){
+    public function booking_detail($bookingNumberId)
+    {
         $title = "Chi tiết đặt phòng";
         $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
         $payment = Payment::where('booking_id', $booking->id)->first();
         $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
-        ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
+            ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
         return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays'));
     }
 }
