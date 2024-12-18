@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Booking;
+use App\Models\BookingCancelled;
 use App\Models\Payment;
 use App\Models\Room;
 use DateTime;
@@ -81,11 +82,33 @@ class HomeController
     public function booking_detail($bookingNumberId)
     {
         $title = "Chi tiết đặt phòng";
-        
+
         $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
         $payment = Payment::where('booking_id', $booking->id)->first();
+        $cancel = BookingCancelled::where('booking_id', $booking->id)->first();
         $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
             ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
-        return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays'));
+        return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays', 'cancel'));
+    }
+
+    public function getBookingList(Request $request)
+    {
+        $user = Auth::user();
+
+        $bookings = Booking::where('user_id', $user->id)
+            ->with('room')
+            ->get();
+
+        $dataStatus = [
+            0 => "Chưa thanh toán cọc",
+            1 => "Đang thanh toán",
+            2 => "Đã thanh toán cọc",
+            3 => "Đã thanh toán tổng tiền đơn",
+            4 => "Đang sử dụng",
+            5 => "Đã hủy",
+            6 => "Hoàn thành"
+        ];
+
+        return view("client.bookingList", compact("bookings", "dataStatus"));
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthenticationController;
@@ -42,7 +43,7 @@ Route::get('/blog-detail', [HomeController::class, 'index'])
     ->name('client.blog-detail')->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get('/booking', [HomeController::class, 'booking'])
     ->name('client.booking');
-    
+
 Route::prefix('auth')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('client.login')->middleware(CheckLoginMiddleware::class . ':guest-only');
     Route::post('/login', [LoginController::class, 'login'])->name('client.loginRequest');
@@ -60,11 +61,14 @@ Route::put("/account/{id}", [WebUsersController::class, "updateProficeUser"])->n
 Route::get("/confirm-password", [WebUsersController::class, "updatePasswordUserUI"])->name("updatePasswordUserUI")->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::post("/account/password/{id}", [WebUsersController::class, "updatePasswordUser"])->name("updatePassword")->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get("/payment-history", [PaymentsController::class, "paymentHistory"])->name("paymentHistory")->middleware(CheckLoginMiddleware::class . ':admin-only');
+Route::get("/booking-list", [HomeController::class, "getBookingList"])->name("getBookingList")->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get("/payment-history-detail/{id}", [PaymentsController::class, "paymentHistoryDetail"])->name("paymentHistoryDetail")->middleware(CheckLoginMiddleware::class . ':admin-only');
 
 Route::get('/detail-booking/{bookingNumberId}', [HomeController::class, 'booking_detail'])
     ->name('client.detail_booking')->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get('/cancelBooking', [BookingCancelledController::class, 'index'])
     ->name('cancelBooking.index')->middleware(CheckLoginMiddleware::class . ':admin-only');
+Route::get('/reviewModal', [AdminReviewController::class, 'modal'])
+    ->name('reviewModal.modal')->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::post('/cancelBooking/store', [BookingCancelledController::class, 'store'])
     ->name('cancelBooking.store')->middleware(CheckLoginMiddleware::class . ':admin-only');

@@ -3,7 +3,6 @@
 @section('title')
     Chi tiết đặt phòng
 @endsection
-
 @section('content')
     @include('client.layouts.banner.banner')
     <section class="order-details-wrap padding-small">
@@ -32,7 +31,8 @@
                             <h5 class="mb-4">Thông tin đặt phòng</h5>
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Phòng: {{ $booking->room->title }}</strong></li>
-                                <li class="list-group-item"><strong>Giá một đêm: {{  number_format($booking->room->price, 0, ',', '.') }}vnđ</strong></li>
+                                <li class="list-group-item"><strong>Giá một đêm:
+                                        {{ number_format($booking->room->price, 0, ',', '.') }}vnđ</strong></li>
                                 <li class="list-group-item">
                                     <strong>Ngày đến:
                                         {{ \Carbon\Carbon::createFromTimestamp($booking->check_in_date)->format('d-m-Y') }}
@@ -55,6 +55,37 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Hiển thị thêm thông tin khi status = 5 -->
+                @if ($booking->status == 5)
+                    <div class="row g-5 mt-4">
+                        <div class="col-lg-12">
+                            <div class="cancellation-details">
+                                <h5 class="mb-4">Thông tin hủy đơn</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item"><strong>Lý do hủy:
+                                            {{ isset($cancel->reason) ? $cancel->reason : 'Không có' }}</strong></li>
+                                    <li class="list-group-item"><strong>Mô tả:
+                                            {{ isset($cancel->description) ? $cancel->description : 'Không có' }}</strong>
+                                    </li>
+                                    <li class="list-group-item"><strong>Ngày hủy:
+                                            {{ \Carbon\Carbon::createFromTimestamp($cancel->cancelled_at)->format('d-m-Y H:i') }}</strong>
+                                    </li>
+                                    <li class="list-group-item"><strong>Trạng thái:
+                                            @if ($cancel->status == 'pending')
+                                                Đang chờ
+                                            @elseif ($cancel->status == 'approved')
+                                                Đã xác nhận
+                                            @else
+                                                Không xác định
+                                            @endif
+                                        </strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="row g-5 mt-4">
                     <div class="col-lg-12">
                         <div class="payment-summary">
@@ -76,7 +107,7 @@
                                                 @endif
                                             </th>
                                         @else
-                                            <th>Giảm giá: Không hợp lệ</th>
+                                            <th>Giảm giá: Không có</th>
                                         @endif
                                         <td></td>
                                     </tr>
@@ -131,7 +162,6 @@
                 <div class="row mt-4">
                     <div class="col-lg-12 text-center">
                         <a href="{{ route('client.home') }}" class="btn btn-primary">Trang chủ</a>
-                        <a href="{{ route('paymentHistory') }}" class="btn btn-primary">Danh sách lịch sử thanh toán</a>
                     </div>
                 </div>
             </div>
@@ -141,6 +171,33 @@
 @endsection
 @section('js')
     <script type="module">
+        $(document).ready(function() {
+            let bookingStatus = {{ $booking->status }};
+            let bookingId = {{ $booking->id }};
+
+            if (bookingStatus === 6) {
+                let url = `{{ route('reviewModal.modal') }}`;
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        id: bookingId
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        if (res.type == 'success') {
+                            $('#modal').html(res.view);
+                            $('#reviewModal').modal('show');
+                        }
+                    },
+                    error: function(e) {
+                        notification(e.responseJSON.type, e.responseJSON.title, e.responseJSON.content);
+                    },
+                });
+            }
+        });
+
         $('#cancelOrderBtn').on('click', function() {
             let url = `{{ route('cancelBooking.index') }}`;
             $.ajax({
