@@ -19,7 +19,7 @@
 </div>
 @endif
 
-<div class="container">
+<div id="okoko" class="container">
     <h2>Đánh Giá Phòng Khách Sạn</h2>
 
     <div class="room-info">
@@ -88,7 +88,7 @@
         background-color: #f9f9f9;
     }
 
-    .container {
+    #okoko {
         max-width: 600px;
         margin: 50px auto;
         padding: 20px;
