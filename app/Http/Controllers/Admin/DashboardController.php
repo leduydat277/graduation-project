@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\Room;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;

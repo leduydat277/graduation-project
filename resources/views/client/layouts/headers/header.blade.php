@@ -96,6 +96,9 @@
                                         <a class="dropdown-item text-black" href="{{ route('account') }}">Quản lý tài khoản</a>
                                     </li>
                                     <li>
+                                        <a class="dropdown-item text-black" href="{{ route('getBookingList') }}">Các đơn đặt phòng</a>
+                                    </li>
+                                    <li>
                                         <a class="dropdown-item text-black" href="{{ route('paymentHistory') }}">Lịch sử thanh toán</a>
                                     </li>
                                     <li>
