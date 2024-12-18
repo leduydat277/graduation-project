@@ -77,7 +77,6 @@ class ManageStatusRoomController extends Controller
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }
 
-
     public function create($id_booking, $id_room, $from, $to)
     {
         $from_new = (new DateTime($from))->setTime(14, 0, 0)->getTimestamp();
@@ -160,5 +159,10 @@ class ManageStatusRoomController extends Controller
         }
 
         return 'Thêm bản ghi vào bảng Manage Status Room thành công';
+    }
+
+    public function cancel(){
+        $booking_id = 263;
+        $record = ManageStatusRoom::where('booing')->first();
     }
 }

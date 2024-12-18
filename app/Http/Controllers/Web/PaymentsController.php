@@ -23,7 +23,7 @@ class PaymentsController extends Controller
             3 => "Đã thanh toán tổng tiền đơn"
         ];
 
-        dd($dataPayment->toArray());
+        // dd($dataPayment->toArray());
         return view("client.paymentHistory", compact("dataPayment", "dataStatus"));
     }
 
