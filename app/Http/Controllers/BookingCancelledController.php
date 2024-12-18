@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NotificationMessage;
+use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Models\Booking;
 use App\Models\BookingCancelled;
 use App\Models\ManageStatusRoom;
@@ -43,7 +44,6 @@ class BookingCancelledController
         $today = Carbon::now();
 
         $booking = Booking::where('id', $bookingId)->first();
-
         if (!$booking) {
             return response()->json(['error' => 'Booking not found'], 201);
         }
@@ -73,10 +73,7 @@ class BookingCancelledController
             $refundAmount = '0';
         }
 
-        $manager = ManageStatusRoom::where('booking_id', $bookingId)->first();
-        $manager->booking_id = null;
-        $manager->status = 1;
-        $manager->save();
+        ManageStatusRoomController::cancel($bookingId);
 
         $booking->status = 5;
         $booking->save();

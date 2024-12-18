@@ -71,7 +71,6 @@ class BookingController  extends Controller
                 $endDateTime = trim($dateRange[1]);
                 $startDate = strtotime($startDateTime);
                 $endDate = strtotime($endDateTime);
-                // In ra để kiểm tra
                 $query->where(function ($subQuery) use ($startDate, $endDate) {
                     $subQuery->whereBetween('check_in_date', [$startDate, $endDate]) 
                         ->orWhereBetween('check_out_date', [$startDate, $endDate]) 
@@ -82,7 +81,7 @@ class BookingController  extends Controller
                 });
             }
         }
-
+        
         $bookings = $query->whereNotIn('status', [0, 1]) 
             ->orderBy('id', 'desc') 
             ->paginate(10); 

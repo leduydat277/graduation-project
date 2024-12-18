@@ -117,8 +117,12 @@
       once: true,
     });
 
-    // DateTimePicker
-    new DateTimePickerComponent.DatePicker('select-arrival-date');
-    new DateTimePickerComponent.DatePicker('select-departure-date');
+    if ($('#select-arrival-date').length) {
+      new DateTimePickerComponent.DatePicker('select-arrival-date');
+  }
+  
+  if ($('#select-departure-date').length) {
+      new DateTimePickerComponent.DatePicker('select-departure-date');
+  }
   });
 })(jQuery);

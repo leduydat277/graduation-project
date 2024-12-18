@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\ManageStatusRoom;
 use App\Models\Admin\Room;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ManageStatusRoomController extends Controller
@@ -76,7 +78,6 @@ class ManageStatusRoomController extends Controller
 
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }
-
 
     public function create($id_booking, $id_room, $from, $to)
     {
@@ -160,5 +161,45 @@ class ManageStatusRoomController extends Controller
         }
 
         return 'Thêm bản ghi vào bảng Manage Status Room thành công';
+    }
+
+    public static function cancel($booking_id)
+    {
+        $record = ManageStatusRoom::where('booking_id', '=', $booking_id)->first();
+
+        $recentToPrevious =  (new DateTime())->setTimestamp($record->from)->setTime(12, 0, 0)->getTimestamp();
+        $recentToNext =  (new DateTime())->setTimestamp($record->to)->setTime(14, 0, 0)->getTimestamp();
+
+        $recordPrevious = ManageStatusRoom::where([
+            ['to', '=', $recentToPrevious],
+            ['room_id', '=', $record->room_id],
+        ])->first() ?? '';
+
+        $recordNext = ManageStatusRoom::where([
+            ['from', '=', $recentToNext],
+            ['room_id', '=', $record->room_id],
+        ])->first() ?? '';
+
+        if (!$recordPrevious) {
+            $newFrom = $record->from;
+        } else {
+            $recordPrevious->delete();
+            $newFrom = $recordPrevious->from;
+        }
+        if (!$recordNext) {
+            $newTo = $record->to;
+        } else {
+            $recordNext->delete();
+            $newTo = $recordNext->to;
+        }
+
+        $record->update([
+            'from' => $newFrom,
+            'to' => $newTo,
+            'status' => 1,
+            'booking_id' => null,
+        ]);
+
+        return true;
     }
 }
