@@ -32,6 +32,7 @@
                             <h5 class="mb-4">Thông tin đặt phòng</h5>
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Phòng: {{ $booking->room->title }}</strong></li>
+                                <li class="list-group-item"><strong>Giá một đêm: {{  number_format($booking->room->price, 0, ',', '.') }}vnđ</strong></li>
                                 <li class="list-group-item">
                                     <strong>Ngày đến:
                                         {{ \Carbon\Carbon::createFromTimestamp($booking->check_in_date)->format('d-m-Y') }}
