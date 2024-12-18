@@ -180,7 +180,6 @@ class RoomController extends Controller
             'max_people' => $request->input('max_people'),
             'image_room' => $imageRoomData,
             'thumbnail_image' => $thumbnailImagePath,
-            'status' => $request->input('status'),
         ]);
 
         return redirect()->route('rooms.show', $room->id)->with('success', 'Phòng đã được cập nhật thành công.');

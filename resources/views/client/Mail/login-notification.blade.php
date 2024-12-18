@@ -7,7 +7,6 @@
 </head>
 <body>
     <h2>Chào mường :  {{ $user->name }} đến với SleepHotel</h2>
-    <p>Bạn đã đăng nhập vào hệ thống SleepHotel thành công vào lúc {{ $loginTime }}.</p>
     <p>Bạn có thể đọc qua điều khoản của chúng tôi: </p>
     <div class="text-center mb-4">
         <a href="{{ $policylink }}" class="btn btn-primary btn-lg px-4 py-2">Xem ngay</a>

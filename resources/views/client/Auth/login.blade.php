@@ -35,8 +35,8 @@
         }
     </style>
 
-    <section class="vh-100" style="margin-top: 70px">
-        <div class="container h-100">
+    <section class="vh-100">
+
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-9 col-lg-6 col-xl-5">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
@@ -88,13 +88,17 @@
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
                             <p class="mt-3 text-muted">
+                                
+                                <a href="{{ route('admin.login') }}" class="text-primary fw-bold">Đăng nhập bằng tài khoản admin</a>
+                            </p>
+                            <p class="mt-3 text-muted">
                                 Chưa có tài khoản?
                                 <a href="{{ route('client.register') }}" class="text-primary fw-bold">Đăng ký</a>
                             </p>
                         </div>
                     </form>
                 </div>
-            </div>
+
         </div>
     </section>
 @endsection

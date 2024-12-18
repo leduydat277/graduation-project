@@ -73,7 +73,10 @@ class BookingCancelledController
             $refundAmount = '0';
         }
 
-        ManageStatusRoom::where('booking_id', $bookingId)->delete();
+        $manager = ManageStatusRoom::where('booking_id', $bookingId)->first();
+        $manager->booking_id = null;
+        $manager->status = 1;
+        $manager->save();
 
         $booking->status = 5;
         $booking->save();
@@ -96,29 +99,6 @@ class BookingCancelledController
                 "status" => 'approved'
             ]);
         }
-
-        $title = "Yêu cầu hoàn tiền mới";
-        $message = "Khách hàng " . $booking->last_name . ' ' . $booking->first_name . " đã yêu cầu hoàn tiền.";
-
-        $timestamp = $booking->created_at;
-
-        $date = Carbon::createFromTimestamp($timestamp);
-
-        $formattedDate = $date->format('H:i d-m-Y');
-
-        $messageData = [
-            "date" => $formattedDate,
-            "message" => $message,
-            "booking_id" => $booking->id
-        ];
-
-        Notification::create([
-            "user_id" => $booking->user_id,
-            "title" => $title,
-            "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
-        ]);
-
-        event(new NotificationMessage($message, $title, $formattedDate));
 
         return response()->json([
             'type' => 'success',

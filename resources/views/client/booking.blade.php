@@ -156,15 +156,7 @@
                                                     <span class="price-amount amount ps-5">
                                                         <bdi>
                                                             <span id="adult" data-quantity="{{ $adult_quantity }}"
-                                                                class="price-currency-symbol">{{ $adult_quantity }} người
-                                                                lớn</span>
-                                                        </bdi>
-                                                    </span>
-                                                    <span class="price-amount amount mt-2 ps-5">
-                                                        <bdi>
-                                                            <span id="children" data-quantity="{{ $children_quantity }}"
-                                                                class="price-currency-symbol">{{ $children_quantity }} trẻ
-                                                                em</span>
+                                                                class="price-currency-symbol">{{ $adult_quantity }} người</span>
                                                         </bdi>
                                                     </span>
                                                 </div>
@@ -399,8 +391,6 @@
             var adultQuantity = document.getElementById('adult').getAttribute('data-quantity');
             console.log(adultQuantity);
 
-            var childrenQuantity = document.getElementById('children').getAttribute('data-quantity');
-
             var formData = {
                 user_id: {{ Auth::user()->id }},
                 check_in_date: checkInDate,
@@ -416,7 +406,6 @@
                 voucher_id: voucher_id,
                 total_price: $('#finalPrice').text().replace('VND', '').trim().replace(/\./g, ''),
                 message: $('#message').val(),
-                children_quantity: childrenQuantity,
                 adults_quantity: adultQuantity,
             };
 
