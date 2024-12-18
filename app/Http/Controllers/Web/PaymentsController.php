@@ -20,8 +20,13 @@ class PaymentsController extends Controller
             0 => "Chưa thanh toán cọc",
             1 => "Đang thanh toán",
             2 => "Đã thanh toán cọc",
-            3 => "Đã thanh toán tổng tiền đơn"
+            3 => "Đã thanh toán tổng tiền đơn",
+            4 => "Đang sử dụng",
+            5 => "Đã hủy",
+            6 => "Hoàn thành"
         ];
+
+        // dd($dataPayment->toArray());
 
         return view("client.paymentHistory", compact("dataPayment", "dataStatus"));
     }

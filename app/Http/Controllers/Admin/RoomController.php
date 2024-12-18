@@ -104,11 +104,11 @@ class RoomController extends Controller
             'status' => 0,
         ]);
 
-        $currentTime = Carbon::now();
+        $currentTime = Carbon::now('Asia/Ho_Chi_Minh');
         $from = $currentTime->hour < 14
-            ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)->timestamp
-            : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0)->timestamp;
-
+        ? $currentTime->setHour(14)->setMinute(0)->setSecond(0)->timestamp
+        : $currentTime->addDay()->setHour(14)->setMinute(0)->setSecond(0)->timestamp;
+        
         ManageStatusRoom::create([
             'room_id' => $room->id,
             'status' => 1,

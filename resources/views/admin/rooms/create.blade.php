@@ -84,7 +84,7 @@
 
                     <div class="mb-3">
                         <label for="price" class="form-label">Giá Mỗi Đêm</label>
-                        <input type="text" class="form-control" id="price" name="price"
+                        <input type="number" class="form-control" id="price" name="price"
                             placeholder="Nhập giá mỗi đêm" value="{{ old('price') }}">
                         @error('price')
                             <span class="text-danger">{{ $message }}</span>

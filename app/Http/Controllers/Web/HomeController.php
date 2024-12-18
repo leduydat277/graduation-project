@@ -81,6 +81,7 @@ class HomeController
     public function booking_detail($bookingNumberId)
     {
         $title = "Chi tiết đặt phòng";
+        
         $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
         $payment = Payment::where('booking_id', $booking->id)->first();
         $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
