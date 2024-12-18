@@ -11,9 +11,14 @@ use Illuminate\Support\Facades\Auth;
 
 class RoomDetailController
 {
-    public function index($id){
+    public function index($id)
+    {
         $title = "Chi tiết phòng";
         $room = Room::find($id);
+
+        if ($room->status == 4) {
+            return redirect()->route('client.home');
+        }
 
         $images = json_decode($room->image_room);
 
@@ -22,10 +27,8 @@ class RoomDetailController
         $assets_type = AssetType::whereIn('id', $assets_type_ids)->get();
 
         $comments = Review::where('room_id', $id)
-        ->with('user')
-        ->get();
+            ->with('user')
+            ->get();
         return view('client.room-details', compact('room', 'images', 'assets_type', 'comments', 'title'));
     }
-
-
 }

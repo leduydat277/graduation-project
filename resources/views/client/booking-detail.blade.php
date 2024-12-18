@@ -32,10 +32,11 @@
                             <h5 class="mb-4">Thông tin đặt phòng</h5>
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Phòng: {{ $booking->room->title }}</strong></li>
+                                <li class="list-group-item"><strong>Giá một đêm: {{  number_format($booking->room->price, 0, ',', '.') }}vnđ</strong></li>
                                 <li class="list-group-item">
                                     <strong>Ngày đến:
                                         {{ \Carbon\Carbon::createFromTimestamp($booking->check_in_date)->format('d-m-Y') }}
-                                         (14:00)
+                                        (14:00)
                                     </strong>
                                 </li>
                                 <li class="list-group-item">
@@ -65,7 +66,18 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <th>Giảm giá: {{ number_format($booking->discount_value, 0, ',', '.') }} VNĐ</th>
+                                        @if (is_numeric($booking->discount_value))
+                                            <th>
+                                                Giảm giá:
+                                                @if ($booking->discount_value < 100)
+                                                    {{ $booking->discount_value }}%
+                                                @else
+                                                    {{ number_format($booking->discount_value, 0, ',', '.') }} VNĐ
+                                                @endif
+                                            </th>
+                                        @else
+                                            <th>Giảm giá: Không hợp lệ</th>
+                                        @endif
                                         <td></td>
                                     </tr>
                                     <tr>
@@ -110,7 +122,7 @@
                                 </tbody>
                             </table>
                             <!-- Nút Hủy Đơn -->
-                            @if ($booking->status != 5)
+                            @if ($booking->status != 5 && $booking->status != 6)
                                 <button id="cancelOrderBtn" class="btn btn-danger mt-3">Hủy đơn hàng</button>
                             @endif
                         </div>
