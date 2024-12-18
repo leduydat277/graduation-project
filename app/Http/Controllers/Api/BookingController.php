@@ -134,7 +134,7 @@ class BookingController
 
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
-            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate) + 1;
+            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate) ;
             $discount_value = null;
             if ($voucher) {
                 $v = Voucher::where('id', $voucher)->first();

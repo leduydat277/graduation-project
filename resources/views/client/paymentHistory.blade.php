@@ -33,13 +33,13 @@
                                         <th scope="row" class="text-center">{{ $index + 1 }}</th>
                                         <td>
                                             <a class="text-info" style="text-decoration: underline" href="{{ route('client.detail_booking', ['bookingNumberId'=>$item->booking->booking_number_id]) }}">
-                                                {{ $item->payments_id_number }} 
+                                                {{ $item->payments_id_number }}
                                             </a>
                                         </td>
                                         <td>{{ date('d/m/Y H:i:s', $item->payment_date) }}</td>
                                         <td>{{ number_format($item->total_price) }} VNĐ</td>
                                         <td>{{ $item->payment_method == 1 ? 'Chuyển khoản' : 'Tiền mặt' }}</td>
-                                        <td>{{ $dataStatus[$item->payment_status] }}</td>
+                                        <td>{{ $dataStatus[$item->booking->status] }}</td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -83,5 +83,5 @@
         });
     </script>
 @endpush
-    
+
 
