@@ -197,19 +197,23 @@ class BookingController
             }
 
             $bookings = Booking::where('room_id', $room->id)
-                ->where(function ($query) use ($check_in, $check_out) {
-                    $query->where(function ($q) use ($check_in, $check_out) {
-                        $q->where('check_in_date', '<', $check_out)
-                            ->where('check_out_date', '>', $check_in);
+                ->where(function ($query) use ($check_in_timestamp, $check_out_timestamp) {
+                    $query->where(function ($q) use ($check_in_timestamp, $check_out_timestamp) {
+                        $q->where('check_in_date', '<', $check_out_timestamp)
+                            ->where('check_out_date', '>', $check_in_timestamp);
                     });
                 })
                 ->whereIn('status', [1, 2, 3, 4])
                 ->exists();
 
+            $messageRes = [
+                "redirect" => route('client.room-details', $room_id) . '?message=' . urlencode("Khoảng thời gian bạn đặt đã có người đặt trước rồi. Vui lòng chọn ngày khác ạ."),
+            ];
+
             if ($bookings) {
                 return response()->json([
                     "type" => "error",
-                    "message" => "Phòng đã có người đặt trước đó."
+                    "message" => $messageRes,
                 ], 201);
             }
 

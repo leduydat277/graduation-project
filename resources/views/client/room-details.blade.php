@@ -18,6 +18,15 @@
                 @endforeach
             </ul>
         </div>
+        @if (session('success') || session('error'))
+            <div class="col">
+                <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                    role="alert">
+                    {{ session('success') ?? session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
     @endif
     <div class="post-wrap my-5">
         <div class="container-fluid padding-side">
@@ -251,6 +260,20 @@
 
 @section('js')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            if (message) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thông báo',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+
+
         $(document).ready(function() {
             const pricePerNight = {{ $room->price }};
             const maxPeople = {{ $room->max_people }};
