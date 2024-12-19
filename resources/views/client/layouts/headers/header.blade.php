@@ -33,9 +33,6 @@
                                 <a class="nav-link {{ request()->routeIs('client.services') ? 'active' : '' }} p-0" href="{{ route('client.services') }}">Tiện nghi</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link {{ request()->routeIs('client.blog') ? 'active' : '' }} p-0" href="{{ route('client.blog') }}">Bài viết</a>
-                            </li>
-                            <li class="nav-item px-3">
                                 <a class="nav-link {{ request()->routeIs('client.policy') ? 'active' : '' }} p-0" href="{{ route('client.policy') }}">Điều khoản</a>
                             </li>
                         </ul>
