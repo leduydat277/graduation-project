@@ -45,7 +45,7 @@
                                 Đã thanh toán tổng tiền
                             @endif
                             @if ($payment->payment_status == 2)
-                                Đã thanh toán cọc
+                                Đã thanh toán tổng tiền
                             @endif
                         </span>
                     </p>
@@ -62,24 +62,22 @@
                     <p><strong>Tổng Số Tiền Đặt Phòng:</strong> <span
                             class="text-danger fw-bold">{{ number_format($payment->booking->total_price) }} VNĐ</span></p>
                     <p><strong>Số Tiền Cọc:</strong> {{ number_format($payment->booking->tien_coc) }} VNĐ</p>
-                    <p><strong>Trạng Thái Đặt Phòng:</strong>
-                        <span
-                            class="badge @if ($payment->booking->status == 3 || $payment->payment_status == 2) bg-success
-                            @elseif ($payment->booking->status == 4)
-                            bg-primary
-                            @else
-                            bg-warning @endif">
-                            @if ($payment->booking->status == 3)
-                                Đã check-out
-                            @endif
-                            @if ($payment->booking->status == 2)
-                                Đã cọc
-                            @endif
-                            @if ($payment->booking->status == 4)
-                                Đang sử dụng
-                            @endif
-                        </span>
-                    </p>
+                    @if ($payment->booking->discount_value)
+                        <p><strong>Giảm Giá:</strong>
+                            <span class="badge bg-info fs-6">
+                                Giảm giá:
+                                @if ($payment->booking->discount_value < 100)
+                                    {{ $payment->booking->discount_value }}%
+                                @else
+                                    {{ number_format($payment->booking->discount_value, 0, ',', '.') }} VNĐ
+                                @endif
+                            </span>
+                        </p>
+                        <p><strong>Tổng Tiền Sau Khi Giảm:</strong>
+                            <span class="badge bg-info fs-6">{{ number_format($payment->booking->discount_price, 0, ',', '.') }}đ</span>
+                        </p>
+                        <p><strong>Ghi chú: {{$booking->message ?? ''}}</strong></p>
+                    @endif
                 </div>
 
                 <!-- Thông tin phòng -->

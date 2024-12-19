@@ -43,6 +43,17 @@
                                     </tr>
                                 @endforeach
                             @endif
+                            @foreach ($dataPayment as $index => $item)
+                                <tr>
+                                    <th scope="row" class="text-center">{{ $index + 1 }}</th> <!-- Tăng index bắt đầu từ 1 -->
+                                    <td><a class="text-info" href="{{ route('client.detail_booking', $item->booking->booking_number_id) }}">{{ $item->payments_id_number }}</a></td>
+                                    <td>{{ date('d/m/Y H:i:s', $item->payment_date) }}</td>
+                                    <td>{{ number_format($item->total_price) }}</td>
+                                    <td>{{ $item->payment_method == 1 ? 'Chuyển khoản' : 'Tiền mặt' }}</td>
+                                    <td>{{ $dataStatus[$item->payment_status] }}</td>
+                                </tr>
+                            @endforeach
+
                         </tbody>
                     </table>
                 </div>
