@@ -25,6 +25,12 @@ class HomeController
         $title = "Phòng";
         return view('client.room', compact('title'));
     }
+
+    public function roomAll(){
+        $title = "Tất Cả Phòng";
+        return view('client.room-all', compact('title'));
+    }
+
     public function blog()
     {
         $title = "Bài Viết";
@@ -88,6 +94,23 @@ class HomeController
         $cancel = BookingCancelled::where('booking_id', $booking->id)->first();
         $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
             ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
+
+        return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays', 'cancel'));
+    }
+
+    public function done_booking_detail($bookingNumberId)
+    {
+        $title = "Chi tiết đặt phòng";
+
+        $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
+        $payment = Payment::where('booking_id', $booking->id)->first();
+        $cancel = BookingCancelled::where('booking_id', $booking->id)->first();
+        $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
+            ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
+
+        session()->flash('status', 'success');
+        session()->flash('message', 'Bạn đã đặt phòng thành công!');
+
         return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays', 'cancel'));
     }
 
@@ -97,7 +120,8 @@ class HomeController
 
         $bookings = Booking::where('user_id', $user->id)
             ->with('room')
-            ->get();
+            ->where('status', '!=', 0)
+            ->paginate(10);
 
         $dataStatus = [
             0 => "Chưa thanh toán cọc",

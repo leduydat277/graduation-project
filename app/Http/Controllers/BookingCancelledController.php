@@ -106,7 +106,9 @@ class BookingCancelledController
     public function index_admin(Request $request)
     {
         if ($request->ajax()) {
-            $query = BookingCancelled::with('booking');
+            $query = BookingCancelled::with('booking')->whereHas('booking', function ($subQuery) {
+                $subQuery->where('status', 5);
+            });
 
             // Lọc theo status nếu có yêu cầu
             if ($request->has('status') && $request->status) {

@@ -45,10 +45,6 @@
                                         <div class="row g-lg-5" style="margin-top:0px">
                                             <div class="col-md-6 col-xl-4 mb-4">
                                                 <!-- Placeholder for rooms -->
-                                                <div id="no-rooms-message" class="alert alert-warning"
-                                                    style="display: none;">
-                                                    Không có phòng nào phù hợp với tiêu chí tìm kiếm của bạn.
-                                                </div>
                                             </div>
                                         </div>
                                     </main>
@@ -116,33 +112,22 @@
                 $('#loading').show();
 
                 $.ajax({
-                    url: "{{ route('api.search_room') }}",
+                    url: "{{ route('api.rooms.all') }}",
                     method: "GET",
                     success: function(response) {
-                        if (response.status === "success" && Array.isArray(response.data) && response
-                            .data.length > 0) {
+                        console.log(response);
+                        if (response.status === "success" && Array.isArray(response.data)) {
                             allRooms = response.data;
                             console.log(response);
 
                             renderRooms(allRooms, currentPage, roomsPerPage);
                             renderPagination(allRooms.length, roomsPerPage);
-
-                            // Ẩn thông báo không có phòng nếu có phòng
-                            $('#no-rooms-message').hide();
                         } else {
-                            $('#loading').hide(); // Ẩn loading nếu không có phòng
-                            $('#no-rooms-message').show();
                             console.error("Dữ liệu phòng không hợp lệ");
-
-                            // Hiển thị thông báo không có phòng
                         }
                     },
                     error: function(error) {
-                        $('#no-rooms-message').show();
-                        $('#loading').hide(); // Ẩn loading khi có lỗi
                         console.error("Lỗi khi gọi API phòng:", error);
-
-                        // Hiển thị thông báo lỗi
                     },
                     complete: function() {
                         // Ẩn loading khi hoàn tất
@@ -185,8 +170,7 @@
                 const paginatedRooms = rooms.slice(startIndex, startIndex + perPage);
 
                 paginatedRooms.forEach(room => {
-                    let url_detail = 'http://127.0.0.1:8000/room/' + room.id + '?' +
-                        '{{ http_build_query(request()->query()) }}';
+                    let url_detail = 'http://127.0.0.1:8000/room/' + room.id + '?' + '{{ http_build_query(request()->query()) }}'; 
                     const roomItem = `
                 <div class="col-md-6 col-xl-4 mb-4">
                    <a href="${url_detail}"><div class="room-item rounded-4">

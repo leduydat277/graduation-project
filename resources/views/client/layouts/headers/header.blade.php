@@ -26,6 +26,10 @@
                             </li>
                             <li class="nav-item px-3">
                                 <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
+                                    href="{{ route('client.room.all') }}">Phòng</a>
+                            </li>
+                            <li class="nav-item px-3">
+                                <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
                                     href="{{ route('client.about') }}">Về chúng tôi</a>
                             </li>
                             <li class="nav-item px-3">
