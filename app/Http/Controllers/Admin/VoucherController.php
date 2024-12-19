@@ -60,10 +60,10 @@ class VoucherController
             'discount_value' => 'required|numeric|min:0',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'min_booking_amount' => 'required|numeric|min:0',
+            'min_booking_amount' => 'required|min:0',
             'quantity' => 'required|integer|min:0',
         ]);
-    
+        $minBookingAmount = floatval(str_replace('.', '', $request->min_booking_amount));
         Voucher::create(array_merge(
             $request->only([
                 'name', 
@@ -76,6 +76,7 @@ class VoucherController
                 'status'
             ]),
             [
+                'min_booking_amount' => $minBookingAmount, 
                 'start_date' => $request->start_date ? Carbon::parse($request->start_date)->timestamp : null,
                 'end_date' => $request->end_date ? Carbon::parse($request->end_date)->timestamp : null,
             ]
@@ -98,10 +99,10 @@ class VoucherController
             'discount_value' => 'required|numeric|min:0',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'min_booking_amount' => 'required|numeric|min:0',
+            'min_booking_amount' => 'required|min:0',
             'quantity' => 'required|integer|min:0',
         ]);
-    
+        $minBookingAmount = floatval(str_replace('.', '', $request->min_booking_amount));
         $voucher->update(array_merge(
             $request->only([
                 'name', 
@@ -113,6 +114,7 @@ class VoucherController
                 'status'
             ]),
             [
+                'min_booking_amount' => $minBookingAmount, 
                 'start_date' => $request->start_date ? Carbon::parse($request->start_date)->timestamp : null,
                 'end_date' => $request->end_date ? Carbon::parse($request->end_date)->timestamp : null,
             ]

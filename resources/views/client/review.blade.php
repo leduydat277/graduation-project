@@ -1,5 +1,8 @@
 @extends('client.layouts.master')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 @section('title')
 Đánh giá & Bình luận
@@ -8,15 +11,15 @@
 @section('content')
 @include('client.layouts.banner.banner')
 
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
+@if(session('success'))
+    <script>
+        toastr.success("{{ session('success') }}", "Bình luận thành công!");
+    </script>
 @endif
-@if (session('error'))
-<div class="alert alert-danger">
-    {{ session('error') }}
-</div>
+@if(session('error'))
+    <script>
+        toastr.error("{{ session('error') }}", "Lỗi!");
+    </script>
 @endif
 
 <div id="okoko" class="container">
@@ -28,30 +31,6 @@
         <p>Đơn hàng: {{$booking->booking_number_id}}</p>
         <p>Giá: {{ number_format($booking->room->price, 0, ',', '.') }} VNĐ / Đêm</p>
     </div>
-
-    <form action="{{ route('client.room-postComment', ['id' => $booking->room->id]) }}" method="POST">
-        @csrf
-        <div class="stars">
-            <input type="radio" id="star5" name="rating" value="5">
-            <label for="star5">&#9733;</label>
-            <input type="radio" id="star4" name="rating" value="4">
-            <label for="star4">&#9733;</label>
-            <input type="radio" id="star3" name="rating" value="3">
-            <label for="star3">&#9733;</label>
-            <input type="radio" id="star2" name="rating" value="2">
-            <label for="star2">&#9733;</label>
-            <input type="radio" id="star1" name="rating" value="1">
-            <label for="star1">&#9733;</label>
-        </div>
-        @error('rating')
-        <div class="error-message">{{ $message }}</div>
-        @enderror
-        <textarea name="comment" placeholder="Nhập bình luận của bạn...."></textarea>
-        @error('comment')
-        <div class="error-message">{{ $message }}</div>
-        @enderror
-        <button type="submit">Gửi đánh giá</button>
-    </form>
 
     <div class="comments">
         <h3>Đánh giá: </h3>
