@@ -33,6 +33,9 @@ Route::get('/contact', [HomeController::class, 'contact'])
 Route::get('/room', [HomeController::class, 'rooms'])
     ->name('client.room')->middleware(CheckLoginMiddleware::class . ':admin-only');
 
+Route::get('/room/all', [HomeController::class, 'roomAll'])
+    ->name('client.room.all')->middleware(CheckLoginMiddleware::class . ':admin-only');
+
 Route::post('/room-comment/{id}', [ReviewController::class, 'addComment'])
     ->name('client.room-postComment')->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get('review/{id}', [ReviewController::class, 'review'])

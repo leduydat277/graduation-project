@@ -25,6 +25,12 @@ class HomeController
         $title = "Phòng";
         return view('client.room', compact('title'));
     }
+
+    public function roomAll(){
+        $title = "Tất Cả Phòng";
+        return view('client.room-all', compact('title'));
+    }
+
     public function blog()
     {
         $title = "Bài Viết";

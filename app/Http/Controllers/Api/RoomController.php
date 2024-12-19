@@ -10,8 +10,7 @@ class RoomController
 {
     
     public function search(Request $request)
-    {
-        
+    {   
         $validated = $request->validate([
             'room_type_id' => 'nullable|integer',
             'room_id' => 'nullable|integer',
@@ -190,5 +189,16 @@ class RoomController
             'success' => true,
             'data' => $rooms,
         ]);
+    }
+
+    public function roomAll(){
+        $data = Room::with('roomType')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Rooms retrieved successfully.',
+            'code' => 200,
+            'data' => $data
+        ], 200);
     }
 }

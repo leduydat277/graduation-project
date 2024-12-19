@@ -30,12 +30,11 @@ class SearchRoomController extends Controller
         $from = $_GET['select-arrival-date_value'] ?? null;
         $to = $_GET['select-departure-date_value'] ?? null;
 
-        if ($from && $to) {
             try {
                 $fromDate = new DateTime($from);
                 $toDate = new DateTime($to);
 
-                if ($fromDate->format('Y-m-d') === $toDate->format('Y-m-d')) {
+                if ($fromDate->format('Y-m-d') >= $toDate->format('Y-m-d')) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Invalid date range. Check-in and check-out dates cannot be the same.',
@@ -51,10 +50,7 @@ class SearchRoomController extends Controller
                     'message' => 'Invalid date format.',
                 ], 400);
             }
-        } else {
-            $fromTimestamp = Carbon::now()->timestamp;
-            $toTimestamp = $fromTimestamp + 86400;
-        }
+
 
         $query = Room::query();
 
@@ -110,7 +106,7 @@ class SearchRoomController extends Controller
         }
 
         $roomIds = array_column($arr_room_manages, 'room_id');
-        
+
         $results_rooms = Room::whereIn('id', $roomIds)
             ->with('roomType')
             ->get()
@@ -123,11 +119,6 @@ class SearchRoomController extends Controller
             'data' => $results_rooms
         ], 200);
     }
-
-
-
-
-
 
     /**
      * Search room for FE
