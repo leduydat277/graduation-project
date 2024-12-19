@@ -124,7 +124,8 @@
             <div class="row align-items-start mt-3 mt-lg-5">
                 <div class="col-lg-6">
                     <div class="p-5">
-                        <p style="font-size: 18px">Chào mừng đến với Khách sạn SleepHotel, nơi sự thoải mái hòa quyện với sự yên tĩnh. Nằm ngay
+                        <p style="font-size: 18px">Chào mừng đến với Khách sạn SleepHotel, nơi sự thoải mái hòa quyện với sự
+                            yên tĩnh. Nằm ngay
                             trung
                             tâm thành phố nhộn nhịp, khách sạn của chúng tôi mang đến một nơi nghỉ dưỡng yên bình cho cả
                             khách du lịch và doanh nhân. Với các tiện nghi hiện đại và không gian ấm áp, chúng tôi cam kết
@@ -188,6 +189,15 @@
         </div>
     </section>
     <script>
+        // Hàm định dạng số tiền
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(value).replace('₫', ' đ');
+        }
+
+        // Hàm lấy dữ liệu và render phòng
         async function fetchRooms() {
             try {
                 const response = await fetch('http://127.0.0.1:8000/api/all-rooms');
@@ -216,7 +226,7 @@
                                         <tbody>
                                             <tr class="text-white">
                                                 <td class="pe-2">Giá:</td>
-                                                <td class="price">${room.price} VND /Đêm</td>
+                                                <td class="price">${formatCurrency(room.price)} / Đêm</td>
                                             </tr>
                                             <tr class="text-white">
                                                 <td class="pe-2">Diện tích:</td>
@@ -228,9 +238,8 @@
                                             </tr>
                                         </tbody>
                                     </table>
-
+    
                                     <a href="/room/${room.id}" class="btn btn-arrow mt-3">
-
                                         <p class="text-decoration-underline text-white m-0 mt-2">Xem ngay</p>
                                     </a>
                                 </div>
@@ -241,12 +250,13 @@
                 });
             } catch (error) {
                 console.error('Lỗi:', error);
-                
             }
         }
 
+        // Gọi hàm khi DOM đã sẵn sàng
         document.addEventListener('DOMContentLoaded', fetchRooms);
     </script>
+
 
     <script>
         async function fetchAssetType() {
@@ -277,7 +287,7 @@
                 });
             } catch (error) {
                 console.error('Lỗi:', error);
-                
+
             }
         }
         document.addEventListener('DOMContentLoaded', fetchAssetType);
@@ -307,7 +317,7 @@
 
             } catch (error) {
                 console.error('Lỗi:', error);
-                
+
             }
         }
 
@@ -331,12 +341,14 @@
 
             if (arrivalDate < today) {
                 isValid = false;
-                document.getElementById('arrival-error').textContent = 'Quý khách vui lòng chọn ngày trong hiện tại hoặc tương lai';
+                document.getElementById('arrival-error').textContent =
+                    'Quý khách vui lòng chọn ngày trong hiện tại hoặc tương lai';
             }
 
             if (departureDate < today) {
                 isValid = false;
-                document.getElementById('departure-error').textContent = 'Quý khách vui lòng chọn ngày trong hiện tại hoặc tương lai';
+                document.getElementById('departure-error').textContent =
+                    'Quý khách vui lòng chọn ngày trong hiện tại hoặc tương lai';
             }
 
             if (quantity <= 0) {
