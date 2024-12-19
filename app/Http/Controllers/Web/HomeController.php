@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Models\Booking;
 use App\Models\BookingCancelled;
 use App\Models\Payment;
+use App\Models\PhiPhatSinh;
 use App\Models\Room;
 use DateTime;
 use Illuminate\Http\Client\Request as ClientRequest;
@@ -26,7 +27,8 @@ class HomeController
         return view('client.room', compact('title'));
     }
 
-    public function roomAll(){
+    public function roomAll()
+    {
         $title = "Tất Cả Phòng";
         return view('client.room-all', compact('title'));
     }
@@ -92,10 +94,15 @@ class HomeController
         $booking = Booking::where('booking_number_id', $bookingNumberId)->with('room')->first();
         $payment = Payment::where('booking_id', $booking->id)->first();
         $cancel = BookingCancelled::where('booking_id', $booking->id)->first();
+        $phiphatsinh = PhiPhatSinh::where('booking_id', $booking->id)->where('status', 1)->get();
+        $totalFee = 0;
+        foreach ($phiphatsinh as $item) {
+            $totalFee += (int) $item->price;
+        }
         $totalDays = \Carbon\Carbon::createFromTimestamp($booking->check_in_date)
             ->diffInDays(\Carbon\Carbon::createFromTimestamp($booking->check_out_date));
 
-        return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays', 'cancel'));
+        return view('client.booking-detail', compact('title', 'booking', 'payment', 'totalDays', 'cancel', 'phiphatsinh', 'totalFee'));
     }
 
     public function done_booking_detail($bookingNumberId)
