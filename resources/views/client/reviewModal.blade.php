@@ -1,3 +1,43 @@
+<style>
+    .rating {
+        display: flex;
+        direction: rtl;
+        /* Chọn từ phải qua trái */
+        justify-content: space-between;
+        width: 250px;
+    }
+
+    .rating input {
+        display: none;
+        /* Ẩn các input radio */
+    }
+
+    .rating label {
+        font-size: 40px;
+        color: #ccc;
+        /* Màu của sao khi chưa được chọn */
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    /* Khi sao được chọn, tất cả các sao trước sao đó sẽ sáng lên */
+    .rating input:checked~label {
+        color: #f39c12;
+        /* Màu của sao khi được chọn */
+    }
+
+    /* Khi hover, tất cả các sao phía trước sao được hover cũng sẽ sáng */
+    .rating label:hover,
+    .rating label:hover~label {
+        color: #f39c12;
+    }
+
+    /* Khi sao được chọn và hover, các sao sẽ sáng lên */
+    .rating input:checked+label:hover,
+    .rating input:checked+label:hover~label {
+        color: #f39c12;
+    }
+</style>
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -7,7 +47,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="reviewForm" action="{{ route('client.room-postComment', ['id' => $booking->room_id]) }}" method="post">
+                <form id="reviewForm" action="{{ route('client.room-postComment', ['id' => $booking->room_id]) }}"
+                    method="post">
                     @csrf
                     <input type="hidden" name="id" value="{{ $booking->id }}">
                     <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
@@ -16,11 +57,22 @@
                     <div class="mb-3">
                         <label for="rating" class="form-label">Đánh giá (1 - 5 sao)</label>
                         <div id="rating" class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="1"><label for="star5" title="5 sao"></label>
-                            <input type="radio" id="star4" name="rating" value="2"><label for="star4" title="4 sao"></label>
-                            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 sao"></label>
-                            <input type="radio" id="star2" name="rating" value="4"><label for="star2" title="2 sao"></label>
-                            <input type="radio" id="star1" name="rating" value="5"><label for="star1" title="1 sao"></label>
+                            <div class="rating">
+                                <input type="radio" id="star5" name="rating" value="5">
+                                <label for="star5" title="5 sao">&#9733;</label>
+
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4" title="4 sao">&#9733;</label>
+
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3" title="3 sao">&#9733;</label>
+
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2" title="2 sao">&#9733;</label>
+
+                                <input type="radio" id="star1" name="rating" value="1">
+                                <label for="star1" title="1 sao">&#9733;</label>
+                            </div>
                         </div>
                     </div>
 
