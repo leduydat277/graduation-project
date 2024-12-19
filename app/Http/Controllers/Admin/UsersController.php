@@ -33,12 +33,14 @@ class UsersController extends RoutingController
             'confirm_password_new.min' => 'Mật khẩu mới phải có ít nhất :min ký tự.',
             'image.mimes' => 'Vui lòng chọn file có đuôi jpeg,jpg,png.',
         ];
-    }    
+    }
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $query = User::query();
+
         $email = $request->input("email");
-        if($email){
+        if ($email) {
             $query->where('email', $email);
         }
         $data = $query->get();
@@ -47,18 +49,22 @@ class UsersController extends RoutingController
                 "id" => $item->id,
                 "name" => $item->name,
                 "email" => $item->email,
-                "image" => asset('storage/' .$item->image),
+                "image" => asset('storage/' . $item->image),
                 "role" => $item->role,
+                "status" => $item->status,
             ];
         });
-        return view(self::VIEW_PATH . __FUNCTION__, compact('data'));
+        $userDefaults = Auth::user();
+        return view(self::VIEW_PATH . __FUNCTION__, compact('data', "userDefaults"));
     }
 
-    public function addUI(){
-        return view(self::VIEW_PATH."create");
+    public function addUI()
+    {
+        return view(self::VIEW_PATH . "create");
     }
 
-    public function add(Request $request){
+    public function add(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             "name" => "required|string|max:255",
             "email" => "required|string|email",
@@ -67,7 +73,7 @@ class UsersController extends RoutingController
             "status_id" => "required",
             'image' => 'image|mimes:jpeg,jpg,png'
         ], $this->messages);
-        
+
         if ($validator->fails()) {
             return redirect()->back() 
                 ->withErrors($validator) 
@@ -79,7 +85,7 @@ class UsersController extends RoutingController
         $email = $request->input("email");
         $role = $request->input("role");
         $statusId = $request->input("status_id");
-    
+
         $image = "";
         $dataUsers = User::where("email", $email)->first();
         if ($dataUsers) {
@@ -87,7 +93,7 @@ class UsersController extends RoutingController
                 ->withErrors(["email" => "Email đã được sử dụng."])
                 ->withInput();
         }
-    
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             if (!$file->isValid()) {
@@ -95,10 +101,10 @@ class UsersController extends RoutingController
                     ->withErrors(["image" => "File không hợp lệ, vui lòng thử lại"])
                     ->withInput();
             }
-    
+
             $image = $file->store('uploads', 'public');
         }
-    
+
         User::create([
             "name" => $name,
             "email" => $email,
@@ -107,23 +113,27 @@ class UsersController extends RoutingController
             "role" => $role,
             "cccd" => 1
         ]);
-    
+
         return redirect()->route('user.addUI')->with('success', 'Thêm tài khoản thành công.');
     }
 
-    public function editUI($id){
+    public function editUI($id)
+    {
         $data = User::find($id);
-        
+
         if (!$data) {
             return redirect()->back() 
             ->withErrors(["email" => "Không tìm thấy tài khoản"])
             ->withInput();
         }
-        $data["image"] = asset('storage/' .$data["image"]);
-        return view(self::VIEW_PATH."edit", compact("data"));
+        $userDefaults = Auth::user();
+        $distable = $userDefaults->role == 1 && $data->role == 1 ? 'disabled' : "";
+        $data["image"] = asset('storage/' . $data["image"]);
+        return view(self::VIEW_PATH . "edit", compact("data", "distable"));
     }
-    
-    public function edit($id, Request $request){
+
+    public function edit($id, Request $request)
+    {
         $validator = Validator::make($request->all(), [
             "name" => "required|string|max:255",
             "email" => "required|string|email",
@@ -163,18 +173,18 @@ class UsersController extends RoutingController
                 Storage::disk("public")->delete($dataUsersOld->image);
             }
             $image = $files->store('uploads', 'public');
-        }else{
+        } else {
             $image = $dataUsersOld->image;
         }
 
-        $dataUpdate =[
+        $dataUpdate = [
             "name" => $name,
             "email" => $email,
             "image" => $image,
             "role" => $role,
         ];
 
-        if(!empty($password)){
+        if (!empty($password)) {
             $dataUpdate["password"] =  bcrypt($password);
         }
 
@@ -182,8 +192,9 @@ class UsersController extends RoutingController
         return redirect()->route('user.editUI', $id)->with('success', 'Cập nhật tài khoản thành công');
     }
 
-    public function delete($id){
-        User::where("id", $id)->update(["status_id"=> 2]);
+    public function delete($id)
+    {
+        User::where("id", $id)->update(["status" => 0]);
         return redirect()->route('user.index', $id)->with('success', 'Vô hiệu hóa tài khoản thành công');
     }
 }

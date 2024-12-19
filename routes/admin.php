@@ -87,7 +87,7 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
         Route::post('/add', [UsersController::class, 'add'])->name('add');
         Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
         Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
-        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+        Route::get('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
     });
 
     Route::prefix('cancel-booking')->as('cancel.')->group(function () {

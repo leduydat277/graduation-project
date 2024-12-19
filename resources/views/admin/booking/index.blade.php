@@ -146,8 +146,8 @@
 
                                     </td>
                                     <td>{{ $booking->user->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
                                     <td>{{ $booking->room->title }}</td>
                                     <td>
                                         <span

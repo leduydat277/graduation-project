@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Models\admin\Room;
@@ -8,9 +9,9 @@ use DateTime;
 
 class RoomController
 {
-    
+
     public function search(Request $request)
-    {   
+    {
         $validated = $request->validate([
             'room_type_id' => 'nullable|integer',
             'room_id' => 'nullable|integer',
@@ -18,38 +19,38 @@ class RoomController
             'from' => 'required|date',
             'to' => 'required|date|after:from',
         ]);
-    
+
         $room_type_id = $validated['room_type_id'] ?? null;
         $room_id = $validated['room_id'] ?? null;
         $input_people = $validated['input_people'] ?? 1;
         $from = new DateTime($validated['from']);
         $to = new DateTime($validated['to']);
-    
-        
-        $from = $from->setTime(14, 0, 0)->getTimestamp();  
-        $to = $to->setTime(12, 0, 0)->getTimestamp();    
-    
-       
+
+
+        $from = $from->setTime(14, 0, 0)->getTimestamp();
+        $to = $to->setTime(12, 0, 0)->getTimestamp();
+
+
         if ($room_id != null) {
             $current_time_room = ManageStatusRoom::select('room_id', 'from', 'to')
                 ->where('room_id', $room_id)
                 ->where('status', 1)
                 ->get()
                 ->toArray();
-    
+
             if (empty($current_time_room)) {
                 return response()->json([
                     'message' => 'Không tìm thấy thời gian trống nào',
                     'status' => false
                 ], 404);
             }
-    
-          
+
+
             foreach ($current_time_room as &$item_arr) {
                 $item_arr['from'] = (new DateTime())->setTimestamp($item_arr['from'])->format('m-d-Y');
                 $item_arr['to'] = (new DateTime())->setTimestamp($item_arr['to'])->format('m-d-Y');
             }
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Rooms retrieved successfully.',
@@ -57,56 +58,56 @@ class RoomController
                 'data' => $current_time_room
             ], 200);
         }
-    
-       
+
+
         $rooms_query = Room::query();
-    
-     
+
+
         if ($room_type_id) {
             $rooms_query->where('room_type_id', $room_type_id);
         }
-    
-      
+
+
         $rooms_query->where('max_people', '>=', $input_people);
-    
-     
-        $rooms_query->where('status', 0);  
-    
+
+
+        $rooms_query->where('status', 0);
+
         $arr_rooms = $rooms_query->select('id')->get()->toArray();
-    
+
         if (empty($arr_rooms)) {
             return response()->json(['error' => 'Không có phòng nào thỏa mãn điều kiện.'], 404);
         }
-    
-      
+
+
         $arr_room_manages = [];
         foreach ($arr_rooms as $room) {
             $records_manage = ManageStatusRoom::where('room_id', $room['id'])
                 ->where('status', 1)
                 ->get()
                 ->toArray();
-    
+
             if (!empty($records_manage)) {
                 $arr_room_manages = array_merge($arr_room_manages, $records_manage);
             }
         }
-    
-     
+
+
         $results = [];
         foreach ($arr_room_manages as $room) {
-            
+
             if ($room['from'] <= $from && $room['to'] == 0) {
                 $results[] = $room['room_id'];
                 continue;
             }
-    
-          
+
+
             if ($room['from'] <= $from && $to <= $room['to']) {
                 $results[] = $room['room_id'];
             }
         }
-    
-       
+
+
         if (empty($results)) {
             return response()->json([
                 'status' => 'error',
@@ -115,12 +116,12 @@ class RoomController
                 'data' => null
             ], 404);
         }
-    
+
         $results_rooms = Room::whereIn('id', $results)
-            ->with('roomType') 
+            ->with('roomType')
             ->get()
             ->makeHidden(['room_type_id', 'status', 'room_type']);
-    
+
         return response()->json([
             'status' => 'success',
             'message' => 'Rooms retrieved successfully.',
@@ -128,7 +129,7 @@ class RoomController
             'data' => $results_rooms
         ], 200);
     }
-    
+
 
     public function index()
     {
@@ -184,14 +185,15 @@ class RoomController
                     'image_room' => json_decode($room->image_room),
                 ];
             });
-    
+
         return response()->json([
             'success' => true,
             'data' => $rooms,
         ]);
     }
 
-    public function roomAll(){
+    public function roomAll()
+    {
         $data = Room::with('roomType')->get();
 
         return response()->json([
@@ -200,5 +202,56 @@ class RoomController
             'code' => 200,
             'data' => $data
         ], 200);
+    }
+
+    public function getRoomBookings(Request $request)
+    {
+        $query = Room::select(
+            "rooms.id",
+            "rooms.title",
+            "rooms.price",
+            "rooms.max_people"
+        )
+            ->leftJoin("bookings", "bookings.room_id", "=", "rooms.id")
+            ->groupBy(
+                "rooms.id",
+                "rooms.title",
+                "rooms.price",
+                "rooms.max_people"
+            );
+
+        if ($request->input("room_type_id")) {
+            $query->where("rooms.room_type_id", $request->input("room_type_id"));
+        }
+        if ($request->input("max_people")) {
+            $query->where("rooms.max_people", "<=", $request->input("max_people"));
+        }
+
+        $checkInDate = $request->input("check_in_date");
+        $checkOutDate = $request->input("check_out_date");
+
+        if ($checkInDate && $checkOutDate) {
+            $checkInTimestamp = strtotime($checkInDate);
+            $checkOutTimestamp = strtotime($checkOutDate);
+
+            $query->whereNotExists(function ($subQuery) use ($checkInTimestamp, $checkOutTimestamp) {
+                $subQuery->select("bookings.room_id")
+                    ->from("bookings")
+                    ->whereColumn("bookings.room_id", "=", "rooms.id")
+                    ->where(function ($dateQuery) use ($checkInTimestamp, $checkOutTimestamp) {
+                        $dateQuery->whereBetween("bookings.check_in_date", [$checkInTimestamp, $checkOutTimestamp])
+                            ->orWhereBetween("bookings.check_out_date", [$checkInTimestamp, $checkOutTimestamp])
+                            ->orWhere(function ($overlapQuery) use ($checkInTimestamp, $checkOutTimestamp) {
+                                $overlapQuery->where("bookings.check_in_date", "<=", $checkInTimestamp)
+                                    ->where("bookings.check_out_date", ">=", $checkOutTimestamp);
+                            });
+                    });
+            });
+        }
+
+        // Chỉ lấy các phòng không trùng lặp
+        $data = $query->distinct()->get();
+
+        return response()->json($data);
     }
 }

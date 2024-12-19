@@ -50,8 +50,8 @@
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email"
-                            value="{{ old('email', $data->email) }}" placeholder="Nhập email">
+                        <input disabled type="email" class="form-control" id="email" name="email" value="{{ old('email', $data->email) }}" placeholder="Nhập email">
+                        <input type="hidden" class="form-control" id="email" name="email" value="{{ old('email', $data->email) }}" placeholder="Nhập email">
                         @error('email')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -59,9 +59,9 @@
 
                     <div class="mb-3">
                         <label for="role" class="form-label">Chức vụ</label>
-                        <select class="form-select" name="role" id="role">
+                        <select {{ $distable }} class="form-select" name="role" id="role">
                             <option value="1" {{ old('role', $data->role) == 1 ? 'selected' : '' }}>Admin</option>
-                            <option value="0" {{ old('role', $data->role) == 4 ? 'selected' : '' }}>Khách hàng
+                            <option value="0" {{ old('role', $data->role) == 0 ? 'selected' : '' }}>Khách hàng
                             </option>
                         </select>
                         @error('role')
@@ -92,9 +92,13 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="{{ route('user.index') }}" class="btn btn-secondary me-2">
+                            <i class="ri-arrow-go-back-line align-bottom"></i> Quay lại
+                        </a>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        </div>
                     </div>
                 </form>
 

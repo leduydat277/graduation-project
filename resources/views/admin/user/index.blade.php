@@ -49,11 +49,9 @@
                                 <div class="d-flex justify-content-sm-end">
                                     <form method="GET" action="{{ route('user.index') }}">
                                         <div class="input-group search-box ms-2">
-                                            <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm tài khoản...">
+                                            <input type="text" name="email" class="form-control"
+                                                placeholder="Tìm kiếm email...">
                                             <!-- Giữ nguyên giá trị sắp xếp khi tìm kiếm -->
-                                            <input type="hidden" name="sort_by">
-                                            <input type="hidden" name="sort_order">
                                             <button class="btn btn-primary" type="submit">
                                                 <i class="ri-search-line search-icon"></i>
                                             </button>
@@ -67,28 +65,25 @@
                             <table class="table align-middle table-nowrap" id="userTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 50px;">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="checkAll"
-                                                    value="option">
-                                            </div>
-                                        </th>
-                                        <th class="sort" data-sort="id">
+                                        <th data-sort="id">
                                             ID
                                         </th>
-                                        <th class="sort" data-sort="name">
+                                        <th data-sort="name">
                                             Tên
                                         </th>
-                                        <th class="sort" data-sort="email">
+                                        <th data-sort="email">
                                             Email
                                         </th>
-                                        <th class="sort" data-sort="role">
+                                        <th data-sort="role">
                                             Vai trò
                                         </th>
-                                        <th class="sort" data-sort="role">
+                                        <th data-sort="role">
+                                            Trạng thái
+                                        </th>
+                                        <th data-sort="role">
                                             Ảnh
                                         </th>
-                                        <th class="sort" data-sort="action">Hành động</th>
+                                        <th data-sort="action">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -102,25 +97,39 @@
                                             1 => 'Admin',
                                             0 => 'Khách hàng',
                                         ];
+                                        $dataStatus = [
+                                            1 => 'Hoạt động',
+                                            0 => 'Ngưng hoạt động',
+                                        ];
                                     @endphp
                                     @foreach ($data as $user)
+                                        @php
+                                            $role = $user['role'];
+                                            $distable = $userDefaults->role == 1 && $role == 1;
+                                        @endphp
                                         <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        value="{{ $user['id'] }}">
-                                                </div>
-                                            </td>
                                             <td>{{ $user['id'] }}</td>
                                             <td class="text-wrap" style="max-width: 200px;">{{ $user['name'] }}</td>
                                             <td>{{ $user['email'] }}</td>
-                                            <td>{{ $dataRole[$user['role']] }}</td>
+                                            <td>{{ $dataRole[$role] }}</td>
+                                            <td>{{ $dataStatus[$user['status']] }}</td>
                                             <td>
-                                                <img src="{{ $user['image'] }}" style="width: 100px" alt="{{ $user['image'] }}">
+                                                <img src="{{ $user['image'] }}" style="width: 100px" alt="Image">
                                             </td>
-                                            <td>
-                                                <a href="{{ route('user.editUI', $user["id"]) }}"
+                                            <td class="d-flex">
+                                                <a href="{{ route('user.editUI', $user['id']) }}"
                                                     class="btn btn-warning">Sửa</a>
+                                                @if ($userDefaults->role == 1 && $role == 0)
+                                                    <form action="{{ route('user.destroy', $user['id']) }}"
+                                                        class="mx-2 delete-form" method="delete">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-danger "
+                                                            title="Khóa tài khoản">
+                                                            <i class="fas fa-times-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -175,8 +184,6 @@
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', function() {
                 var form = this.closest('.delete-form');
-                var userName = form.getAttribute('data-user-name'); // Đổi từ 'student' sang 'user'
-
                 Swal.fire({
                     title: 'Bạn có chắc chắn muốn khóa tài khoản không?',
                     icon: 'warning',
