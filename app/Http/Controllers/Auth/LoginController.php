@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Mail\LoginNotificationMail;
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -92,7 +93,24 @@ class LoginController extends Controller
             'password' => bcrypt($validatedData['password']),
         ]);
 
-        Mail::to($user->email)->queue(new LoginNotificationMail($user));
+        $voucher = DB::table('vouchers')->insertGetId([
+            'name' => 'Voucher Chào Mừng',
+            'description' => 'Voucher giảm giá chào mừng bạn đến với SleepHotel.',
+            'code_voucher' => strtoupper(Str::random(10)),
+            'discount_value' => 100000, 
+            'start_date' => Carbon::now()->timestamp,
+            'end_date' => Carbon::now()->addDays(7)->timestamp, 
+            'type' => 'fixed', 
+            'min_booking_amount' => 500000, 
+            'quantity' => 1,
+            'status' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $newVoucher = DB::table('vouchers')->find($voucher);
+
+        Mail::to($user->email)->queue(new LoginNotificationMail($user, $newVoucher));
 
         return redirect()->route('client.login')->with('success', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
     }

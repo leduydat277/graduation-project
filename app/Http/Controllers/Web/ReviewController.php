@@ -9,16 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController
 {
-    public function review($id){
+    public function review($id)
+    {
         $title = "Đánh giá & bình luận";
         $booking = Booking::with(['room', 'user'])->findOrFail($id);
         $comments = Review::where('room_id', $booking->room->id)
-        ->with('user')
-        ->get();
+            ->with('user')
+            ->get();
         return view('client.review', compact('title', 'booking', 'comments'));
     }
 
-        public function addComment(Request $request, $id){
+    public function addComment(Request $request, $id)
+    {
         $title = "Chi tiết phòng";
         $validatedData = $request->validate([
             'comment' => 'required|string|max:500',
@@ -35,7 +37,8 @@ class ReviewController
             'rating' => $validatedData['rating']
         ];
         Review::create($data);
-        return redirect()->back()->with('success', 'Bình luận của bạn đã được gửi.', compact('title'));
-
+        return redirect()->route('client.review', ['id' => $request->id])
+            ->with('success', 'Bình luận của bạn đã được gửi.')
+            ->with('title', $title);
     }
 }
