@@ -13,8 +13,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="card-title mb-0">{{ $title }}</h4>
+                <div class="card-header bg-primary">
+                    <h4 class="card-title mb-0 text-white">{{ $title }}</h4>
                 </div>
 
                 <div class="card-body">

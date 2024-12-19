@@ -74,7 +74,7 @@
                                     <h4 class="display-6 fw-normal">{{ $room->title }}</h4>
                                     <p class="m-0"><span
                                             class="text-primary fs-2">{{ number_format($room->price, 0, ',', '.') }}
-                                            VNĐ</span>/đêm</p>
+                                            đ</span>/đêm</p>
                                 </div>
                                 <p class="mb-xxl-5"><span>{{ $room->max_people }} Người</span>/Phòng</p>
                                 <hr>

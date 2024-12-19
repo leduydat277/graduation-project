@@ -15,7 +15,6 @@ class RoomDetailController
     {
         $title = "Chi tiết phòng";
         $room = Room::find($id);
-
         if ($room->status == 4) {
             return redirect()->route('client.home');
         }
