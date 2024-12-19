@@ -50,8 +50,8 @@
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email"
-                            value="{{ old('email', $data->email) }}" placeholder="Nhập email">
+                        <input disabled type="email" class="form-control" id="email" name="email" value="{{ old('email', $data->email) }}" placeholder="Nhập email">
+                        <input type="hidden" class="form-control" id="email" name="email" value="{{ old('email', $data->email) }}" placeholder="Nhập email">
                         @error('email')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -59,9 +59,9 @@
 
                     <div class="mb-3">
                         <label for="role" class="form-label">Chức vụ</label>
-                        <select class="form-select" name="role" id="role">
+                        <select {{ $distable }} class="form-select" name="role" id="role">
                             <option value="1" {{ old('role', $data->role) == 1 ? 'selected' : '' }}>Admin</option>
-                            <option value="0" {{ old('role', $data->role) == 4 ? 'selected' : '' }}>Khách hàng
+                            <option value="0" {{ old('role', $data->role) == 0 ? 'selected' : '' }}>Khách hàng
                             </option>
                         </select>
                         @error('role')
@@ -70,14 +70,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="status_id" class="form-label">Trạng thái</label>
-                        <select class="form-select" name="status_id" id="status_id">
-                            <option value="1" {{ old('status_id', $data->status_id) == 1 ? 'selected' : '' }}>Hoạt
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select class="form-select" name="status">
+                            <option value="1" {{ old('status', $data->status) == 1 ? 'selected' : '' }}>Hoạt
                                 động</option>
-                            <option value="3" {{ old('status_id', $data->status_id) == 3 ? 'selected' : '' }}>Ngưng
+                            <option value="0" {{ old('status', $data->status) == 0 ? 'selected' : '' }}>Ngưng
                                 hoạt động</option>
                         </select>
-                        @error('status_id')
+                        @error('status')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -92,9 +92,13 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="{{ route('user.index') }}" class="btn btn-secondary me-2">
+                            <i class="ri-arrow-go-back-line align-bottom"></i> Quay lại
+                        </a>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        </div>
                     </div>
                 </form>
 

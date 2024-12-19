@@ -7,7 +7,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="reviewForm">
+                <form id="reviewForm" action="{{ route('client.room-postComment', ['id' => $booking->room_id]) }}" method="post">
+                    @csrf
                     <input type="hidden" name="id" value="{{ $booking->id }}">
                     <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     <input type="hidden" name="room_id" value="{{ $booking->room_id }}">
@@ -15,11 +16,11 @@
                     <div class="mb-3">
                         <label for="rating" class="form-label">Đánh giá (1 - 5 sao)</label>
                         <div id="rating" class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 sao"></label>
-                            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 sao"></label>
+                            <input type="radio" id="star5" name="rating" value="1"><label for="star5" title="5 sao"></label>
+                            <input type="radio" id="star4" name="rating" value="2"><label for="star4" title="4 sao"></label>
                             <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 sao"></label>
-                            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 sao"></label>
-                            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 sao"></label>
+                            <input type="radio" id="star2" name="rating" value="4"><label for="star2" title="2 sao"></label>
+                            <input type="radio" id="star1" name="rating" value="5"><label for="star1" title="1 sao"></label>
                         </div>
                     </div>
 
@@ -33,13 +34,12 @@
                             * Vui lòng đánh giá và để lại nhận xét về trải nghiệm của bạn.
                         </span>
                     </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="submitReviewBtn">Gửi đánh giá</button>
+                    </div>
                 </form>
             </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button class="btn btn-primary" id="submitReviewBtn">Gửi đánh giá</button>
-            </div>
         </div>
     </div>
 </div>

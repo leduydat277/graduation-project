@@ -38,8 +38,6 @@
             margin-top: 4px;
             /* Khoảng cách giữa ảnh và giá */
         }
-
-
     </style>
 @endsection
 @section('content')
@@ -117,7 +115,8 @@
                                     <tbody>
                                         <tr class="subtotal border-top pt-2 pb-2 text-uppercase">
                                             <th>{{ $room->title }}</th>
-                                            <td class="price-currency-symbol">Giá một đêm: {{ number_format($room->price, 0, ',', '.') }} VND</td>
+                                            <td class="price-currency-symbol">Giá một đêm:
+                                                {{ number_format($room->price, 0, ',', '.') }} VND</td>
                                             <td data-title="Image">
                                                 <span class="price-amount amount ps-5">
                                                     <bdi>
@@ -156,7 +155,8 @@
                                                     <span class="price-amount amount ps-5">
                                                         <bdi>
                                                             <span id="adult" data-quantity="{{ $adult_quantity }}"
-                                                                class="price-currency-symbol">{{ $adult_quantity }} người</span>
+                                                                class="price-currency-symbol">{{ $adult_quantity }}
+                                                                người</span>
                                                         </bdi>
                                                     </span>
                                                 </div>
@@ -433,7 +433,6 @@
                         });
                     } else {
                         var errors = response.message;
-                        console.log(errors);
 
                         if (errors.first_name) {
                             toastr.error(errors.first_name.join(', '), 'Lỗi', {
@@ -490,6 +489,9 @@
                                 positionClass: 'toast-top-right',
                                 timeOut: 5000,
                             });
+                        }
+                        if (errors.redirect) {
+                            window.location = errors.redirect;
                         }
                     }
                 },

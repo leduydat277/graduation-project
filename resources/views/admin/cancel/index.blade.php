@@ -190,6 +190,7 @@
             $('#cancelBookingTable').DataTable().ajax.reload();
         });
 
+        //////
         $('#cancelBookingTable').DataTable({
             processing: true,
             serverSide: true,
@@ -291,6 +292,7 @@
                 }
             }
         });
+        /////
 
         $(document).on('click', '.confirm-action', function() {
             var actionUrl = '/admin/cancel-booking/confirm/' + $(this).data('id');

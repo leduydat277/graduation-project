@@ -18,6 +18,15 @@
                 @endforeach
             </ul>
         </div>
+        @if (session('success') || session('error'))
+            <div class="col">
+                <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                    role="alert">
+                    {{ session('success') ?? session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
     @endif
     <div class="post-wrap my-5">
         <div class="container-fluid padding-side">
@@ -33,7 +42,7 @@
                                             @foreach ($images as $image)
                                                 <div class="swiper-slide">
                                                     <img src="{{ asset('storage/' . $image) }}" alt="product-large"
-                                                        width="985px" height="580px" class="img-fluid img-product">
+                                                        width="100%" height="580px" class="img-fluid img-product">
                                                 </div>
                                             @endforeach
 
@@ -169,12 +178,12 @@
                     </div>
                 </main>
                 <aside class="col-lg-3 mt-5">
-                    <div class=" ">
+                    <div>
                         <form id="bookingForm" class="form-group flex-wrap p-4 border rounded-4">
-                            <h2 class=" fs-2 text-black my-3 mb-5">Đặt Phòng</h2>
+                            <h2 class="fs-2 text-black my-3 mb-5">Đặt Phòng</h2>
                             <input type="hidden" name="room_id" value="{{ $room->id }}">
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Ngày nhận</label>
+                                <label for="checkin" class="form-label text-black">Ngày nhận</label>
                                 <div class="input-group date" id="datepicker">
                                     <input type="date" id="checkin" name="checkin" class="form-control ps-3 me-3"
                                         value="{{ isset($_GET['select-arrival-date_value']) ? $_GET['select-arrival-date_value'] : '' }}">
@@ -182,7 +191,7 @@
                                 <div id="error-message-checkin" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Ngày trả</label>
+                                <label for="checkout" class="form-label text-black">Ngày trả</label>
                                 <div class="input-group date" id="datepicker">
                                     <input type="date" id="checkout" name="checkout" class="form-control ps-3 me-3"
                                         value="{{ isset($_GET['select-departure-date_value']) ? $_GET['select-departure-date_value'] : '' }}">
@@ -190,7 +199,7 @@
                                 <div id="error-message-checkout" style="color: black; display: none;"></div>
                             </div>
                             <div class="col-lg-12 my-4">
-                                <label for="exampleInputEmail1" class="form-label text-black">Số lượng người</label>
+                                <label for="adult-quantity" class="form-label text-black">Số lượng người</label>
                                 <input type="number" id="adult-quantity" name="quantity" class="form-control ps-3"
                                     value="{{ $_GET['quantity'] ?? 1 }}">
                                 <div id="error-message" style="color: black; display: none;">Số lượng người không được
@@ -200,6 +209,13 @@
                                 <button type="submit" class="btn btn-arrow btn-primary">Đặt ngay</button>
                             </div>
                         </form>
+                        <div id="bookingSummary" class="mt-4 p-3 border rounded-4">
+                            <h3 class="fs-3 text-black">Thông Tin Đặt Phòng</h3>
+                            <p id="summary-checkin">Ngày nhận: Chưa chọn</p>
+                            <p id="summary-checkout">Ngày trả: Chưa chọn</p>
+                            <p id="summary-nights">Tổng số đêm: -</p>
+                            <p id="summary-price">Tổng tiền: -</p>
+                        </div>
                     </div>
                 </aside>
             </div>
@@ -240,6 +256,153 @@
             object-fit: cover;
         }
     </style>
+@endsection
+
+@section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            if (message) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thông báo',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+
+
+        $(document).ready(function() {
+            const pricePerNight = {{ $room->price }};
+            const maxPeople = {{ $room->max_people }};
+
+            // Ẩn phần booking summary mặc định
+            $('#bookingSummary').hide();
+
+            function updateBookingSummary() {
+                const checkinDate = $('#checkin').val();
+                const checkoutDate = $('#checkout').val();
+                const adultQuantity = parseInt($('#adult-quantity').val()) || 0;
+
+                // Kiểm tra nếu cả checkin và checkout đều có giá trị
+                if (!checkinDate || !checkoutDate) {
+                    $('#bookingSummary').hide(); // Nếu chưa chọn đầy đủ ngày thì ẩn
+                    return;
+                }
+
+                // Hiển thị phần bookingSummary nếu cả checkin và checkout đều có giá trị
+                $('#bookingSummary').show(); // Hiển thị phần bookingSummary khi có đủ ngày
+
+                const checkin = new Date(checkinDate);
+                const checkout = new Date(checkoutDate);
+
+                function formatDate(date) {
+                    const day = date.getDate().toString().padStart(2, '0');
+                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+
+                const formattedCheckin = formatDate(checkin);
+                const formattedCheckout = formatDate(checkout);
+
+                // Kiểm tra xem ngày trả có lớn hơn ngày nhận không
+                if (checkout <= checkin) {
+                    $('#summary-checkin').text(`Ngày nhận: ${formattedCheckin}`);
+                    $('#summary-checkout').text(`Ngày trả: ${formattedCheckout}`);
+                    $('#summary-nights').text('Tổng số đêm: Lỗi');
+                    $('#summary-price').text('Tổng tiền: Lỗi');
+                    return;
+                }
+
+                // Kiểm tra số lượng người
+                if (adultQuantity <= 0 || adultQuantity > maxPeople) {
+                    $('#summary-checkin').text(`Ngày nhận: ${formattedCheckin}`);
+                    $('#summary-checkout').text(`Ngày trả: ${formattedCheckout}`);
+                    $('#summary-nights').text('Tổng số đêm: Lỗi số lượng người');
+                    $('#summary-price').text('Tổng tiền: Lỗi số lượng người');
+                    return;
+                }
+
+                const nights = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+                const totalPrice = nights * pricePerNight;
+
+                $('#summary-checkin').text(`Ngày nhận: ${formattedCheckin}`);
+                $('#summary-checkout').text(`Ngày trả: ${formattedCheckout}`);
+                $('#summary-nights').text(`Tổng số đêm: ${nights}`);
+                $('#summary-price').text(`Tổng tiền: ${totalPrice.toLocaleString('vi-VN')} VND`);
+            }
+
+            // Cập nhật thông tin mỗi khi có thay đổi trong checkin, checkout hoặc adult quantity
+            $('#checkin, #checkout, #adult-quantity').on('change input', function() {
+                updateBookingSummary();
+            });
+
+            // Cập nhật ngay khi trang được tải nếu có sẵn thông tin
+            updateBookingSummary();
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInput = document.getElementById('adult-quantity');
+            const errorMessage = document.getElementById('error-message');
+            const maxGuests = {{ $room->max_people }};
+            quantityInput.min = 1;
+
+            quantityInput.addEventListener('input', function() {
+                const value = parseInt(quantityInput.value, 10);
+
+                if (isNaN(value) || value <= 0) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = "Số lượng người không được âm hoặc bằng 0";
+                    $('#adult-quantity').focus();
+                    quantityInput.classList.add('is-invalid');
+                } else {
+                    errorMessage.style.display = 'none';
+                    quantityInput.classList.remove('is-invalid');
+                }
+
+                if (value > maxGuests) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = "Số lượng người không được vượt quá " + maxGuests;
+                    quantityInput.classList.add('is-invalid');
+                } else {
+                    errorMessage.style.display = 'none';
+                    quantityInput.classList.remove('is-invalid');
+                }
+            });
+        });
+
+
+        // const maxGuests = {{ $room->max_people }};
+        // const adultInput = document.getElementById('adult-quantity');
+        // const errorMessage = document.getElementById('error-message');
+
+        // adultInput.addEventListener('input', function() {
+        //     const adultQuantity = parseInt(adultInput.value, 10);
+
+        //     if (adultQuantity > maxGuests) {
+        //         errorMessage.style.display = 'block';
+        //         errorMessage.textContent = "Số lượng người không được vượt quá " + maxGuests;
+        //     } else {
+        //         errorMessage.style.display = 'none';
+
+        //         adultInput.setCustomValidity("");
+        //     }
+        // });
+
+        // document.getElementById('form').addEventListener('submit', function(e) {
+        //     const adultQuantity = parseInt(adultInput.value, 10);
+
+        //     if (adultQuantity > maxGuests) {
+        //         e.preventDefault();
+        //         alert("Số lượng người lớn không được vượt quá " + maxGuests + " người.");
+        //     }
+        // });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const checkinInput = document.getElementById("checkin");
@@ -303,36 +466,36 @@
             }
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const adultInput = document.getElementById("adult-quantity");
-            const childrenInput = document.getElementById("children-quantity");
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const adultInput = document.getElementById("adult-quantity");
+        //     const childrenInput = document.getElementById("children-quantity");
 
-            childrenInput.value = 0;
+        //     childrenInput.value = 0;
 
-            adultInput.addEventListener("input", function() {
-                if (adultInput.value < 1) {
-                    adultInput.value = 1;
-                }
-            });
+        //     adultInput.addEventListener("input", function() {
+        //         if (adultInput.value < 1) {
+        //             adultInput.value = 1;
+        //         }
+        //     });
 
-            childrenInput.addEventListener("input", function() {
-                if (childrenInput.value < 0) {
-                    childrenInput.value = 0;
-                }
-            });
+        //     childrenInput.addEventListener("input", function() {
+        //         if (childrenInput.value < 0) {
+        //             childrenInput.value = 0;
+        //         }
+        //     });
 
-            adultInput.addEventListener("change", function() {
-                if (adultInput.value < 1) {
-                    adultInput.value = 1;
-                }
-            });
+        //     adultInput.addEventListener("change", function() {
+        //         if (adultInput.value < 1) {
+        //             adultInput.value = 1;
+        //         }
+        //     });
 
-            childrenInput.addEventListener("change", function() {
-                if (childrenInput.value < 0) {
-                    childrenInput.value = 0;
-                }
-            });
-        });
+        //     childrenInput.addEventListener("change", function() {
+        //         if (childrenInput.value < 0) {
+        //             childrenInput.value = 0;
+        //         }
+        //     });
+        // });
     </script>
 
     <script type="module">
@@ -345,26 +508,20 @@
                 checkin: $('#checkin').val(),
                 checkout: $('#checkout').val(),
                 adult_quantity: $('#adult-quantity').val(),
+                children_quantity: $('#children-quantity').val()
             };
 
-            // Giới hạn số lượng người lớn và trẻ em
             const maxAdults = {{ $room->max_people }};
             const maxChildren = 2;
-            const checkinValidate = document.getElementById('checkin');
-            const checkoutValidate = document.getElementById('checkout');
+
             const errorCheckin = document.getElementById('error-message-checkin');
             const errorCheckout = document.getElementById('error-message-checkout');
-            const adultInput = document.getElementById('adult-quantity');
             const errorMessage = document.getElementById('error-message');
-            const childrenInput = document.getElementById('children-quantity');
             const errorMessageChildren = document.getElementById('error-message-children');
 
-            // if (adultQuantity > maxGuests) {
-            //     errorCheckin.style.display = 'block';
-            // } else {
-            //     errorMessage.style.display = 'none';
-            //     adultInput.setCustomValidity("");
-            // }
+            errorCheckin.style.display = 'none';
+            errorCheckout.style.display = 'none';
+            errorMessage.style.display = 'none';
 
             if (!formData.checkin) {
                 errorCheckin.style.display = 'block';
@@ -375,14 +532,23 @@
 
             if (!formData.checkout) {
                 errorCheckout.style.display = 'block';
-                errorCheckin.textContent = "Vui lòng chọn ngày đi"
+                errorCheckout.textContent = "Vui lòng chọn ngày đi";
                 $('#checkout').focus();
+                return false;
+            }
+
+            if (formData.adult_quantity <= 0) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = "Số lượng người phải lớn hơn 0";
+                $('#adult-quantity').focus();
                 return false;
             }
 
             if (formData.adult_quantity > maxAdults) {
                 errorMessage.style.display = 'block';
-                return;
+                errorMessage.textContent = "Số lượng người không được vượt quá " + maxAdults;
+                $('#adult-quantity').focus();
+                return false;
             }
 
             $.ajax({
@@ -391,8 +557,7 @@
                 data: formData,
                 success: function(response) {
                     if (response.type === 'success') {
-                        window.location.href = response
-                            .url;
+                        window.location.href = response.url;
                     } else {
                         alert('Đã xảy ra lỗi khi gửi thông tin.');
                     }
@@ -403,6 +568,7 @@
                 }
             });
         });
+
 
         $.ajax({
             url: `{{ route('api.checkDate', $room->id) }}`,
@@ -513,7 +679,6 @@
                             return;
                         }
 
-                        // Kiểm tra từng ngày trong khoảng từ ngày nhận đến ngày trả
                         let currentDate = new Date(checkinDate);
                         while (currentDate < checkoutDate) {
                             const formattedDate = currentDate.toISOString().split("T")[0];
@@ -536,60 +701,6 @@
             error: function(xhr, status, error) {
                 console.error("Error checking booking dates:", xhr, status, error);
                 console.log("Đã xảy ra lỗi khi kiểm tra ngày đặt!");
-            }
-        });
-
-        const maxGuests = {{ $room->max_people }};
-
-        const adultInput = document.getElementById('adult-quantity');
-        const errorMessage = document.getElementById('error-message');
-
-        adultInput.addEventListener('input', function() {
-            const adultQuantity = parseInt(adultInput.value, 10);
-
-            if (adultQuantity > maxGuests) {
-                errorMessage.style.display = 'block';
-                adultInput.setCustomValidity("Số lượng người lớn không được vượt quá " + maxGuests +
-                    " người.");
-            } else {
-                errorMessage.style.display = 'none';
-                adultInput.setCustomValidity("");
-            }
-        });
-
-        const maxChildren = 2;
-
-        const childrenInput = document.getElementById('children-quantity');
-        const errorMessageChildren = document.getElementById('error-message-children');
-
-        childrenInput.addEventListener('input', function() {
-            const childrenQuantity = parseInt(childrenInput.value, 10);
-
-            if (childrenQuantity > maxChildren) {
-                errorMessageChildren.style.display = 'block';
-                childrenInput.setCustomValidity("Số lượng trẻ em không được vượt quá " + maxChildren +
-                    " trẻ em.");
-            } else {
-                errorMessageChildren.style.display = 'none';
-                childrenInput.setCustomValidity("");
-            }
-        });
-
-        document.getElementById('form').addEventListener('submit', function(e) {
-            const adultQuantity = parseInt(adultInput.value, 10);
-
-            if (adultQuantity > maxGuests) {
-                e.preventDefault();
-                alert("Số lượng người lớn không được vượt quá " + maxGuests + " người.");
-            }
-        });
-
-        document.getElementById('form').addEventListener('submit', function(e) {
-            const childrenQuantity = parseInt(childrenInput.value, 10);
-
-            if (childrenQuantity > maxChildren) {
-                e.preventDefault();
-                alert("Số lượng trẻ em không được vượt quá " + maxChildren + " trẻ em.");
             }
         });
     </script>

@@ -13,7 +13,7 @@ class PaymentsController extends Controller
     public function paymentHistory(Request $request)
     {
         $usersDefault = Auth::user();
-        $dataPayment = Payment::with(['booking.user'])->whereHas('booking', function ($query) use ($usersDefault) {
+        $dataPayment = Payment::with(["booking:id,booking_number_id", 'booking.user'])->whereHas('booking', function ($query) use ($usersDefault) {
             $query->where('user_id', $usersDefault->id);
         })->get();
         $dataStatus = [

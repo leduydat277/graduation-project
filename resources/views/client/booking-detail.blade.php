@@ -142,9 +142,9 @@
                                     </tr>
                                     <tr>
                                         <th>Hình thức thanh toán:
-                                            @if ($payment->payment_method == 0)
+                                            @if ($payment && $payment->payment_method == 0)
                                                 Tiền mặt
-                                            @elseif ($payment->payment_method == 1)
+                                            @elseif ($payment && $payment->payment_method == 1)
                                                 Chuyển khoản
                                             @else
                                                 Không rõ
@@ -162,13 +162,12 @@
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="col-lg-12 text-center">
+                    <div class="col-lg-12 d-flex justify-content-center gap-3">
                         <a href="{{ route('client.home') }}" class="btn btn-primary">Trang chủ</a>
-                    </div>
-                    <div class="col-lg-12 text-center">
                         <a href="{{ route('getBookingList') }}" class="btn btn-primary">Danh sách đơn đặt</a>
                     </div>
                 </div>
+                
             </div>
         </div>
     </section>

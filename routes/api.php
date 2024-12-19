@@ -26,6 +26,7 @@ Route::middleware('api')->get('/example', function (Request $request) {
 Route::middleware('api')->group(function () {
     Route::get('/rooms', [RoomController::class, 'index']);
     Route::get('/rooms/booking', [RoomController::class, 'getRoomBooking']);
+    Route::get('/rooms/bookings', [RoomController::class, 'getRoomBookings']);
 });
 
 
