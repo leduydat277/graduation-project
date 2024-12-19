@@ -63,6 +63,8 @@
                                     </option>
                                     <option value="5" {{ request('status') == '5' ? 'selected' : '' }}>Đã hủy
                                     </option>
+                                    <option value="6" {{ request('status') == '6' ? 'selected' : '' }}>Đã hoàn thành
+                                    </option>
                                 </select>
                             </div>
                             <!-- Bộ lọc khoảng thời gian -->
