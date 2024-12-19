@@ -86,3 +86,5 @@ Route::get('test', function () {
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/all-asset-types', AssetTypeController::class . '@index');
+
+Route::get('rooms/all', [RoomController::class, 'roomAll'])->name('api.rooms.all');

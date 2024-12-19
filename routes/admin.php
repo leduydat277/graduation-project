@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SearchRoomController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\BookingCancelledController;
 use App\Http\Middleware\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,11 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
         Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
         Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
         Route::get('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+    });
+
+    Route::prefix('cancel-booking')->as('cancel.')->group(function () {
+        Route::get('/', [BookingCancelledController::class, 'index_admin'])->name('index');
+        Route::post('/confirm/{id}', [BookingCancelledController::class, 'confirm'])->name('confirm');
     });
 });
 

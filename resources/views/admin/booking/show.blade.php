@@ -40,13 +40,32 @@
                             <div class="col-md-6">
                                 <h6 class="text-muted">Thông tin đơn hàng</h6>
                                 <div class="border rounded p-3 mb-3">
-                                    <p><strong>Mã Đơn:</strong> <span class="text-primary">{{ $booking->booking_number_id }}</span></p>
+                                    <p><strong>Mã Đơn:</strong> <span
+                                            class="text-primary">{{ $booking->booking_number_id }}</span></p>
                                     <p><strong>Mã Check-in:</strong> {{ $booking->code_check_in }}</p>
                                     <p><strong>Loại phòng:</strong> {{ $booking->room->roomType->type ?? 'Không rõ' }}</p>
                                     <p><strong>Tên Phòng:</strong> {{ $booking->room->title }}</p>
-                                    <p><strong>Tổng tiền:</strong>
+                                    <p><strong>Tổng tiền ban đầu:</strong>
                                         <span
                                             class="badge bg-info fs-6">{{ number_format($booking->total_price, 0, ',', '.') }}đ</span>
+                                    </p>
+                                    <p><strong>Giảm giá:</strong>
+                                        @if (is_numeric($booking->discount_value))
+                                            <span class="badge bg-info fs-6">
+                                                Giảm giá:
+                                                @if ($booking->discount_value < 100)
+                                                    {{ $booking->discount_value }}%
+                                                @else
+                                                    {{ number_format($booking->discount_value, 0, ',', '.') }} VNĐ
+                                                @endif
+                                            </span>
+                                        @else
+                                            <span class="badge bg-info fs-6">Giảm giá: Không hợp lệ</span>
+                                        @endif
+                                    </p>
+                                    <p><strong>Tổng tiền sau khi giảm:</strong>
+                                        <span
+                                            class="badge bg-info fs-6">{{ number_format($booking->discount_price, 0, ',', '.') }}đ</span>
                                     </p>
                                 </div>
                             </div>

@@ -49,11 +49,9 @@
                                 <div class="d-flex justify-content-sm-end">
                                     <form method="GET" action="{{ route('user.index') }}">
                                         <div class="input-group search-box ms-2">
-                                            <input type="text" name="search" class="form-control"
-                                                placeholder="Tìm kiếm tài khoản...">
+                                            <input type="text" name="email" class="form-control"
+                                                placeholder="Tìm kiếm email...">
                                             <!-- Giữ nguyên giá trị sắp xếp khi tìm kiếm -->
-                                            <input type="hidden" name="sort_by">
-                                            <input type="hidden" name="sort_order">
                                             <button class="btn btn-primary" type="submit">
                                                 <i class="ri-search-line search-icon"></i>
                                             </button>

@@ -7,6 +7,7 @@ use App\Events\NotificationMessage;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ManageStatusRoomController;
 use App\Http\Controllers\PaymentController;
+use App\Jobs\SendEmail;
 use App\Models\Booking;
 use App\Models\ManageStatusRoom;
 use App\Models\Notification;
@@ -19,7 +20,6 @@ use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 use Str;
@@ -134,7 +134,7 @@ class BookingController
 
             $checkInDate = Carbon::createFromTimestamp($check_in_timestamp, 'Asia/Ho_Chi_Minh');
             $checkOutDate = Carbon::createFromTimestamp($check_out_timestamp, 'Asia/Ho_Chi_Minh');
-            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate) ;
+            $daysBooked = (int)$checkInDate->diffInDays($checkOutDate);
             $discount_value = null;
             if ($voucher) {
                 $v = Voucher::where('id', $voucher)->first();
@@ -215,6 +215,8 @@ class BookingController
 
             $bookingNumberId = Str::upper(Str::random(5));
 
+            $todayTime = Carbon::now();
+
             if ($payment_type == 1) {
                 $booking = Booking::create([
                     "room_id" => $room_id,
@@ -229,7 +231,7 @@ class BookingController
                     "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
-                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp,
+                    "created_at" => $todayTime->timestamp,
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
                     'discount_price' => (int)$discount_price,
@@ -250,7 +252,7 @@ class BookingController
                     "check_in_date" => $check_in_timestamp,
                     "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
-                    "created_at" => Carbon::now('Asia/Ho_Chi_Minh')->timestamp,
+                    "created_at" => $todayTime->timestamp,
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
                     'discount_price' => (int)$discount_price,
@@ -410,15 +412,13 @@ class BookingController
             $status = new ManageStatusRoomController();
             $status->create($id, $booking->room_id, $from_new, $to_new);
 
-            $mail = new MailController();
-
             $data = [
                 'checkin_code' => $check_in_code,
                 'check_in_date' => $from_new,
                 'check_out_date' => $to_new,
                 'name' => $booking->last_name . '' . $booking->first_name
             ];
-            $mail->SendCheckinCode("Gửi mã Check in", 'checkincode', $data, $booking->email);
+            SendEmail::dispatch($data, 'checkincode', 'Gửi mã Check in', $booking->email);
 
             $title = "Đơn đặt phòng mới";
             $message = "Khách hàng " . $booking->last_name . ' ' . $booking->first_name . " đã đặt phòng " . $room->title . ".";
@@ -441,7 +441,7 @@ class BookingController
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
 
-            return redirect()->route('client.detail_booking', $booking->booking_number_id);
+            return redirect()->route('client.done_booking', $booking->booking_number_id);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",

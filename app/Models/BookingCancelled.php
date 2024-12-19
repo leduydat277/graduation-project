@@ -15,4 +15,8 @@ class BookingCancelled extends Model
         'cancelled_at',
         'status'
     ];
+
+    public function booking(){
+        return $this->belongsTo(Booking::class);
+    }
 }

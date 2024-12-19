@@ -26,6 +26,10 @@
                             </li>
                             <li class="nav-item px-3">
                                 <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
+                                    href="{{ route('client.room.all') }}">Phòng</a>
+                            </li>
+                            <li class="nav-item px-3">
+                                <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
                                     href="{{ route('client.about') }}">Về chúng tôi</a>
                             </li>
                             <li class="nav-item px-3">
@@ -94,6 +98,9 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li>
                                         <a class="dropdown-item text-black" href="{{ route('account') }}">Quản lý tài khoản</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-black" href="{{ route('getBookingList') }}">Các đơn đặt phòng</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item text-black" href="{{ route('paymentHistory') }}">Lịch sử thanh toán</a>
