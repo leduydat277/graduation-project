@@ -34,6 +34,8 @@
                             <label for="email" class="form-label">Email</label>
                             <input disabled type="email" class="form-control" id="email" name="email"
                                 value="{{ old('email', $data->email) }}" placeholder="Nhập email">
+                            <input type="hidden" class="form-control" id="email" name="email"
+                                value="{{ old('email', $data->email) }}" placeholder="Nhập email">
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -48,7 +50,7 @@
                             @enderror
                         </div>
 
-                        
+
                         <div class="mb-3">
                             <label for="address" class="form-label">Địa chỉ</label>
                             <input type="text" class="form-control" id="address" name="address"
@@ -63,7 +65,7 @@
                                 <img style="width: 200px;" src="{{ $data->image }}" alt="img">
                             @endif
                         </div>
-                        
+
 
                         <div class="mb-3">
                             <label for="image" class="form-label">Ảnh đại diện</label>

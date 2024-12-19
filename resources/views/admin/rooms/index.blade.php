@@ -156,7 +156,7 @@
                                                     @break
 
                                                     @case(4)
-                                                        <span class="badge bg-dark">Bị khóa</span>
+                                                        <span class="badge bg-dark">Ngừng kinh doanh</span>
                                                     @break
 
                                                     @default

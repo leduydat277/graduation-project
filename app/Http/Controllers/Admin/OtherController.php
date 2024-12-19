@@ -91,8 +91,7 @@ class OtherController
         } else {
             $validated['value'] = $other->value;
         }
-
-        // Cập nhật dữ liệu vào đối tượng
+        
         $other->update([
             'name' => $validated['name'],
             'type' => $validated['type'],

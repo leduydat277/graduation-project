@@ -11,33 +11,25 @@ class LoginNotificationMail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $voucher;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($user)
+    public function __construct($user, $voucher)
     {
         $this->user = $user;
+        $this->voucher = $voucher;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
-    {   
+    {
         $policylink = url('/policy');
         $homelink = url('/');
-        return $this->subject('Thông báo đăng nhập thành công')
+        return $this->subject('Đăng ký thành công & Nhận voucher')
             ->view('client.Mail.login-notification')
             ->with([
                 'user' => $this->user,
+                'voucher' => $this->voucher,
                 'policylink' => $policylink,
                 'homelink' => $homelink,
-                'loginTime' => now()->format('d-m-Y H:i:s'),
             ]);
     }
 }

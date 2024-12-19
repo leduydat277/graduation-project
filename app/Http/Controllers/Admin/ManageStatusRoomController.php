@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\ManageStatusRoom;
 use App\Models\Admin\Room;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ManageStatusRoomController extends Controller
@@ -19,18 +21,15 @@ class ManageStatusRoomController extends Controller
     {
         $title = 'Quản lý trạng thái phòng';
 
-        // Lấy dữ liệu đầu vào
         $status = $request->input('status');
         $from_date = $request->input('from_date');
         $to_date = $request->input('to_date');
         $search = $request->input('search');
 
-        // Xác thực các trường cơ bản
         if (!is_null($status) && !is_numeric($status)) {
             return redirect()->back()->withErrors(['error' => 'Trạng thái không hợp lệ']);
         }
 
-        // Chuyển đổi `from_date` và `to_date` thành timestamp
         $from = $to = null;
         try {
             if (!empty($from_date)) {
@@ -43,7 +42,6 @@ class ManageStatusRoomController extends Controller
             return redirect()->back()->withErrors(['error' => 'Ngày không hợp lệ']);
         }
 
-        // Tìm kiếm phòng theo `id`, `title`, hoặc `room_code`
         $room_ids = [];
         if (!empty($search)) {
             $room_ids = Room::where('id', $search)
@@ -57,7 +55,6 @@ class ManageStatusRoomController extends Controller
             }
         }
 
-        // Xây dựng query cho `ManageStatusRoom`
         $query = ManageStatusRoom::query()->with(['room.roomType', 'booking']);
 
         if ($status !== null) {
@@ -68,10 +65,6 @@ class ManageStatusRoomController extends Controller
             $query->whereIn('room_id', $room_ids);
         }
 
-        // Loại bỏ các bản ghi có `to` = 0
-        // $query->where('to', '>', 0);
-
-        // Lọc theo khoảng thời gian nằm hoàn toàn trong khoảng đã chọn
         if ($from !== null && $to !== null) {
             $query->where('from', '>=', $from)
                 ->where('to', '<=', $to);
@@ -81,14 +74,10 @@ class ManageStatusRoomController extends Controller
             $query->where('to', '<=', $to);
         }
 
-        // dd($query->toSql(), $query->getBindings()); // Debug query nếu cần
-
-        // Phân trang kết quả
         $statusRooms = $query->orderBy('id', 'desc')->paginate(10);
 
         return view(self::VIEW_PATH . 'index', compact('statusRooms', 'title'));
     }
-
 
     public function create($id_booking, $id_room, $from, $to)
     {
@@ -172,5 +161,45 @@ class ManageStatusRoomController extends Controller
         }
 
         return 'Thêm bản ghi vào bảng Manage Status Room thành công';
+    }
+
+    public static function cancel($booking_id)
+    {
+        $record = ManageStatusRoom::where('booking_id', '=', $booking_id)->first();
+
+        $recentToPrevious =  (new DateTime())->setTimestamp($record->from)->setTime(12, 0, 0)->getTimestamp();
+        $recentToNext =  (new DateTime())->setTimestamp($record->to)->setTime(14, 0, 0)->getTimestamp();
+
+        $recordPrevious = ManageStatusRoom::where([
+            ['to', '=', $recentToPrevious],
+            ['room_id', '=', $record->room_id],
+        ])->first() ?? '';
+
+        $recordNext = ManageStatusRoom::where([
+            ['from', '=', $recentToNext],
+            ['room_id', '=', $record->room_id],
+        ])->first() ?? '';
+
+        if (!$recordPrevious) {
+            $newFrom = $record->from;
+        } else {
+            $recordPrevious->delete();
+            $newFrom = $recordPrevious->from;
+        }
+        if (!$recordNext) {
+            $newTo = $record->to;
+        } else {
+            $recordNext->delete();
+            $newTo = $recordNext->to;
+        }
+
+        $record->update([
+            'from' => $newFrom,
+            'to' => $newTo,
+            'status' => 1,
+            'booking_id' => null,
+        ]);
+
+        return true;
     }
 }

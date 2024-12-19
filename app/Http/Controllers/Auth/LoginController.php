@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Mail\LoginNotificationMail;
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -35,14 +36,21 @@ class LoginController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials, $request->has('remember'))) {
-            $user = Auth::user();
-            Mail::to($user->email)->send(new LoginNotificationMail($user));
+
+        if (Auth::attempt($credentials)) {
+            // nếu trạng thái tài khoản là 1 thì không cho đăng nhập
+            if (Auth::user()->status == 0) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.'])->withInput();
+            }
+            if (Auth::user()->role == 1) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Tài khoản này không được cấp quyền truy trang này'])->withInput();
+            }
 
             return redirect()->route('client.home')->with('success', 'Đăng nhập thành công! Kiểm tra email của bạn.');
         }
 
-        // Đăng nhập thất bại
         return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
     }
 
@@ -61,9 +69,6 @@ class LoginController extends Controller
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|numeric|digits_between:10,15',
-            'cccd' => 'nullable|string|max:50',
-            'address' => 'nullable|string|max:255',
             'password' => 'required|string|min:6|confirmed',
         ], [
             'last_name.required' => 'Họ không được để trống.',
@@ -71,27 +76,41 @@ class LoginController extends Controller
             'email.required' => 'Email không được để trống.',
             'email.email' => 'Email không hợp lệ.',
             'email.unique' => 'Email này đã được sử dụng.',
-            'phone.required' => 'Số điện thoại không được để trống.',
-            'phone.numeric' => 'Số điện thoại phải là số.',
-            'phone.digits_between' => 'Số điện thoại phải có từ 10 đến 15 chữ số.',
-            'cccd.max' => 'Số CCCD không được vượt quá 50 ký tự.',
-            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
             'password.required' => 'Mật khẩu không được để trống.',
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => "{$validatedData['last_name']} {$validatedData['first_name']}",
             'last_name' => $validatedData['last_name'],
             'first_name' => $validatedData['first_name'],
             'email' => $validatedData['email'],
-            'phone' => $validatedData['phone'],
+            'phone' => $validatedData['phone'] ?? null,
             'cccd' => $validatedData['cccd'] ?? null,
             'address' => $validatedData['address'] ?? null,
             'role' => 0,
             'password' => bcrypt($validatedData['password']),
         ]);
+
+        $voucher = DB::table('vouchers')->insertGetId([
+            'name' => 'Voucher Chào Mừng',
+            'description' => 'Voucher giảm giá chào mừng bạn đến với SleepHotel.',
+            'code_voucher' => strtoupper(Str::random(10)),
+            'discount_value' => 100000, 
+            'start_date' => Carbon::now()->timestamp,
+            'end_date' => Carbon::now()->addDays(7)->timestamp, 
+            'type' => 'fixed', 
+            'min_booking_amount' => 500000, 
+            'quantity' => 1,
+            'status' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $newVoucher = DB::table('vouchers')->find($voucher);
+
+        Mail::to($user->email)->queue(new LoginNotificationMail($user, $newVoucher));
 
         return redirect()->route('client.login')->with('success', 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
     }
@@ -144,7 +163,6 @@ class LoginController extends Controller
 
     public function resetPassword(Request $request)
     {
-        // Validate dữ liệu đầu vào
         $validatedData = $request->validate([
             'token' => 'required',
             'password' => 'required|min:6|confirmed',
@@ -154,27 +172,22 @@ class LoginController extends Controller
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
         ]);
 
-        // Kiểm tra token
         $tokenData = DB::table('tokens')->where('value', $validatedData['token'])->first();
 
         if (!$tokenData || $tokenData->expiry_time < now()) {
             return redirect()->back()->withErrors(['token' => 'Token không hợp lệ hoặc đã hết hạn.']);
         }
 
-        // Lấy thông tin người dùng
         $user = User::find($tokenData->user_id);
         if (!$user) {
             return redirect()->back()->withErrors(['user' => 'Không tìm thấy người dùng.']);
         }
 
-        // Cập nhật mật khẩu
         $user->password = bcrypt($validatedData['password']);
         $user->save();
 
-        // Xóa token sau khi sử dụng
         DB::table('tokens')->where('value', $validatedData['token'])->delete();
 
-        // Chuyển hướng đến trang đăng nhập với thông báo thành công
         return redirect()->route('client.login')->with('success', 'Mật khẩu đã được đặt lại thành công!');
     }
 

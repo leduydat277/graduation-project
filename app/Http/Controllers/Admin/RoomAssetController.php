@@ -34,7 +34,6 @@ class RoomAssetController extends Controller
             });
         }
 
-        // Sắp xếp dữ liệu
         switch ($sort) {
             case 'room_name_asc':
                 $query->orderBy('rooms.title', 'asc');
@@ -49,13 +48,11 @@ class RoomAssetController extends Controller
                 $query->orderBy('asset_count', 'desc');
                 break;
             default:
-                $query->orderBy('rooms.title', 'asc'); // Mặc định sắp xếp theo tên phòng
+                $query->orderBy('rooms.title', 'asc');
         }
 
-        // Phân trang
         $roomassets = $query->paginate(10);
 
-        // Truyền dữ liệu qua view
         return view(self::VIEW_PATH . __FUNCTION__, compact('roomassets', 'title'));
     }
 
@@ -71,17 +68,11 @@ class RoomAssetController extends Controller
 
     public function create()
     {
-        //Tiêu đề trang
         $title = 'Thêm tiện nghi phòng';
-
-        //danh sách phòng
         $roomAsset = RoomAsset::select('room_id')->get();
         $rooms = Room::select('id', 'title')->whereNotIn('id', $roomAsset)->get();
-
-        //danh sach loại tiện nghi
         $assetTypes = AssetType::select('id', 'name', 'status')->where('status', 0)->get();
 
-        // Truyền các tham số sang view
         return view(self::VIEW_PATH . __FUNCTION__, compact('title', 'rooms', 'assetTypes'));
     }
 

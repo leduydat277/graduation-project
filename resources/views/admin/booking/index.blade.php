@@ -94,6 +94,20 @@
         <!-- Booking Table -->
         <div class="card">
             <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="date_range" class="form-label"></label>
+                    <form method="GET" action="{{ route('bookings.index') }}" class="d-flex align-items-center mb-3">
+                        <div class="row g-3 align-items-center">
+                            <div class="input-group">
+                                <input type="text" name="search" value="{{ request('search') }}" class="form-control"
+                                    placeholder="Nhập mã đơn hoặc tên khách hàng..." aria-label="Tìm kiếm">
+                                <button class="btn btn-primary" type="submit" aria-label="Tìm kiếm">
+                                    <i class="ri-search-line"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <!-- Hiển thị thông báo -->
                 @if (session('success') || session('error'))
                     <div class="col">
@@ -127,19 +141,22 @@
                                     <td class="d-flex justify-content-evenly align-content-center">
 
                                         <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}"
-                                            alt="Room Image" class="img-fluid mb-2 mt-2" style="width: 80px; height: 80px">
+                                            alt="Room Image" class="img-fluid mb-2 mt-2"
+                                            style="width: 80px; height: 80px">
 
                                     </td>
-                                    <td>{{ $booking->last_name . ' ' . $booking->first_name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
+                                    <td>{{ $booking->user->name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y') }}</td>
                                     <td>{{ $booking->room->title }}</td>
                                     <td>
-                                        <span class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
+                                        <span
+                                            class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
                                             đ</span>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">{{ number_format($booking->total_price, 0, ',', '.') }}
+                                        <span
+                                            class="badge bg-info">{{ number_format($booking->discount_price, 0, ',', '.') }}
                                             đ</span>
                                     </td>
                                     <td>
@@ -201,130 +218,6 @@
             </div>
         </div>
     </div>
-    {{-- <div class="row">
-        <div class="col-sm-auto">
-            <div>
-                <a href="{{ route('adminBooking.addUI') }}" class="btn btn-success">
-                    <i class="ri-add-line align-bottom me-1"></i> Đặt phòng
-                </a>
-            </div>
-        </div>
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <!-- Hiển thị thông báo -->
-                    @if (session('success') || session('error'))
-                        <div class="col">
-                            <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
-                                role="alert">
-                                {{ session('success') ?? session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        </div>
-                    @endif
-                    <div class="table-responsive">
-                        <table id="bookingTable" class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Mã đặt</th>
-                                    <th>Ảnh phòng</th>
-                                    <th>Khách hàng</th>
-                                    <th>Ngày đến</th>
-                                    <th>Ngày đi</th>
-                                    <th>Phòng</th>
-                                    <th>Tiền cọc</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Trạng thái đơn</th>
-                                    <th>Hành Động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($bookings as $booking)
-                                    <tr>
-                                        <td>{{ $booking->booking_number_id }}</td>
-                                        <td class="d-flex justify-content-evenly align-content-center">
-
-                                            <img src="{{ asset('storage/' . $booking->room->thumbnail_image) }}"
-                                                alt="Room Image" class="img-fluid mb-2 mt-2"
-                                                style="width: 80px; height: 80px">
-
-                                        </td>
-                                        <td>{{ $booking->last_name . ' ' . $booking->first_name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d-m-Y H:i') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d-m-Y H:i') }}</td>
-                                        <td>{{ $booking->room->title }}</td>
-                                        <td>
-                                            <span
-                                                class="badge bg-warning">{{ number_format($booking->tien_coc, 0, ',', '.') }}
-                                                đ</span>
-                                        </td>
-                                        <td>
-                                            <span
-                                                class="badge bg-info">{{ number_format($booking->total_price, 0, ',', '.') }}
-                                                đ</span>
-                                        </td>
-                                        <td>
-                                            @switch($booking['status'])
-                                                @case(0)
-                                                    Chưa thanh toán cọc
-                                                @break
-
-                                                @case(1)
-                                                    Đang thanh toán
-                                                @break
-
-                                                @case(2)
-                                                    <span class="badge bg-warning">Đã thanh toán cọc</span>
-                                                @break
-
-                                                @case(3)
-                                                    <span class="badge bg-success">Đã thanh toán tổng tiền đơn</span>
-                                                @break
-
-                                                @case(4)
-                                                    <span class="badge bg-info">Đang sử dụng</span>
-                                                @break
-
-                                                @case(5)
-                                                    <span class="badge bg-danger">Đã hủy</span>
-                                                @break
-
-                                                @case(6)
-                                                    <span class="badge bg-success">Hoàn thành</span>
-                                                @break
-
-                                                @default
-                                                    <span class="badge bg-success">Không xác định</span>
-                                            @endswitch
-                                        </td>
-                                        <td>
-                                            @if ($booking->status != 5)
-                                                <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-info"
-                                                    title="Xem chi tiết">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                @if ($booking->status != 2 && $booking->status != 6 && $booking->status != 3)
-                                                    <button type="button" class="btn btn-danger" title="Hủy đặt phòng"
-                                                        onclick="confirmCancel({{ $booking->id }})">
-                                                        <i class="fas fa-times-circle"></i>
-                                                    </button>
-                                                @endif
-                                            @endif
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <div class="d-flex justify-content-end">
-                            {{ $bookings->appends(request()->input())->links('pagination::bootstrap-5') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- end col -->
-    </div> --}}
 @endsection
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -376,22 +269,6 @@
                         form.submit(); // Gửi form nếu đặt phòng xác nhận xóa
                     }
                 });
-            });
-        });
-    </script>
-    <!-- jQuery, DataTables, Daterangepicker -->
-
-    <script>
-        $('#bookingTable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
-            }
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Khởi tạo flatpickr với chế độ chọn khoảng thời gian
-            flatpickr('#date-range-input', {
-                mode: 'range',
-                dateFormat: 'Y-m-d',
             });
         });
     </script>

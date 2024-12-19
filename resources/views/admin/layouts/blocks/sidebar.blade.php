@@ -41,66 +41,66 @@
                 </li>
                 <li class="nav-item">
                     <a href="/admin/user" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-user"></i> <!-- Biểu tượng cho danh sách người dùng -->
+                        <i class="fa-solid fa-user"></i>
                         Tài khoản
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('bookings.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-calendar-check"></i> <!-- Biểu tượng cho trang chủ -->
+                        <i class="fa-solid fa-calendar-check"></i>
                         Đơn đặt
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('adminBooking.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-calendar-check"></i> <!-- Biểu tượng cho trang chủ -->
-                        Đặt phòng
+                    <a href="{{ route('cancel.index') }}" class="nav-link" data-key="t-analytics">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        Đơn hủy
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-file-invoice-dollar"></i> <!-- Biểu tượng cho trang chủ -->
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
                         Hóa đơn
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('room-types.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-bed"></i> <!-- Icon for room type list -->
+                        <i class="fa-solid fa-bed"></i>
                         Loại phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('rooms.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-list"></i> <!-- Icon for room list -->
+                        <i class="fa-solid fa-list"></i>
                         Danh sách phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('asset-types.index')}}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-concierge-bell"></i> <!-- Icon for room type list -->
+                        <i class="fa-solid fa-concierge-bell"></i>
                         Danh sách tiện nghi
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('room-assets.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-tools"></i> <!-- Icon for room type list -->
+                        <i class="fa-solid fa-tools"></i>
                         Quản lý tiện nghi phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('manage-status-rooms.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-door-closed"></i> <!-- Thay đổi icon cho quản lý trạng thái phòng -->
+                        <i class="fa-solid fa-door-closed"></i>
                         Quản lý trạng thái phòng
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('reviews.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-comments"></i> <!-- Icon for reviews and comments -->
+                        <i class="fa-solid fa-comments"></i>
                         Đánh giá và bình luận
                     </a>
                 </li>
@@ -118,7 +118,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('vouchers.index') }}" class="nav-link" data-key="t-analytics">
-                        <i class="fa-solid fa-money-bill-wave"></i>
+                    <i class="fa-solid fa-ticket"></i>
                         Mã giảm giá
                     </a>
                 </li>

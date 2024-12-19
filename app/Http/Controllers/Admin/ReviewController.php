@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\Review;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -12,14 +13,9 @@ class ReviewController extends Controller
 
     public function index(Request $request)
     {
-        // Nhận từ khóa tìm kiếm
         $search = $request->input('search');
-
-        // Nhận giá trị sắp xếp (mặc định là theo `rating` và thứ tự giảm dần)
         $sortBy = $request->input('sort_by', 'rating');
         $sortOrder = $request->input('sort_order', 'desc');
-
-        // Truy vấn danh sách đánh giá với tìm kiếm và sắp xếp
         $reviews = Review::with(['user', 'room'])
             ->when($search, function ($query, $search) {
                 return $query->where('comment', 'LIKE', "%{$search}%")
@@ -30,16 +26,36 @@ class ReviewController extends Controller
             ->orderBy($sortBy, $sortOrder)
             ->paginate(10);
 
-        // Truyền các tham số sang view
         return view('admin.reviews.index', compact('reviews', 'search', 'sortBy', 'sortOrder'));
     }
 
-    //hàm xóa comment
     public function destroy($id)
     {
         $review = Review::findOrFail($id);
         $review->delete();
 
         return redirect()->route('reviews.index')->with('success', 'Xóa đánh giá thành công');
+    }
+
+    public function modal(Request $request)
+    {
+        $bookingId = $request->id;
+
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            return response()->json(['type' => 'error', 'content' => 'Booking không tồn tại']);
+        }
+
+        if ($booking->status != 6) {
+            return response()->json(['type' => 'error', 'content' => 'Trạng thái booking không hợp lệ']);
+        }
+
+        $view = view('client.reviewModal', compact('booking'))->render();
+
+        return response()->json([
+            'type' => 'success',
+            'view' => $view,
+        ]);
     }
 }

@@ -45,6 +45,10 @@
                                         <div class="row g-lg-5" style="margin-top:0px">
                                             <div class="col-md-6 col-xl-4 mb-4">
                                                 <!-- Placeholder for rooms -->
+                                                <div id="no-rooms-message" class="alert alert-warning"
+                                                    style="display: none;">
+                                                    Không có phòng nào phù hợp với tiêu chí tìm kiếm của bạn.
+                                                </div>
                                             </div>
                                         </div>
                                     </main>
@@ -71,7 +75,7 @@
 
             const queryParams = new URLSearchParams(window.location.search);
             const urlParams = Object.fromEntries(queryParams.entries());
-
+console.log(urlParams);
             fetchRooms(urlParams);
 
             $.ajax({
@@ -116,18 +120,30 @@
                     method: "GET",
                     data: params,
                     success: function(response) {
-                        if (response.status === "success" && Array.isArray(response.data)) {
+                        if (response.status === "success" && Array.isArray(response.data) && response
+                            .data.length > 0) {
                             allRooms = response.data;
                             console.log(response);
 
                             renderRooms(allRooms, currentPage, roomsPerPage);
                             renderPagination(allRooms.length, roomsPerPage);
+
+                            // Ẩn thông báo không có phòng nếu có phòng
+                            $('#no-rooms-message').hide();
                         } else {
+                            $('#loading').hide(); // Ẩn loading nếu không có phòng
+                            $('#no-rooms-message').show();
                             console.error("Dữ liệu phòng không hợp lệ");
+
+                            // Hiển thị thông báo không có phòng
                         }
                     },
                     error: function(error) {
+                        $('#no-rooms-message').show();
+                        $('#loading').hide(); // Ẩn loading khi có lỗi
                         console.error("Lỗi khi gọi API phòng:", error);
+
+                        // Hiển thị thông báo lỗi
                     },
                     complete: function() {
                         // Ẩn loading khi hoàn tất
@@ -149,7 +165,7 @@
                     }
 
                     if (maxPrice) {
-                      console.log(parseInt(maxPrice.replace(/\./g, ''), 10));
+                        console.log(parseInt(maxPrice.replace(/\./g, ''), 10));
                         isPriceMatch = (room.price <= parseInt(maxPrice.replace(/\./g, ''), 10));
                     }
 
@@ -170,17 +186,18 @@
                 const paginatedRooms = rooms.slice(startIndex, startIndex + perPage);
 
                 paginatedRooms.forEach(room => {
+                    let url_detail = 'http://127.0.0.1:8000/room/' + room.id + '?' +
+                        '{{ http_build_query(request()->query()) }}';
                     const roomItem = `
                 <div class="col-md-6 col-xl-4 mb-4">
-                    <a href="${room.details_url}"><div class="room-item rounded-4">
+                    <a href="${url_detail}"><div class="room-item rounded-4">
                         <img src="http://127.0.0.1:8000/storage/${JSON.parse(room.image_room)[0]}" style="width: 100%;  height: 400px; object-fit: cover;" alt="img" class="img-fluid rounded-4">
                     </div></a>
                     <div class="room-content">
                         <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-                            <h4 class="display-6 fw-normal"><a href="${room.details_url}">${room.title}</a></h4>
+                            <h4 class="display-6 fw-normal"><a href="${url_detail}">${room.title}</a></h4>
                         </div>
-                        <p class="product-paragraph">${room.description}</p>
-                        <table>
+                        <table> 
                             <tbody>
                                 <tr>
                                     <td class="pe-2">Loại phòng: </td>
@@ -200,7 +217,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="${room.details_url}">
+                        <a href="${url_detail}">
                             <p class="text-decoration-underline mt-3">Chi tiết</p>
                         </a>
                     </div>

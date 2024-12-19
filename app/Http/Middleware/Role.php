@@ -18,17 +18,14 @@ class Role
     {
         $user = Auth::user();
 
-        // Kiểm tra nếu người dùng chưa đăng nhập
         if (!$user) {
             return redirect()->route('admin.login')->with('error', 'Bạn cần đăng nhập để truy cập.');
         }
 
-        // Kiểm tra nếu người dùng không phải admin
-        if ($user->role !== 1) { // 1: Admin
+        if ($user->role !== 1) {
             return redirect('/')->with('error', 'Bạn không có quyền truy cập trang này.');
         }
 
-        // Tiếp tục xử lý yêu cầu nếu hợp lệ
         return $next($request);
     }
 }
