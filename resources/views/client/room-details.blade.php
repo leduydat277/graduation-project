@@ -191,8 +191,8 @@
                             </div>
                             <div class="col-lg-12 my-4">
                                 <label for="exampleInputEmail1" class="form-label text-black">Số lượng người</label>
-                                <input type="number" id="adult-quantity" name="quantity"
-                                    class="form-control ps-3" value="{{ $_GET['quantity'] ?? 1 }}">
+                                <input type="number" id="adult-quantity" name="quantity" class="form-control ps-3"
+                                    value="{{ $_GET['quantity'] ?? 1 }}">
                                 <div id="error-message" style="color: black; display: none;">Số lượng người không được
                                     vượt quá số lượng cho phép của phòng.</div>
                             </div>
@@ -498,24 +498,37 @@
                     checkoutInput.addEventListener("change", function() {
                         const checkinDate = new Date(checkinInput.value);
                         const checkoutDate = new Date(checkoutInput.value);
-                        const formattedCheckinDate = checkinDate.toISOString().split('T')[0];
 
                         if (isNaN(checkoutDate)) {
-                            errorCheckout.style.display = 'block';
+                            errorCheckout.style.display = "block";
                             errorCheckout.textContent = "Vui lòng chọn ngày trả phòng hợp lệ.";
                             checkoutInput.value = "";
                             return;
                         }
 
-                        if (isDateBlocked(formattedCheckoutDate)) {
-                            errorCheckout.style.display = 'block';
+                        if (checkoutDate <= checkinDate) {
+                            errorCheckout.style.display = "block";
+                            errorCheckout.textContent = "Ngày trả phòng phải sau ngày nhận phòng.";
                             checkoutInput.value = "";
-                            errorCheckout.textContent = "Ngày này đã có người đặt rồi";
-                        } else {
-                            errorCheckout.style.display = 'none';
+                            return;
                         }
-                    });
 
+                        // Kiểm tra từng ngày trong khoảng từ ngày nhận đến ngày trả
+                        let currentDate = new Date(checkinDate);
+                        while (currentDate < checkoutDate) {
+                            const formattedDate = currentDate.toISOString().split("T")[0];
+                            if (isDateBlocked(formattedDate)) {
+                                errorCheckout.style.display = "block";
+                                errorCheckout.textContent =
+                                    "Khoảng thời gian này đã được đặt, vui lòng chọn thời gian khác.";
+                                checkoutInput.value = "";
+                                return;
+                            }
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+
+                        errorCheckout.style.display = "none";
+                    });
                 } else {
                     console.log("Không có dữ liệu ngày đặt!");
                 }

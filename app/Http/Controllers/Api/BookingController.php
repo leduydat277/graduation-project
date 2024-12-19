@@ -215,6 +215,8 @@ class BookingController
 
             $bookingNumberId = Str::upper(Str::random(5));
 
+            $todayTime = Carbon::now();
+
             if ($payment_type == 1) {
                 $booking = Booking::create([
                     "room_id" => $room_id,
@@ -229,7 +231,7 @@ class BookingController
                     "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
                     "tien_coc" => $depositAmount,
-                    "created_at" => $today,
+                    "created_at" => $todayTime->timestamp,
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
                     'discount_price' => (int)$discount_price,
@@ -250,7 +252,7 @@ class BookingController
                     "check_in_date" => $check_in_timestamp,
                     "check_out_date" => $check_out_timestamp,
                     "total_price" => $total_price,
-                    "created_at" => $today,
+                    "created_at" => $todayTime->timestamp,
                     'voucher_id' => $voucher,
                     'discount_value' => $discount_value,
                     'discount_price' => (int)$discount_price,
@@ -439,7 +441,7 @@ class BookingController
                 "message" => json_encode($messageData, JSON_UNESCAPED_UNICODE)
             ]);
 
-            return redirect()->route('client.detail_booking', $booking->booking_number_id);
+            return redirect()->route('client.done_booking', $booking->booking_number_id);
         } catch (Exception $e) {
             return response()->json([
                 "message" => "Booking failed",

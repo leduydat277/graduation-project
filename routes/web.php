@@ -66,6 +66,8 @@ Route::get("/payment-history-detail/{id}", [PaymentsController::class, "paymentH
 
 Route::get('/detail-booking/{bookingNumberId}', [HomeController::class, 'booking_detail'])
     ->name('client.detail_booking')->middleware(CheckLoginMiddleware::class . ':admin-only');
+Route::get('/done-booking/{bookingNumberId}', [HomeController::class, 'done_booking_detail'])
+    ->name('client.done_booking')->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get('/cancelBooking', [BookingCancelledController::class, 'index'])
     ->name('cancelBooking.index')->middleware(CheckLoginMiddleware::class . ':admin-only');
 Route::get('/reviewModal', [AdminReviewController::class, 'modal'])

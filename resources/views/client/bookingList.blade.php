@@ -38,9 +38,11 @@
                                                 {{ $item->booking_number_id }}
                                             </a>
                                         </td>
-                                        <td>{{ date('d/m/Y', strtotime($item->check_in)) }}</td>
-                                        <td>{{ date('d/m/Y', strtotime($item->check_out)) }}</td>
-                                        <td>{{ number_format($item->total_amount ?? 0) }} VNĐ</td>
+                                        <td>{{ \Carbon\Carbon::createFromTimestamp($item->check_in_date, 'Asia/Ho_Chi_Minh')->format('d-m-Y') }}
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::createFromTimestamp($item->check_out_date, 'Asia/Ho_Chi_Minh')->format('d-m-Y') }}
+                                        </td>
+                                        <td>{{ number_format($item->discount_price ?? 0) }} VNĐ</td>
                                         <td>{{ $dataStatus[$item->status] }}</td>
                                         <td>
                                             <a href="{{ route('client.detail_booking', ['bookingNumberId' => $item->booking_number_id]) }}"
@@ -51,6 +53,10 @@
                             @endif
                         </tbody>
                     </table>
+
+                    <div class="d-flex justify-content-center">
+                        {{ $bookings->links() }}
+                    </div>
                 </div>
             </div>
         </div>
