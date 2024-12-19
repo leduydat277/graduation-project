@@ -68,8 +68,10 @@
                                     <li class="list-group-item"><strong>Mô tả:
                                             {{ isset($cancel->description) ? $cancel->description : 'Không có' }}</strong>
                                     </li>
-                                    <li class="list-group-item"><strong>Ngày hủy:
-                                            {{ \Carbon\Carbon::createFromTimestamp($cancel->cancelled_at)->format('d-m-Y H:i') }}</strong>
+                                    <li class="list-group-item">
+                                        <strong>Ngày hủy:
+                                            {{ \Carbon\Carbon::createFromTimestamp($cancel->cancelled_at, 'Asia/Ho_Chi_Minh') }}
+                                        </strong>
                                     </li>
                                     <li class="list-group-item"><strong>Trạng thái:
                                             @if ($cancel->status == 'pending')
@@ -163,6 +165,9 @@
                     <div class="col-lg-12 text-center">
                         <a href="{{ route('client.home') }}" class="btn btn-primary">Trang chủ</a>
                     </div>
+                    <div class="col-lg-12 text-center">
+                        <a href="{{ route('getBookingList') }}" class="btn btn-primary">Danh sách đơn đặt</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -170,6 +175,17 @@
     <div id="modal"></div>
 @endsection
 @section('js')
+    @if (session('status'))
+        <script>
+            Swal.fire({
+                title: '{{ session('status') === 'success' ? 'Thành công' : 'Lỗi' }}',
+                text: '{{ session('message') }}',
+                icon: '{{ session('status') === 'success' ? 'success' : 'error' }}',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
     <script type="module">
         $(document).ready(function() {
             let bookingStatus = {{ $booking->status }};

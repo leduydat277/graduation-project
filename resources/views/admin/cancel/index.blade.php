@@ -305,18 +305,20 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Gửi yêu cầu POST đến server
-                    $.post(actionUrl, {
-                        _token: $('meta[name="csrf-token"]').attr('content') // CSRF token
-                    }).done(function() {
-                        window.location.href = '/admin/cancel-booking';
-                    }).fail(function() {
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Có lỗi xảy ra khi xử lý yêu cầu.',
-                            icon: 'error'
-                        });
+                    var form = $('<form>', {
+                        method: 'POST',
+                        action: actionUrl
                     });
+
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: '_token',
+                        value: csrfToken
+                    }));
+
+                    $('body').append(form);
+                    form.submit();
                 }
             });
         });
