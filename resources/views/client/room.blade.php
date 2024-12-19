@@ -75,7 +75,7 @@
 
             const queryParams = new URLSearchParams(window.location.search);
             const urlParams = Object.fromEntries(queryParams.entries());
-
+console.log(urlParams);
             fetchRooms(urlParams);
 
             $.ajax({
@@ -118,6 +118,7 @@
                 $.ajax({
                     url: "{{ route('api.search_room') }}",
                     method: "GET",
+                    data: params,
                     success: function(response) {
                         if (response.status === "success" && Array.isArray(response.data) && response
                             .data.length > 0) {
@@ -189,7 +190,7 @@
                         '{{ http_build_query(request()->query()) }}';
                     const roomItem = `
                 <div class="col-md-6 col-xl-4 mb-4">
-                   <a href="${url_detail}"><div class="room-item rounded-4">
+                    <a href="${url_detail}"><div class="room-item rounded-4">
                         <img src="http://127.0.0.1:8000/storage/${JSON.parse(room.image_room)[0]}" style="width: 100%;  height: 400px; object-fit: cover;" alt="img" class="img-fluid rounded-4">
                     </div></a>
                     <div class="room-content">
