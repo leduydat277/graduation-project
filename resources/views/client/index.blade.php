@@ -267,7 +267,7 @@
                             <div class="position-relative">
                                 <img src="http://127.0.0.1:8000/storage/${assetType.image}" alt="${assetType.name}" class="img-fluid rounded">
                             </div>
-                            <h4 class="display-6 fw-normal my-3">${assetType.name}</h4>
+                            <h4 class="display-6 fw-normal my-3" style="font-size: 2rem;">${assetType.name}</h4>
                             <p>${assetType.description}</p>
                            
                         </div>

@@ -21,28 +21,25 @@
                     <div class="offcanvas-body align-items-center justify-content-center">
                         <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                             <li class="nav-item px-3">
-                                <a class="nav-link {{ request()->routeIs('client.home') ? 'active' : '' }} p-0"
-                                    aria-current="page" href="{{ route('client.home') }}">Trang chủ</a>
+                                <a class="nav-link {{ request()->routeIs('client.home') ? 'active' : '' }} p-0" aria-current="page" href="{{ route('client.home') }}">Trang chủ</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
-                                    href="{{ route('client.room.all') }}">Phòng</a>
+                                <a class="nav-link {{ request()->routeIs('client.room.all') ? 'active' : '' }} p-0" href="{{ route('client.room.all') }}">Phòng</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0"
-                                    href="{{ route('client.about') }}">Về chúng tôi</a>
+                                <a class="nav-link {{ request()->routeIs('client.about') ? 'active' : '' }} p-0" href="{{ route('client.about') }}">Về chúng tôi</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link {{ request()->routeIs('client.services') ? 'active' : '' }} p-0"
-                                    href="{{ route('client.services') }}">Tiện nghi</a>
+                                <a class="nav-link {{ request()->routeIs('client.services') ? 'active' : '' }} p-0" href="{{ route('client.services') }}">Tiện nghi</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link p-0" href="{{ route('client.blog') }}">Bài viết</a>
+                                <a class="nav-link {{ request()->routeIs('client.blog') ? 'active' : '' }} p-0" href="{{ route('client.blog') }}">Bài viết</a>
                             </li>
                             <li class="nav-item px-3">
-                                <a class="nav-link p-0" href="{{ route('client.policy') }}">Điều khoản</a>
+                                <a class="nav-link {{ request()->routeIs('client.policy') ? 'active' : '' }} p-0" href="{{ route('client.policy') }}">Điều khoản</a>
                             </li>
                         </ul>
+
 
                     </div>
                 </div>
@@ -82,43 +79,43 @@
                     </style>
                     <div class="d-flex justify-content-end align-items-center">
                         @if (Auth::check())
-                            <!-- Khi người dùng đã đăng nhập -->
-                            <div class="dropdown">
-                                <button class="btn d-flex align-items-center" type="button" id="userDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <!-- Hình ảnh tài khoản -->
-                                    @if (Auth::user()->image && Storage::url(Auth::user()->image))
-                                    <img src="{{ Auth::user()->image ? Storage::url(Auth::user()->image): asset('images/default-avatar.png') }}"
+                        <!-- Khi người dùng đã đăng nhập -->
+                        <div class="dropdown">
+                            <button class="btn d-flex align-items-center" type="button" id="userDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- Hình ảnh tài khoản -->
+                                @if (Auth::user()->image && Storage::url(Auth::user()->image))
+                                <img src="{{ Auth::user()->image ? Storage::url(Auth::user()->image): asset('images/default-avatar.png') }}"
                                     alt="avatar" class="rounded-circle me-2"
                                     style="width: 40px; height: 40px; object-fit: cover;">
-                                    @endif
-                                    <!-- Tên tài khoản -->
-                                    <span>Hi, {{ Auth::user()->name }}</span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li>
-                                        <a class="dropdown-item text-black" href="{{ route('account') }}">Quản lý tài khoản</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-black" href="{{ route('getBookingList') }}">Các đơn đặt phòng</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-black" href="{{ route('paymentHistory') }}">Lịch sử thanh toán</a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="{{ route('client.logout') }}">Đăng
-                                            xuất</a>
-                                    </li>
-                                </ul>
-                            </div>
+                                @endif
+                                <!-- Tên tài khoản -->
+                                <span>Hi, {{ Auth::user()->name }}</span>
+                            </button>
+                            <ul style="left: 0; right: auto; border: none" class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item text-black" href="{{ route('account') }}">Quản lý tài khoản</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-black" href="{{ route('getBookingList') }}">Các đơn đặt phòng</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-black" href="{{ route('paymentHistory') }}">Lịch sử thanh toán</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ route('client.logout') }}">Đăng
+                                        xuất</a>
+                                </li>
+                            </ul>
+                        </div>
                         @else
-                            <!-- Khi người dùng chưa đăng nhập -->
-                            <a href="{{ route('client.login') }}" class="btn btn-outline-primary me-2 login-btn">Đăng
-                                nhập</a>
-                            <a href="{{ route('client.register') }}" class="btn btn-outline-primary me-2 login-btn">Đăng ký</a>
+                        <!-- Khi người dùng chưa đăng nhập -->
+                        <a href="{{ route('client.login') }}" class="btn btn-outline-primary me-2 login-btn">Đăng
+                            nhập</a>
+                        <a href="{{ route('client.register') }}" class="btn btn-outline-primary me-2 login-btn">Đăng ký</a>
                         @endif
                     </div>
                 </div>
