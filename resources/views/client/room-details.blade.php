@@ -33,7 +33,7 @@
                                             @foreach ($images as $image)
                                                 <div class="swiper-slide">
                                                     <img src="{{ asset('storage/' . $image) }}" alt="product-large"
-                                                        width="985px" height="580px" class="img-fluid img-product">
+                                                        width="100%" height="580px" class="img-fluid img-product">
                                                 </div>
                                             @endforeach
 
