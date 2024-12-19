@@ -354,6 +354,7 @@
             const totalPrice = parseInt($('#originalPrice').text().replace(/\D/g, ''), 10);
             $('#finalPrice').text(`${totalPrice.toLocaleString('vi-VN')} VND`);
             $('#discountAmount').text('0 VND');
+            voucher_id = null;
         });
 
         const updateTotalPrice = (totalPrice, voucher) => {
