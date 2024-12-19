@@ -12,6 +12,7 @@ class Review extends Model
     public $timestamps = false;
     // Các trường có thể được gán giá trị hàng loạt
     protected $fillable = [
+        'booking_id',
         'user_id',
         'room_id',
         'comment',
