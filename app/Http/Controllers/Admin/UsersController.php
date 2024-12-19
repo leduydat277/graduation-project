@@ -52,6 +52,7 @@ class UsersController extends RoutingController
                 "image" => asset('storage/' . $item->image),
                 "role" => $item->role,
                 "status" => $item->status,
+                "status" => $item->status,
             ];
         });
         $userDefaults = Auth::user();
@@ -192,9 +193,28 @@ class UsersController extends RoutingController
         return redirect()->route('user.editUI', $id)->with('success', 'Cập nhật tài khoản thành công');
     }
 
-    public function delete($id)
-    {
-        User::where("id", $id)->update(["status" => 0]);
-        return redirect()->route('user.index', $id)->with('success', 'Vô hiệu hóa tài khoản thành công');
+    // làm cho tôi chức năng khóa tài khoản
+    public function lock($id){
+        $data = User::find($id);
+        if (!$data) {
+            return redirect()->back() 
+            ->withErrors(["email" => "Không tìm thấy tài khoản"])
+            ->withInput();
+        }
+        $data->status = 0;
+        $data->save();
+        return redirect()->route('user.index')->with('success', 'Khóa tài khoản thành công');
+    }
+
+    public function unlock($id){
+        $data = User::find($id);
+        if (!$data) {
+            return redirect()->back() 
+            ->withErrors(["email" => "Không tìm thấy tài khoản"])
+            ->withInput();
+        }
+        $data->status = 1;
+        $data->save();
+        return redirect()->route('user.index')->with('success', 'Mở khóa tài khoản thành công');
     }
 }

@@ -25,5 +25,10 @@ class Room extends Model
         return $this->hasMany(Booking::class, 'room_id');
     }
 
+    public function roomAssets()
+    {
+        return $this->hasMany(RoomAsset::class, 'room_id');
+    }
+
     public $timestamps = false;
 }

@@ -49,8 +49,8 @@
                                         <span
                                             class="badge bg-info fs-6">{{ number_format($booking->total_price, 0, ',', '.') }}đ</span>
                                     </p>
-                                    <p><strong>Giảm giá:</strong>
-                                        @if (is_numeric($booking->discount_value))
+                                    @if ($booking->discount_value)
+                                        <p><strong>Giảm giá:</strong>
                                             <span class="badge bg-info fs-6">
                                                 Giảm giá:
                                                 @if ($booking->discount_value < 100)
@@ -59,14 +59,12 @@
                                                     {{ number_format($booking->discount_value, 0, ',', '.') }} VNĐ
                                                 @endif
                                             </span>
-                                        @else
-                                            <span class="badge bg-info fs-6">Giảm giá: Không hợp lệ</span>
-                                        @endif
-                                    </p>
-                                    <p><strong>Tổng tiền sau khi giảm:</strong>
-                                        <span
-                                            class="badge bg-info fs-6">{{ number_format($booking->discount_price, 0, ',', '.') }}đ</span>
-                                    </p>
+                                        </p>
+                                        <p><strong>Tổng tiền sau khi giảm:</strong>
+                                            <span
+                                                class="badge bg-info fs-6">{{ number_format($booking->discount_price, 0, ',', '.') }}đ</span>
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -80,6 +78,7 @@
                                     <p><strong>Số điện thoại:</strong> {{ $booking->phone }}</p>
                                     <p><strong>Địa chỉ:</strong> {{ $booking->address }}</p>
                                     <p><strong>CCCD:</strong> {{ $booking->CCCD_booking ?? 'Không rõ' }}</p>
+                                    <p><strong>Ghi chú: {{$booking->message ?? ''}}</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -136,6 +135,10 @@
 
                                             @case(5)
                                                 <span class="badge bg-danger">Đã hủy</span>
+                                            @break
+
+                                            @case(6)
+                                                <span class="badge bg-success">Hoàn thành</span>
                                             @break
 
                                             @default

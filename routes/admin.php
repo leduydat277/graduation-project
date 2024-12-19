@@ -87,7 +87,10 @@ Route::prefix('admin')->middleware(Role::class)->group(function () {
         Route::post('/add', [UsersController::class, 'add'])->name('add');
         Route::get('/edit-ui/{id}', [UsersController::class, 'editUI'])->name('editUI');
         Route::put('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
-        Route::get('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+        Route::delete('/destroy/{id}', [UsersController::class, 'delete'])->name('destroy');
+        //chứa năng khóa 
+        Route::put('/lock/{id}', [UsersController::class, 'lock'])->name('lock');
+        Route::put('/unlock/{id}', [UsersController::class, 'unlock'])->name('unlock');
     });
 
     Route::prefix('cancel-booking')->as('cancel.')->group(function () {

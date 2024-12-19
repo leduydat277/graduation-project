@@ -46,14 +46,20 @@
                                 </div>
                             </div>
                             <div class="col-sm">
-                                <div class="d-flex justify-content-sm-end">
-                                    <form method="GET" action="{{ route('user.index') }}">
-                                        <div class="input-group search-box ms-2">
-                                            <input type="text" name="email" class="form-control"
-                                                placeholder="Tìm kiếm email...">
-                                            <!-- Giữ nguyên giá trị sắp xếp khi tìm kiếm -->
-                                            <button class="btn btn-primary" type="submit">
-                                                <i class="ri-search-line search-icon"></i>
+                                <div class="d-flex justify-content-end">
+                                    <form method="GET" action="{{ route('user.index') }}" class="w-100" style="max-width: 400px;">
+                                        <div class="input-group">
+                                            <!-- Ô tìm kiếm -->
+                                            <input 
+                                                type="text" 
+                                                name="search" 
+                                                class="form-control rounded-start" 
+                                                placeholder="Tìm kiếm tài khoản..." 
+                                                value="{{ request('search') }}"
+                                            >
+                                            <!-- Nút tìm kiếm -->
+                                            <button class="btn btn-primary rounded-end" type="submit">
+                                                <i class="ri-search-line"></i>
                                             </button>
                                         </div>
                                     </form>
@@ -88,8 +94,11 @@
                                 </thead>
                                 <tbody class="list form-check-all">
                                     @if (session('success'))
-                                        <div class="alert alert-success">
-                                            {{ session('success') }}
+                                        <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
+                                            role="alert">
+                                            {{ session('success') ?? session('error') }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                         </div>
                                     @endif
                                     @php
@@ -102,6 +111,7 @@
                                             0 => 'Ngưng hoạt động',
                                         ];
                                     @endphp
+                                    {{-- @dd($data) --}}
                                     @foreach ($data as $user)
                                         @php
                                             $role = $user['role'];
@@ -114,22 +124,23 @@
                                             <td>{{ $dataRole[$role] }}</td>
                                             <td>{{ $dataStatus[$user['status']] }}</td>
                                             <td>
-                                                <img src="{{ $user['image'] }}" style="width: 100px" alt="Image">
+                                                <img src="{{ Storage::url($user['image']) }}" style="width: 100px"
+                                                    alt="{{ $user['name'] }}">
                                             </td>
-                                            <td class="d-flex">
-                                                <a href="{{ route('user.editUI', $user['id']) }}"
-                                                    class="btn btn-warning">Sửa</a>
-                                                @if ($userDefaults->role == 1 && $role == 0)
-                                                    <form action="{{ route('user.destroy', $user['id']) }}"
-                                                        class="mx-2 delete-form" method="delete">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="btn btn-danger "
-                                                            title="Khóa tài khoản">
-                                                            <i class="fas fa-times-circle"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
+                                            <td>
+                                                <form
+                                                    action="{{ $user['status'] === 0 ? route('user.unlock', $user['id']) : route('user.lock', $user['id']) }}"
+                                                    method="POST" class="lock-unlock-form"
+                                                    data-room-name="{{ $user['name'] }}" style="display:inline-block;">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="button"
+                                                        class="btn {{ $user['status'] === 0 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn"
+                                                        title="{{ $user['status'] === 0 ? 'Mở hoạt động' : 'Dừng hoạt động' }}">
+                                                        <i
+                                                            class="{{ $user['status'] === 0 ? 'fas fa-unlock' : 'fas fa-lock' }}"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -179,22 +190,24 @@
     <!-- App js -->
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        document.querySelectorAll('.delete-btn').forEach(button => {
+        document.querySelectorAll('.lock-unlock-btn').forEach(button => {
             button.addEventListener('click', function() {
-                var form = this.closest('.delete-form');
+                const form = this.closest('.lock-unlock-form');
+                const roomName = form.dataset.roomName;
+                const isUnlocking = this.classList.contains('btn-success');
+
                 Swal.fire({
-                    title: 'Bạn có chắc chắn muốn khóa tài khoản không?',
+                    title: `Bạn có chắc chắn muốn ${isUnlocking ? 'mở khóa' : 'khóa'} tài khoản "${roomName}" không?`,
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: isUnlocking ? '#28a745' : '#ffc107',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đồng ý',
+                    confirmButtonText: `Có, ${isUnlocking ? 'mở khóa' : 'khóa'}!`,
                     cancelButtonText: 'Hủy'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit(); // Gửi form nếu tài khoản xác nhận xóa
+                        form.submit();
                     }
                 });
             });
