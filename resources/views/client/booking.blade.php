@@ -216,6 +216,8 @@
                                             id="payment_type" value="1">
                                         <span>
                                             <strong class="text-uppercase">Thanh toán 30%</strong>
+                                            <span id="payment_30_price" class="ms-auto">-
+                                                {{ number_format($room->price * $totalDays * 0.3, 0, ',', '.') }}VND</span>
                                         </span>
                                     </label>
                                     <label class="list-group-item d-flex gap-2 border-0">
@@ -223,6 +225,8 @@
                                             id="payment_type" value="2">
                                         <span>
                                             <strong class="text-uppercase">Thanh toán tất cả</strong>
+                                            <span id="payment_full_price" class="ms-auto">-
+                                                {{ number_format($room->price * $totalDays, 0, ',', '.') }}VND</span>
                                         </span>
                                     </label>
                                 </div>
@@ -281,6 +285,8 @@
             const originalPriceElement = $('#originalPrice');
             const discountAmountElement = $('#discountAmount');
             const finalPriceElement = $('#finalPrice');
+            const payment_30_price = $('#payment_30_price');
+            const payment_full_price = $('#payment_full_price');
             const totalPrice = parseInt(originalPriceElement.text().replace(/\D/g, ''), 10);
 
             if (!voucherCode) {
@@ -313,6 +319,8 @@
 
                         discountAmountElement.text(`${discountValue.toLocaleString('vi-VN')} VND`);
                         finalPriceElement.text(`${newTotalPrice.toLocaleString('vi-VN')} VND`);
+                        payment_30_price.text(`${(newTotalPrice * 0.3).toLocaleString('vi-VN')} VND`);
+                        payment_full_price.text(`${newTotalPrice.toLocaleString('vi-VN')} VND`);
                         $('#voucherInfo').show();
                         $('#voucherName').text(response.voucher.name);
                         $('#voucherType').text(response.voucher.type);
@@ -352,8 +360,11 @@
             const voucherCode = $('#voucher').val('');
 
             const totalPrice = parseInt($('#originalPrice').text().replace(/\D/g, ''), 10);
+            $('#payment_30_price').text(`${(totalPrice * 0.3).toLocaleString('vi-VN')} VND`);
+            $('#payment_full_price').text(`${totalPrice.toLocaleString('vi-VN')} VND`);
             $('#finalPrice').text(`${totalPrice.toLocaleString('vi-VN')} VND`);
             $('#discountAmount').text('0 VND');
+            voucher_id = null;
         });
 
         const updateTotalPrice = (totalPrice, voucher) => {

@@ -44,6 +44,8 @@ class ReviewController extends Controller
 
         $booking = Booking::find($bookingId);
 
+        $review =Review::where('booking_id', $booking->id)->first();
+
         if (!$booking) {
             return response()->json(['type' => 'error', 'content' => 'Booking không tồn tại']);
         }
@@ -52,11 +54,15 @@ class ReviewController extends Controller
             return response()->json(['type' => 'error', 'content' => 'Trạng thái booking không hợp lệ']);
         }
 
-        $view = view('client.reviewModal', compact('booking'))->render();
+        if (!$review) {
+            $view = view('client.reviewModal', compact('booking'))->render();
 
-        return response()->json([
-            'type' => 'success',
-            'view' => $view,
-        ]);
+            return response()->json([
+                'type' => 'success',
+                'view' => $view,
+            ]);
+        }
+
+        return ;
     }
 }

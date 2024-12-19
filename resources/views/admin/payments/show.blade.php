@@ -62,6 +62,17 @@
                     <p><strong>Tổng Số Tiền Đặt Phòng:</strong> <span
                             class="text-danger fw-bold">{{ number_format($payment->booking->total_price) }} VNĐ</span></p>
                     <p><strong>Số Tiền Cọc:</strong> {{ number_format($payment->booking->tien_coc) }} VNĐ</p>
+                    @if ($payment->booking->phiPhatSinhs->count())
+                        <p>
+                            <strong>Phí phát sinh:</strong>
+                            @foreach ($payment->booking->phiPhatSinhs as $item)
+                                <ul>
+                                    <li>Tên: {{ $item->name }}</li>
+                                    <li>Giá: {{ number_format($item->price, 0, ',', '.') }}đ</li>
+                                </ul>
+                            @endforeach
+                        </p>
+                    @endif
                     @if ($payment->booking->discount_value)
                         <p><strong>Giảm Giá:</strong>
                             <span class="badge bg-info fs-6">
@@ -74,9 +85,10 @@
                             </span>
                         </p>
                         <p><strong>Tổng Tiền Sau Khi Giảm:</strong>
-                            <span class="badge bg-info fs-6">{{ number_format($payment->booking->discount_price, 0, ',', '.') }}đ</span>
+                            <span
+                                class="badge bg-info fs-6">{{ number_format($payment->booking->discount_price, 0, ',', '.') }}đ</span>
                         </p>
-                        <p><strong>Ghi chú: {{$booking->message ?? ''}}</strong></p>
+                        <p><strong>Ghi chú: {{ $booking->message ?? '' }}</strong></p>
                     @endif
                 </div>
 

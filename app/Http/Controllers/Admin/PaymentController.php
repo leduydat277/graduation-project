@@ -63,7 +63,7 @@ class PaymentController extends Controller
 
     public function generatePDF($id)
     {
-        $payment = Payment::with(['booking', 'booking.room', 'booking.room.roomType', 'booking.user'])->findOrFail($id);
+        $payment = Payment::with(['booking', 'booking.room', 'booking.room.roomType', 'booking.user', 'booking.phiPhatSinhs'])->findOrFail($id);
         $pdf = Pdf::loadView('admin.payments.pdf', compact('payment'))
             ->setPaper('A4', 'portrait'); 
 

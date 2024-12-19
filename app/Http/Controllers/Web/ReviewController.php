@@ -31,6 +31,7 @@ class ReviewController
             return redirect()->back()->with('error', 'Bạn cần đăng nhập để bình luận.');
         }
         $data = [
+            'booking_id' => $request->id,
             'user_id' => $user->id,
             'room_id' => $id,
             'comment' => $validatedData['comment'],

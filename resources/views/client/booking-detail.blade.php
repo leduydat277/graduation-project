@@ -88,6 +88,36 @@
                     </div>
                 @endif
 
+                @if ($booking->status == 6 && isset($phiphatsinh))
+                    <div class="row g-5 mt-4">
+                        <div class="col-lg-12">
+                            <div class="additional-fees">
+                                <h5 class="mb-4">Phí phát sinh</h5>
+                                <ul class="list-group">
+                                    @foreach ($phiphatsinh as $fee)
+                                        <li class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>{{ $fee->name }}</strong>
+                                                    <p>{{ $fee->description ?? 'Không có mô tả' }}</p>
+                                                </div>
+                                                <div>
+                                                    @if ($fee->image)
+                                                        <img src="{{ asset('storage/images/' . $fee->image) }}"
+                                                            alt="{{ $fee->name }}" width="50">
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <strong>{{ number_format($fee->price, 0, ',', '.') }} VND</strong>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="row g-5 mt-4">
                     <div class="col-lg-12">
                         <div class="payment-summary">
@@ -140,6 +170,14 @@
                                         </th>
                                         <td></td>
                                     </tr>
+                                    @if ($booking->status == 2)
+                                        <tr>
+                                            <th>Tiền cọc:
+                                                {{ number_format($booking->tien_coc, 0, ',', '.') }}
+                                                VNĐ</th>
+                                            <td></td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <th>Hình thức thanh toán:
                                             @if ($payment && $payment->payment_method == 0)
@@ -152,6 +190,11 @@
                                         </th>
                                         <td></td>
                                     </tr>
+                                    @if ($booking->status == 6 && isset($phiphatsinh))
+                                        <tr>
+                                            <th>Tổng tiền phí phát sinh: {{ number_format($totalFee, 0, ',', '.') }} VNĐ</th>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                             <!-- Nút Hủy Đơn -->
