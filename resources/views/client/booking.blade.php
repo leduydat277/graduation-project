@@ -216,8 +216,8 @@
                                             id="payment_type" value="1">
                                         <span>
                                             <strong class="text-uppercase">Thanh toán 30%</strong>
-                                            <span id="payment_30_price" class="ms-auto">-
-                                                {{ number_format($room->price * $totalDays * 0.3, 0, ',', '.') }}VND</span>
+                                            <span id="payment_30_price" class="ms-auto"> (
+                                                {{ number_format($room->price * $totalDays * 0.3, 0, ',', '.') }}VND)</span>
                                         </span>
                                     </label>
                                     <label class="list-group-item d-flex gap-2 border-0">
@@ -225,8 +225,8 @@
                                             id="payment_type" value="2">
                                         <span>
                                             <strong class="text-uppercase">Thanh toán tất cả</strong>
-                                            <span id="payment_full_price" class="ms-auto">-
-                                                {{ number_format($room->price * $totalDays, 0, ',', '.') }}VND</span>
+                                            <span id="payment_full_price" class="ms-auto"> 
+                                                ({{ number_format($room->price * $totalDays, 0, ',', '.') }}VND)</span>
                                         </span>
                                     </label>
                                 </div>
