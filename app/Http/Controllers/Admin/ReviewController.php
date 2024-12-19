@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\admin\Booking as AdminBooking;
 use App\Models\Admin\Review;
 use App\Models\Booking;
 use Illuminate\Http\Request;

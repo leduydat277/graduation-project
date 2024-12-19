@@ -376,7 +376,7 @@
                     booking.phone,
                     booking.check_in_date,
                     booking.check_out_date,
-                    booking.total_price,
+                    booking.discount_price,
                     booking.status,
                     booking.created_at,
                     booking.id

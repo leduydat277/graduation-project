@@ -52,7 +52,6 @@ class UsersController extends RoutingController
                 "image" => asset('storage/' . $item->image),
                 "role" => $item->role,
                 "status" => $item->status,
-                "status" => $item->status,
             ];
         });
         $userDefaults = Auth::user();

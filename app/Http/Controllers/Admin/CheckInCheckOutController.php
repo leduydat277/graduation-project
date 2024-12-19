@@ -121,14 +121,14 @@ class CheckInCheckOutController extends RoutingController
         $booking->check_out_date = $currentTimestamp;
         $totalUpdate = $booking->total_price;
         if($booking->tien_coc == null){
-            $booking->total_price = $totalUpdate + $request->totalPrice;
+            $booking->discount_price = $totalUpdate + $request->totalPrice;
         }
         else{
             $cocs = 0;
             foreach($request->price as $coc){
                 $cocs += $coc;
             }
-            $booking->total_price = $totalUpdate + $cocs;
+            $booking->discount_price = $totalUpdate + $cocs;
         }
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();

@@ -23,6 +23,7 @@
     <link href="{{ asset('assets/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('assets/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endsection
 @section('content')
     <div class="row">
@@ -33,140 +34,61 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="listjs-table" id="userList">
-                        <div class="row g-4 mb-3">
-                            <div class="col-sm-auto">
-                                <div>
-                                    <a href="{{ route('user.addUI') }}" class="btn btn-success">
-                                        <i class="ri-add-line align-bottom me-1"></i> Thêm tài khoản
-                                    </a>
-                                    <button class="btn btn-soft-danger" onClick="deleteMultiple()">
-                                        <i class="ri-delete-bin-2-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-sm">
-                                <div class="d-flex justify-content-end">
-                                    <form method="GET" action="{{ route('user.index') }}" class="w-100" style="max-width: 400px;">
-                                        <div class="input-group">
-                                            <!-- Ô tìm kiếm -->
-                                            <input 
-                                                type="text" 
-                                                name="search" 
-                                                class="form-control rounded-start" 
-                                                placeholder="Tìm kiếm tài khoản..." 
-                                                value="{{ request('search') }}"
-                                            >
-                                            <!-- Nút tìm kiếm -->
-                                            <button class="btn btn-primary rounded-end" type="submit">
-                                                <i class="ri-search-line"></i>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="table-responsive table-card mt-3 mb-1">
-                            <table class="table align-middle table-nowrap" id="userTable">
-                                <thead class="table-light">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-bordered" id="userTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ảnh</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $dataRole = [1 => 'Admin', 0 => 'Khách hàng'];
+                                    $dataStatus = [1 => 'Hoạt động', 0 => 'Ngưng hoạt động'];
+                                @endphp
+                                @foreach ($data as $user)
                                     <tr>
-                                        <th data-sort="id">
-                                            ID
-                                        </th>
-                                        <th data-sort="name">
-                                            Tên
-                                        </th>
-                                        <th data-sort="email">
-                                            Email
-                                        </th>
-                                        <th data-sort="role">
-                                            Vai trò
-                                        </th>
-                                        <th data-sort="role">
-                                            Trạng thái
-                                        </th>
-                                        <th data-sort="role">
-                                            Ảnh
-                                        </th>
-                                        <th data-sort="action">Hành động</th>
+                                        <td>{{ $user['name'] }}</td>
+                                        <td>{{ $user['email'] }}</td>
+                                        <td>{{ $dataRole[$user['role']] }}</td>
+                                        <td>{{ $dataStatus[$user['status']] }}</td>
+                                        <td>
+                                            <img src="{{ $user['image'] }}" style="width: 100px"
+                                                alt="{{ $user['name'] }}">
+                                        </td>
+                                        <td>
+                                            <form
+                                                action="{{ $user['status'] === 0 ? route('user.unlock', $user['id']) : route('user.lock', $user['id']) }}"
+                                                method="POST" class="lock-unlock-form"
+                                                data-room-name="{{ $user['name'] }}" style="display:inline-block;">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="button"
+                                                    class="btn {{ $user['status'] === 0 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn"
+                                                    title="{{ $user['status'] === 0 ? 'Mở hoạt động' : 'Dừng hoạt động' }}">
+                                                    <i
+                                                        class="{{ $user['status'] === 0 ? 'fas fa-unlock' : 'fas fa-lock' }}"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody class="list form-check-all">
-                                    @if (session('success'))
-                                        <div class="alert {{ session('success') ? 'alert-success' : 'alert-danger' }} alert-dismissible fade show mb-0"
-                                            role="alert">
-                                            {{ session('success') ?? session('error') }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                        </div>
-                                    @endif
-                                    @php
-                                        $dataRole = [
-                                            1 => 'Admin',
-                                            0 => 'Khách hàng',
-                                        ];
-                                        $dataStatus = [
-                                            1 => 'Hoạt động',
-                                            0 => 'Ngưng hoạt động',
-                                        ];
-                                    @endphp
-                                    {{-- @dd($data) --}}
-                                    @foreach ($data as $user)
-                                        @php
-                                            $role = $user['role'];
-                                            $distable = $userDefaults->role == 1 && $role == 1;
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $user['id'] }}</td>
-                                            <td class="text-wrap" style="max-width: 200px;">{{ $user['name'] }}</td>
-                                            <td>{{ $user['email'] }}</td>
-                                            <td>{{ $dataRole[$role] }}</td>
-                                            <td>{{ $dataStatus[$user['status']] }}</td>
-                                            <td>
-                                                <img src="{{ Storage::url($user['image']) }}" style="width: 100px"
-                                                    alt="{{ $user['name'] }}">
-                                            </td>
-                                            <td>
-                                                <form
-                                                    action="{{ $user['status'] === 0 ? route('user.unlock', $user['id']) : route('user.lock', $user['id']) }}"
-                                                    method="POST" class="lock-unlock-form"
-                                                    data-room-name="{{ $user['name'] }}" style="display:inline-block;">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="button"
-                                                        class="btn {{ $user['status'] === 0 ? 'btn-success' : 'btn-danger' }} lock-unlock-btn"
-                                                        title="{{ $user['status'] === 0 ? 'Mở hoạt động' : 'Dừng hoạt động' }}">
-                                                        <i
-                                                            class="{{ $user['status'] === 0 ? 'fas fa-unlock' : 'fas fa-lock' }}"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @if ($data->isEmpty())
-                                <div class="noresult">
-                                    <div class="text-center">
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                            colors="primary:#121331,secondary:#08a88a"
-                                            style="width:75px;height:75px"></lord-icon>
-                                        <h5 class="mt-2">Xin lỗi! Không có kết quả</h5>
-                                        <p class="text-muted mb-0">Không tìm thấy tài khoản nào phù hợp với tìm kiếm của
-                                            bạn.</p>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                </div><!-- end card-body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('assets/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/admin/assets/libs/node-waves/waves.min.js') }}"></script>
@@ -190,6 +112,28 @@
     <!-- App js -->
     <script src="{{ asset('assets/admin/assets/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('#userTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                language: {
+                    paginate: {
+                        next: 'Tiếp',
+                        previous: 'Trước'
+                    },
+                    search: "Tìm kiếm:",
+                    lengthMenu: "Hiển thị _MENU_ mục",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu để hiển thị",
+                    zeroRecords: "Không tìm thấy kết quả",
+                }
+            });
+        });
+    </script>
+
     <script>
         document.querySelectorAll('.lock-unlock-btn').forEach(button => {
             button.addEventListener('click', function() {

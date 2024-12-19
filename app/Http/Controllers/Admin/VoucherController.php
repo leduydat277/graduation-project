@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Booking;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -124,6 +125,13 @@ class VoucherController
 
     public function destroy(Voucher $voucher)
     {
+        $bookings = Booking::all();
+        foreach ($bookings as $booking){
+            if ($booking->voucher_id == $voucher->id){
+                return redirect()->route('vouchers.index')->with('error', 'Không thể xóa mã giảm giá vì có đơn hàng liên quan.');
+            }
+        }
+
         $voucher->delete();
         return redirect()->route('vouchers.index')->with('success', 'Voucher đã được xóa.');
     }
