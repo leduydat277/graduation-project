@@ -119,28 +119,38 @@
                     {{ \Carbon\Carbon::parse($payment->booking->check_out_date)->format('d-m-Y') }}</div>
             </div>
             <div class="row">
-                <div class="col"><strong>Tổng Số Tiền Đặt Phòng:</strong> <span
-                        class="text-danger">{{ number_format($payment->booking->total_price) }} VNĐ</span></div>
-                <div class="col"><strong>Số Tiền Cọc:</strong> {{ number_format($payment->booking->tien_coc) }} VNĐ
-                </div>
-                <div class="col"><strong>Trạng Thái Đặt Phòng:</strong>
-                    <span
-                        class="badge @if ($payment->booking->status == 3 || $payment->payment_status == 2) bg-success
-                    @elseif ($payment->booking->status == 4)
-                    bg-primary
-                    @else
-                    bg-warning @endif">
-                        @if ($payment->booking->status == 3)
-                            Đã check-out
-                        @endif
-                        @if ($payment->booking->status == 2)
-                            Đã cọc
-                        @endif
-                        @if ($payment->booking->status == 4)
-                            Đang sử dụng
-                        @endif
-                    </span>
-                </div>
+                <p><strong>Tổng Số Tiền Đặt Phòng:</strong> <span
+                        class="text-danger fw-bold">{{ number_format($payment->booking->total_price) }} VNĐ</span></p>
+                <p><strong>Số Tiền Cọc:</strong> {{ number_format($payment->booking->tien_coc) }} VNĐ</p>
+                @if ($payment->booking->phiPhatSinhs->count())
+                    <p>
+                        <strong>Phí phát sinh:</strong>
+                        @foreach ($payment->booking->phiPhatSinhs as $item)
+                            <ul>
+                                <li>Tên: {{ $item->name }}</li>
+                                <li>Giá: {{ number_format($item->price, 0, ',', '.') }}đ</li>
+                            </ul>
+                        @endforeach
+                    </p>
+                @endif
+                @if ($payment->booking->discount_value)
+                    <p><strong>Giảm Giá:</strong>
+                        <span class="badge bg-info fs-6">
+                            Giảm giá:
+                            @if ($payment->booking->discount_value < 100)
+                                {{ $payment->booking->discount_value }}%
+                            @else
+                                {{ number_format($payment->booking->discount_value, 0, ',', '.') }} VNĐ
+                            @endif
+                        </span>
+                    </p>
+                    <p><strong>Tổng Tiền Sau Khi Giảm:</strong>
+                        <span
+                            class="badge bg-info fs-6">{{ number_format($payment->booking->discount_price, 0, ',', '.') }}đ</span>
+                    </p>
+                    <p><strong>Ghi chú: {{ $booking->message ?? '' }}</strong></p>
+                @endif
+
             </div>
         </div>
     </div>
@@ -156,7 +166,7 @@
             </div>
             <div class="row">
                 <div class="col"><strong>Giá Mỗi Đêm:</strong> <span
-                        class="text-danger">{{ number_format($payment->booking->room->price ?? 0) }} VNĐ</span></div>
+                        class="text-danger">{{ number_format($payment->booking->room->price ?? 0) }} đ</span></div>
                 <div class="col"><strong>Sức Chứa:</strong> {{ $payment->booking->room->max_people ?? 'N/A' }} người
                 </div>
             </div>

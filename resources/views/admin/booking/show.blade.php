@@ -49,6 +49,17 @@
                                         <span
                                             class="badge bg-info fs-6">{{ number_format($booking->total_price, 0, ',', '.') }}đ</span>
                                     </p>
+                                    @if ($booking->phiPhatSinhs->count())
+                                        <p>
+                                            <strong>Phí phát sinh:</strong>
+                                            @foreach ($booking->phiPhatSinhs as $item)
+                                                <ul>
+                                                    <li>Tên: {{ $item->name }}</li>
+                                                    <li>Giá: {{ number_format($item->price, 0, ',', '.') }}đ</li>
+                                                </ul>
+                                            @endforeach
+                                        </p>
+                                    @endif
                                     @if ($booking->discount_value)
                                         <p><strong>Giảm giá:</strong>
                                             <span class="badge bg-info fs-6">
@@ -78,7 +89,7 @@
                                     <p><strong>Số điện thoại:</strong> {{ $booking->phone }}</p>
                                     <p><strong>Địa chỉ:</strong> {{ $booking->address }}</p>
                                     <p><strong>CCCD:</strong> {{ $booking->CCCD_booking ?? 'Không rõ' }}</p>
-                                    <p><strong>Ghi chú: {{$booking->message ?? ''}}</strong></p>
+                                    <p><strong>Ghi chú: {{ $booking->message ?? '' }}</strong></p>
                                 </div>
                             </div>
                         </div>
