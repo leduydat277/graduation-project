@@ -70,14 +70,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="status_id" class="form-label">Trạng thái</label>
-                        <select class="form-select" name="status_id" id="status_id">
-                            <option value="1" {{ old('status_id', $data->status_id) == 1 ? 'selected' : '' }}>Hoạt
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select class="form-select" name="status">
+                            <option value="1" {{ old('status', $data->status) == 1 ? 'selected' : '' }}>Hoạt
                                 động</option>
-                            <option value="3" {{ old('status_id', $data->status_id) == 3 ? 'selected' : '' }}>Ngưng
+                            <option value="0" {{ old('status', $data->status) == 0 ? 'selected' : '' }}>Ngưng
                                 hoạt động</option>
                         </select>
-                        @error('status_id')
+                        @error('status')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

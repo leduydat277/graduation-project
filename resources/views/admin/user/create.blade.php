@@ -68,8 +68,8 @@
                         <label for="role" class="form-label">Chức vụ</label>
                         <select class="form-select" name="role" id="role">
                             <option selected disabled>Chọn chức vụ</option>
-                            <option value="0" {{ old('role') == 1 ? 'selected' : '' }}>Admin</option>
-                            <option value="1" {{ old('role') == 4 ? 'selected' : '' }}>Khách hàng</option>
+                            <option value="0" {{ old('role') == 0 ? 'selected' : '' }}>Khách hàng</option>
+                            <option value="1" {{ old('role') == 1 ? 'selected' : '' }}>Admin</option>
                         </select>
                         @error('role')
                             <span class="text-danger">{{ $message }}</span>
@@ -77,13 +77,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="status_id" class="form-label">Trạng thái</label>
-                        <select class="form-select" name="status_id" id="status_id">
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select class="form-select" name="status">
                             <option selected disabled>Chọn trạng thái</option>
-                            <option value="1" {{ old('status_id') == 1 ? 'selected' : '' }}>Hoạt động</option>
-                            <option value="3" {{ old('status_id') == 3 ? 'selected' : '' }}>Ngưng hoạt động</option>
+                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Hoạt động</option>
+                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Ngưng hoạt động</option>
                         </select>
-                        @error('status_id')
+                        @error('status')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

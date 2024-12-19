@@ -22,7 +22,7 @@ class UsersController extends RoutingController
             'phone.required' => 'Số điện thoại không được để trống.',
             'address.required' => 'Địa chỉ không được để trống.',
             'role.required' => 'Chức vụ không được để trống.',
-            'status_id.required' => 'Chức vụ không được để trống.',
+            'status.required' => 'Chức vụ không được để trống.',
             'email.required' => 'Email không được để trống.',
             'email.email' => 'Email không hợp lệ.',
             'password_old.required' => 'Mật khẩu cũ không được để trống.',
@@ -71,7 +71,7 @@ class UsersController extends RoutingController
             "email" => "required|string|email",
             "password" => "required|string|min:8",
             "role" => "required",
-            "status_id" => "required",
+            "status" => "required",
             'image' => 'image|mimes:jpeg,jpg,png'
         ], $this->messages);
 
@@ -85,7 +85,7 @@ class UsersController extends RoutingController
         $name = $request->input("name");
         $email = $request->input("email");
         $role = $request->input("role");
-        $statusId = $request->input("status_id");
+        $statusId = $request->input("status");
 
         $image = "";
         $dataUsers = User::where("email", $email)->first();
@@ -112,7 +112,8 @@ class UsersController extends RoutingController
             "password" => bcrypt($password),
             "image" => $image,
             "role" => $role,
-            "cccd" => 1
+            "cccd" => 1,
+            "status" => $statusId
         ]);
 
         return redirect()->route('user.addUI')->with('success', 'Thêm tài khoản thành công.');
@@ -140,7 +141,8 @@ class UsersController extends RoutingController
             "email" => "required|string|email",
             "password" => "nullable|string|min:8",
             "role" => "required",
-            'image' => 'image|mimes:jpeg,jpg,png'
+            'image' => 'image|mimes:jpeg,jpg,png',
+            "status" => "required",
         ], $this->messages);
         if ($validator->fails()) {
             return redirect()->back()
@@ -152,7 +154,7 @@ class UsersController extends RoutingController
         $email = request("email");
         $role = request("role");
         $image = "";
-        $statusId = request("status_id");
+        $statusId = request("status");
 
         $dataUsers = User::where("email", $email)->where("id", "!=", $id)->first();
         $dataUsersOld = User::where("id", "=", $id)->first();
@@ -183,6 +185,7 @@ class UsersController extends RoutingController
             "email" => $email,
             "image" => $image,
             "role" => $role,
+            "status" => $statusId
         ];
 
         if (!empty($password)) {
