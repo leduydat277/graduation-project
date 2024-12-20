@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DashboardController
@@ -406,7 +407,7 @@ class DashboardController
     function countRoomOrders(Request $request)
     {
         try {
-            $roomCounts = Booking::select('room_id', \DB::raw('count(*) as count'))
+            $roomCounts = Booking::select('room_id', DB::raw('count(*) as count'))
                 ->whereIn('status', [2, 3, 4, 6])
                 ->groupBy('room_id')
                 ->orderByDesc('count')

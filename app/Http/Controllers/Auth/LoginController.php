@@ -48,6 +48,14 @@ class LoginController extends Controller
                 return back()->withErrors(['email' => 'Tài khoản này không được cấp quyền truy trang này'])->withInput();
             }
 
+            if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+                // Lấy URL lưu trữ (nếu có) và xóa khỏi session
+                $redirectUrl = session()->pull('url.intended', route('client.home'));
+
+                // Chuyển hướng về URL hoặc trang mặc định (dashboard)
+                return redirect($redirectUrl)->with('success', 'Đăng nhập thành công!');
+            }
+
             return redirect()->route('client.home')->with('success', 'Đăng nhập thành công! Kiểm tra email của bạn.');
         }
 
@@ -97,11 +105,11 @@ class LoginController extends Controller
             'name' => 'Voucher Chào Mừng',
             'description' => 'Voucher giảm giá chào mừng bạn đến với SleepHotel.',
             'code_voucher' => strtoupper(Str::random(10)),
-            'discount_value' => 100000, 
+            'discount_value' => 100000,
             'start_date' => Carbon::now()->timestamp,
-            'end_date' => Carbon::now()->addDays(7)->timestamp, 
-            'type' => 'fixed', 
-            'min_booking_amount' => 500000, 
+            'end_date' => Carbon::now()->addDays(7)->timestamp,
+            'type' => 'fixed',
+            'min_booking_amount' => 500000,
             'quantity' => 1,
             'status' => 1,
             'created_at' => Carbon::now(),

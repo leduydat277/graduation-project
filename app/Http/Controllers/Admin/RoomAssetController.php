@@ -136,9 +136,18 @@ class RoomAssetController extends Controller
 
     public function destroy($id, Request $request)
     {
-        // Tìm room asset theo ID
+        //nếu tồn tại loại tiện nghi hoặc phòng thì không được
+
         $roomAsset = RoomAsset::find($id);
-        // Xóa room asset
+
+        if (!$roomAsset) {
+            return redirect()->back()->with('error', 'Không tìm thấy tiện nghi.');
+        }
+        
+        if($roomAsset->room->count()) {
+            return redirect()->back()->with('error', 'Không thể xóa Phòng ' . $roomAsset->room->title . ' vì vẫn còn Loại thuộc phòng này.');
+        }
+
         $roomAsset->delete();
 
         $room_id = $request->room_id;
