@@ -505,10 +505,11 @@
         totalPrice.value = Number(rawValue) + Number(total);
         const price = document.querySelectorAll('input[name="price[]"]');
         price.forEach(function(input) {
-            const formatPrice = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không phải số
+            var formatPrice = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không phải số
             input.value = formatPrice; // Cập nhật giá trị đã được làm sạch
         });
-
+        
+        
         form.action = '/admin/checkin-checkout/checkout/' + bookingId;
         form.method = 'POST';
         form.submit();

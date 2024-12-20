@@ -80,6 +80,11 @@ class CheckInCheckOutController extends RoutingController
 
     public function checkOut(Request $request, $id)
     {
+        $tong = 0;
+        foreach ($request->price as $item){
+            $tong += $item;
+        }
+        $tong += $request->tienno;
         foreach ($request->pps as $index => $name) {
             $price = $request->price[$index];
             PhiPhatSinh::insert([
@@ -119,16 +124,16 @@ class CheckInCheckOutController extends RoutingController
 
         $booking->status = 6;
         $booking->check_out_date = $currentTimestamp;
-        $totalUpdate = $booking->total_price;
+        $totalUpdate = $booking->discount_price;
         if($booking->tien_coc == null){
-            $booking->discount_price = $totalUpdate + $request->totalPrice;
+            $booking->discount_price = (int)$totalUpdate + (int)$request->totalPrice;
         }
         else{
             $cocs = 0;
             foreach($request->price as $coc){
                 $cocs += $coc;
             }
-            $booking->discount_price = $totalUpdate + $cocs;
+            $booking->discount_price = (int)$totalUpdate + (int)$cocs;
         }
         $booking->save();
         $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
@@ -143,16 +148,16 @@ class CheckInCheckOutController extends RoutingController
         $room->save();
         $payment = Payment::where('booking_id', $id)->first();
         $payment->payment_status = 3;
-        $payment->insert(
-            [
-                'booking_id' => $id,
-                'payments_id_number' => Str::random(6),
-                'payment_date' => Carbon::now()->timestamp,
-                'payment_method' => 0,
-                'payment_status' => 3,
-                'total_price' => ($request->totalPrice),
-            ]
-        );
+            $payment->insert(
+                [
+                    'booking_id' => $id,
+                    'payments_id_number' => Str::random(6),
+                    'payment_date' => Carbon::now()->timestamp,
+                    'payment_method' => 0,
+                    'payment_status' => 3,
+                    'total_price' => $tong,
+                ]
+            );
         $payment->save();
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
     }
