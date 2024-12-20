@@ -37,9 +37,10 @@ class CheckInCheckOutController extends RoutingController
     }
 
     public function index(Request $request)
-    {$title = "Checkin & Checkout";
+    {
+        $title = "Checkin & Checkout";
         $reson = Reson::all();
-        $bookings = Booking::whereIn('bookings.status', [2,3, 4])
+        $bookings = Booking::whereIn('bookings.status', [2, 3, 4])
             ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
@@ -53,7 +54,7 @@ class CheckInCheckOutController extends RoutingController
             )
             ->get();
 
-        $phiphatsinhs = PhiPhatSinh::where('status', 0)->get(); 
+        $phiphatsinhs = PhiPhatSinh::where('status', 0)->get();
 
         return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs', 'reson'));
     }
@@ -81,10 +82,13 @@ class CheckInCheckOutController extends RoutingController
     public function checkOut(Request $request, $id)
     {
         $tong = 0;
-        foreach ($request->price as $item){
-            $tong += $item;
+        if ($request->price) {
+            foreach ($request->price as $item) {
+                $tong += $item;
+            }
         }
         $tong += $request->tienno;
+        if($request->pps){
         foreach ($request->pps as $index => $name) {
             $price = $request->price[$index];
             PhiPhatSinh::insert([
@@ -93,6 +97,7 @@ class CheckInCheckOutController extends RoutingController
                 'price' => $price,
             ]);
         }
+    }
         $phiphatsinhs = PhiPhatSinh::where('booking_id', $id)->get();
         foreach ($phiphatsinhs as $phi) {
             $phi->status = 1;
@@ -100,7 +105,7 @@ class CheckInCheckOutController extends RoutingController
         }
         $currentTimestamp = Carbon::now()->timestamp;
         $booking = Booking::findOrFail($id);
-        if ($booking->check_out_date == $currentTimestamp) { 
+        if ($booking->check_out_date == $currentTimestamp) {
             $manage_status_rooms = ManageStatusRoom::where('booking_id', $id)->get();
             foreach ($manage_status_rooms as $manage_status_room) {
                 $manage_status_room->delete();
@@ -125,14 +130,15 @@ class CheckInCheckOutController extends RoutingController
         $booking->status = 6;
         $booking->check_out_date = $currentTimestamp;
         $totalUpdate = $booking->discount_price;
-        if($booking->tien_coc == null){
+        if ($booking->tien_coc == null) {
             $booking->discount_price = (int)$totalUpdate + (int)$request->totalPrice;
-        }
-        else{
+        } else {
             $cocs = 0;
-            foreach($request->price as $coc){
+            if($request->price){
+            foreach ($request->price as $coc) {
                 $cocs += $coc;
             }
+        }
             $booking->discount_price = (int)$totalUpdate + (int)$cocs;
         }
         $booking->save();
@@ -148,21 +154,22 @@ class CheckInCheckOutController extends RoutingController
         $room->save();
         $payment = Payment::where('booking_id', $id)->first();
         $payment->payment_status = 3;
-            $payment->insert(
-                [
-                    'booking_id' => $id,
-                    'payments_id_number' => Str::random(6),
-                    'payment_date' => Carbon::now()->timestamp,
-                    'payment_method' => 0,
-                    'payment_status' => 3,
-                    'total_price' => $tong,
-                ]
-            );
+        $payment->insert(
+            [
+                'booking_id' => $id,
+                'payments_id_number' => Str::random(6),
+                'payment_date' => Carbon::now()->timestamp,
+                'payment_method' => 0,
+                'payment_status' => 3,
+                'total_price' => $tong,
+            ]
+        );
         $payment->save();
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
     }
 
-    public function cancel(Request $request){
+    public function cancel(Request $request)
+    {
         $bookingId = $request->id;
         $today = Carbon::now();
 
@@ -190,15 +197,14 @@ class CheckInCheckOutController extends RoutingController
 
         $booking->status = 5;
         $booking->save();
-            BookingCancelled::create([
-                'booking_id' => $bookingId,
-                'reason' => $reson->reson,
-                'description' => $request->description,
-                'refund' => $refundAmount,
-                'cancelled_at' => $today->timestamp,
-                "status" => 'approved'
-            ]);
+        BookingCancelled::create([
+            'booking_id' => $bookingId,
+            'reason' => $reson->reson,
+            'description' => $request->description,
+            'refund' => $refundAmount,
+            'cancelled_at' => $today->timestamp,
+            "status" => 'approved'
+        ]);
         return redirect()->route('checkin-checkout.index')->with('success', 'Hủy đơn thành công!');
-
     }
 }

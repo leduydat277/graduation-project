@@ -71,11 +71,11 @@
                                                 @endif
                                             </span>
                                         </p>
-                                        <p><strong>Tổng tiền sau khi giảm:</strong>
+                                        @endif
+                                        <p><strong>Tổng tiền khi thanh toán:</strong>
                                             <span
                                                 class="badge bg-info fs-6">{{ number_format($booking->discount_price, 0, ',', '.') }}đ</span>
                                         </p>
-                                    @endif
                                 </div>
                             </div>
 
