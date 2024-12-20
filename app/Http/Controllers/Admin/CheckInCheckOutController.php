@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Booking;
+use App\Models\BookingCancelled;
 use App\Models\ManageStatusRoom;
 use App\Models\Payment;
 use App\Models\PhiPhatSinh;
+use App\Models\Reson;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,6 +38,7 @@ class CheckInCheckOutController extends RoutingController
 
     public function index(Request $request)
     {$title = "Checkin & Checkout";
+        $reson = Reson::all();
         $bookings = Booking::whereIn('bookings.status', [2,3, 4])
             ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
@@ -52,7 +55,7 @@ class CheckInCheckOutController extends RoutingController
 
         $phiphatsinhs = PhiPhatSinh::where('status', 0)->get(); 
 
-        return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs'));
+        return view('admin.checkin_checkout.index', compact('bookings', 'title', 'phiphatsinhs', 'reson'));
     }
 
 
@@ -154,17 +157,43 @@ class CheckInCheckOutController extends RoutingController
         return redirect()->route('checkin-checkout.index')->with('success', 'Check-out thành công');
     }
 
+    public function cancel(Request $request){
+        $bookingId = $request->id;
+        $today = Carbon::now();
 
-    public function cancel(Request $request)
-    {
-        $booking = Booking::find($request->id);
-        $manage_status_room = ManageStatusRoom::where('from', $booking->check_in_date)
-            ->where('status', 0)
-            ->first();
-        $manage_status_room->status = 1;
-        $manage_status_room->save();
+        $booking = Booking::where('id', $bookingId)->first();
+        if ($booking->status == 5) {
+            return redirect()->route('checkin-checkout.index')->with('errot', 'phòng nãy đã được hủy rồi');
+        }
+
+        $reson = Reson::where('id', $request->reson)->first();
+
+        $createdAt = Carbon::createFromTimestamp($booking->created_at);
+        $checkInTime = Carbon::createFromTimestamp($booking->check_in_date);
+
+        $refundAmount = 0;
+
+        if ($today->diffInMinutes($createdAt) <= 60) {
+            $refundAmount = '100';
+        } elseif ($today->diffInMinutes($createdAt) > 60 && $today->lt($checkInTime->setTime(12, 0, 0))) {
+            $refundAmount = '50';
+        } elseif ($today->gte($checkInTime->setTime(12, 0, 0))) {
+            $refundAmount = '0';
+        }
+
+        ManageStatusRoomController::cancel($bookingId);
+
         $booking->status = 5;
         $booking->save();
+            BookingCancelled::create([
+                'booking_id' => $bookingId,
+                'reason' => $reson->reson,
+                'description' => $request->description,
+                'refund' => $refundAmount,
+                'cancelled_at' => $today->timestamp,
+                "status" => 'approved'
+            ]);
         return redirect()->route('checkin-checkout.index')->with('success', 'Hủy đơn thành công!');
+
     }
 }

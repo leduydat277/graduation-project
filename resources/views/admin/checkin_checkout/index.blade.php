@@ -101,6 +101,16 @@
                 @csrf
                 <div class="modal-body">
                     <p id="exitModalMessage"></p> <!-- Nội dung thông báo sẽ được thay đổi động -->
+                <select id="cancelReasonSelect" name="reson" class="form-select">
+                    <option value="">Chọn lý do hủy</option>
+                    @foreach ($reson as $reasonItem)
+                        <option value="{{ $reasonItem->id }}">{{ $reasonItem->reson }}</option>
+                    @endforeach
+                </select>
+                <textarea id="cancelReason" name="description" rows="10" class="form-control mt-3" placeholder="Nhập lý do hủy đơn hàng..."></textarea>
+                <span style="font-style: italic; font-size: smaller; font-weight: bold;">
+                    * Vui lòng đọc kỹ điều khoản và liên hệ qua SĐT: 0876587532 hoặc gửi email quyen.pham@rikai.technology để được hỗ trợ thêm
+                </span>
                     <input type="hidden" name="id" id="cancelItemId">
                 </div>
                 <div class="modal-footer">
