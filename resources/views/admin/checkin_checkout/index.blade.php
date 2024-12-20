@@ -509,7 +509,6 @@
             input.value = formatPrice; // Cập nhật giá trị đã được làm sạch
         });
         
-        
         form.action = '/admin/checkin-checkout/checkout/' + bookingId;
         form.method = 'POST';
         form.submit();

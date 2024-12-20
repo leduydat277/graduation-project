@@ -14,6 +14,13 @@ class VoucherController
      */
     public function index(Request $request)
     {
+        Voucher::where('quantity', 0)
+        ->orWhere(function ($query) {
+            $query->whereNotNull('end_date')
+                  ->where('end_date', '<', now());
+        })
+        ->update(['status' => 0]);
+        
         $title = "Quản lý Mã giảm giá";
         $query = Voucher::query();
         if ($request->has('code') && $request->code) {

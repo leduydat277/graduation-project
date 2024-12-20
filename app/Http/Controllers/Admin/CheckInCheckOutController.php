@@ -131,7 +131,7 @@ class CheckInCheckOutController extends RoutingController
         $booking->check_out_date = $currentTimestamp;
         $totalUpdate = $booking->discount_price;
         if ($booking->tien_coc == null) {
-            $booking->discount_price = (int)$totalUpdate + (int)$request->totalPrice;
+            $booking->discount_price = (int)$totalUpdate + $tong;
         } else {
             $cocs = 0;
             if($request->price){
